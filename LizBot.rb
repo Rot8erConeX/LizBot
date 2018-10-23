@@ -19,7 +19,7 @@ require 'active_support/core_ext/time' # Download link: https://rubygems.org/gem
          'fate?','fatE?','faTe?','faTE?','fAte?','fAtE?','fATe?','fATE?','Fate?','FatE?','FaTe?','FaTE?','FAte?','FAtE?','FATe?','FATE?']
 
 # The bot's token is basically their password, so is censored for obvious reasons
-bot = Discordrb::Commands::CommandBot.new token: '>Token<', client_id: 502288364838322176, prefix: @prefix
+bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', client_id: 502288364838322176, prefix: @prefix
 
 @servants=[]
 @skills=[]
@@ -546,6 +546,8 @@ def data_load()
     b[i][8]=b[i][8].split(', ')
     b[i][8][0]=b[i][8][0].to_f
     b[i][8][1]=b[i][8][1].to_i
+    b[i][8][2]=b[i][8][2].to_f unless b[i][8][2].nil?
+    b[i][8][3]='NP' if b[i][8][3].nil? && !b[i][8][2].nil?
     b[i][9]=b[i][9].split(', ').map{|q| q.to_i}
     for j in 0...5
       b[i][9][j]=0 if b[i][9][j].nil?
@@ -760,6 +762,7 @@ end
 
 def find_servant(name,event)
   data_load()
+  name=normalize(name)
   if name.to_i.to_s==name && name.to_i<=@servants[-1][0]
     return @servants[@servants.find_index{|q| q[0]==name.to_i}]
   elsif name.to_f.to_s==name && name.to_f<2
@@ -785,8 +788,10 @@ def find_servant(name,event)
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
   return @servants[k] unless k.nil?
   nicknames_load()
-  k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name && (q[2].nil? || q[2].include?(g))}
-  return @servants[@servants.find_index{|q| q[0]==@aliases[k][1]}] unless k.nil?
+  for i in name.length...@aliases.map{|q| q[0].length}.max
+    k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
+    return @servants[@servants.find_index{|q| q[0]==@aliases[k][1]}] unless k.nil?
+  end
   return []
 end
 
@@ -839,7 +844,7 @@ def disp_servant_stats(bot,event,args=nil)
   fou=1000 if dispstr.include?('fou-jp') || dispstr.include?('jp-fou')
   flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*Atk* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*Atk* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*Atk* - #{longFormattedNumber(k[7][2])}  "]]
   flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
-  flds.push(["Attack Parameters","__**Hit Counts**__\n*Quick*: #{k[9][0]}\n*Arts*: #{k[9][1]}\n*Buster*: #{k[9][2]}\n*Extra*: #{k[9][3]}\n*NP*: #{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
+  flds.push(["Attack Parameters","__**Hit Counts**__\n*Quick*: #{k[9][0]}\n*Arts*: #{k[9][1]}\n*Buster*: #{k[9][2]}\n*Extra*: #{k[9][3]}\n*NP*: #{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -890,7 +895,7 @@ def disp_tiny_stats(bot,event,args=nil)
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1]}" unless kx.nil?
-  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\u00A0\u00B7\u00A0**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5]} (NP type: #{k[17][6,1]})\n**Noble Phantasm:** #{k[16]}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}\u00A0Grail\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}\u00A0Grail\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0*Q:*\u00A0#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*A:*\u00A0#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0*B:*\u00A0#{k[9][2]}\u00A0\u00A0\u00B7\u00A0\u00A0*EX:*\u00A0#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0*NP:*\u00A0#{k[9][4]}\n**NP Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%\u00A0\u00A0\u00B7\u00A0\u00A0*Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
+  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\u00A0\u00B7\u00A0**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5]} (NP type: #{k[17][6,1]})\n**Noble Phantasm:** #{k[16]}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}\u00A0Grail\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}\u00A0Grail\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0*Q:*\u00A0#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*A:*\u00A0#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0*B:*\u00A0#{k[9][2]}  \u00B7  *EX:*\u00A0#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0*NP:*\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -1476,7 +1481,7 @@ end
 
 bot.command(:invite) do |event, user|
   usr=event.user
-  txt="You can invite me to your server with this link: <https://goo.gl/ox9CxB>\nTo look at my source code: ~~(link not available yet)~~\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: ~~(link not available yet)~~"
+  txt="You can invite me to your server with this link: <https://goo.gl/ox9CxB>\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: ~~(link not available yet)~~"
   user_to_name="you"
   unless user.nil?
     if /<@!?(?:\d+)>/ =~ user
