@@ -1,5 +1,4 @@
 @shardizard=ARGV.first.to_i              # taking a single variable from the command prompt to get the shard value
-@shardizard=0
 system("color 0#{"CBAE7"[@shardizard,1]}")
 system("title loading #{['Man','Sky','Earth','Star','Beast'][@shardizard]} LizBot")
 
