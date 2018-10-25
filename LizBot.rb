@@ -701,7 +701,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
   elsif ['status'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*message__","Sets my status to `message`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
   elsif ['servant','data','unit'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats and other relevant data.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Fou modifiers",0xED619A)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats.  If you include the word \"Fou\", the combat stats will be displayed with Fou modifiers\n\nIf it is safe to spam, also shows information on `name`s skills, traits, Noble Phantasm, and Bond CE.",0xED619A)
   elsif ['tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed','statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small','micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little'].include?(command.downcase) || (['stat','stats'].include?(command.downcase) && ['tiny','small','micro','smol','squashed','little'].include?("#{subcommand}".downcase))
     create_embed(event,"**#{command.downcase}#{" #{subcommand.downcase}" if ['stat','stats'].include?(command.downcase)}** __name__","Shows `name`'s stats, in a condensed format.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Silver Fou modifiers.\nInclude the word \"GoldenFou\" to display combat stats with Golden Fou modifiers.",0xED619A)
   elsif ['stats','stat'].include?(command.downcase)
@@ -768,7 +768,7 @@ def all_commands(include_nil=false,permissions=-1)
   return k
 end
 
-def find_servant(name,event)
+def find_servant(name,event,fullname=false)
   data_load()
   name=normalize(name)
   if name.to_i.to_s==name && name.to_i<=@servants[-1][0]
@@ -792,6 +792,7 @@ def find_servant(name,event)
   g=event.server.id unless event.server.nil?
   k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && (q[2].nil? || q[2].include?(g))}
   return @servants[@servants.find_index{|q| q[0]==@aliases[k][1]}] unless k.nil?
+  return [] if fullname
   name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
   return @servants[k] unless k.nil?
@@ -803,7 +804,18 @@ def find_servant(name,event)
   return []
 end
 
-def find_servant_ex(name,event)
+def find_servant_ex(name,event,fullname=false)
+  k=find_servant(name,event,true)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_servant(args[i,args.length-1-i-i2].join(' '),event,true)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return [] if fullname
   k=find_servant(name,event)
   return k if k.length>0
   args=name.split(' ')
@@ -1438,9 +1450,9 @@ end
 
 bot.command([:servant,:data,:unit]) do |event, *args|
   disp_servant_stats(bot,event,args)
+  disp_servant_skills(bot,event,args,true)
   if safe_to_spam?(event)
     disp_servant_traits(bot,event,args,true)
-    disp_servant_skills(bot,event,args,true)
     disp_servant_np(bot,event,args,true)
   end
   return nil
@@ -1873,9 +1885,9 @@ bot.mention do |event|
   k=find_servant_ex(name,event)
   if k.length>0
     disp_servant_stats(bot,event,args)
+    disp_servant_skills(bot,event,args,true)
     if safe_to_spam?(event)
       disp_servant_traits(bot,event,args,true)
-      disp_servant_skills(bot,event,args,true)
       disp_servant_np(bot,event,args,true)
     end
   end
@@ -1896,9 +1908,9 @@ bot.message do |event|
   if m && !all_commands().include?(s.split(' ')[0])
     if find_servant_ex(s,event).length>0
       disp_servant_stats(bot,event,s.split(' '))
+      disp_servant_skills(bot,event,s.split(' '),true)
       if safe_to_spam?(event)
         disp_servant_traits(bot,event,s.split(' '),true)
-        disp_servant_skills(bot,event,s.split(' '),true)
         disp_servant_np(bot,event,s.split(' '),true)
       end
     end
