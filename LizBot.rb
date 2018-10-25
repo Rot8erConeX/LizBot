@@ -639,8 +639,14 @@ def metadata_save()
   }
 end
 
-def nicknames_load()
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt')
+def nicknames_load(mode==1)
+  if mode==2 && File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt').each_line do |line|
+      b.push(eval line)
+    end
+    return b
+  elsif File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt')
     b=[]
     File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt').each_line do |line|
       b.push(eval line)
@@ -697,13 +703,15 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
   elsif ['servant','data','unit'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats and other relevant data.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Fou modifiers",0xED619A)
   elsif ['tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed','statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small','micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little'].include?(command.downcase) || (['stat','stats'].include?(command.downcase) && ['tiny','small','micro','smol','squashed','little'].include?("#{subcommand}".downcase))
-    create_embed(event,"**#{command.downcase}#{" #{subcommand.downcase}" if ['stat','stats'].include?(command.downcase)}** __name__","Shows `name`'s stats, in a condensed format.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Fou modifiers.\nInclude the word \"GoldenFou\" to displayed combat stats with Golden Fou modifiers.",0xED619A)
+    create_embed(event,"**#{command.downcase}#{" #{subcommand.downcase}" if ['stat','stats'].include?(command.downcase)}** __name__","Shows `name`'s stats, in a condensed format.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Silver Fou modifiers.\nInclude the word \"GoldenFou\" to display combat stats with Golden Fou modifiers.",0xED619A)
   elsif ['stats','stat'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Fou modifiers\n\nIf it is not safe to spam, this command automatically reverts to the `smol` command.",0xED619A)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Fou modifiers.\n\nIf it is not safe to spam, this command automatically reverts to the `smol` command, and thus you need to include the word \"GoldenFou\" to display combat stats with Golden Fou modifiers.",0xED619A)
   elsif ['traits','trait'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s traits.",0xED619A)
   elsif ['skills'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s skills.\n\nIf it is safe to spam, each skill will also be given additional information.",0xED619A)
+  elsif ['np','noble','phantasm','noblephantasm'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
   elsif ['embed','embeds'].include?(command.downcase)
     event << '**embed**'
     event << ''
@@ -737,7 +745,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`traits` __name__ - displays a servant's traits\n`skills` __name__ - displays a servant's skills\n`aliases` __name__ - displays a servant's aliases\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`traits` __name__ - displays a servant's traits\n`skills` __name__ - displays a servant's skills\n`np` __name__ - displays a servant's Noble Phantasm\n`aliases` __name__ - displays a servant's aliases\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -1344,8 +1352,9 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
     end
   }
   nicknames_load()
+  nzz=nicknames_load(2)
   nzzz=@aliases.map{|a| a}
-  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][1]>=@servants[@servants.length-1][0]
+  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][1]>=nzz[nzz.length-1][1]
     bot.channel(logchn).send_message('Alias list saved.')
     open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
       for i in 0...nzzz.length
@@ -1413,9 +1422,9 @@ bot.command([:deletealias,:removealias]) do |event, name|
     end
   }
   nicknames_load()
-  event.respond "#{name} has been removed from #{j[1]} [##{j[0]}]'s aliases."
+  nzz=nicknames_load(2)
   nzzz=@aliases.map{|a| a}
-  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][1]>=@servants[@servants.length-1][0]
+  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][1]>=nzz[nzz.length-1][1]
     bot.channel(logchn).send_message("Alias list saved.")
     open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
       for i in 0...nzzz.length
@@ -1576,15 +1585,16 @@ bot.command(:status, from: 167657750971547648) do |event, *args|
   event.respond 'Status set.'
 end
 
-bot.command(:backupaliases, from: 167657750971547648) do |event, trigger|
+bot.command(:backupaliases, from: 167657750971547648) do |event|
   return nil unless event.user.id==167657750971547648 || event.channel.id==386658080257212417
   nicknames_load()
+  nzz=nicknames_load(2)
   @aliases.uniq!
   @aliases.sort! {|a,b| (a[1] <=> b[1]) == 0 ? (a[0].downcase <=> b[0].downcase) : (a[1] <=> b[1])}
-  if @aliases[@aliases.length-1].length<=1 || @aliases[@aliases.length-1][1]<@servants[@servants.length-1][0]
+  if @aliases[@aliases.length-1].length<=1 || @aliases[@aliases.length-1][1]<nzz[nzz.length-1][1]
     event.respond 'Alias list has __***NOT***__ been backed up, as alias list has been corrupted.'
     bot.gateway.check_heartbeat_acks = true
-    event.respond 'FEH!restorealiases'
+    event.respond 'FGO!restorealiases'
     return nil
   end
   nzzzzz=@aliases.map{|a| a}
@@ -1594,6 +1604,40 @@ bot.command(:backupaliases, from: 167657750971547648) do |event, trigger|
     end
   }
   event.respond 'Alias list has been backed up.'
+end
+
+bot.command(:restorealiases, from: 167657750971547648) do |event|
+  return nil unless [167657750971547648,bot.profile.id].include?(event.user.id) || event.channel.id==502288368777035777
+  bot.gateway.check_heartbeat_acks = false
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt').each_line do |line|
+      b.push(eval line)
+    end
+  else
+    b=[]
+  end
+  nzzzzz=b.uniq
+  if nzzzzz[nzzzzz.length-1][1]<225
+    event << 'Last backup of the alias list has been corrupted.  Restoring from manually-created backup.'
+    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames3.txt')
+      b=[]
+      File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames3.txt').each_line do |line|
+        b.push(eval line)
+      end
+    else
+      b=[]
+    end
+    nzzzzz=b.uniq
+  else
+    event << 'Last backup of the alias list being used.'
+  end
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+    for i in 0...nzzzzz.length
+      f.puts "#{nzzzzz[i].to_s}#{"\n" if i<nzzzzz.length-1}"
+    end
+  }
+  event << 'Alias list has been restored from backup.'
 end
 
 bot.command(:sendmessage, from: 167657750971547648) do |event, channel_id, *args| # sends a message to a specific channel
