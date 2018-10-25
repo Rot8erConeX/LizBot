@@ -639,7 +639,7 @@ def metadata_save()
   }
 end
 
-def nicknames_load(mode==1)
+def nicknames_load(mode=1)
   if mode==2 && File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
     b=[]
     File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt').each_line do |line|
