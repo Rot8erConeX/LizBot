@@ -18,7 +18,7 @@ require 'active_support/core_ext/time' # Download link: https://rubygems.org/gem
          'fate?','fatE?','faTe?','faTE?','fAte?','fAtE?','fATe?','fATE?','Fate?','FatE?','FaTe?','FaTE?','FAte?','FAtE?','FATe?','FATE?']
 
 # The bot's token is basically their password, so is censored for obvious reasons
-bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', client_id: 502288364838322176, prefix: @prefix
+bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: @prefix
 
 @servants=[]
 @skills=[]
@@ -584,7 +584,7 @@ def data_load()
         b[i][i2]=b[i][i2].split(';; ')
       end
     elsif b[i][2]=='Noble'
-      for i2 in 6...16
+      for i2 in 7...17
         b[i][i2]=b[i][i2].split(';; ')
       end
     end
@@ -752,7 +752,8 @@ def all_commands(include_nil=false,permissions=-1)
      'sendmessage','sendpm','leaveserver','cleanupaliases','serveraliases','saliases','backupaliases','snagstats','reboot','help','commands','command_list',
      'commandlist','tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed',
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
-     'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills']
+     'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
+     'noblephantasm']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -819,7 +820,6 @@ def disp_servant_stats(bot,event,args=nil)
   dispfou=false
   dispfou=true if dispstr.include?('fou')
   k=find_servant_ex(args.join(' '),event)
-  puts k.to_s
   if k.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -926,7 +926,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   text='' if chain
   text="#{text}\n**Attribute:** *#{k[12]}*"
   text="#{text}\n**Gender:** *#{k[13][0]}*" if ['Female','Male'].include?(k[13][0])
-  text="#{text}\n~~**Gender:** *Effeminate*~~" if k[0]==94
+  text="#{text}\n~~**Gender:** *Effeminate*~~" if [10,94,143].include?(k[0])
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -959,7 +959,6 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     for i in 0...k[14].length
       str="#{'__' if safe_to_spam?(event)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event)}"
       if safe_to_spam?(event)
-        puts k[14][i][0]
         k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}
         str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}"
         for i2 in 4...@skills[k2].length
@@ -969,11 +968,6 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
               x=@skills[k2][i2][1]
               x2=@skills[k2][i2][6]
               x3=@skills[k2][i2][10]
-              if x.to_f<1
-                x="#{(x.to_f*1000).to_i/10.0}%" 
-                x2="#{(x2.to_f*1000).to_i/10.0}%"
-                x3="#{(x3.to_f*1000).to_i/10.0}%"
-              end
               if x==x2 && x==x3
                 str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
               else
@@ -986,7 +980,6 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       unless k[14][i][1].nil?
         str="#{str}\n#{"\n__" if safe_to_spam?(event)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event)}"
         if safe_to_spam?(event)
-          puts k[14][i][1]
           k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1]}
           str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}"
           for i2 in 4...@skills[k2].length
@@ -1020,7 +1013,6 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     for i in 0...k[15].length
       str="*#{k[15][i]}*"
-      puts k[15][i]
       k2=@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}
       str="#{str}: #{@skills[k2][3]}"
       passklz.push(str)
@@ -1038,6 +1030,67 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
   end
+end
+
+def disp_servant_np(bot,event,args=nil,chain=false)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_servant_ex(args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.' unless chain
+    return nil
+  end
+  xcolor=0xED619A
+  xcolor=0x21BC2C if k[17][6,1]=='Q'
+  xcolor=0x0B4DDF if k[17][6,1]=='A'
+  xcolor=0xFE2116 if k[17][6,1]=='B'
+  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="**0-star**" if k[3]==0
+  text='' if chain
+  np="*"
+  nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
+  unless nophan.nil?
+    nophan=@skills[nophan]
+    np="#{':* ' unless chain}#{nophan[3]}"
+  end
+  text="#{text}\n**Noble Phantasm:** *#{k[16]}#{np}" unless chain
+  npl=1
+  npl=2 if event.message.text.downcase.split(' ').include?('np2')
+  npl=3 if event.message.text.downcase.split(' ').include?('np3')
+  npl=4 if event.message.text.downcase.split(' ').include?('np4')
+  npl=5 if event.message.text.downcase.split(' ').include?('np5')
+  unless nophan.nil?
+    l=[nophan[5],nophan[6]]
+    text="#{text}\n**Type:** #{nophan[5]}\n**Target:** #{nophan[6]}\n\n**Rank:** #{nophan[4]}\n__**Effects**__"
+    for i in 7...17
+      unless nophan[i][0]=='-'
+        text="#{text}\n*#{nophan[i][0]}*"
+        if nophan[i][0].include?('<OVERCHARGE>') || (nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event))
+          text="#{text} - #{nophan[i][1]}\u00A0/\u00A0#{nophan[i][2]}\u00A0/\u00A0#{nophan[i][3]}\u00A0/\u00A0#{nophan[i][4]}\u00A0/\u00A0#{nophan[i][5]}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+        else
+          text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
+        end
+      end
+    end
+    nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}
+    unless nophan.nil?
+      nophan=@skills[nophan]
+      text="#{text}#{"\n" if nophan[5]!=l[0] || nophan[6]!=l[1]}#{"\n**Type:** #{nophan[5]}" if nophan[5]!=l[0]}#{"\n**Target:** #{nophan[6]}" if nophan[6]!=l[1]}\n\n**Rank:** #{nophan[4]}\n__**Effects**__"
+      for i in 7...17
+        unless nophan[i][0]=='-'
+          text="#{text}\n*#{nophan[i][0]}*"
+          if nophan[i][0].include?('<OVERCHARGE>') || (nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event))
+            text="#{text} - #{nophan[i][1]}\u00A0/\u00A0#{nophan[i][2]}\u00A0/\u00A0#{nophan[i][3]}\u00A0/\u00A0#{nophan[i][4]}\u00A0/\u00A0#{nophan[i][5]}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          else
+            text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
+          end
+        end
+      end
+    end
+  end
+  ftr='You can also include NP# to show relevant stats at other merge counts.' if npl==1
+  ftr=nil if safe_to_spam?(event)
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}:** *#{np}*#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
 def get_donor_list()
@@ -1379,6 +1432,7 @@ bot.command([:servant,:data,:unit]) do |event, *args|
   if safe_to_spam?(event)
     disp_servant_traits(bot,event,args,true)
     disp_servant_skills(bot,event,args,true)
+    disp_servant_np(bot,event,args,true)
   end
   return nil
 end
@@ -1390,6 +1444,11 @@ end
 
 bot.command([:traits,:trait]) do |event, *args|
   disp_servant_traits(bot,event,args)
+  return nil
+end
+
+bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
+  disp_servant_np(bot,event,args)
   return nil
 end
 
@@ -1773,6 +1832,7 @@ bot.mention do |event|
     if safe_to_spam?(event)
       disp_servant_traits(bot,event,args,true)
       disp_servant_skills(bot,event,args,true)
+      disp_servant_np(bot,event,args,true)
     end
   end
 end
@@ -1795,6 +1855,7 @@ bot.message do |event|
       if safe_to_spam?(event)
         disp_servant_traits(bot,event,s.split(' '),true)
         disp_servant_skills(bot,event,s.split(' '),true)
+        disp_servant_np(bot,event,s.split(' '),true)
       end
     end
   end
