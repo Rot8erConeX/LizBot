@@ -761,7 +761,7 @@ def all_commands(include_nil=false,permissions=-1)
      'commandlist','tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed',
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
-     'noblephantasm']
+     'noblephantasm','ce','bond','bondce']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -1033,6 +1033,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     for i in 0...k[15].length
       str="*#{k[15][i]}*"
+      puts k[15][i]
       k2=@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}
       str="#{str}: #{@skills[k2][3]}"
       passklz.push(str)
@@ -1111,6 +1112,38 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   ftr='You can also include NP# to show relevant stats at other merge counts.' if npl==1
   ftr=nil if safe_to_spam?(event)
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}:** *#{np}*#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+end
+
+def disp_servant_ce(bot,event,args=nil,chain=false)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_servant_ex(args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.' unless chain
+    return nil
+  end
+  xcolor=0xED619A
+  xcolor=0x21BC2C if k[17][6,1]=='Q'
+  xcolor=0x0B4DDF if k[17][6,1]=='A'
+  xcolor=0xFE2116 if k[17][6,1]=='B'
+  text=''
+  ce=@crafts.find_index{|q| q[0]==k[23]}
+  ce=@crafts[ce] unless ce.nil?
+  ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+  if ce.nil?
+    text=">No CE information known<"
+  else
+    text="#{"<:Icon_Rarity_4:448266418459377684>"*ce[2]}\n**Cost:** #{ce[3]}"
+    text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless chain
+    if ce[4]==ce[5] && ce[6]==ce[7]
+      text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6]}"
+    else
+      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
+      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
+      text="#{text}\n\n__**Additional info**__\n#{ce[8]}" unless ce[8].nil? || ce[8].length.zero?
+    end
+  end
+  create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,nil,nil)
 end
 
 def get_donor_list()
@@ -1454,6 +1487,7 @@ bot.command([:servant,:data,:unit]) do |event, *args|
   if safe_to_spam?(event)
     disp_servant_traits(bot,event,args,true)
     disp_servant_np(bot,event,args,true)
+    disp_servant_ce(bot,event,args,true)
   end
   return nil
 end
@@ -1470,6 +1504,11 @@ end
 
 bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
   disp_servant_np(bot,event,args)
+  return nil
+end
+
+bot.command([:ce,:CE,:bond,:bondce,:bondCE]) do |event, *args|
+  disp_servant_ce(bot,event,args)
   return nil
 end
 
@@ -1889,6 +1928,7 @@ bot.mention do |event|
     if safe_to_spam?(event)
       disp_servant_traits(bot,event,args,true)
       disp_servant_np(bot,event,args,true)
+      disp_servant_ce(bot,event,args,true)
     end
   end
 end
@@ -1912,6 +1952,7 @@ bot.message do |event|
       if safe_to_spam?(event)
         disp_servant_traits(bot,event,s.split(' '),true)
         disp_servant_np(bot,event,s.split(' '),true)
+        disp_servant_ce(bot,event,s.split(' '),true)
       end
     end
   end
