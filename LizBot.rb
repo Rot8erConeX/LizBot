@@ -712,6 +712,8 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s skills.\n\nIf it is safe to spam, each skill will also be given additional information.",0xED619A)
   elsif ['np','noble','phantasm','noblephantasm'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
+  elsif ['ce','bond','bondce'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Bond CE.",0xED619A)
   elsif ['embed','embeds'].include?(command.downcase)
     event << '**embed**'
     event << ''
@@ -745,7 +747,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`traits` __name__ - displays a servant's traits\n`skills` __name__ - displays a servant's skills\n`np` __name__ - displays a servant's Noble Phantasm\n`aliases` __name__ - displays a servant's aliases\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`aliases` __name__ - displays a servant's aliases\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -1000,7 +1002,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       unless k[14][i][1].nil?
         str="#{str}\n#{"\n__" if safe_to_spam?(event)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event)}"
         if safe_to_spam?(event)
-          k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1]}
+          k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && @skills[k2]!=q}
           str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}"
           for i2 in 4...@skills[k2].length
             unless @skills[k2][i2][0]=='-'
@@ -1114,7 +1116,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}:** *#{np}*#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
-def disp_servant_ce(bot,event,args=nil,chain=false)
+def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   k=find_servant_ex(args.join(' '),event)
@@ -1130,9 +1132,16 @@ def disp_servant_ce(bot,event,args=nil,chain=false)
   ce=@crafts.find_index{|q| q[0]==k[23]}
   ce=@crafts[ce] unless ce.nil?
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+  ftr=nil
+  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>2 && !skipftr
+    cex=@crafts[k[0]-1]
+    ftr="This is the Bond CE for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
+  end
   if ce.nil?
+    xpic=nil
     text=">No CE information known<"
   else
+    xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
     text="#{"<:Icon_Rarity_4:448266418459377684>"*ce[2]}\n**Cost:** #{ce[3]}"
     text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
@@ -1143,7 +1152,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false)
       text="#{text}\n\n__**Additional info**__\n#{ce[8]}" unless ce[8].nil? || ce[8].length.zero?
     end
   end
-  create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,nil,nil)
+  create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
 
 def get_donor_list()
@@ -1487,7 +1496,7 @@ bot.command([:servant,:data,:unit]) do |event, *args|
   if safe_to_spam?(event)
     disp_servant_traits(bot,event,args,true)
     disp_servant_np(bot,event,args,true)
-    disp_servant_ce(bot,event,args,true)
+    disp_servant_ce(bot,event,args,true,true)
   end
   return nil
 end
@@ -1928,7 +1937,7 @@ bot.mention do |event|
     if safe_to_spam?(event)
       disp_servant_traits(bot,event,args,true)
       disp_servant_np(bot,event,args,true)
-      disp_servant_ce(bot,event,args,true)
+      disp_servant_ce(bot,event,args,true,true)
     end
   end
 end
@@ -1952,7 +1961,7 @@ bot.message do |event|
       if safe_to_spam?(event)
         disp_servant_traits(bot,event,s.split(' '),true)
         disp_servant_np(bot,event,s.split(' '),true)
-        disp_servant_ce(bot,event,s.split(' '),true)
+        disp_servant_ce(bot,event,s.split(' '),true,true)
       end
     end
   end
