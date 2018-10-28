@@ -833,6 +833,37 @@ def find_servant_ex(name,event,fullname=false)
   return []
 end
 
+def avg_color(c,mode=0)
+  m=[0,0,0]
+  for i in 0...c.length
+    m[0]+=c[i][0]
+    m[1]+=c[i][1]
+    m[2]+=c[i][2]
+  end
+  m[0]/=c.length
+  m[1]/=c.length
+  m[2]/=c.length
+  return m if mode==1
+  return 256*256*m[0]+256*m[1]+m[2]
+end
+
+def servant_color(k)
+  xcolor=[237,97,154]
+  xcolor=[33,188,44] if k[17][6,1]=='Q'
+  xcolor=[11,77,223] if k[17][6,1]=='A'
+  xcolor=[254,33,22] if k[17][6,1]=='B'
+  m=[]
+  m.push(xcolor)
+  m.push(xcolor)
+  m.push([33,188,44]) if k[17][1,1]=='Q'
+  m.push([33,188,44]) if k[17][1,2]=='QQ'
+  m.push([254,33,22]) if k[17][3,1]=='B'
+  m.push([254,33,22]) if k[17][2,2]=='BB'
+  m.push([11,77,223]) if k[17].include?('AA')
+  m.push([11,77,223]) if k[17].include?('AAA')
+  return avg_color(m)
+end
+
 def disp_servant_stats(bot,event,args=nil)
   dispstr=event.message.text.downcase.split(' ')
   if dispstr.include?('tiny') || dispstr.include?('small') || dispstr.include?('smol') || dispstr.include?('micro') || dispstr.include?('little') || !safe_to_spam?(event)
@@ -848,10 +879,7 @@ def disp_servant_stats(bot,event,args=nil)
     event.respond 'No matches found.'
     return nil
   end
-  xcolor=0xED619A
-  xcolor=0x21BC2C if k[17][6,1]=='Q'
-  xcolor=0x0B4DDF if k[17][6,1]=='A'
-  xcolor=0xFE2116 if k[17][6,1]=='B'
+  xcolor=servant_color(k)
   text="<:Icon_Rarity_5:448266417553539104>"*k[3]
   text="**0-star**" if k[3]==0
   np="*"
@@ -903,10 +931,7 @@ def disp_tiny_stats(bot,event,args=nil)
     event.respond 'No matches found.'
     return nil
   end
-  xcolor=0xED619A
-  xcolor=0x21BC2C if k[17][6,1]=='Q'
-  xcolor=0x0B4DDF if k[17][6,1]=='A'
-  xcolor=0xFE2116 if k[17][6,1]=='B'
+  xcolor=servant_color(k)
   text="<:Icon_Rarity_5:448266417553539104>"*k[3]
   text="**0-star**" if k[3]==0
   if dispfou==2000
@@ -941,10 +966,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=0xED619A
-  xcolor=0x21BC2C if k[17][6,1]=='Q'
-  xcolor=0x0B4DDF if k[17][6,1]=='A'
-  xcolor=0xFE2116 if k[17][6,1]=='B'
+  xcolor=servant_color(k)
   text="<:Icon_Rarity_5:448266417553539104>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
@@ -966,10 +988,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=0xED619A
-  xcolor=0x21BC2C if k[17][6,1]=='Q'
-  xcolor=0x0B4DDF if k[17][6,1]=='A'
-  xcolor=0xFE2116 if k[17][6,1]=='B'
+  xcolor=servant_color(k)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -1065,10 +1084,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=0xED619A
-  xcolor=0x21BC2C if k[17][6,1]=='Q'
-  xcolor=0x0B4DDF if k[17][6,1]=='A'
-  xcolor=0xFE2116 if k[17][6,1]=='B'
+  xcolor=servant_color(k)
   text="<:Icon_Rarity_5:448266417553539104>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
@@ -1126,10 +1142,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=0xED619A
-  xcolor=0x21BC2C if k[17][6,1]=='Q'
-  xcolor=0x0B4DDF if k[17][6,1]=='A'
-  xcolor=0xFE2116 if k[17][6,1]=='B'
+  xcolor=servant_color(k)
   text=''
   ce=@crafts.find_index{|q| q[0]==k[23]}
   ce=@crafts[ce] unless ce.nil?
@@ -1179,10 +1192,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=0xED619A
-  xcolor=0x21BC2C if k[17][6,1]=='Q'
-  xcolor=0x0B4DDF if k[17][6,1]=='A'
-  xcolor=0xFE2116 if k[17][6,1]=='B'
+  xcolor=servant_color(k)
   text="<:Icon_Rarity_5:448266417553539104>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
