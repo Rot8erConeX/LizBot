@@ -864,6 +864,16 @@ def servant_color(k)
   return avg_color(m)
 end
 
+def numabr(n)
+  return "#{n/1000000000}bil" if n>1000000000 && n%1000000000==0
+  return "#{n.to_f/1000000000}bil" if n>1000000000
+  return "#{n/1000000}mil" if n>1000000 && n%1000000==0
+  return "#{n.to_f/1000000}mil" if n>1000000
+  return "#{n/1000}k" if n>1000 && n%1000==0
+  return "#{n.to_f/1000}k" if n>1000
+  return n
+end
+
 def disp_servant_stats(bot,event,args=nil)
   dispstr=event.message.text.downcase.split(' ')
   if dispstr.include?('tiny') || dispstr.include?('small') || dispstr.include?('smol') || dispstr.include?('micro') || dispstr.include?('little') || !safe_to_spam?(event)
@@ -1174,16 +1184,6 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
   create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
 
-def numabr(n)
-  return "#{n/1000000000}bil" if n>1000000000 && n%1000000000==0
-  return "#{n.to_f/1000000000}bil" if n>1000000000
-  return "#{n/1000000}mil" if n>1000000 && n%1000000==0
-  return "#{n.to_f/1000000}mil" if n>1000000
-  return "#{n/1000}k" if n>1000 && n%1000==0
-  return "#{n.to_f/1000}k" if n>1000
-  return n
-end
-
 def disp_servant_mats(bot,event,args=nil,chain=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
@@ -1211,7 +1211,8 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   qp=[100000,300000,1000000,3000000,200000,400000,1200000,1600000,4000000,5000000,10000000,12000000,20000000] if k[3]==5
   flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}, #{numabr(qp[0])} QP\n**Second Ascension:** #{k[18][1].join(', ')}, #{numabr(qp[1])} QP\n**Third Ascension:** #{k[18][2].join(', ')}, #{numabr(qp[2])} QP\n**Final Ascension:** #{k[18][3].join(', ')}, #{numabr(qp[3])} QP"]]
   flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
-  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil?
+  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
+  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
   flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[8])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[9])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[10])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   puts flds.map{|q| q.to_s}
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds)
