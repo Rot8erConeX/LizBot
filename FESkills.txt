@@ -1,0 +1,324 @@
+Nobility\Fates\Nohr Prince, 1; Nohr Princess, 1; Nohr Royal, 1\-\Experience gained x 1.2
+Dragon Fang\Fates\Nohr Prince, 10; Nohr Princess, 10; Nohr Royal, 10\(Skill*3/4)%\Adds 50% of the user's Attack Power as damage
+Dragon Ward\Fates\Hoshido Noble, 5\target's Luck * 0.5\Allies adjacent to the user receive half damage from enemy attacks
+Hoshidan Unity\Fates\Hoshido Noble, 15\-\Adds 10% to Skill activation rates
+Draconic Hex\Fates\Nohr Noble, 5\-\After battle, all of enemy's stats -4
+Nohrian Trust\Fates\Nohr Noble, 15\-\During Attack or Guard Stance, user shares their support unit's battle skills
+Luck +4\Fates\Songstress, 1\-\Luck +4
+Inspiring Song\Fates\Songstress, 10\-\Skill, Speed and Luck +3 for one Turn for the unit who receives the user's song
+Voice of Peace\Fates\Songstress, 25\-\Enemies within a 2 tile radius deal 2 less physical damage
+Foreign Princess\Fates\Songstress, 35\-\“Foreign Army” enemies within a 2 tile radius deal 2 less damage and receive 2 extra damage
+Duelist's Blow\Fates\Samurai, 1\-\When user triggers the battle, Avoid +30
+Vantage\Fates\Samurai, 10\-\Strike first during an enemy attack when HP is under half
+Seal Strength\Fates\Master of Arms, 5\-\After battle, enemy's Strength -6
+Life and Death\Fates\Master of Arms, 15\-\During battles, damage +10, damage received +10
+Seal Resistance\Fates\Oni Savage, 1\-\After battle, enemy's Resistance -6
+Shove\Fates\Oni Savage, 10; Ailuran, 10\Shove Command\Push an adjacent ally 1 tile
+Death Blow\Fates\Oni Chieftain, 5\-\When user triggers the battle, Critical rate +20
+Counter\Fates\Oni Chieftain, 15\-\When an adjacent enemy triggers the battle, user deals the full damage back at the enemy
+Salvage Blow\Fates\Blacksmith, 5\Luck%\Receive a Iron Hoshidan weapon if the user defeats the enemy
+Lancebreaker\Fates\Blacksmith, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a Lance or Naginata
+Seal Defense\Fates\Spear Fighter, 1\-\After battle, enemy's Defense -6
+Swap\Fates\Spear Fighter, 10\Swap Command\Swap places with an adjacent ally on the map
+Seal Speed\Fates\Spear Master, 5\-\After battle, enemy's Speed -6
+Lancefaire\Fates\Spear Master, 15\-\Damage +5 when equipped with a Lance or Naginata
+Magic +2\Fates\Diviner, 1\-\Magic +2
+Future Sight\Fates\Diviner, 10\Luck%\Gain double experience when user defeats the enemy
+Rally Magic\Fates\Onmyoji, 5\Rally Command\Magic +4 to all alies within a 2 tile radius for one Turn
+Tomefaire\Fates\Onmyoji, 15\-\Damage +5 when equipped with a Tome or Scroll
+Rend Heaven\Fates\Basara, 5\Skill * 1.5\Adds half the enemy's Strength (if user has a physical weapon) or Magic (if user has a magical weapon) as damage
+Quixotic\Fates\Basara, 15\-\User and enemy's Hit rate +30 and skill activation rate +15% during battle
+Miracle\Fates\Monk, 1; Shrine Maiden, 1; Healer, 1\Luck%\Character survives with 1 HP after receiving a fatal blow.  (Must have at least 2 HP to activate)
+Rally Luck\Fates\Monk, 10; Shrine Maiden, 10; Healer, 10\Rally Command\Luck +8 to all allies within a 2 tile radius for one Turn
+Renewal\Fates\Great Master, 5; Priestess, 5; Great Mistress, 5; Priest, 5; Great Healer, 5\-\Recover 30% HP at the start of the user's Turn
+Countermagic\Fates\Great Master, 15; Priestess, 15; Great Mistress, 15; Priest, 15; Great Healer, 15\-\When the enemy triggers the battle and inflicts magical damage, the enemy receives the same damage
+Darting Blow\Fates\Sky Knight, 1\-\When user triggers the battle, double attack threshold +5
+Camaraderie\Fates\Sky Knight, 10\-\Recover 10% HP at the start of the user's Turn if there are allies within a 2 tile radius
+Rally Speed\Fates\Falcon Knight, 5\Rally Command\Speed +4 to all allies within a 2 tile radius for one Turn
+Warding Blow\Fates\Falcon Knight, 15\-\When user triggers the battle, magical damage received -20
+Air Superiority\Fates\Kinshi Knight, 5\-\Hit rate and Avoid +30 when facing Flying enemies
+Amaterasu\Fates\Kinshi Knight, 15\-\Allies within a 2 tile radius recover 20% HP at the start of the user's Turn
+Skill +2\Fateswakening\Archer, 1\-\Skill +2
+Quick Draw\Fates\Archer, 10\-\When user triggers the battle, damage +4
+Certain Blow\Fates\Sniper, 5\-\When user triggers the battle, Hit rate +40
+Bowfaire\Fateswakening\Sniper, 15\-\Damage +5 when equipped with a Bow or Yumi
+Locktouch\Fates\Ninja, 1; Outlaw, 1\-\User can open doors and chests without requiring keys
+Poison Strike\Fates\Ninja, 10\-\When user triggers the battle, the enemy's HP is reduced by 20% after the battle
+Lethality\Fates\Master Ninja, 5\(Skill/4)%\Instantly defeats the enemy.  (Does not work if the user would deal 0 damage)
+Shurikenfaire\Fates\Master Ninja, 15\-\Damage +5 when equipped with a Shuriken or Dagger
+Golembane\Fates\Mechanist, 5\-\Attacks are effective against Puppeteers, Puppets and Golems
+Replicate\Fates\Mechanist, 15\Replicate Command\Use once per battle to create a replica
+Potent Potion\Fates\Apothecary, 1\-\The effect of HP recovery and stat-boosting potions is increased by 50%
+Quick Salve\Fates\Apothecary, 10\Use HP recovery or stat-boosting potion\User can perform another action after using a healing item
+Profiteer\Fates\Merchant, 5\Luck%\Obtain a gold bar on each of the unit's first 7 turns
+Spendthrift\Fates\Merchant, 15\-\When user initiates battle, if a Golden Coin is in the inventory, it is consumed and damage +10, damage received -10
+Evenhanded\Fates\Kitsune, 1\-\During even-numbered Turns, damage +4
+Beastbane\Fates\Kitsune, 10; Wolfskin, 10\-\When user is a Taguel, Wolfskin, or Kitsune, their attacks are effective against Beast units
+Even Better\Fates\Nine-Tails, 5\-\Recover 40% HP at the start of even-numbered Turns
+Grisly Wound\Fates\Nine-Tails, 15; Wolfssegner, 15; Ailuran, 15\-\The enemy's HP is reduced by 20% after the battle
+Aptitude\Fates\Villager, 1\-\Adds 10% to all growth rates
+Elbow Room\Fates\Cavalier, 1\-\When user fights on terrain with no terrain effects, damage +3 during battles
+Shelter\Fates\Cavalier, 10\Shelter Command\Make an adjacent ally the user's support unit
+Defender\Fateswakening\Paladin, 5\-\All Stats (except movement) +1 when the lead unit in a Guard Stance
+Aegis\Fateswakening\Paladin, 15\Skill%\Halves damage from Bow, Magic, Hidden Weapon, Dragonstone, Breath and Boulder attacks
+Defense +2\Fateswakening\Knight, 1\-\Defense +2
+Natural Cover\Fates\Knight, 10\-\When user fights in terrain with terrain effects, damage received -3 during battles
+Wary Fighter\Fates\General, 5\-\During battles, neither the user or enemy can double attack
+Pavise\Fateswakening\General, 15\Skill%\Halves damage from Sword, Lance, Axe, Beaststone, Monster and Puppet attacks
+Luna\Fateswakening\Great Knight, 5\Skill%\Ignores half enemy's Defense or Resistance
+Armored Blow\Fates\Great Knight, 15\-\When user triggers the battle, physical damage received -10
+HP +5\Fateswakening\Fighter, 1\-\Maximum HP +5
+Gamble\Fates\Fighter, 10\-\Hit rate -10, Critical rate +10
+Rally Strength\Fates\Berserker, 5\Rally Command\Strength +4 to all allies within a 2 tile radius for one Turn
+Axefaire\Fateswakening\Berserker, 15\-\Damage +5 when equipped with an Axe or Club
+Good Fortune\Fates\Mercenary, 1\Luck%\Recover 20% HP at the start of the user's Turn
+Strong Riposte\Fates\Mercenary, 10\-\When enemy triggers the battle, damage +3
+Sol\Fateswakening\Hero, 5\Skill%\Recover HP equal to half the damage dealt to the enemy
+Axebreaker\Fateswakening\Hero, 15\-\Hit rate and Avoid +50 when enemy is equipped with an Axe or Club
+Rally Skill\Fates\Bow Knight, 5\Rally Command\Skill +4 to all allies within a 2 tile radius for one Turn
+Shurikenbreaker\Fates\Bow Knight, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a Shuriken or Dagger
+Movement +1\Fates\Outlaw, 10\-\Movement +1
+Lucky Seven\Fates\Adventurer, 5\-\Hit rate and Avoid +20 for the first 7 Turns of a map
+Pass\Fates\Adventurer, 15\-\User can pass through tiles occupied by enemy units
+Strength +2\Fateswakening\Wyvern Rider, 1\-\Strength +2
+Lunge\Fates\Wyvern Rider, 10\Lunge Command\Swap places with an enemy after an attack
+Rally Defense\Fates\Wyvern Lord, 5\Rally Command\Defense +4 to all allies within a 2 tile radius for one Turn
+Swordbreaker\Fateswakening\Wyvern Lord, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a Sword or Katana
+Savage Blow\Fates\Malig Knight, 5\-\When user triggers the battle, enemies within a 2 tile radius have their HP reduced by 20% after the battle
+Trample\Fates\Malig Knight, 15\-\Unless enemy is on a mount, damage +5
+Heartseeker\Fates\Dark Mage, 1\-\When adjacent to an enemy, the adjacent enemy's Avoid -20
+Malefic Aura\Fates\Dark Mage, 10\-\Enemies within a 2 tile radius receive 2 extra damage from magical attacks
+Vengeance\Fateswakening\Sorcerer, 5\(2*Skill)% in *Awakening*, (Skill*3/2)% in *Fates*\Adds half of the user's current accrued damage to user's attack
+Bowbreaker\Fates\Sorcerer, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a Bow or Yumi
+Seal Magic\Fates\Dark Knight, 5\-\After battle, enemy's Magic -6
+Lifetaker\Fateswakening\Dark Knight, 15\-\User recovers 50% Max HP after they defeat an enemy during the user's Turn
+Resistance +2\Fateswakening\Troubadour, 1\-\Resistance +2
+Gentilhomme\Fates\Troubadour(M), 10\-\Female allies within a 2 tile radius receive 2 less damage during battles
+Demoiselle\Fates\Troubadour(F), 10\-\Male allies within a 2 tile radius receive 2 less damage during battles
+Rally Resistance\Fates\Strategist, 5\Rally Command\Resistance +4 to all allies within a 2 tile radius for one Turn
+Inspiration\Fates\Strategist, 15\-\Allies within a 2 tile radius deal 2 extra damage and receive 2 less damage during battles
+Live to Serve\Fates\Maid, 5; Butler, 5; Servant, 5\-\When healing an ally, the user recovers the same amount of HP
+Tomebreaker\Fates\Maid, 15; Butler, 15; Servant, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a Tome or Scroll
+Odd Shaped\Fates\Wolfskin, 1\-\During odd-numbered Turns, damage +4
+Better Odds\Fates\Wolfssegner, 5\-\Recover 40% HP at the start of odd-numbered Turns
+Even Keel\Fates\Dread Fighter, 1\-\During even-numbered Turns, magical damage received -4
+Iron Will\Fates\Dread Fighter, 10\-\When enemy triggers the battle, magical damage received -4
+Clarity\Fates\Dread Fighter, 25\-\User recovers from status reduction effects twice as fast
+Aggressor\Fates\Dread Fighter, 35\-\When user triggers the battle, Damage +7
+Speed +2\Fates\Dark Falcon, 1; Pegasus Knight, 1\-\Speed +2
+Relief\Fates\Dark Falcon, 10; Pegasus Knight, 10\-\Recover 20% HP at the start of the user's Turn if there are no units within a 3 tile radius
+Rally Movement\Fates\Dark Falcon, 25\Rally Command\Movement +1 to all allies within a 2 tile radius for one Turn
+Galeforce\Fates\Dark Falcon, 35\-\Allows the user another full action after they defeat an enemy during the user's Turn.  Activates only once per Turn.  (This does not trigger in Attack or Guard Stance)
+Survey\Fates\Ballistician, 1\Turret Command\Turret Hit rate +10
+Opportunity Shot\Fates\Ballistician, 10\Skill%\Automatically attack an enemy within range at the start of the user's Turn
+Rifled Barrel\Fates\Ballistician, 25\Turret Command\Turret's range +1 and inner/outer range -1
+Surefooted\Fates\Ballistician, 35\-\When user is a Ballistician, Movement +1 and all traversable terrain costs 1 movement point to cross
+Shadowgift\Fates\Witch, 1; Warlock, 1; Great Sorcerer, 1\-\Enables the usage of Dark Tomes in any Tome wielding class
+Witch's Brew\Fates\Witch, 10; Warlock, 10; Great Sorcerer, 10\Luck%\Obtain a potion item (eg.  HP Tonic) after moving during the first seven Turns
+Warp\Fates\Witch, 25; Warlock, 25; Great Sorcerer, 25; Warp Scroll\Warp Command\Instantly move adjacent to an ally and perform another action
+Toxic Brew\Fates\Witch, 35; Warlock, 35; Great Sorcerer, 35\(Skill*3/2)%\Reduces the enemy's Movement to 0 and Avoid by 20 after the battle until the next turn
+Dancing Blade\Fates\Lodestar, 1\-\Speed +3, Defense -1
+Charm\Fates\Lodestar, 10; Great Lord, 10\-\Allies within a 2 tile radius deal 2 extra damage during battles
+Dual Guardsman\Fates\Lodestar, 25\-\When user is the support unit in Guard Stance, shield gauge gain +1
+Speedtaker\Fates\Lodestar, 35; Speedtaker Scroll\-\When user defeats the enemy, Speed +2 (up to 10) (does not overlap with other Drain skills and expires after the chapter)
+Heavy Blade\Fates\Vanguard, 1; Heavy Blade Scroll\-\Strength +3, Speed -1
+Veteran Intuition\Fates\Vanguard, 10; Veteran Intuition Scroll\-\Critical Evade +15
+Aether\Fates\Vanguard, 25; Great Lord, 25; Aether Scroll\(Skill/4)%\Attack twice consecutively, with the first strike having a Sol effect and the second strike having a Luna effect
+Strengthtaker\Fates\Vanguard, 35; Strengthtaker Scroll\-\When user defeats the enemy, Strength +2 (up to 10) (does not overlap with other Drain skills and expires after the chapter)
+Dual Striker\Fates\Great Lord, 1\-\When user is the support unit in Attack Stance, Dual Strike damage +3
+Awakening\Fates\Great Lord, 35\-\When HP is under half, Hit rate, Avoid, Critical rate and Critical Evade +30
+Tactical Guide\Fates\Grandmaster, 1\-\When user is the support unit in Guard Stance, lead unit's Hit rate +10
+Solidarity\Fates\Grandmaster, 10\-\Adjacent allies receive Critical Rate/Critical Evade +10
+Ignis\Fates\Grandmaster, 25\Skill%\Adds (Magic)/2 to Strength when dealing physical damage and (Strength)/2 to Magic when dealing magical damage
+Rally Spectrum\Fates\Grandmaster, 35\Rally Command\All stats (except movement) +2 to all allies within a 4 tile radius for one Turn
+Paragon\Fates\Paragon Scroll\-\User receives double EXP in battles
+Skilltaker\Fates\Skilltaker Scroll\-\When user defeats the enemy, Skill +2 (up to 10) (does not overlap with other Drain skills and expires after the chapter)
+Lucktaker\Fates\Lucktaker Scroll\-\When user defeats the enemy, Luck +2 (up to 10) (does not overlap with other Drain skills and expires after the chapter)
+Magictaker\Fates\Magictaker Scroll\-\When user defeats the enemy, Magic +2 (up to 10) (does not overlap with other Drain skills and expires after the chapter)
+Defensetaker\Fates\Defensetaker Scroll\-\When user defeats the enemy, Defense +2 (up to 10) (does not overlap with other Drain skills and expires after the chapter)
+Resistancetaker\Fates\Resistancetaker Scroll\-\When user defeats the enemy, Resistance +2 (up to 10) (does not overlap with other Drain skills and expires after the chapter)
+Point Blank\Fates\Point Blank Scroll\-\User can attack enemies at 1 Range with any Bow
+Dragonskin\Fates\Enemy exclusive\-\Halves all damage.  Negates Counter, Poison damage, and Lethality.  Reduces the effect of critical hits, Aether, Astra, Dragon Fang, Sol, Luna, Ignis, Vengeance, and Rend Heaven
+Immobilize\Fates\Enemy exclusive\-\If user's attack connects with the enemy, target's Movement is reduced to 0 and Avoid reduced by 20 until the next Turn
+Resist Status\Fates\Enemy exclusive\-\Halves status reduction effects, Poison damage, and status staff Hit rate
+Wing Shield\Fates\Enemy exclusive\-\When user is a Flying unit, their Flying weakness is nullified and they will receive terrain effects
+Divine Shield\Fates\Enemy exclusive\-\Halves all damage.  Negates Counter, Poison damage, and Lethality
+Immune Status\Fates\Enemy exclusive\-\Negates status reduction effects, Poison damage, and status staff Hit rate
+Staff Savant\Fates\Enemy exclusive\-\Staves can be used without expending uses and if its Range is under 10, it is increased to 10
+Bold Stance\Fates\Enemy exclusive\-\When user is the lead unit, even in Guard Stance, the support unit can trigger Dual Strikes, but enemy Dual Strikes are not passively negated
+Void Curse\Fates\Enemy exclusive\-\No experience can be gained from the user
+Inevitable End\Fates\Enemy exclusive\-\Enemy will accumulate status reduction effects
+Self-Destruct\Fates\Enemy exclusive\-\When HP is under half, enemies within a 2 tile radius have their HP reduced by remaining HP of its user, then destroys the user
+Supportive\Fates\Corrin, personal\-\If this unit is supporting a lead unit with a support level of C or higher, lead unit receives +10 Hit, +2 damage dealt and -2 damage received in combat
+Healing Descant\Fates\Azura, personal\-\Allies within 2 spaces of this unit recover 10% of their max HP at the start of their turn
+Devoted Partner\Fates\Felicia, personal\-\If this unit is supporting the avatar, they deal +2 damage and receive -2 damage in combat
+Evasive Partner\Fates\Jakob, personal\-\If this unit is supporting the avatar, they will receive +15 Avoid and -3 damage taken in combat
+Miraculous Save\Fates\Kaze, personal\-\If this unit is the support unit, the lead unit has a [Luck]% chance of surviving a fatal attack with 1 HP
+Vow of Friendship\Fates\Silas, personal\-\If the Avatar is under half HP, this unit deals +3 damage and receives -3 damage in combat
+Forager\Fates\Mozu, personal\-\If this unit begins their turn on Field, Forest, Mountain or Wasteland terrain, they recover 20% of their max HP
+Highwayman\Fates\Shura, personal\-\When this unit initiates combat, if the enemy cannot counterattack, their Strength and Speed is reduced by 3.  Recovers 1 per turn
+Peacebringer\Fates\Izana, personal\-\Allies and enemies within 2 spaces deal -2 damage
+Misfortunate\Fates\Arthur, personal\-\Enemies within 2 spaces of this unit suffer -15 Critical Evade, while this unit gets -5 Critical Evade
+Fierce Mien\Fates\Benny, personal\-\Enemies within 2 spaces of this unit suffer -10 Avoid
+Opportunist\Fates\Beruka, personal\-\+4 to damage dealt if the enemy can't counterattack
+Rose's Thorns\Fates\Camilla, personal\-\Adjacent allies deal +3 damage and receive -1 damage
+Unmask\Fates\Charlotte, personal\-\This unit will deal +4 damage and gain a +20 Critical boost if they battle a female enemy
+Puissance\Fates\Effie, personal\-\This unit deals +3 damage to enemies if this unit's Strength is 5 points or higher than the enemy's
+Lily's Poise\Fates\Elise, personal\-\Adjacent allies deal +1 damage and receive -3 damage
+Icy Blood\Fates\Flora, personal\-\If this unit takes damage from nonadjacent enemy and their HP isn't full, the enemy takes half the damage inflicted and suffers -3 to Skill and Speed.  Recovers 1 per turn
+Forceful Partner\Fates\Gunter, personal\-\If this unit is supporting the avatar, they gain +15 to Hit and deal +3 damage in combat
+Collector\Fates\Keaton, personal\-\After finishing an action, this unit has a [Luck]% chance to obtain +3 Ore or Foodstuffs until the 7th turn
+Fancy Footwork\Fates\Laslow, personal\Rally Command\When using Rally, allies within 2 spaces receive +1 to Strength and Speed for one Turn.  Stacks with other equipped Rally skills
+Pragmatic\Fates\Leo, personal\-\If the enemy's HP isn't full, +3 to damage dealt and -1 to damage received
+Kidnap\Fates\Niles, personal\-\this unit can capture a normal enemy and certain bosses upon defeating them with the Capture command if there is a Jail in My Castle
+Countercurse\Fates\Nyx, personal\-\If this unit takes damage from a magical attack, the attacker receives half the damage dealt
+Aching Blood\Fates\Odin, personal\-\If this unit equips a forged weapon with a name that's 12 characters long, they gain a +10 Critical boost
+Bloodthirst\Fates\Peri, personal\-\If this unit initiates combat and defeats the enemy, +4 to their Strength, Magic, Skill and Speed until the next turn
+Fierce Rival\Fates\Selena, personal\-\When this unit is the support unit, if the lead unit triggers a critical hit, they will also perform a critical hit if their attack connects
+Chivalry\Fates\Xander, personal\-\+2 to damage dealt and -2 to damage taken against enemies with full HP
+Divine Retribution\Fates\Azama, personal\-\If this unit has no weapon equipped and is attacked, the enemy will receive half their damage dealt
+Fearsome Blow\Fates\Hana, personal\-\If this unit initiates combat and defeats an enemy, all adjacent enemies lose 20% of their max HP
+Pride\Fates\Hayato, personal\-\If this unit's level is lower than the enemy's (promoted units count as Level +20), they deal +4 damage
+Triple Threat\Fates\Hinata, personal\-\If a sword, lance or axe attack drops this unit's HP to 50% or lower, the enemy will receive half the damage dealt
+Rallying Cry\Fates\Hinoka, personal\-\Allies within a 2 tile radius deal +2 damage
+Reciprocity\Fates\Kaden, personal\-\If this unit is healed with a staff/rod, the user will be healed by half the amount
+Shuriken Mastery\Fates\Kagero, personal\-\If this unit is attacked with a shuriken, attacker receives half the damage dealt and receives the stat drops inflicted
+Nohr Enmity\Fates\Oboro, personal\-\If this unit enters combat with a Nohrian class or unit originating from Nohr, +3 to damage dealt
+Capture\Fates\Orochi, personal\-\this unit can capture a normal enemy and certain bosses upon defeating them with the Capture command if there is a Jail in My Castle
+Fiery Blood\Fates\Rinkah, personal\-\If this unit's HP is less than full, they will deal +4 damage
+Morbid Celebration\Fates\Reina, personal\-\If this unit initiates combat and defeats the enemy, they recover 20% of their max HP
+Bushido\Fates\Ryoma, personal\-\When this unit is the lead unit, if their level is greater than or equal to their supporter, +10 to Critical, +2 damage dealt and -2 damage received
+Pyrotechnics\Fates\Saizo, personal\-\If this unit initiates battle at 50% or lower HP, this unit and enemies within 2 spaces will lose 20% of their maximum HP afterward
+Quiet Strength\Fates\Sakura, personal\-\Allies within 2 spaces receive -2 damage
+In Extremis\Fates\Scarlet, personal\-\If this unit enters battle with 25% or less HP, they receive +30 to their Critical rate
+Optimistic\Fates\Setsuna, personal\-\If this unit is healed with a staff/rod, they recover 1.5 times the amount
+Perfectionist\Fates\Subaki, personal\-\If this unit's HP is full, they gain +15 to Hit and Avoid
+Competitive\Fates\Takumi, personal\-\When this unit is the lead unit, if their level is lower than or equal to their supporter, +10 to Critical, +3 damage dealt and -1 damage received
+Perspicacious\Fates\Yukimura, personal\-\Grants +5 Hit to all allies on the battlefield
+Sweet Tooth\Fates\Asugi, personal\-\When choosing to Wait, 4 HP is recovered
+Prodigy\Fates\Caeldori, personal\-\If this unit's Strength or Magic is lower than the enemy's, +4 to damage dealt
+Born Steward\Fates\Dwyer, personal\-\When fighting in My Castle, +20 to Hit and Avoid, +2 to damage dealt and -2 to damage taken
+Fierce Counter\Fates\Forrest, personal\-\When a male enemy initiates the battle, this unit deals +2 damage
+Calm\Fates\Hisame, personal\-\When choosing to Wait, receive +4 Skill and Resistance until the next turn
+Guarded Bravery\Fates\Ignatius, personal\-\When this unit is the lead unit in attack or guard stance, -2 damage taken.  If unsupported, +2 damage taken
+Draconic Heir\Fates\Kana, personal\-\If this unit has a Dragonstone equipped at the beginning of their turn, they recover 15% of their max HP
+Optimist\Fates\Kiragi, personal\-\When choosing to Wait, +4 Speed and +8 Luck until the next turn
+Lucky Charm\Fates\Midori, personal\-\Skills with an activation rate dependent on Luck are boosted by 20%
+Haiku\Fates\Mitama, personal\-\If this unit begins her turn with allies adjacent to her vertically, this unit recovers 7 HP and the allies recover 5 HP
+Daydream\Fates\Nina, personal\-\When this unit is adjacent two male allies in Guard Stance, +2 damage given and -2 damage taken
+Bibliophile\Fates\Ophelia, personal\-\If carrying 3 or more Tomes/Scrolls, +10 to this unit's Critical rate
+Fortunate Son\Fates\Percy, personal\-\Allies within 2 space receive +15 to their Critical Evade, while this unit's Critical Evade is boosted by 5
+Vendetta\Fates\Rhajat, personal\-\When this unit enters combat against an enemy they previously battled, they deal +4 damage
+Playthings\Fates\Selkie, personal\-\At the start of this unit's turn, all adjacent enemies lose 5 HP
+Perfect Pitch\Fates\Shigure, personal\Rally Command\When using Rally, allies within 2 tiles who have HP lower than this unit will recover 10% their maximum HP
+Noble Cause\Fates\Shiro, personal\-\When this unit is the lead unit, if the support unit doesn't have full HP, they deal +3 damage but also takes +1 damage
+Gallant\Fates\Siegbert, personal\-\If this unit is supporting a female ally, the lead unit will deal +2 damage
+Sisterhood\Fates\Soleil, personal\-\If this unit is supported by a female ally, this unit deals +2 damage and receives -2 damage
+Mischievous\Fates\Sophie, personal\-\When this unit initiates combat, if their attack connects, the enemy's clothing is stripped and will suffer -3 Defense afterward
+Goody Basket\Fates\Velouria, personal\-\At the start of their turn, this unit has a [Luck]% chance of recovering 10 HP
+Make a Killing\Fates\Anna, personal\-\If this unit initiates combat and defeats an enemy, they have a [Luck]% chance of receiving gold afterward
+Wind Disciple\Fates\Fuga, personal\-\If this unit's HP is not full, they will receive +15 to Hit and Avoid
+Luck +4\Awakening\Dancer, 1\-\Luck +4
+Rightful King\Awakening\Great Lord, 15\-\Adds 10% to Skill activation rates
+Dual Strike+\Awakening\Lord, 1\-\Adds 10% to Dual Strike activation
+Charm\Awakening\Lord, 10\-\Hit rate and Avoid +5 to all allies within a 3 tile radius
+Aether\Awakening\Great Lord, 5\(Skill/2)%\Attack twice consecutively, with the first strike having a Sol effect and the second strike having a Luna effect
+Veteran\Awakening\Tactician, 1\-\x1.5 experience gain when in Pair Up
+Solidarity\Awakening\Tactician, 10\-\Adjacent allies receive Critical Rate/Critical Evade +10
+Ignis\Awakening\Grandmaster, 5\Skill%\Adds (Magic)/2 to Strength when dealing physical damage and (Strength)/2 to Magic when dealing magical damage
+Rally Spectrum\Awakening\Grandmaster, 15\Rally Command\All stats (except movement) +4 to all allies within a 3 tile radius for one Turn
+Discipline\Awakening\Cavalier, 1\-\Weapon Experience x2
+Outdoor Fighter\Awakening\Cavalier, 10\-\Hit rate and Avoid +10 when fighting outdoors
+Indoor Fighter\Awakening\Knight, 10\-\Hit rate and Avoid +10 when fighting indoors
+Rally Defense\Awakening\General, 5\Rally Command\Defense +4 to all allies within a 3 tile radius for one Turn
+Dual Guard+\Awakening\Great Knight, 15\-\Adds 10% to Dual Guard rate
+Avoid +10\Awakening\Myrmidon, 1\-\Avoid +10
+Vantage\Awakening\Myrmidon, 10\-\Strike first during an enemy attack when HP is under half
+Astra\Fateswakening\Swordmaster, 5\(Skill/2)%\Deals 5 consecutive hits at half damage
+Swordfaire\Fateswakening\Swordmaster, 15\-\Damage +5 when equipped with a Sword or Katana
+Locktouch\Awakening\Thief, 1\-\User can open doors and chests without requiring keys
+Movement +1\Awakening\Thief, 10\-\Movement +1
+Lucky Seven\Awakening\Trickster, 5\-\Hit rate and Avoid +20 for the first 7 Turns of a map
+Acrobat\Awakening\Trickster, 15\-\All traversable terrain costs 1 movement point to cross
+Lethality\Awakening\Assassin, 5\(Skill/4)%\Instantly defeats the enemy
+Pass\Awakening\Assassin, 15\-\User can pass through tiles occupied by enemy units
+Despoil\Awakening\Barbarian, 1\Luck%\Obtain a Bullion (S) from the enemy if the user defeats the enemy
+Gamble\Awakening\Barbarian, 10\-\Hit rate -10, Critical rate +10
+Wrath\Awakening\Berserker, 5\-\Critical +20 when under half HP
+Zeal\Awakening\Fighter, 10\-\Critical +5
+Rally Strength\Awakening\Warrior, 5\Rally Command\Strength +4 to all allies within a 3 tile radius for one Turn
+Counter\Awakening\Warrior, 15\-\When an adjacent enemy triggers the battle, user deals the full damage back at the enemy
+Armsthrift\Awakening\Mercenary, 1\(Luck*2)%\Weapon durability is not decreased when activated
+Patience\Awakening\Mercenary, 10\-\Hit Rate and Avoid +10 during the enemy's Turn
+Prescience\Awakening\Archer, 10\-\Hit rate and Avoid +15 during the user's Turn
+Hit Rate +20\Awakening\Sniper, 5\-\Hit Rate +20
+Rally Skill\Awakening\Bow Knight, 5\Rally Command\Skill +4 to all allies within a 3 tile radius for one Turn
+Bowbreaker\Awakening\Bow Knight, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a Bow or Yumi
+Hex\Awakening\Dark Mage, 1\-\Avoid -15 to all adjacent enemies
+Anathema\Awakening\Dark Mage, 10\-\Avoid and Critical Avoid -10 to all enemies within a 3 tile radius
+Tomebreaker\Awakening\Sorcerer, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a Tome or Scroll
+Magic +2\Awakening\Mage, 1\-\Magic +2
+Focus\Awakening\Mage, 10\-\Critical +10 when no allies are within a 3 tile radius
+Rally Magic\Awakening\Sage, 5\Rally Command\Magic +4 to all alies within a 3 tile radius for one Turn
+Tomefaire\Awakening\Sage, 15\-\Damage +5 when equipped with a Tome or Scroll
+Slow Burn\Awakening\Dark Knight, 5\-\Hit rate and Avoid increases by 1 each Turn up to the 15th turn
+Miracle\Awakening\Cleric, 1; Priest, 1; Healer, 1\Luck%\Character survives with 1 HP after receiving a fatal blow.  (Must have at least 2 HP to activate)
+Healtouch\Awakening\Cleric, 10; Priest, 10; Healer, 10\-\Restores an extra 5 HP when healing allies
+Rally Luck\Awakening\War Cleric, 5; War Monk, 5; War Healer, 5\Rally Command\Luck +8 to all allies within a 3 tile radius for one Turn
+Renewal\Awakening\War Cleric, 15; War Monk, 15; War Healer, 15\-\Recover 30% HP at the start of the user's Turn
+Demoiselle\Awakening\Troubadour, 10\-\Avoid and Critical Avoid +10 to all male allies within a 3 tile radius
+Rally Resistance\Awakening\Valkyrie, 5\Rally Command\Resistance +4 to all allies within a 3 tile radius for one Turn
+Dual Support+\Awakening\Valkyrie, 15\-\Increases the Dual Support level of a unit by 4
+Speed +2\Awakening\Pegasus Knight, 1\-\Speed +2
+Relief\Awakening\Pegasus Knight, 10\-\Recover 20% HP at the start of the user's Turn if there are no units within a 3 tile radius
+Rally Speed\Awakening\Falcon Knight, 5\Rally Command\Speed +4 to all allies within a 3 tile radius for one Turn
+Lancefaire\Awakening\Falcon Knight, 15\-\Damage +5 when equipped with a Lance or Naginata
+Rally Movement\Awakening\Dark Flier, 5\Rally Command\Movement +1 to all allies within a 3 tile radius for one Turn
+Galeforce\Awakening\Dark Flier, 15\-\Allows the user another full action after they defeat an enemy during the user's Turn. Activates only once per Turn
+Tantivy\Awakening\Wyvern Rider, 10\-\Hit rate and Avoid +10 if no allies within a 3 tile radius
+Quick Burn\Awakening\Wyvern Lord, 5\-\Hit rate and Avoid +15 at the start of a chapter. Effect decreases by 1 with each passing turn
+Deliverer\Awakening\Griffon Rider, 5\-\Movement +2 when in a Pair Up
+Lancebreaker\Awakening\Griffon Rider, 15\-\Hit rate and Avoid +50 when the enemy is equipped with a lance
+Aptitude\Awakening\Villager, 1\-\Adds 20% to all growth rates
+Underdog\Fateswakening\Villager, 15\-\Hit rate and Avoid +15 when the user's level is lower than the enemy. Promoted units count as Level +20 against a non-promoted user
+Special Dance\Awakening\Dancer, 15\-\Strength, Magic, Defense, and Resistance +2 for one Turn for any unit who receives the user's Dance
+Even Rhythm\Awakening\Taguel, 1\-\Hit rate and Avoid +10 during even numbered Turns
+Beastbane\Awakening\Taguel, 15\-\When user is a Taguel, Wolfskin, or Kitsune, their attacks are effective against Beast units
+Odd Rhythm\Awakening\Manakete, 1\-\Hit rate and Avoid +10 during odd numbered Turns
+Wyrmsbane\Awakening\Manakete, 15\-\Deals effective damage to dragon units when the user is a Manakete
+Conquest\Awakening\Walhart, personal\-\Negates the user's Beast and Armor weaknesses
+Shadowgift\Awakening\Aversa, personal\-\Enables the usage of Dark Tomes in any Tome wielding class
+Resistance +10\Awakening\Dread Fighter, 1\-\Resistance +10
+Aggressor\Awakening\Dread Fighter, 15\-\Attack +10 during the user's Turn
+Rally Heart\Awakening\Bride, 1; Groom, 1; Wedding Guest, 1\Rally Command\All stats +2 and Movement +1 to all allies within a 3 tile radius for one Turn
+Bond\Awakening\Bride, 15; Groom, 15; Wedding Guest, 15\-\Restores 10 HP to all allies within a 3 tile radius at the beginning of the user's Turn. Having multiple users of Bond does not increase the HP regenerated
+All Stats +2\Awakening\All Stats +2 Manual\-\All stats (except movement) +2
+Paragon\Awakening\Paragon Manual\-\Negates user's flying weakness
+Iote's Shield\Awakening\Iote's Shield Manual\-\Negates user's flying weakness
+Limit Breaker\Awakening\Limit Break Manual\-\Raises the user's maximum stat caps by 10
+Dragonskin\Awakening\Enemy exclusive\-\Halves all damage. Negates Counter and Lethality
+Hit Rate +10\Awakening\Enemy exclusive\-\Hit rate +10
+Rightful God\Awakening\Enemy exclusive\-\Adds 30% to Skill activation rates
+Vantage+\Awakening\Enemy exclusive\-\User always attacks first, even if attacked
+Luna+\Awakening\Enemy exclusive\-\User ignores half of the enemy's Defense or Resistance
+Hawkeye\Awakening\Enemy exclusive\-\User will always hit the enemy
+Pavise+\Awakening\Enemy exclusive\-\Halves damage from swords, lances, axes (includes magical variants) and beaststones
+Aegis+\Awakening\Enemy exclusive\-\Halves damage from bows, tomes and dragonstones
+Crippled Blow\Gates\Mathoo, personal\-\If HP is below 25% maximum, this unit can get critical hits and use special skills on weapons that usually don't allow them as long as they are unforged
+Downpour\Gates\Draco, personal\-\If this unit is outside, all enemies that are also outside receive -2 Speed
+Trounce\Gates\Bluezie, personal\-\When this unit is facing an enemy of a lower level, this unit receives +5 Crit
+Grape Shot\Gates\Dwight, personal\-\Upon defeating an enemy on a battle initiated by this unit, enemies adjacent to the defeated receive 30% of damage dealt via the killing blow
+Bloodsport\Gates\Rudyard, personal\-\+2 damage dealt to enemies using magic-based weapons
+Jealousy\Gates\-, personal\-\If enemy is using the same type of weapon as this unit and has better proficency, +3 damage dealt
+Skeptic\Gates\Elentil, personal\-\If this unit is fighting an enemy that either is invisible or can trigger Dragon Veins, -2 damage taken
+Odd Feeling\Gates\Bride, 1; Groom, 1; Wedding Guest, 1\-\During odd-numbered Turns, Luck +10
+Rally Heart\Gates\Bride, 10; Groom, 10; Wedding Guest, 10\Rally Command\Allies within two spaces of this unit receive stat increases equal to the support-based Pair-Up stats between them and this unit
+Bond\Gates\Bride, 25; Groom, 25; Wedding Guest, 25\-\At the start of each turn, allies within two spaces of this unit are healed for (5+5/**r*) HP, where *r* is the number of Support ranks between them and this unit (no ranks = 0, C = 1, B = 2, A/A+ = 3, S = 4)
+White Veil\Gates\Bride, 35; Groom, 35; Wedding Guest, 35\-\This unit cannot be attacked if there is another unit who has A (or higher) support with this unit found adjacent to them.  Also prevents enemy Shadow Megan from being attacked until Shadow GSO is killed and/or removed from the space adjacent to her
+Glacies\Gates\Glacies Scroll\(Skill*3/4)%\Adds 50% of the user's Resistance as damage
+Defiant\Gates\Aoi, personal\-\If enemy is in a Nohrian class, they are afflicted with -3 effective speed when battling this unit
+Snatch\Gates\Sheldon, personal\-\this unit can capture a normal enemy and certain bosses upon defeating them with the Capture command if there is a Jail in My Castle
+Dollmaker\Gates\Megan, personal\Dollmaker Command\Creates a doll-like replica once per battle.  This unit and the replica share movement points
+Porcelain Skin\Gates\Portia, personal\-\Any "counter" skills this unit has have their range increased to 1-2
+Kanjispace\Gates\GSO, personal\-\Magic +3 if using a Scroll (not a tome)
+Needlepoint Knitter\Gates\Naomi, personal\-\When this unit is wielding a Naginata (not a lance), damage dealt +1 for each fabric-based accessory worn by this unit
