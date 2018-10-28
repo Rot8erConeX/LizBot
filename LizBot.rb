@@ -714,6 +714,8 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
   elsif ['ce','bond','bondce'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Bond CE.",0xED619A)
+  elsif ['mats','ascension','enhancement','enhance','materials'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Ascension, Skill Enhancement, and Costume Creation materials.",0xED619A)
   elsif ['embed','embeds'].include?(command.downcase)
     event << '**embed**'
     event << ''
@@ -747,7 +749,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`aliases` __name__ - displays a servant's aliases\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -763,7 +765,7 @@ def all_commands(include_nil=false,permissions=-1)
      'commandlist','tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed',
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
-     'noblephantasm','ce','bond','bondce']
+     'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -873,7 +875,7 @@ def disp_servant_stats(bot,event,args=nil)
   ftr=nil
   ftr='You can include the word "Fou" to show the values with Fou modifiers' unless dispfou
   ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
-  ftr="This servant can switch to servant #1.2 at her Master's wish." if k[0]==1.1
+  ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
@@ -1131,16 +1133,20 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
   text=''
   ce=@crafts.find_index{|q| q[0]==k[23]}
   ce=@crafts[ce] unless ce.nil?
-  ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   ftr=nil
-  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>2 && !skipftr
+  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2 && !skipftr
     cex=@crafts[k[0]-1]
     ftr="This is the Bond CE for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
+  elsif event.message.text.split(' ').include?('1') && k[0]<2 && !skipftr
+    cex=@crafts[0]
+    ftr="This is the Bond CE for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
   if ce.nil?
     xpic=nil
     text=">No CE information known<"
+    return nil if chain
   else
+    ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
     xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
     text="#{"<:Icon_Rarity_4:448266418459377684>"*ce[2]}\n**Cost:** #{ce[3]}"
     text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless chain
@@ -1153,6 +1159,52 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     end
   end
   create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+end
+
+def numabr(n)
+  return "#{n/1000000000}bil" if n>1000000000 && n%1000000000==0
+  return "#{n.to_f/1000000000}bil" if n>1000000000
+  return "#{n/1000000}mil" if n>1000000 && n%1000000==0
+  return "#{n.to_f/1000000}mil" if n>1000000
+  return "#{n/1000}k" if n>1000 && n%1000==0
+  return "#{n.to_f/1000}k" if n>1000
+  return n
+end
+
+def disp_servant_mats(bot,event,args=nil,chain=false)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_servant_ex(args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.' unless chain
+    return nil
+  end
+  xcolor=0xED619A
+  xcolor=0x21BC2C if k[17][6,1]=='Q'
+  xcolor=0x0B4DDF if k[17][6,1]=='A'
+  xcolor=0xFE2116 if k[17][6,1]=='B'
+  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="**0-star**" if k[3]==0
+  text='' if chain
+  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
+  dispnum="0012" if k[0]<2
+  dispnum="0016" if k[0]==1.2
+  xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+  if k[18][4].nil? && !k[18][5].nil?
+    k[18][4]=k[18][5].map{|q| q}
+    k[18][5]=nil
+  end
+  qp=[10000,30000,90000,300000,10000,20000,60000,80000,200000,250000,500000,600000,1000000]
+  qp=[15000,45000,150000,450000,20000,40000,120000,160000,400000,500000,1000000,1200000,2000000] if k[3]==2 || k[3]==0
+  qp=[30000,100000,300000,900000,50000,100000,300000,400000,1000000,1250000,2500000,3000000,5000000] if k[3]==3
+  qp=[50000,150000,500000,1500000,100000,200000,600000,800000,2000000,2500000,5000000,6000000,10000000] if k[3]==4
+  qp=[100000,300000,1000000,3000000,200000,400000,1200000,1600000,4000000,5000000,10000000,12000000,20000000] if k[3]==5
+  flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}, #{numabr(qp[0])} QP\n**Second Ascension:** #{k[18][1].join(', ')}, #{numabr(qp[1])} QP\n**Third Ascension:** #{k[18][2].join(', ')}, #{numabr(qp[2])} QP\n**Final Ascension:** #{k[18][3].join(', ')}, #{numabr(qp[3])} QP"]]
+  flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
+  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil?
+  flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[8])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[9])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[10])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
+  puts flds.map{|q| q.to_s}
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds)
 end
 
 def get_donor_list()
@@ -1497,6 +1549,7 @@ bot.command([:servant,:data,:unit]) do |event, *args|
     disp_servant_traits(bot,event,args,true)
     disp_servant_np(bot,event,args,true)
     disp_servant_ce(bot,event,args,true,true)
+    disp_servant_mats(bot,event,args,true)
   end
   return nil
 end
@@ -1516,8 +1569,18 @@ bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
   return nil
 end
 
-bot.command([:ce,:CE,:bond,:bondce,:bondCE]) do |event, *args|
+bot.command([:ce,:CE]) do |event, *args|
   disp_servant_ce(bot,event,args)
+  return nil
+end
+
+bot.command([:bond,:bondce,:bondCE]) do |event, *args|
+  disp_servant_ce(bot,event,args,false,true)
+  return nil
+end
+
+bot.command([:mats,:ascension,:enhancement,:enhance,:materials]) do |event, *args|
+  disp_servant_mats(bot,event,args)
   return nil
 end
 
@@ -1938,6 +2001,7 @@ bot.mention do |event|
       disp_servant_traits(bot,event,args,true)
       disp_servant_np(bot,event,args,true)
       disp_servant_ce(bot,event,args,true,true)
+      disp_servant_mats(bot,event,args,true)
     end
   end
 end
@@ -1962,6 +2026,7 @@ bot.message do |event|
         disp_servant_traits(bot,event,s.split(' '),true)
         disp_servant_np(bot,event,s.split(' '),true)
         disp_servant_ce(bot,event,s.split(' '),true,true)
+        disp_servant_mats(bot,event,s.split(' '),true)
       end
     end
   end
