@@ -712,8 +712,10 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s skills.\n\nIf it is safe to spam, each skill will also be given additional information.",0xED619A)
   elsif ['np','noble','phantasm','noblephantasm'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
-  elsif ['ce','bond','bondce'].include?(command.downcase)
+  elsif ['bond','bondce'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Bond CE.",0xED619A)
+  elsif ['ce'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a CE, shows that CE's info.\nIf `name` is the name of a servant, shows that servant's Bond CE.\n\nIf `name` is a number, prioritizes servant ID over Craft Essence ID.",0xED619A)
   elsif ['mats','ascension','enhancement','enhance','materials'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Ascension, Skill Enhancement, and Costume Creation materials.",0xED619A)
   elsif ['embed','embeds'].include?(command.downcase)
@@ -775,7 +777,7 @@ end
 def find_servant(name,event,fullname=false)
   data_load()
   name=normalize(name)
-  if name.to_i.to_s==name && name.to_i<=@servants[-1][0]
+  if name.to_i.to_s==name && name.to_i<=@servants[-1][0] && name.to_i>0
     return @servants[@servants.find_index{|q| q[0]==name.to_i}]
   elsif name.to_f.to_s==name && name.to_f<2
     return @servants[@servants.find_index{|q| q[0]==name.to_f}]
@@ -826,6 +828,55 @@ def find_servant_ex(name,event,fullname=false)
   for i in 0...args.length-1
     for i2 in 0...args.length-i
       k=find_servant(args[i,args.length-1-i-i2].join(' '),event)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return []
+end
+
+def find_ce(name,event,fullname=false)
+  data_load()
+  name=normalize(name)
+  if name.to_i.to_s==name && name.to_i<=@servants[-1][0] && name.to_i>0
+    return []
+  elsif name.to_i.to_s==name && name.to_i<=@crafts[-1][0] && name.to_i>0
+    return @crafts[@crafts.find_index{|q| q[0]==name.to_f}]
+  end
+  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  return @crafts[k] unless k.nil?
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="the#{name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}" && q[1][0,4].downcase=='the '}
+  return @crafts[k] unless k.nil?
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="a#{name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}" && q[1][0,2].downcase=='a '}
+  return @crafts[k] unless k.nil?
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="an#{name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}" && q[1][0,3].downcase=='an '}
+  return @crafts[k] unless k.nil?
+  return [] if fullname
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
+  return @crafts[k] unless k.nil?
+  return []
+end
+
+def find_ce_ex(name,event,fullname=false)
+  k=find_ce(name,event,true)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_ce(args[i,args.length-1-i-i2].join(' '),event,true)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return [] if fullname
+  k=find_ce(name,event)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_ce(args[i,args.length-1-i-i2].join(' '),event)
       k=[] if args[i,args.length-1-i-i2].length<=0
       return k if k.length>0
     end
@@ -1066,7 +1117,6 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     for i in 0...k[15].length
       str="*#{k[15][i]}*"
-      puts k[15][i]
       k2=@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}
       str="#{str}: #{@skills[k2][3]}"
       passklz.push(str)
@@ -1214,8 +1264,38 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
   flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
   flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[8])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[9])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[10])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
-  puts flds.map{|q| q.to_s}
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds)
+end
+
+def disp_ce_card(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  ce=find_ce_ex(args.join(' '),event)
+  if ce.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  xcolor=0x7D4529
+  xcolor=0x718F93 if ce[2]>2
+  xcolor=0xF5D672 if ce[2]>3
+  k=@servants.find_index{|q| q[23]==ce[0]}
+  k=@servants[k] unless k.nil?
+  xcolor=servant_color(k) unless k.nil?
+  text=''
+  ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+  xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
+  text="#{"<:Icon_Rarity_4:448266418459377684>"*ce[2]}\n**Cost:** #{ce[3]}"
+  text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless k.nil?
+  if ce[4]==ce[5] && ce[6]==ce[7]
+    text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6]}"
+  else
+    text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
+    text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
+    text="#{text}\n\n__**Additional info**__\n#{ce[8]}" unless ce[8].nil? || ce[8].length.zero?
+  end
+  ftr=nil
+  ftr='For the other CE given the title "Heaven\'s Feel", it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
+  create_embed(event,"**#{ce[1]}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
 end
 
 def get_donor_list()
@@ -1581,8 +1661,18 @@ bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
 end
 
 bot.command([:ce,:CE]) do |event, *args|
-  disp_servant_ce(bot,event,args)
-  return nil
+  name=args.join(' ')
+  if find_ce_ex(name,event,true).length>0
+    disp_ce_card(bot,event,args)
+  elsif find_servant_ex(name,event,true).length>0
+    disp_servant_ce(bot,event,args)
+  elsif find_ce_ex(name,event).length>0
+    disp_ce_card(bot,event,args)
+  elsif find_servant_ex(name,event).length>0
+    disp_servant_ce(bot,event,args)
+  else
+    event.respond "No matches found."
+  end
 end
 
 bot.command([:bond,:bondce,:bondCE]) do |event, *args|
@@ -2004,8 +2094,16 @@ bot.mention do |event|
   args=event.message.text.downcase.split(' ')
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   name=args.join(' ')
-  k=find_servant_ex(name,event)
-  if k.length>0
+  if find_servant_ex(name,event,true).length>0
+    disp_servant_stats(bot,event,args)
+    disp_servant_skills(bot,event,args,true)
+    if safe_to_spam?(event)
+      disp_servant_traits(bot,event,args,true)
+      disp_servant_np(bot,event,args,true)
+      disp_servant_ce(bot,event,args,true,true)
+      disp_servant_mats(bot,event,args,true)
+    end
+  elsif find_servant_ex(name,event).length>0
     disp_servant_stats(bot,event,args)
     disp_servant_skills(bot,event,args,true)
     if safe_to_spam?(event)
@@ -2030,7 +2128,16 @@ bot.message do |event|
     s=s[5,s.length-5]
   end
   if m && !all_commands().include?(s.split(' ')[0])
-    if find_servant_ex(s,event).length>0
+    if find_servant_ex(s,event,true).length>0
+      disp_servant_stats(bot,event,s.split(' '))
+      disp_servant_skills(bot,event,s.split(' '),true)
+      if safe_to_spam?(event)
+        disp_servant_traits(bot,event,s.split(' '),true)
+        disp_servant_np(bot,event,s.split(' '),true)
+        disp_servant_ce(bot,event,s.split(' '),true,true)
+        disp_servant_mats(bot,event,s.split(' '),true)
+      end
+    elsif find_servant_ex(s,event).length>0
       disp_servant_stats(bot,event,s.split(' '))
       disp_servant_skills(bot,event,s.split(' '),true)
       if safe_to_spam?(event)
