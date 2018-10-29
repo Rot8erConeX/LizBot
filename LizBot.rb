@@ -714,6 +714,10 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
   elsif ['bond','bondce'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Bond CE.",0xED619A)
+  elsif ['art'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s art.\n\nDefaults to their normal art, but can be modified to other arts based on the following words:\nFirst/1st/FirstAscension/1stAscension\nSecond/2nd/SecondAscension/2ndAscension\nThird/3rd/ThirdAscension/3rdAscension\nFinal/Fourth/4th/FinalAscension/FourthAscension/4thAscension\nCostume/FirstCostume/1stCostume\nSecondCostume/2ndCostume\nRiyo/AprilFool's\n\nIf the requested art doesn't exist, reverts back to default art.",0xED619A)
+  elsif ['riyo'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Riyo art, which is shown on April Fool's.",0xED619A)
   elsif ['ce'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a CE, shows that CE's info.\nIf `name` is the name of a servant, shows that servant's Bond CE.\n\nIf `name` is a number, prioritizes servant ID over Craft Essence ID.",0xED619A)
   elsif ['mats','ascension','enhancement','enhance','materials'].include?(command.downcase)
@@ -751,7 +755,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Command Essence\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -767,7 +771,7 @@ def all_commands(include_nil=false,permissions=-1)
      'commandlist','tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed',
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
-     'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials']
+     'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -1262,9 +1266,45 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}, #{numabr(qp[0])} QP\n**Second Ascension:** #{k[18][1].join(', ')}, #{numabr(qp[1])} QP\n**Third Ascension:** #{k[18][2].join(', ')}, #{numabr(qp[2])} QP\n**Final Ascension:** #{k[18][3].join(', ')}, #{numabr(qp[3])} QP"]]
   flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
   flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
-  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
+  flds.push(['Costume materials',"**First Costume:** #{"#{k[18][5].join(', ')}\n**Second Costume:** " unless k[18][5].nil?}#{k[18][4].join(', ')}, 3mil QP"]) unless k[18][4].nil? || k[0]>=2
   flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[8])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[9])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[10])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds)
+end
+
+def disp_servant_art(bot,event,args=nil,riyodefault=false)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_servant_ex(args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  xcolor=servant_color(k)
+  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_s.gsub('.','p')}"
+  disptext=event.message.text.downcase
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}2.png" if disptext.split(' ').include?('first') || disptext.split(' ').include?('firstascension') || disptext.split(' ').include?('first_ascension') || " #{disptext} ".include?(" first ascension ") || disptext.split(' ').include?('1st') || disptext.split(' ').include?('1stascension') || disptext.split(' ').include?('1st_ascension') || " #{disptext} ".include?(" 1st ascension ") || disptext.split(' ').include?('second') || disptext.split(' ').include?('secondascension') || disptext.split(' ').include?('second_ascension') || " #{disptext} ".include?(" second ascension ") || disptext.split(' ').include?('2nd') || disptext.split(' ').include?('2ndascension') || disptext.split(' ').include?('2nd_ascension') || " #{disptext} ".include?(" 2nd ascension ")
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}3.png" if disptext.split(' ').include?('third') || disptext.split(' ').include?('thirdascension') || disptext.split(' ').include?('third_ascension') || " #{disptext} ".include?(" third ascension ") || disptext.split(' ').include?('3rd') || disptext.split(' ').include?('3rdascension') || disptext.split(' ').include?('3rd_ascension') || " #{disptext} ".include?(" 3rd ascension ")
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}4.png" if disptext.split(' ').include?('fourth') || disptext.split(' ').include?('fourthascension') || disptext.split(' ').include?('fourth_ascension') || " #{disptext} ".include?(" fourth ascension ") || disptext.split(' ').include?('4th') || disptext.split(' ').include?('4thascension') || disptext.split(' ').include?('4th_ascension') || " #{disptext} ".include?(" 4th ascension ") || disptext.split(' ').include?('final') || disptext.split(' ').include?('finalascension') || disptext.split(' ').include?('final_ascension') || " #{disptext} ".include?(" final ascension ")
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}5.png" if disptext.split(' ').include?('costume') || disptext.split(' ').include?('firstcostume') || disptext.split(' ').include?('first_costume') || " #{disptext} ".include?(" first costume ") || disptext.split(' ').include?('1stcostume') || disptext.split(' ').include?('1st_costume') || " #{disptext} ".include?(" 1st costume ")
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}6.png" if disptext.split(' ').include?('secondcostume') || disptext.split(' ').include?('second_costume') || " #{disptext} ".include?(" second costume ") || disptext.split(' ').include?('2ndcostume') || disptext.split(' ').include?('2nd_costume') || " #{disptext} ".include?(" 2nd costume ")
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png" if riyodefault || disptext.split(' ').include?('riyo') || disptext.split(' ').include?('aprilfools') || disptext.split(' ').include?("aprilfool's") || disptext.split(' ').include?("april_fool's") || disptext.split(' ').include?("april_fools") || " #{disptext} ".include?(" april fool's ") || " #{disptext} ".include?(" april fools ")
+  text=''
+  m=false
+  IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp.png") rescue m=true
+  if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp.png")<=100 || m
+    xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
+    text='Requested art not found.  Default art shown.'
+  end
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
+    event.respond xpic
+  else
+    event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
+      embed.description=text
+      embed.color=xcolor
+      embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
+    end
+  end
 end
 
 def disp_ce_card(bot,event,args=nil)
@@ -1655,6 +1695,16 @@ bot.command([:traits,:trait]) do |event, *args|
   return nil
 end
 
+bot.command([:art]) do |event, *args|
+  disp_servant_art(bot,event,args)
+  return nil
+end
+
+bot.command([:riyo,:Riyo]) do |event, *args|
+  disp_servant_art(bot,event,args,true)
+  return nil
+end
+
 bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
   disp_servant_np(bot,event,args)
   return nil
@@ -1977,7 +2027,7 @@ bot.command(:snagstats) do |event, f, f2|
     event << "#{longFormattedNumber(b[0].reject{|q| q.gsub('  ','')!="event.respond 'You are not a mod.'"}.length)} mod-only commands, invoked with #{longFormattedNumber(all_commands(false,1).length)} different phrases."
     event << "#{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command(' || !q.include?('from: 167657750971547648')}.length)} dev-only commands, invoked with #{longFormattedNumber(all_commands(false,2).length)} different phrases."
     event << ''
-    event << "**There are #{longFormattedNumber(@prefix.map{|q| q.downcase}.uniq.length)} command prefixes**, but because I am faking case-insensitivity it's actually #{longFormattedNumber(@prefix.length)} prefixes."
+    event << "**There are #{longFormattedNumber(@prefix.map{|q| q.downcase}.reject{|q| q.include?('0')}.uniq.length)} command prefixes**, but because I am faking case-insensitivity it's actually #{longFormattedNumber(@prefix.length)} prefixes."
     event << ''
     event << "**There are #{longFormattedNumber(b[0].reject{|q| q[0,4]!='def '}.length)} functions the commands use.**"
     if safe_to_spam?(event) || " #{event.message.text.downcase} ".include?(" all ")
@@ -2094,7 +2144,9 @@ bot.mention do |event|
   args=event.message.text.downcase.split(' ')
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   name=args.join(' ')
-  if find_servant_ex(name,event,true).length>0
+  if find_ce_ex(name,event,true).length>0
+    disp_ce_card(bot,event,args)
+  elsif find_servant_ex(name,event,true).length>0
     disp_servant_stats(bot,event,args)
     disp_servant_skills(bot,event,args,true)
     if safe_to_spam?(event)
@@ -2103,6 +2155,8 @@ bot.mention do |event|
       disp_servant_ce(bot,event,args,true,true)
       disp_servant_mats(bot,event,args,true)
     end
+  elsif find_ce_ex(name,event).length>0
+    disp_ce_card(bot,event,args)
   elsif find_servant_ex(name,event).length>0
     disp_servant_stats(bot,event,args)
     disp_servant_skills(bot,event,args,true)
@@ -2128,7 +2182,9 @@ bot.message do |event|
     s=s[5,s.length-5]
   end
   if m && !all_commands().include?(s.split(' ')[0])
-    if find_servant_ex(s,event,true).length>0
+    if find_ce_ex(s,event,true).length>0
+      disp_ce_card(bot,event,s.split(' '))
+    elsif find_servant_ex(s,event,true).length>0
       disp_servant_stats(bot,event,s.split(' '))
       disp_servant_skills(bot,event,s.split(' '),true)
       if safe_to_spam?(event)
@@ -2137,6 +2193,8 @@ bot.message do |event|
         disp_servant_ce(bot,event,s.split(' '),true,true)
         disp_servant_mats(bot,event,s.split(' '),true)
       end
+    elsif find_ce_ex(s,event).length>0
+      disp_ce_card(bot,event,s.split(' '))
     elsif find_servant_ex(s,event).length>0
       disp_servant_stats(bot,event,s.split(' '))
       disp_servant_skills(bot,event,s.split(' '),true)
