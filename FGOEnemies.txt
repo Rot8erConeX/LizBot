@@ -1,0 +1,90 @@
+Hand of Dawn\Sky\-
+Arm of Dawn\Sky\-
+Iron Arm of Dawn\Sky\-
+Divine Arm of Dawn\Sky\-
+Door of the Dead\Sky\-
+Door of Heroes\Sky\-
+Door of Saints\Sky\-
+Door of Champions\Sky\-
+Shadow Servant\-\Servant, Humanoid
+Servant\-\Servant, Humanoid
+Skeleton\Man\Undead, Demonic
+Skeleton King\Man\Undead, Demonic, Sovereign
+Dragon Tooth Warrior\Earth\-
+French Soldier\Man\Male, Human, Humanoid
+Zombie (French Soldier)\Man\Male, Human, Humanoid, Undead, Demonic
+Roman Soldier\Man\Male, Human, Humanoid, Roman
+Soldier\Man\Male, Human, Humanoid
+Zombie (Roman Soldier)\Man\Male, Human, Humanoid, Undead, Demonic
+Pirate\Man\Male, Human, Humanoid
+Zombie (Pirate)\Man\Male, Human, Humanoid, Undead, Demonic
+Celtic Soldier\Man\Male, Human, Humanoid
+Druid\Man\Male, Human, Humanoid
+Amazoness\Man\Female, Human, Humanoid
+Amazoness Leader\Man\Female, Human, Humanoid
+Amazoness Queen\Man\Female, Human, Humanoid
+Ghost\Sky\Undead, Demonic
+Giant Ghost\Sky\Undead, Demonic, Massive
+Hassan of the Intoxicating Smoke\Sky\Undead, Demonic, Massive
+Bell Ringer\Sky\Undead, Demonic, Massive
+Wyvern\Earth\Dragon
+Wyvern Dread\Earth\Dragon
+Wyvern Evil\Earth\Dragon
+Wyvern Classic\Earth\Dragon
+Wyvern Tempest\Earth\Dragon
+Dragon\Earth\Dragon, Massive
+Fafnir\Earth\Dragon, Massive
+Great Dragon\Earth\Dragon, Massive
+Elder Dragon\Earth\Dragon, Massive
+Primeval Dragon\Earth\Massive
+Werewolf\Earth\Male, Humanoid, Wild Beast, Demonic
+Werejaguar\Earth\Male, Humanoid, Wild Beast, Demonic
+Goblin\Earth\Male, Humanoid, Wild Beast, Demonic
+Centaur\Earth\Male, Humanoid
+Centaur Knight\Earth\Male, Humanoid
+Centaur Paladin\Earth\Male, Humanoid
+Chimera\Earth\Wild Beast
+White Chimera\Earth\Wild Beast
+Lamia\Earth\Female, Human, Humanoid, Demonic
+Naga\Earth\Female, Human, Humanoid, Demonic
+Naga Raja\Earth\Female, Human, Humanoid, Demonic, Sovereign
+Daemon\Sky\Evil Demon, Demonic
+Greater Daemon\Sky\Evil Demon, Demonic
+Demon God Flauros\Sky\Massive
+Demon God Forneus\Sky\Massive
+Demon God Barbatos\Sky\Massive
+Demon God Halphas\Sky\Massive
+Great God Amon Ra\Sky\Massive, Sovereign
+Demon God Sabnock\Sky\Massive
+Blast Furnace Naberius\Sky\Massive
+Intellgence Room Flauros\Sky\Massive
+Observatory Forneus\Sky\Massive
+Control Tower Barbatos\Sky\Massive
+Arsenal Halphas\Sky\Massive
+Spy Satellite Amon\Sky\Massive
+Health Office Sabnock\Sky\Massive
+Demon God Andromalius\Sky\Massive
+Demon God Baal\Sky\Massive
+Demon God Phenex\Sky\Massive
+Demon God Pillar\Sky\Massive
+Homunculus\Sky\-
+Proto-Homunculus\Sky\-
+Golem\Sky\-
+Stone Golem\Sky\-
+Iron Golem\Sky\-
+Twin Steel Golem\Sky\-
+Automata\Sky\-
+Killing Doll\Sky\-
+Old Gear\Sky\-
+Helter Skelter\Sky\Mecha
+Mechanized Infantry\Man\Human, Humanoid
+Spell Book\Sky\-
+Fire Book\Sky\-
+Thunder Book\Sky\-
+Wind Book\Sky\-
+Ice Book\Sky\-
+Grimoire\Sky\-
+Soul Eater\Earth\Demonic
+Gazer\Earth\Evil Demon, Demonic
+Spotter\Earth\Evil Demon, Demonic
+Bicorn\Earth\Wild Beast, Demonic
