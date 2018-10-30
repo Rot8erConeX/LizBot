@@ -23,6 +23,7 @@ bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shar
 @servants=[]
 @skills=[]
 @crafts=[]
+@codes=[]
 @aliases=[]
 @embedless=[]
 @spam_channels=[]
@@ -607,6 +608,20 @@ def data_load()
     b[i][5]=b[i][5].split(', ').map{|q| q.to_i}
   end
   @crafts=b.map{|q| q}
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    b[i][0]=b[i][0].to_i
+    b[i][2]=b[i][2].to_i
+  end
+  @codes=b.map{|q| q}
 end
 
 def metadata_load()
@@ -718,8 +733,10 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s art.\n\nDefaults to their normal art, but can be modified to other arts based on the following words:\nFirst/1st/FirstAscension/1stAscension\nSecond/2nd/SecondAscension/2ndAscension\nThird/3rd/ThirdAscension/3rdAscension\nFinal/Fourth/4th/FinalAscension/FourthAscension/4thAscension\nCostume/FirstCostume/1stCostume\nSecondCostume/2ndCostume\nRiyo/AprilFool's\n\nIf the requested art doesn't exist, reverts back to default art.",0xED619A)
   elsif ['riyo'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Riyo art, which is shown on April Fool's.",0xED619A)
-  elsif ['ce'].include?(command.downcase)
+  elsif ['ce','craft','essance','craftessance'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a CE, shows that CE's info.\nIf `name` is the name of a servant, shows that servant's Bond CE.\n\nIf `name` is a number, prioritizes servant ID over Craft Essence ID.",0xED619A)
+  elsif ['code','commandcode','command'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","Shows the information about the command code named `name`.",0xED619A)
   elsif ['mats','ascension','enhancement','enhance','materials'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Ascension, Skill Enhancement, and Costume Creation materials.",0xED619A)
   elsif ['embed','embeds'].include?(command.downcase)
@@ -755,7 +772,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Command Essence\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code (*also `code`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -771,7 +788,8 @@ def all_commands(include_nil=false,permissions=-1)
      'commandlist','tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed',
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
-     'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo']
+     'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','boop','code','command','commandcode','craft',
+     'essance','craftessance']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -846,6 +864,18 @@ def find_ce(name,event,fullname=false)
     return []
   elsif name.to_i.to_s==name && name.to_i<=@crafts[-1][0] && name.to_i>0
     return @crafts[@crafts.find_index{|q| q[0]==name.to_f}]
+  elsif name.to_i==2030
+    return @crafts[@crafts.find_index{|q| q[1].include?('2030')}]
+  end
+  if name[0,1]=='#'
+    name2=name[1,name.length-1]
+    if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0] && name2.to_i>0
+      return []
+    elsif name2.to_i.to_s==name2 && name2.to_i<=@crafts[-1][0] && name2.to_i>0
+      return @crafts[@crafts.find_index{|q| q[0]==name2.to_f}]
+    elsif name2.to_i==2030
+      return @crafts[@crafts.find_index{|q| q[1].include?('2030')}]
+    end
   end
   return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
   k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
@@ -859,6 +889,12 @@ def find_ce(name,event,fullname=false)
   return [] if fullname
   name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
+  return @crafts[k] unless k.nil?
+  k=@crafts.find_index{|q| q[1].downcase.gsub('the ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && q[1][0,4].downcase=='the '}
+  return @crafts[k] unless k.nil?
+  k=@crafts.find_index{|q| q[1].downcase.gsub('a ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && q[1][0,2].downcase=='a '}
+  return @crafts[k] unless k.nil?
+  k=@crafts.find_index{|q| q[1].downcase.gsub('an ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && q[1][0,3].downcase=='an '}
   return @crafts[k] unless k.nil?
   return []
 end
@@ -881,6 +917,57 @@ def find_ce_ex(name,event,fullname=false)
   for i in 0...args.length-1
     for i2 in 0...args.length-i
       k=find_ce(args[i,args.length-1-i-i2].join(' '),event)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return []
+end
+
+def find_code(name,event,fullname=false)
+  data_load()
+  name=normalize(name)
+  if name.to_i.to_s==name && name.to_i<=@codes[-1][0] && name.to_i>0
+    return @codes[@codes.find_index{|q| q[0]==name.to_i}]
+  end
+  if name[0,1]=='#'
+    name2=name[1,name.length-1]
+    if name2.to_i.to_s==name2 && name2.to_i<=@codes[-1][0] && name2.to_i>0
+      return @codes[@codes.find_index{|q| q[0]==name2.to_i}]
+    end
+  end
+  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
+  k=@codes.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  return @codes[k] unless k.nil?
+  k=@codes.find_index{|q| q[1].gsub('Code: ','').downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  return @codes[k] unless k.nil?
+  return [] if fullname
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  k=@codes.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
+  return @codes[k] unless k.nil?
+  k=@codes.find_index{|q| q[1].gsub('Code: ','').downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
+  return @codes[k] unless k.nil?
+  return []
+end
+
+def find_code_ex(name,event,fullname=false)
+  k=find_code(name,event,true)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_code(args[i,args.length-1-i-i2].join(' '),event,true)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return [] if fullname
+  k=find_code(name,event)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_code(args[i,args.length-1-i-i2].join(' '),event)
       k=[] if args[i,args.length-1-i-i2].length<=0
       return k if k.length>0
     end
@@ -1035,7 +1122,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   text="<:Icon_Rarity_5:448266417553539104>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
-  text="#{text}\n**Attribute:** *#{k[12]}*"
+  text="#{text}\n**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*"
   text="#{text}\n**Gender:** *#{k[13][0]}*" if ['Female','Male'].include?(k[13][0])
   text="#{text}\n~~**Gender:** *Effeminate*~~" if [10,94,143].include?(k[0])
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
@@ -1180,7 +1267,15 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}
     unless nophan.nil?
       nophan=@skills[nophan]
-      text="#{text}#{"\n" if nophan[5]!=l[0] || nophan[6]!=l[1]}#{"\n**Type:** #{nophan[5]}" if nophan[5]!=l[0]}#{"\n**Target:** #{nophan[6]}" if nophan[6]!=l[1]}\n\n**Rank:** #{nophan[4]}\n__**Effects**__"
+      nophan[5]=nophan[5].encode(Encoding::UTF_8).gsub('┬á','')
+      nophan[6]=nophan[6].encode(Encoding::UTF_8).gsub('┬á','')
+      l[0]=(nophan[5]!=l[0] rescue (nophan[5].encode(Encoding::UTF_8)!=l[0].encode(Encoding::UTF_8)))
+      l[1]=(nophan[6]!=l[1] rescue (nophan[6].encode(Encoding::UTF_8)!=l[1].encode(Encoding::UTF_8)))
+      text="#{text}#{"\n" if l[0] || l[1]}"
+      text="#{text}#{"\n**Type:** #{nophan[5].encode(Encoding::UTF_8)}" if l[0]}"
+      text="#{text}#{"\n**Target:** #{nophan[6].encode(Encoding::UTF_8)}" if l[1]}"
+      text="#{text}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8)}"
+      text="#{text}\n__**Effects**__"
       for i in 7...17
         unless nophan[i][0]=='-'
           text="#{text}\n*#{nophan[i][0]}*"
@@ -1232,8 +1327,8 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     else
       text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
       text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
-      text="#{text}\n\n__**Additional info**__\n#{ce[8]}" unless ce[8].nil? || ce[8].length.zero?
     end
+    text="#{text}\n\n__**Additional info**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
   end
   create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
@@ -1326,16 +1421,35 @@ def disp_ce_card(bot,event,args=nil)
   xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
   text="#{"<:Icon_Rarity_4:448266418459377684>"*ce[2]}\n**Cost:** #{ce[3]}"
   text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless k.nil?
+  text="#{text}\n**Availability:** #{ce[8]}" if k.nil?
   if ce[4]==ce[5] && ce[6]==ce[7]
     text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6]}"
   else
     text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
     text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
-    text="#{text}\n\n__**Additional info**__\n#{ce[8]}" unless ce[8].nil? || ce[8].length.zero?
   end
+  text="#{text}\n\n__**Additional info**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel", it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   create_embed(event,"**#{ce[1]}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
+end
+
+def disp_code_data(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  ce=find_code_ex(args.join(' '),event)
+  if ce.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  xcolor=0x7D4529
+  xcolor=0x718F93 if ce[2]>2
+  xcolor=0xF5D672 if ce[2]>3
+  text="#{"<:Icon_Rarity_3:448266417934958592>"*ce[2]}"
+  text="#{text}\n\n**Effect:** #{ce[3]}"
+  text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
+  xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
+  create_embed(event,"**#{ce[1]}** [Command Code ##{ce[0]}]",text,xcolor,nil,xpic)
 end
 
 def get_donor_list()
@@ -1710,7 +1824,7 @@ bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
   return nil
 end
 
-bot.command([:ce,:CE]) do |event, *args|
+bot.command([:ce,:CE,:craft,:essance,:craftessance]) do |event, *args|
   name=args.join(' ')
   if find_ce_ex(name,event,true).length>0
     disp_ce_card(bot,event,args)
@@ -1723,6 +1837,10 @@ bot.command([:ce,:CE]) do |event, *args|
   else
     event.respond "No matches found."
   end
+end
+
+bot.command([:command,:code,:commandcode]) do |event, *args|
+  disp_code_data(bot,event,args)
 end
 
 bot.command([:bond,:bondce,:bondCE]) do |event, *args|
@@ -1743,6 +1861,44 @@ end
 bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args|
   disp_tiny_stats(bot,event,args)
   return nil
+end
+
+bot.command(:boop) do |event, x|
+  x=x.to_i
+  data_load()
+  h=''
+  if x==2
+    h='Classes'
+    m=@servants.map{|q| q[2]}.uniq.sort
+  elsif x==4
+    h='Growth Curves'
+    m=@servants.map{|q| q[4]}.uniq.sort
+  elsif x==12
+    h='Attributes'
+    m=@servants.map{|q| q[12]}.uniq.sort
+  elsif x==13
+    h='Traits'
+    m=@servants.map{|q| q[13]}.join(', ').split(', ').uniq.sort
+  elsif x==20
+    h='Availability'
+    m=@servants.map{|q| q[20]}.uniq.sort
+  elsif x==22
+    h='Alignment'
+    m=@servants.map{|q| q[22]}.uniq.sort
+  else
+    event << "2 = Classes"
+    event << "4 = Growth curves"
+    event << "12 = Attributes"
+    event << "13 = Traits"
+    event << "20 = Availability"
+    event << "22 = Alignment"
+    return nil
+  end
+  str="__**#{h}**__"
+  for i in 0...m.length
+    str=extend_message(str,m[i],event)
+  end
+  event.respond str
 end
 
 bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, f|
@@ -2141,12 +2297,13 @@ bot.server_delete do |event|
 end
 
 bot.mention do |event|
+  puts event.message.text
   args=event.message.text.downcase.split(' ')
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   name=args.join(' ')
-  if find_ce_ex(name,event,true).length>0
-    disp_ce_card(bot,event,args)
-  elsif find_servant_ex(name,event,true).length>0
+  m=true
+  if ['servant','data','unit'].include?(args[0].downcase)
+    args.shift
     disp_servant_stats(bot,event,args)
     disp_servant_skills(bot,event,args,true)
     if safe_to_spam?(event)
@@ -2155,16 +2312,81 @@ bot.mention do |event|
       disp_servant_ce(bot,event,args,true,true)
       disp_servant_mats(bot,event,args,true)
     end
-  elsif find_ce_ex(name,event).length>0
-    disp_ce_card(bot,event,args)
-  elsif find_servant_ex(name,event).length>0
+    m=false
+  elsif ['stats','stat'].include?(args[0])
+    args.shift
     disp_servant_stats(bot,event,args)
-    disp_servant_skills(bot,event,args,true)
-    if safe_to_spam?(event)
-      disp_servant_traits(bot,event,args,true)
-      disp_servant_np(bot,event,args,true)
-      disp_servant_ce(bot,event,args,true,true)
-      disp_servant_mats(bot,event,args,true)
+    m=false
+  elsif ['skills'].include?(args[0])
+    args.shift
+    disp_servant_skills(bot,event,args)
+    m=false
+  elsif ['traits','trait'].include?(args[0])
+    args.shift
+    disp_servant_traits(bot,event,args)
+    m=false
+  elsif ['np','noble','phantasm','noblephantasm'].include?(args[0])
+    args.shift
+    disp_servant_np(bot,event,args)
+    m=false
+  elsif ['bond','bondce'].include?(args[0])
+    args.shift
+    disp_servant_ce(bot,event,args)
+    m=false
+  elsif ['mats','ascension','enhancement','materials'].include?(args[0])
+    args.shift
+    disp_servant_mats(bot,event,args)
+    m=false
+  elsif ['command','code','commandcode'].include?(args[0])
+    args.shift
+    disp_code_data(bot,event,args)
+    m=false
+  elsif ['tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed','statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small','micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little'].include?(args[0])
+    args.shift
+    disp_tiny_stats(bot,event,args)
+    m=false
+  elsif ['ce','craft','essance','craftessance'].include?(args[0])
+    args.shift
+    if find_ce_ex(args.join(' '),event,true).length>0
+      disp_ce_card(bot,event,args)
+    elsif find_servant_ex(args.join(' '),event,true).length>0
+      disp_servant_ce(bot,event,args)
+    elsif find_ce_ex(args.join(' '),event).length>0
+      disp_ce_card(bot,event,args)
+    elsif find_servant_ex(args.join(' '),event).length>0
+      disp_servant_ce(bot,event,args)
+    else
+      event.respond "No matches found."
+    end
+    m=false
+  end
+  if m
+    if find_ce_ex(name,event,true).length>0
+      disp_ce_card(bot,event,args)
+    elsif find_servant_ex(name,event,true).length>0
+      disp_servant_stats(bot,event,args)
+      disp_servant_skills(bot,event,args,true)
+      if safe_to_spam?(event)
+        disp_servant_traits(bot,event,args,true)
+        disp_servant_np(bot,event,args,true)
+        disp_servant_ce(bot,event,args,true,true)
+        disp_servant_mats(bot,event,args,true)
+      end
+    elsif find_code_ex(name,event,true).length>0
+      disp_code_data(bot,event,args)
+    elsif find_ce_ex(name,event).length>0
+      disp_ce_card(bot,event,args)
+    elsif find_servant_ex(name,event).length>0
+      disp_servant_stats(bot,event,args)
+      disp_servant_skills(bot,event,args,true)
+      if safe_to_spam?(event)
+        disp_servant_traits(bot,event,args,true)
+        disp_servant_np(bot,event,args,true)
+        disp_servant_ce(bot,event,args,true,true)
+        disp_servant_mats(bot,event,args,true)
+      end
+    elsif find_code_ex(name,event).length>0
+      disp_code_data(bot,event,args)
     end
   end
 end
@@ -2193,6 +2415,8 @@ bot.message do |event|
         disp_servant_ce(bot,event,s.split(' '),true,true)
         disp_servant_mats(bot,event,s.split(' '),true)
       end
+    elsif find_code_ex(s,event,true).length>0
+      disp_code_data(bot,event,s.split(' '))
     elsif find_ce_ex(s,event).length>0
       disp_ce_card(bot,event,s.split(' '))
     elsif find_servant_ex(s,event).length>0
@@ -2204,6 +2428,8 @@ bot.message do |event|
         disp_servant_ce(bot,event,s.split(' '),true,true)
         disp_servant_mats(bot,event,s.split(' '),true)
       end
+    elsif find_code_ex(s,event).length>0
+      disp_code_data(bot,event,s.split(' '))
     end
   end
 end
