@@ -522,6 +522,32 @@ def triple_finish(list,forcetwo=false) # used to split a list into three roughly
   return [['.',p1],['.',p2],['.',p3]]
 end
 
+def has_any?(arr1,arr2) # used to determine if two arrays share any members
+  return true if arr1.nil? && arr2.nil?
+  return true if arr1.nil? && !arr2.nil? && arr2.include?(nil)
+  return true if arr2.nil? && !arr1.nil? && arr1.include?(nil)
+  return false if arr1.nil? || arr2.nil?
+  if arr1.is_a?(String)
+    arr1=arr1.downcase.chars
+  elsif arr1.is_a?(Array)
+    arr1=arr1.map{|q| q.downcase rescue q}
+  end
+  if arr2.is_a?(String)
+    arr2=arr2.downcase.chars
+  elsif arr2.is_a?(Array)
+    arr2=arr2.map{|q| q.downcase rescue q}
+  end
+  return true if (arr1 & arr2).length>0
+  return false
+end
+
+def micronumber(n)
+  m=["\u2080","\u2081","\u2082","\u2083","\u2084","\u2085","\u2086","\u2087","\u2088","\u2089"]
+  return "\uFE63#{micronumber(0-n)}" if n<0
+  return "#{micronumber(n/10)}#{m[n%10]}" if n>9
+  return m[n]
+end
+
 def data_load()
   if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOServants.txt')
     b=[]
@@ -672,13 +698,6 @@ def nicknames_load(mode=1)
   @aliases=b.reject{|q| q.nil? || q[1].nil?}.uniq
 end
 
-def micronumber(n)
-  m=["\u2080","\u2081","\u2082","\u2083","\u2084","\u2085","\u2086","\u2087","\u2088","\u2089"]
-  return "\uFE63#{micronumber(0-n)}" if n<0
-  return "#{micronumber(n/10)}#{m[n%10]}" if n>9
-  return m[n]
-end
-
 bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
   return nil unless event.user.id==167657750971547648 # only work when used by the developer
   puts 'FGO!reboot'
@@ -749,6 +768,8 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       event << 'This help window is not in an embed so that people who need this command can see it.'
     end
     return nil
+  elsif ['find','list','search'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Attribute\n- Traits\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif ['aliases','checkaliases','seealiases'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __servant__","Responds with a list of all `servant`'s aliases.\nIf no servant is listed, responds with a list of all aliases and who they are for.\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif command.downcase=='snagstats'
@@ -772,7 +793,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code (*also `code`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code (*also `code`*)\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -788,8 +809,8 @@ def all_commands(include_nil=false,permissions=-1)
      'commandlist','tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed',
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
-     'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','boop','code','command','commandcode','craft',
-     'essance','craftessance']
+     'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
+     'essance','craftessance','list','search']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -1361,7 +1382,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}, #{numabr(qp[0])} QP\n**Second Ascension:** #{k[18][1].join(', ')}, #{numabr(qp[1])} QP\n**Third Ascension:** #{k[18][2].join(', ')}, #{numabr(qp[2])} QP\n**Final Ascension:** #{k[18][3].join(', ')}, #{numabr(qp[3])} QP"]]
   flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
   flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
-  flds.push(['Costume materials',"**First Costume:** #{"#{k[18][5].join(', ')}\n**Second Costume:** " unless k[18][5].nil?}#{k[18][4].join(', ')}, 3mil QP"]) unless k[18][4].nil? || k[0]>=2
+  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
   flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[8])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[9])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[10])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds)
 end
@@ -1573,6 +1594,216 @@ def disp_aliases(bot,event,args=nil,mode=0)
   end
   event.respond msg
   return nil
+end
+
+def find_servants(event,args=nil)
+  data_load()
+  args=normalize(event.message.text.downcase).split(' ') if args.nil?
+  args=args.map{|q| normalize(q.downcase)}
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  clzz=[]
+  curves=[]
+  attributes=[]
+  traits=[]
+  avail=[]
+  align1=[]
+  align2=[]
+  align=[]
+  for i in 0...args.length
+    clzz.push('Alter Ego') if ['alterego','alter','ego','alteregoes','alters','egoes','alteregos','egos','extra','extras'].include?(args[i])
+    clzz.push('Archer') if ['archer','bow','sniper','archa','archers','bows','snipers','archas'].include?(args[i])
+    clzz.push('Assassin') if ['assassin','assasshin','assassins','assasshins'].include?(args[i])
+    clzz.push('Avenger') if ['avenger','avengers','extra','extras'].include?(args[i])
+    clzz.push('Beast') if ['beastclass'].include?(args[i])
+    clzz.push('Berserker') if ['berserker','berserkers','berserk','berserks'].include?(args[i])
+    clzz.push('Caster') if ['caster','casters','castor','castors','mage','mages','magic'].include?(args[i])
+    clzz.push('Foreigner') if ['foreigner','foreigners','extra','extras'].include?(args[i])
+    clzz.push('Lancer') if ['lancer','lancers','lance','lances'].include?(args[i])
+    clzz.push('Moon Cancer') if ['mooncancer','mooncanser','mooncancers','mooncansers','moonkancer','moonkanser','moonkancers','moonkansers','moon','moons','cancer','cancers','canser','cansers','kancer','kancers','kanser','kansers','extra','extras'].include?(args[i])
+    clzz.push('Rider') if ['rider','riders','raida','raidas'].include?(args[i])
+    clzz.push('Ruler') if ['ruler','rulers','king','kings','queen','queens','leader','leaders','extra','extras'].include?(args[i])
+    clzz.push('Saber') if ['saber','sabers','seiba','seibas'].include?(args[i])
+    clzz.push('Shielder') if ['shielder','shielders','shield','shields','sheilder','sheilders','sheild','sheilds','extra','extras'].include?(args[i])
+    curves.push('Linear') if ['linear','linear','line','lines'].include?(args[i])
+    curves.push('Reverse S') if ['reverses','reverse','backwards','backward'].include?(args[i])
+    curves.push('S') if ['s','ess','ses','esses'].include?(args[i])
+    curves.push('Semi Reverse S') if ['semireverses','semireverse','semibackwards','semibackward','halfreverses','halfreverse','halfbackwards','halfbackward'].include?(args[i])
+    curves.push('Semi S') if ['semi','semis','half','halfs'].include?(args[i])
+    attributes.push('Beast') if ['beasts','beast'].include?(args[i])
+    attributes.push('Earth') if ['earth','earths','earthers','earthlings','dirt','dirty','terra','terrafirma'].include?(args[i])
+    attributes.push('Man') if ['man','men'].include?(args[i])
+    attributes.push('Sky') if ['sky','skies','cloud','clouds','skys','sora','ventus'].include?(args[i])
+    attributes.push('Star') if ['star','stars','space','spaces'].include?(args[i])
+    traits.push('Altria Face') if ['altriaface','altria','altrias','face'].include?(args[i])
+    traits.push('Arthur') if ['arthur','arthurs','kingarthur','kingarthurs'].include?(args[i])
+    traits.push("Brynhild's Beloved") if ["brynhild'sbeloved","brynhild'sbeloveds",'brynhildsbeloved','brynhildsbeloveds',"brynhild's",'brynhilds','beloved','beloveds'].include?(args[i])
+    traits.push('Demi-Servant') if ['demi-servant','demiservant','demi','demi-servants','demiservants','demis'].include?(args[i])
+    traits.push('Divine') if ['divine','devine','godly','god','divines','devines','godlies','godlys','gods'].include?(args[i])
+    traits.push('Demonic') if ['demonic','demon','demonics','demons'].include?(args[i])
+    traits.push('Dragon') if ['dragon','wyrm','manakete','draco','draconic','dragons','wyrms','manaketes','dracos','draconics'].include?(args[i])
+    traits.push('Earth or Sky') if ['earthorsky','earthsky','earthorskys','earthskys','earthorskies','earthskies','earthorskyservant','earthskyservant','earthorskyservants','earthskyservants'].include?(args[i])
+    traits.push('Female') if ['female','woman','girl','f','females','women','girls'].include?(args[i])
+    traits.push('Humanoid') if ['human','humanoid','humans','humanoids'].include?(args[i])
+    traits.push('Male') if ['male','boy','m','males','boys'].include?(args[i])
+    traits.push('Mecha') if ['mecha','mech','mechanical','machine','mechas','mechs','mechanicals','machines'].include?(args[i])
+    traits.push('Man of Greek Mythology') if ['manofgreekmythology','menofgreekmythology','greekman','greekmen','greek','greeks','mythology','mythologies','myth','myths','mythological'].include?(args[i])
+    traits.push('Not Weak to Enuma Elish') if ['notweaktoenumaelish','notweak2enumaelish','safefromenumaelish','notweaktoenuma','notweak2enuma','safefromenuma','notweaktoelish','notweak2elish','safefromelish','notweak'].include?(args[i])
+    traits.push('Pseudo-Servant') if ['pseudo-servant','pseudoservant','pseudo','pseudo-servants','pseudoservants','pseudos'].include?(args[i])
+    traits.push('Riding') if ['riding','horse','pony','cavalry','cavalier','cav','horses','ponys','ponies','cavalrys','cavalries','cavaliers','cavs'].include?(args[i])
+    traits.push('Roman') if ['roman','romans'].include?(args[i])
+    traits.push('Servant') if ['servants','servant'].include?(args[i])
+    traits.push('Sovereign') if ['sovereign','soveriegn','reign','riegn'].include?(args[i])
+    traits.push('Threat to Humanity') if ['threattohumanity','threat','threatening','threat2humanity','threattohumans','threat2humans'].include?(args[i])
+    traits.push('Weak to Enuma Elish') if ['weaktoenumaelish','weak2enumaelish','weaktoenuma','weak2enuma','weaktoelish','weak2elish','weak'].include?(args[i])
+    traits.push('Wild Beast') if ['wildbeast','wild','beastattribute'].include?(args[i])
+    avail.push('Event') if ['event','event','welfare','welfares'].include?(args[i])
+    avail.push('Limited') if ['limited','limit','limits','seasonal','seasonals'].include?(args[i])
+    avail.push('NonLimited') if ['nonlimited','nonlimit','notlimits','notlimited','notlimit','notlimits','nolimits','limitless','default','non'].include?(args[i])
+    avail.push('Starter') if ['starter','starters','start','starting'].include?(args[i])
+    avail.push('StoryLocked') if ['story','stories','storylocked','storylock','storylocks','locked','lock','locks'].include?(args[i])
+    avail.push('StoryPromo') if ['storypromo','storypromos','storypromotion','promotion','promotions','storypromotions'].include?(args[i])
+    avail.push('Unavailable') if ['unavailable','enemy','enemy-only','enemyonly','enemies'].include?(args[i])
+    align1.push('Lawful') if ['lawful','law','lawfuls','laws'].include?(args[i])
+    align1.push('Neutral') if ['neutral1'].include?(args[i])
+    align1.push('Chaotic') if ['chaotic','chaos','chaotics','chaoses'].include?(args[i])
+    align2.push('Good') if ['good','light'].include?(args[i])
+    align2.push('Neutral') if ['neutral2'].include?(args[i])
+    align2.push('Evil') if ['evil','dark','bad'].include?(args[i])
+    align2.push('Bride') if ['bride','bridals','bridal','brides','wedding','weddings','waifu','waifus'].include?(args[i])
+    align2.push('Summer') if ['summer','summers','swimsuit','swimsuits','beach','beaches','beachs'].include?(args[i])
+    align2.push('Mad') if ['mad','angry','angery','insane','insanity','insanitys','insanities','insanes'].include?(args[i])
+    align.push('Lawful Good') if ['lawfulgood','lawgood','lawfullight','lawlight','lawfulight','goodlawful','goodlaw','lightlawful','lightlaw','lawfulgoods','lawgoods','lawfullights','lawlights','lawfulights','goodlawfuls','goodlaws','lightlawfuls','lightlaws'].include?(args[i])
+    align.push('Lawful Neutral') if ['lawfulneutral','lawneutral','neutrallawful','neutrallaw','neutralawful','neutralaw','lawfulneutrals','lawneutrals','neutrallawfuls','neutrallaws','neutralawfuls','neutralaws'].include?(args[i])
+    align.push('Lawful Evil') if ['lawfulevil','lawfuldark','lawfulbad','lawevil','lawdark','lawbad','evillawful','evilawful','evillaw','evilaw','darklawful','darklaw','badlawful','badlaw','lawfulevils','lawfuldarks','lawfulbads','lawevils','lawdarks','lawbads','evillawfuls','evilawfuls','evillaws','evilaws','darklawfuls','darklaws','badlawfuls','badlaws'].include?(args[i])
+    align.push('Lawful Bride') if ['lawfulbride','lawfulbridal','lawfulwedding','lawbride','lawbridal','lawwedding','lawedding','bridelawful','bridallawful','bridalawful','weddinglawful','bridelaw','bridallaw','bridalaw','weddinglaw','lawfulbrides','lawfulbridals','lawfulweddings','lawbrides','lawbridals','lawweddings','laweddings','bridelawfuls','bridallawfuls','bridalawfuls','weddinglawfuls','bridelaws','bridallaws','bridalaws','weddinglaws','lawfulwaifu','lawwaifu','lawaifu','waifulawful','waifulaw','lawfulwaifus','lawwaifus','lawaifus','waifulawfuls','waifulaws'].include?(args[i])
+    align.push('Lawful Summer') if ['lawfulsummer','lawfulswimsuit','lawfulbeach','lawsummer','lawswimsuit','lawbeach','summerlawful','swimsuitlawful','beachlawful','summerlaw','swimsuitlaw','beachlaw','lawfulsummers','lawfulswimsuits','lawfulbeachs','lawfulbeaches','lawsummers','lawswimsuits','lawbeaches','lawbeachs','summerlawfuls','swimsuitlawfuls','beachlawfuls','summerlaws','swimsuitlaws','beachlaws'].include?(args[i])
+    align.push('Lawful Mad') if ['lawfulmad','lawfulangry','lawfulangery','lawmad','lawangry','lawangery','madlawful','angrylawful','angerylawful','madlaw','angrylaw','angerylaw','lawfulmads','lawfulangrys','lawfulangries','lawfulangerys','lawfulangeries','lawmads','lawangrys','lawangries','lawangerys','lawangeries','madlawfuls','angrylawfuls','angerylawfuls','madlaws','angrylaws','angerylaws','lawfulinsane','lawfulinsanity','lawinsane','lawinsanity','lawfulinsanes','lawfulinsanitys','lawfulinsanities','lawinsanes','lawinsanitys','lawinsanities','insanelawful','insanitylawful','insanelaw','insanitylaw','insanelawfuls','insanitylawfuls','insanelaws','insanitylaws'].include?(args[i])
+    align.push('Neutral Good') if ['neutralgood','neutrallight','neutralight','goodneutral','lightneutral','neutralgoods','neutrallights','neutralights','goodneutrals','lightneutrals'].include?(args[i])
+    align.push('True Neutral') if ['neutralneutral','neutralsquared','trueneutral','neutraltrue','neutraltruth','neutralneutrals','neutralsquareds','trueneutrals','neutraltrues','neutraltruths'].include?(args[i])
+    align.push('Neutral Evil') if ['nautralevil','neutraldark','neutralbad','evilneutral','darkneutral','badneutral','nautralevils','neutraldarks','neutralbads','evilneutrals','darkneutrals','badneutrals'].include?(args[i])
+    align.push('Neutral Bride') if ['neutralbride','neutralbridal','neutralwedding','brideneutral','bridalneutral','weddingneutral','neutralbrides','neutralbridals','neutralweddings','brideneutrals','bridalneutrals','weddingneutrals','neutralwaifu','waifuneutral','neutralwaifus','waifuneutrals'].include?(args[i])
+    align.push('Neutral Summer') if ['neutralsummer','neutralswimsuit','neutralbeach','summerneutral','swimsuitneutral','beachneutral','neutralsummers','neutralswimsuits','neutralbeachs','neutralbeaches','summerneutrals','swimsuitneutrals','beachneutrals'].include?(args[i])
+    align.push('Neutral Mad') if ['neutralmad','neutralangry','neutralangery','madneutral','angryneutral','angerynautral','neutralmads','neutralangrys','neutralangries','neutralangerys','neutralangeries','madneutrals','angryneutrals','angerynautrals','neutralinsane','neutralinsanity','insaneneutral','insanityneutral','insaneutral','neutralinsanes','neutralinsanitys','neutralinsanities','insaneneutrals','insanityneutrals','insaneutrals'].include?(args[i])
+    align.push('Chaotic Good') if ['chaoticgood','chaosgood','chaoticlight','chaoslight','goodchaotic','goodchaos','lightchaotic','lightchaos','chaoticgoods','chaosgoods','chaoticlights','chaoslights','goodchaotics','goodchaoses','lightchaotics','lightchaoses'].include?(args[i])
+    align.push('Chaotic Neutral') if ['chaoticneutral','chaosneutral','neutralchaotic','neutralchaos','chaoticneutrals','chaosneutrals','neutralchaotices','neutralchaoses'].include?(args[i])
+    align.push('Chaotic Evil') if ['chaoticevil','chaoticdark','chaoticbad','chaosevil','chaosdark','chaosbad','evilchaotic','darkchaotic','badchaotic','evilchaos','darkchaos','badchaos','chaoticevils','chaoticdarks','chaoticbads','chaosevils','chaosdarks','chaosbads','evilchaotics','darkchaotics','badchaotics','evilchaoses','darkchaoses','badchaoses'].include?(args[i])
+    align.push('Chaotic Bride') if ['chaoticbride','chaoticbridal','chaoticwedding','chaoticwaifu','chaosbride','chaosbridal','chaoswedding','chaoswaifu','bridechaotic','bridalchaotic','weddingchaotic','waifuchaotic','bridechaos','bridalchaos','weddingchaos','waifuchaos','chaoticbrides','chaoticbridals','chaoticweddings','chaoticwaifus','chaosbrides','chaosbridals','chaosweddings','chaoswaifus','bridechaotics','bridalchaotics','weddingchaotics','waifuchaotics','bridechaoses','bridalchaoses','weddingchaoses','waifuchaoses'].include?(args[i])
+    align.push('Chaotic Summer') if ['chaoticsummer','chaoticswimsuit','chaoticbeach','chaossummer','chaosummer','chaosbeach','summerchaotic','swimsuitchaotic','beachchaotic','beachaotic','summerchaos','swimsuitchaos','beachchaos','beachaos','chaoticsummers','chaoticswimsuits','chaoticbeachs','chaoticbeaches','chaossummers','chaosummers','chaosbeachs','chaosbeaches','summerchaotics','swimsuitchaotics','beachchaotics','beachaotics','summerchaoses','swimsuitchaoses','beachchaoses','beachaoses'].include?(args[i])
+    align.push('Chaotic Mad') if ['chaoticmad','chaoticangry','chaoticangery','chaosmad','chaosangry','chaosangery','madchaotic','angrychaotic','angerychaotic','madchaos','angrychaos','angerychaos','chaoticmads','chaoticangrys','chaoticangries','chaoticangerys','chaoticangeries','chaosmads','chaosangrys','chaosangries','chaosangerys','chaosangeries','madchaotics','angrychaotics','angerychaotics','madchaoses','angrychaoses','angerychaoses','chaoticinsane','chaoticinsanity','chaosinsane','chaosinsanity','insanechaotic','insanitychaotic','insanechaos','insanitychaos','chaoticinsanes','chaoticinsanitys','chaoticinsanities','chaosinsanes','chaosinsanitys','chaosinsanities','insanechaotics','insanitychaotics','insanechaoses','insanitychaoses'].include?(args[i])
+    align.push('None') if ['noalignment','nonealignment','none'].include?(args[i])
+  end
+  textra=''
+  for i in 0...args.length
+    if args[i]=='neutral'
+      if i>0 && args[i-1]=='true'
+      elsif (align1.length<=0 && align2.length<=0) || (align1.length>0 && align2.length>0)
+        align.push('Chaotic Neutral')
+        align.push('Lawful Neutral')
+        align.push('Neutral Good')
+        align.push('Neutral Evil')
+        align.push('Neutral Bride')
+        align.push('Neutral Summer')
+        align.push('Neutral Mad')
+        align.push('True Neutral')
+        textra="#{textra}\n\nAll neutral alignments were added.  If you would like only the *True Neutral* alignment, please use the term \"TrueNeutral\" instead." if align1.length<=0 && align2.length<=0
+      elsif align1.length<=0
+        align1.push('Neutral')
+      elsif align2.length<=0
+        align2.push('Neutral')
+      end
+    end
+  end
+  if curves.include?('Semi S') && curves.include?('Reverse S') && !curves.include?('Semi Reverse S')
+    curves.push('Semi Reverse S')
+    x=[true,true]
+    for i in 0...curves.length
+      if curves[i]=='Semi S' && x[0]
+        x[0]=false
+        curves[i]=nil
+      elsif curves[i]=='Reverse S' && x[1]
+        x[1]=false
+        curves[i]=nil
+      end
+    end
+    curves.compact!
+    textra="#{textra}\n\nThe searches for \"Semi S\" and \"Reverse S\" were combined into a single search for \"Semi Reverse S\".  If you would like to search for \"Semi S\" and \"Reverse S\", please do each search individually." if !curves.include?('Semi S') && !curves.include?('Reverse S')
+  end
+  clzz.uniq!
+  curves.uniq!
+  attributes.uniq!
+  traits.uniq!
+  avail.uniq!
+  align1.uniq!
+  align2.uniq!
+  align.uniq!
+  char=@servants.map{|q| q}.uniq
+  search=[]
+  if clzz.length>0
+    char=char.reject{|q| !clzz.include?(q[2])}.uniq
+    search.push("*Classes*: #{clzz.join(', ')}")
+  end
+  if curves.length>0
+    char=char.reject{|q| !curves.include?(q[4])}.uniq
+    search.push("*Growth curves*: #{curves.join(', ')}")
+  end
+  if attributes.length>0
+    char=char.reject{|q| !attributes.include?(q[12])}.uniq
+    search.push("*Attributes*: #{attributes.join(', ')}")
+    textra="#{textra}\n\nThe search term \"Beast\" is being interpreted as a search for the Beast attribute.\nIf you meant the Beast class, please include the word \"BeastClass\" in your message instead.\nIf you meant the trait *Wild Beast*, please include the word \"Wild\" in your message instead." if attributes.include?('Beast') && !(clzz.include?('Beast') || traits.include?('Wild Beast'))
+    textra="#{textra}\n\nThe search term \"Man\" is being interpreted as a search for the Man attribute.\nIf you meant the trait *Male*, please include the word \"Male\" in your message instead." if attributes.include?('Man') && !traits.include?('Male')
+  end
+  if traits.length>0
+    search.push("*Traits*: #{traits.join(', ')}")
+    if args.include?('any')
+      search[-1]="#{search[-1]}\n(searching for servants with any listed trait)" if traits.length>1
+      char=char.reject{|q| !has_any?(traits,q[13])}.uniq
+    else
+      search[-1]="#{search[-1]}\n(searching for servants with all listed traits)" if traits.length>1
+      textra="#{textra}\n\nTraits searching defaults to searching for servants with all listed traits.  To search for servants with any of the listed traits, perform the search again with the word \"any\" in your message." if traits.length>1
+      for i in 0...traits.length
+        char=char.reject{|q| !q[13].include?(traits[i])}.uniq
+      end
+    end
+  end
+  if avail.length>0
+    char=char.reject{|q| !avail.include?(q[20])}.uniq
+    search.push("*Availability*: #{avail.join(', ')}")
+  end
+  textra=textra[2,textra.length-2] if [textra[0,1],textra[0,2]].include?("\n")
+  search.push("*Horizontal Alignment*: #{align1.join(', ')}") if align1.length>0
+  search.push("*Vertical Alignment*: #{align2.join(', ')}") if align2.length>0
+  search.push("*#{'Complete ' if align1.length>0 || align2.length>0}Alignment*: #{align.join(', ')}") if align.length>0
+  if align1.length>0 || align2.length>0
+    align1=['Lawful','Neutral','Chaotic'] if align1.length<=0
+    align2=['Good','Neutral','Evil','Mad','Summer','Bride'] if align2.length<=0
+    for i in 0...align1.length
+      for j in 0...align2.length
+        align.push("#{align1[i]} #{align2[j]}")
+      end
+    end
+  end
+  char=char.reject{|q| !has_any?(q[22].split(' / '),align)}.uniq if align.length>0
+  char=char.sort{|a,b| a[0]<=>b[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.uniq
+  if (char.length>50 || char.join("\n").length+search.join("\n").length+textra.length>=1900) && !safe_to_spam?(event)
+    event.respond "Too much data is trying to be displayed.  Please use this command in PM."
+    return nil
+  elsif @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || char.join("\n").length+search.join("\n").length+textra.length>=1900
+    str="__**Search**__\n#{search.join("\n")}#{"\n\n#{textra}" if textra.length>0}\n\n__**Results**__"
+    for i in 0...char.length
+      str=extend_message(str,char[i],event)
+    end
+    str=extend_message(str,"#{char.length} total",event,2)
+    event.respond str
+  else
+    flds=nil
+    flds=triple_finish(char,true) unless char.length<=0
+    textra="#{textra}\n\n**No servants match your search**" if char.length<=0
+    create_embed(event,"__**Search**__\n#{search.join("\n")}\n\n__**Results**__",textra,0xED619A,"#{char.length} total",nil,flds)
+  end
+end
+
+bot.command([:find,:list,:search]) do |event, *args|
+  find_servants(event,args)
 end
 
 bot.command([:embeds,:embed]) do |event|
@@ -1861,44 +2092,6 @@ end
 bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args|
   disp_tiny_stats(bot,event,args)
   return nil
-end
-
-bot.command(:boop) do |event, x|
-  x=x.to_i
-  data_load()
-  h=''
-  if x==2
-    h='Classes'
-    m=@servants.map{|q| q[2]}.uniq.sort
-  elsif x==4
-    h='Growth Curves'
-    m=@servants.map{|q| q[4]}.uniq.sort
-  elsif x==12
-    h='Attributes'
-    m=@servants.map{|q| q[12]}.uniq.sort
-  elsif x==13
-    h='Traits'
-    m=@servants.map{|q| q[13]}.join(', ').split(', ').uniq.sort
-  elsif x==20
-    h='Availability'
-    m=@servants.map{|q| q[20]}.uniq.sort
-  elsif x==22
-    h='Alignment'
-    m=@servants.map{|q| q[22]}.uniq.sort
-  else
-    event << "2 = Classes"
-    event << "4 = Growth curves"
-    event << "12 = Attributes"
-    event << "13 = Traits"
-    event << "20 = Availability"
-    event << "22 = Alignment"
-    return nil
-  end
-  str="__**#{h}**__"
-  for i in 0...m.length
-    str=extend_message(str,m[i],event)
-  end
-  event.respond str
 end
 
 bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, f|
@@ -2302,7 +2495,11 @@ bot.mention do |event|
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   name=args.join(' ')
   m=true
-  if ['servant','data','unit'].include?(args[0].downcase)
+  if ['find','list','search'].include?(args[0].downcase)
+    args.shift
+    find_servants(event,args)
+    m=false
+  elsif ['servant','data','unit'].include?(args[0].downcase)
     args.shift
     disp_servant_stats(bot,event,args)
     disp_servant_skills(bot,event,args,true)
