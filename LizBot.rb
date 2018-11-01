@@ -24,6 +24,7 @@ bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shar
 @skills=[]
 @crafts=[]
 @codes=[]
+@enemies=[]
 @aliases=[]
 @embedless=[]
 @spam_channels=[]
@@ -648,6 +649,19 @@ def data_load()
     b[i][2]=b[i][2].to_i
   end
   @codes=b.map{|q| q}
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOEnemies.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOEnemies.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    b[i][2]=b[i][2].split(', ')
+  end
+  @enemies=b.map{|q| q}
 end
 
 def metadata_load()
@@ -741,7 +755,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
   elsif ['stats','stat'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Fou modifiers.\n\nIf it is not safe to spam, this command automatically reverts to the `smol` command, and thus you need to include the word \"GoldenFou\" to display combat stats with Golden Fou modifiers.",0xED619A)
   elsif ['traits','trait'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s traits.",0xED619A)
+    create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s traits.\n\nUnlike other servant-based commands, this one also accepts enemy fighter names.",0xED619A)
   elsif ['skills'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s skills.\n\nIf it is safe to spam, each skill will also be given additional information.",0xED619A)
   elsif ['np','noble','phantasm','noblephantasm'].include?(command.downcase)
@@ -996,6 +1010,44 @@ def find_code_ex(name,event,fullname=false)
   return []
 end
 
+def find_enemy(name,event,fullname=false)
+  data_load()
+  name=normalize(name)
+  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
+  k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  return @enemies[k] unless k.nil?
+  return [] if fullname
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
+  return @enemies[k] unless k.nil?
+  return []
+end
+
+def find_enemy_ex(name,event,fullname=false)
+  k=find_enemy(name,event,true)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_enemy(args[i,args.length-1-i-i2].join(' '),event,true)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return [] if fullname
+  k=find_enemy(name,event)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_enemy(args[i,args.length-1-i-i2].join(' '),event)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return []
+end
+
 def avg_color(c,mode=0)
   m=[0,0,0]
   for i in 0...c.length
@@ -1151,6 +1203,17 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   dispnum="0016" if k[0]==1.2
   xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+end
+
+def disp_enemy_traits(bot,event,args=nil,chain=false)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_enemy_ex(args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.' unless chain
+    return nil
+  end
+  create_embed(event,"__**#{k[0]}**__ [Enemy]","**Attribute:** *#{k[1]}*",0x800000,nil,nil,triple_finish(k[2]))
 end
 
 def disp_servant_skills(bot,event,args=nil,chain=false)
@@ -2036,8 +2099,18 @@ bot.command([:stats,:stat]) do |event, *args|
 end
 
 bot.command([:traits,:trait]) do |event, *args|
-  disp_servant_traits(bot,event,args)
-  return nil
+  name=args.join(' ')
+  if find_servant_ex(name,event,true).length>0
+    disp_servant_traits(bot,event,args)
+  elsif find_enemy_ex(name,event,true).length>0
+    disp_enemy_traits(bot,event,args)
+  elsif find_servant_ex(name,event).length>0
+    disp_servant_traits(bot,event,args)
+  elsif find_enemy_ex(name,event).length>0
+    disp_enemy_traits(bot,event,args)
+  else
+    event.respond "No matches found."
+  end
 end
 
 bot.command([:art]) do |event, *args|
@@ -2571,6 +2644,8 @@ bot.mention do |event|
       end
     elsif find_code_ex(name,event,true).length>0
       disp_code_data(bot,event,args)
+    elsif find_enemy_ex(name,event,true).length>0
+      disp_enemy_traits(bot,event,args)
     elsif find_ce_ex(name,event).length>0
       disp_ce_card(bot,event,args)
     elsif find_servant_ex(name,event).length>0
@@ -2584,6 +2659,8 @@ bot.mention do |event|
       end
     elsif find_code_ex(name,event).length>0
       disp_code_data(bot,event,args)
+    elsif find_enemy_ex(name,event).length>0
+      disp_enemy_traits(bot,event,args)
     end
   end
 end
@@ -2614,6 +2691,8 @@ bot.message do |event|
       end
     elsif find_code_ex(s,event,true).length>0
       disp_code_data(bot,event,s.split(' '))
+    elsif find_enemy_ex(s,event,true).length>0
+      disp_enemy_traits(bot,event,s.split(' '))
     elsif find_ce_ex(s,event).length>0
       disp_ce_card(bot,event,s.split(' '))
     elsif find_servant_ex(s,event).length>0
@@ -2627,6 +2706,8 @@ bot.message do |event|
       end
     elsif find_code_ex(s,event).length>0
       disp_code_data(bot,event,s.split(' '))
+    elsif find_enemy_ex(s,event).length>0
+      disp_enemy_traits(bot,event,s.split(' '))
     end
   end
 end
