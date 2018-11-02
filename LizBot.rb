@@ -608,7 +608,7 @@ def data_load()
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     if b[i][2]=='Skill'
       b[i][3]=b[i][3].to_i
-      for i2 in 4...10
+      for i2 in 5...11
         b[i][i2]=b[i][i2].split(';; ')
       end
     elsif b[i][2]=='Noble'
@@ -732,7 +732,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,'**sendmessage** __channel id__ __*message__',"Sends the message `message` to the channel with id `channel`\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
   elsif command.downcase=='leaveserver'
     create_embed(event,'**leaveserver** __server id number__',"Forces me to leave the server with the id `server id`.\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
-  elsif command.downcase=='shard'
+  elsif ['shard','attribute'].include?(command.downcase)
     create_embed(event,'**shard**','Returns the shard that this server is served by.',0xED619A)
   elsif ['bugreport','suggestion','feedback'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __*message__",'PMs my developer with your username, the server, and the contents of the message `message`',0xED619A)
@@ -768,8 +768,10 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Riyo art, which is shown on April Fool's.",0xED619A)
   elsif ['ce','craft','essance','craftessance'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a CE, shows that CE's info.\nIf `name` is the name of a servant, shows that servant's Bond CE.\n\nIf `name` is a number, prioritizes servant ID over Craft Essence ID.",0xED619A)
-  elsif ['code','commandcode','command'].include?(command.downcase)
+  elsif ['commandcode','command'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows the information about the command code named `name`.",0xED619A)
+  elsif ['code'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","If `name` is the name or ID number of a command code, shows that command code's info.",0xED619A)
   elsif ['mats','ascension','enhancement','enhance','materials'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Ascension, Skill Enhancement, and Costume Creation materials.",0xED619A)
   elsif ['embed','embeds'].include?(command.downcase)
@@ -807,7 +809,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code (*also `code`*)\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -824,7 +826,7 @@ def all_commands(include_nil=false,permissions=-1)
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
-     'essance','craftessance','list','search']
+     'essance','craftessance','list','search','skill']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -1048,6 +1050,47 @@ def find_enemy_ex(name,event,fullname=false)
   return []
 end
 
+def find_skill(name,event,fullname=false)
+  data_load()
+  name=normalize(name)
+  sklz=@skills.reject{|q| q[2]=='Noble'}
+  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
+  k=sklz.find_index{|q| "#{q[0]} #{q[1]}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  return sklz[k] unless k.nil?
+  k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  return sklz.reject{|q| q[0]!=sklz[k][0] || q[2]!=sklz[k][2]} unless k.nil?
+  return [] if fullname
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
+  return sklz.reject{|q| q[0]!=sklz[k][0] || q[2]!=sklz[k][2]} unless k.nil?
+  return []
+end
+
+def find_skill_ex(name,event,fullname=false)
+  k=find_skill(name,event,true)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_skill(args[i,args.length-1-i-i2].join(' '),event,true)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return [] if fullname
+  k=find_skill(name,event)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=find_skill(args[i,args.length-1-i-i2].join(' '),event)
+      k=[] if args[i,args.length-1-i-i2].length<=0
+      return k if k.length>0
+    end
+  end
+  return []
+end
+
 def avg_color(c,mode=0)
   m=[0,0,0]
   for i in 0...c.length
@@ -1239,8 +1282,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       str="#{'__' if safe_to_spam?(event)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event)}"
       if safe_to_spam?(event)
         k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}
-        str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}"
-        for i2 in 4...@skills[k2].length
+        str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{@skills[k2][4]}"
+        for i2 in 5...@skills[k2].length
           unless @skills[k2][i2][0]=='-'
             str="#{str}\n#{@skills[k2][i2][0]}"
             unless @skills[k2][i2][1].nil?
@@ -1260,8 +1303,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
         str="#{str}\n#{"\n__" if safe_to_spam?(event)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event)}"
         if safe_to_spam?(event)
           k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && @skills[k2]!=q}
-          str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}"
-          for i2 in 4...@skills[k2].length
+          str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{@skills[k2][4]}"
+          for i2 in 5...@skills[k2].length
             unless @skills[k2][i2][0]=='-'
               str="#{str}\n#{@skills[k2][i2][0]}"
               unless @skills[k2][i2][1].nil?
@@ -1534,6 +1577,56 @@ def disp_code_data(bot,event,args=nil)
   text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
   create_embed(event,"**#{ce[1]}** [Command Code ##{ce[0]}]",text,xcolor,nil,xpic)
+end
+
+def disp_skill_data(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_skill_ex(args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  header=''
+  text=''
+  if k[0].is_a?(Array)
+    header="__**#{k[0][0]}**__ [#{'Active' if k[0][2]=='Skill'}#{'Passive' if k[0][2]=='Passive'} Skill Family]"
+    xcolor=0x0080B0
+    xcolor=0x008000 if k[0][2]=='Passive'
+    for i in 0...k.length
+      if k[i][2]=='Passive'
+        text="#{text}\n**Rank #{k[i][1]}:** #{k[i][3]}"
+      else
+      end
+    end
+  elsif k[2]=='Passive'
+    header="__**#{k[0]} #{k[1]}**__ [Passive Skill]"
+    xcolor=0x006000
+    text="**Effect:** #{k[3]}"
+  else
+    header="__**#{k[0]} #{k[1]}**__ [Active Skill]"
+    xcolor=0x006080
+    text="**Cooldown:** #{k[3]}\u00A0L#{micronumber(1)}#{micronumber(-5)}  \u00B7  #{k[3]-1}\u00A0L#{micronumber(6)}#{micronumber(-9)}  \u00B7  #{k[3]-2}\u00A0L#{micronumber(10)}\n**Target:** #{k[4]}"
+    m=0
+    for i in 5...k.length
+      unless k[i][0]=='-'
+        m+=1
+        text="#{text}\n\n**Effect #{m}:** #{k[i][0]}"
+        if k[i][1].nil? || k[i][1].length<=0 || k[i][1]=='-'
+        elsif k[i][1,10].uniq.length<=1
+          text="#{text}\nConstant #{k[i][1]}"
+        elsif !safe_to_spam?(event)
+          text="#{text}\n#{k[i][1]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][6]}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][10]}\u00A0L#{micronumber(10)}"
+        else
+          text="#{text}\n#{k[i][1]}\u00A0L#{micronumber(1)}"
+          for i2 in 2...11
+            text="#{text}  \u00B7  #{k[i][i2]}\u00A0L#{micronumber(i2)}"
+          end
+        end
+      end
+    end
+  end
+  create_embed(event,header,text,xcolor)
 end
 
 def get_donor_list()
@@ -1865,6 +1958,10 @@ def find_servants(event,args=nil)
   end
 end
 
+bot.command(:skill) do |event, *args|
+  disp_skill_data(bot,event,args)
+end
+
 bot.command([:find,:list,:search]) do |event, *args|
   find_servants(event,args)
 end
@@ -2143,7 +2240,11 @@ bot.command([:ce,:CE,:craft,:essance,:craftessance]) do |event, *args|
   end
 end
 
-bot.command([:command,:code,:commandcode]) do |event, *args|
+bot.command([:command,:commandcode]) do |event, *args|
+  disp_code_data(bot,event,args)
+end
+
+bot.command([:code]) do |event, *args|
   disp_code_data(bot,event,args)
 end
 
@@ -2259,6 +2360,21 @@ bot.command(:invite) do |event, user|
   end
   usr.pm(txt)
   event.respond "A PM was sent to #{user_to_name}." unless event.server.nil? && user_to_name=="you"
+end
+
+bot.command([:shard,:attribute]) do |event, i|
+  if i.to_i.to_s==i && i.to_i.is_a?(Integer) && @shardizard != 4
+    srv=(bot.server(i.to_i) rescue nil)
+    if srv.nil? || bot.user(502288364838322176).on(srv.id).nil?
+      event.respond "I am not in that server, but it would be assigned #{['Man','Sky','Earth','Star','Beast'][(i.to_i >> 22) % 4]} Attribute."
+    else
+      event.respond "#{srv.name} is assigned #{['Man','Sky','Earth','Star','Beast'][(i.to_i >> 22) % 4]} Attribute."
+    end
+    return nil
+  end
+  event.respond 'This is the debug mode, which is assigned the Beast Attribute.' if @shardizard==4
+  event.respond 'PMs always are assigned the Man Attribute.' if event.server.nil?
+  event.respond "This server is assigned #{['Man','Sky','Earth','Star','Beast'][(event.server.id >> 22) % 4]} Attribute." unless event.server.nil? || @shardizard==4
 end
 
 bot.command(:sortaliases, from: 167657750971547648) do |event, *args|
