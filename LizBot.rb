@@ -1057,7 +1057,6 @@ def find_skill(name,event,fullname=false)
   name=normalize(name)
   name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   sklz=@skills.reject{|q| q[2]=='Noble'}
-  puts name
   return [] if name.length<2
   return sklz.reject{|q| q[0][0,17]!='Primordial Rune ('} if name=='primordialrune'
   return sklz.reject{|q| q[0]!='Innocent Monster' || q[1][0,2]!='EX'} if name=='innocentmonsterex'
