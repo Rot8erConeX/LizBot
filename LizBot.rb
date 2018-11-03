@@ -758,6 +758,8 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s traits.\n\nUnlike other servant-based commands, this one also accepts enemy fighter names.",0xED619A)
   elsif ['skills'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s skills.\n\nIf it is safe to spam, each skill will also be given additional information.",0xED619A)
+  elsif ['skill'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","Shows the skill data for the skill `name`.\nIf no rank is given and `name` is a skill with multiple ranks, shows all.",0xED619A)
   elsif ['np','noble','phantasm','noblephantasm'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
   elsif ['bond','bondce'].include?(command.downcase)
@@ -849,16 +851,16 @@ def find_servant(name,event,fullname=false)
       return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
     end
   end
-  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
-  k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  return [] if name.length<2
+  k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name}
   return @servants[k] unless k.nil?
   nicknames_load()
   g=0
   g=event.server.id unless event.server.nil?
-  k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && (q[2].nil? || q[2].include?(g))}
+  k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name && (q[2].nil? || q[2].include?(g))}
   return @servants[@servants.find_index{|q| q[0]==@aliases[k][1]}] unless k.nil?
   return [] if fullname
-  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
   return @servants[k] unless k.nil?
   nicknames_load()
@@ -914,24 +916,24 @@ def find_ce(name,event,fullname=false)
       return @crafts[@crafts.find_index{|q| q[1].include?('2030')}]
     end
   end
-  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
-  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  return [] if name.length<2
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name}
   return @crafts[k] unless k.nil?
-  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="the#{name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}" && q[1][0,4].downcase=='the '}
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="the#{name}" && q[1][0,4].downcase=='the '}
   return @crafts[k] unless k.nil?
-  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="a#{name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}" && q[1][0,2].downcase=='a '}
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="a#{name}" && q[1][0,2].downcase=='a '}
   return @crafts[k] unless k.nil?
-  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="an#{name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}" && q[1][0,3].downcase=='an '}
+  k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')=="an#{name}" && q[1][0,3].downcase=='an '}
   return @crafts[k] unless k.nil?
   return [] if fullname
-  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
   return @crafts[k] unless k.nil?
-  k=@crafts.find_index{|q| q[1].downcase.gsub('the ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && q[1][0,4].downcase=='the '}
+  k=@crafts.find_index{|q| q[1].downcase.gsub('the ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name && q[1][0,4].downcase=='the '}
   return @crafts[k] unless k.nil?
-  k=@crafts.find_index{|q| q[1].downcase.gsub('a ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && q[1][0,2].downcase=='a '}
+  k=@crafts.find_index{|q| q[1].downcase.gsub('a ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name && q[1][0,2].downcase=='a '}
   return @crafts[k] unless k.nil?
-  k=@crafts.find_index{|q| q[1].downcase.gsub('an ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','') && q[1][0,3].downcase=='an '}
+  k=@crafts.find_index{|q| q[1].downcase.gsub('an ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name && q[1][0,3].downcase=='an '}
   return @crafts[k] unless k.nil?
   return []
 end
@@ -973,13 +975,13 @@ def find_code(name,event,fullname=false)
       return @codes[@codes.find_index{|q| q[0]==name2.to_i}]
     end
   end
-  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
-  k=@codes.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  return [] if name.length<2
+  k=@codes.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name}
   return @codes[k] unless k.nil?
-  k=@codes.find_index{|q| q[1].gsub('Code: ','').downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  k=@codes.find_index{|q| q[1].gsub('Code: ','').downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name}
   return @codes[k] unless k.nil?
   return [] if fullname
-  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   k=@codes.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
   return @codes[k] unless k.nil?
   k=@codes.find_index{|q| q[1].gsub('Code: ','').downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
@@ -1015,11 +1017,11 @@ end
 def find_enemy(name,event,fullname=false)
   data_load()
   name=normalize(name)
-  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
-  k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  return [] if name.length<2
+  k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name}
   return @enemies[k] unless k.nil?
   return [] if fullname
-  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
   return @enemies[k] unless k.nil?
   return []
@@ -1053,14 +1055,18 @@ end
 def find_skill(name,event,fullname=false)
   data_load()
   name=normalize(name)
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
   sklz=@skills.reject{|q| q[2]=='Noble'}
-  return [] if name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').length<2
-  k=sklz.find_index{|q| "#{q[0]} #{q[1]}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  puts name
+  return [] if name.length<2
+  return sklz.reject{|q| q[0][0,17]!='Primordial Rune ('} if name=='primordialrune'
+  return sklz.reject{|q| q[0]!='Innocent Monster' || q[1][0,2]!='EX'} if name=='innocentmonsterex'
+  k=sklz.find_index{|q| "#{q[0]} #{q[1]}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name}
   return sklz[k] unless k.nil?
-  k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')}
+  k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')==name}
   return sklz.reject{|q| q[0]!=sklz[k][0] || q[2]!=sklz[k][2]} unless k.nil?
   return [] if fullname
-  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+  return sklz.reject{|q| q[0][0,17]!='Primordial Rune ('} if name=='primordialrune'[0,name.length]
   k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')[0,name.length]==name}
   return sklz.reject{|q| q[0]!=sklz[k][0] || q[2]!=sklz[k][2]} unless k.nil?
   return []
@@ -1587,16 +1593,71 @@ def disp_skill_data(bot,event,args=nil)
     event.respond 'No matches found.'
     return nil
   end
+  k=k[0] if k.length<2 && k[0].is_a?(Array)
   header=''
   text=''
+  ftr=nil
   if k[0].is_a?(Array)
     header="__**#{k[0][0]}**__ [#{'Active' if k[0][2]=='Skill'}#{'Passive' if k[0][2]=='Passive'} Skill Family]"
     xcolor=0x0080B0
     xcolor=0x008000 if k[0][2]=='Passive'
+    if k.reject{|q| q[0][0,17]=='Primordial Rune ('}.length<=0 && k.map{|q| q[0]}.uniq.length>1
+      header='__**Primordial Rune**__ [Active Skill Family]'
+      xcolor=0x5000A0
+      text2=''
+      for i in 0...k.length
+        text2="__**Version: #{k[i][0].gsub('Primordial Rune (','').gsub(')','')}**__\n*Rank:* #{k[i][1]}\n*Cooldown:* #{k[i][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k[i][4]}"
+        for i2 in 5...k[i].length
+          unless k[i][i2][0]=='-'
+            text2="#{text2}\n*#{k[i][i2][0]}*"
+            if k[i][i2][1].nil? || k[i][i2][1].length<=0 || k[i][i2][1]=='-'
+            elsif k[i][i2][1,10].uniq.length<=1
+              text2="#{text2}  \u00B7  Constant #{k[i][i2][1]}"
+            else
+              text2="#{text2}  \u00B7  #{k[i][i2][1]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][i2][6]}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][i2][10]}\u00A0L#{micronumber(10)}"
+            end
+          end
+        end
+        if text2.length+text.length>=1900
+          create_embed(event,header,text,xcolor)
+          header=''
+          text="#{text2}"
+        else
+          text="#{text}\n\n#{text2}"
+        end
+      end
+      create_embed(event,header,text,xcolor)
+      return nil
+    elsif k[0][0]=='Innocent Monster' && k.reject{|q| q[1][0,2]=='EX'}.length<=0
+      header='__**Innocent Monster EX**__ [Active Skill Subfamily]'
+      xcolor=0x5000A0
+    end
+    text="#{text}\n*Cooldown:* #{k[0][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[0][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[0][3]-2}\u00A0L#{micronumber(10)}" if k.map{|q| q[3]}.uniq.length<=1
+    text="#{text}\n*Target:* #{k[0][4]}" if k.map{|q| q[4]}.uniq.length<=1
+    m=@skills.reject{|q| q[0][0,k[0][0].length+2]!="#{k[0][0]} ("}.map{|q| q[0]}.uniq
+    ftr="You may also mean: #{list_lift(m,'or')}" if m.length>0
     for i in 0...k.length
       if k[i][2]=='Passive'
         text="#{text}\n**Rank #{k[i][1]}:** #{k[i][3]}"
       else
+        if k[0][0]=='Innocent Monster' && k.reject{|q| q[1][0,2]=='EX'}.length<=0
+          text="#{text}\n\n__**Variation: #{k[i][1].gsub('EX(','').gsub(')','')}**__"
+        else
+          text="#{text}\n\n__**Rank: #{k[i][1]}**__"
+        end
+        text="#{text}\n*Cooldown:* #{k[i][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][3]-2}\u00A0L#{micronumber(10)}" unless k.map{|q| q[3]}.uniq.length<=1
+        text="#{text}\n*Target:* #{k[i][4]}" unless k.map{|q| q[4]}.uniq.length<=1
+        for i2 in 5...k[i].length
+          unless k[i][i2][0]=='-'
+            text="#{text}\n*#{k[i][i2][0]}*"
+            if k[i][i2][1].nil? || k[i][i2][1].length<=0 || k[i][i2][1]=='-'
+            elsif k[i][i2][1,10].uniq.length<=1
+              text="#{text}  \u00B7  Constant #{k[i][i2][1]}"
+            else
+              text="#{text}  \u00B7  #{k[i][i2][1]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][i2][6]}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][i2][10]}\u00A0L#{micronumber(10)}"
+            end
+          end
+        end
       end
     end
   elsif k[2]=='Passive'
@@ -1604,9 +1665,11 @@ def disp_skill_data(bot,event,args=nil)
     xcolor=0x006000
     text="**Effect:** #{k[3]}"
   else
-    header="__**#{k[0]} #{k[1]}**__ [Active Skill]"
+    header="__**#{k[0]}#{" #{k[1]}" unless k[1]=='-'}**__ [Active Skill]"
     xcolor=0x006080
-    text="**Cooldown:** #{k[3]}\u00A0L#{micronumber(1)}#{micronumber(-5)}  \u00B7  #{k[3]-1}\u00A0L#{micronumber(6)}#{micronumber(-9)}  \u00B7  #{k[3]-2}\u00A0L#{micronumber(10)}\n**Target:** #{k[4]}"
+    text="**Cooldown:** #{k[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[3]-2}\u00A0L#{micronumber(10)}\n**Target:** #{k[4]}"
+    mx=@skills.reject{|q| q[0][0,k[0].length+2]!="#{k[0]} (" || q[1]!=k[1]}.map{|q| "#{q[0]} #{q[1]}"}.uniq
+    ftr="You may also mean: #{list_lift(mx,'or')}" if mx.length>0
     m=0
     for i in 5...k.length
       unless k[i][0]=='-'
@@ -1626,7 +1689,7 @@ def disp_skill_data(bot,event,args=nil)
       end
     end
   end
-  create_embed(event,header,text,xcolor)
+  create_embed(event,header,text,xcolor,ftr)
 end
 
 def get_donor_list()
@@ -2707,6 +2770,10 @@ bot.mention do |event|
     args.shift
     disp_servant_skills(bot,event,args)
     m=false
+  elsif ['skill'].include?(args[0])
+    args.shift
+    disp_skill_sata(bot,event,args)
+    m=false
   elsif ['traits','trait'].include?(args[0])
     args.shift
     disp_servant_traits(bot,event,args)
@@ -2723,7 +2790,11 @@ bot.mention do |event|
     args.shift
     disp_servant_mats(bot,event,args)
     m=false
-  elsif ['command','code','commandcode'].include?(args[0])
+  elsif ['command','commandcode'].include?(args[0])
+    args.shift
+    disp_code_data(bot,event,args)
+    m=false
+  elsif ['code'].include?(args[0])
     args.shift
     disp_code_data(bot,event,args)
     m=false
@@ -2758,6 +2829,8 @@ bot.mention do |event|
         disp_servant_ce(bot,event,args,true,true)
         disp_servant_mats(bot,event,args,true)
       end
+    elsif find_skill_ex(name,event,true).length>0
+      disp_skill_data(bot,event,args)
     elsif find_code_ex(name,event,true).length>0
       disp_code_data(bot,event,args)
     elsif find_enemy_ex(name,event,true).length>0
@@ -2773,6 +2846,8 @@ bot.mention do |event|
         disp_servant_ce(bot,event,args,true,true)
         disp_servant_mats(bot,event,args,true)
       end
+    elsif find_skill_ex(name,event).length>0
+      disp_skill_data(bot,event,args)
     elsif find_code_ex(name,event).length>0
       disp_code_data(bot,event,args)
     elsif find_enemy_ex(name,event).length>0
@@ -2805,6 +2880,8 @@ bot.message do |event|
         disp_servant_ce(bot,event,s.split(' '),true,true)
         disp_servant_mats(bot,event,s.split(' '),true)
       end
+    elsif find_skill_ex(s,event,true).length>0
+      disp_skill_data(bot,event,s.split(' '))
     elsif find_code_ex(s,event,true).length>0
       disp_code_data(bot,event,s.split(' '))
     elsif find_enemy_ex(s,event,true).length>0
@@ -2820,6 +2897,8 @@ bot.message do |event|
         disp_servant_ce(bot,event,s.split(' '),true,true)
         disp_servant_mats(bot,event,s.split(' '),true)
       end
+    elsif find_skill_ex(s,event).length>0
+      disp_skill_data(bot,event,s.split(' '))
     elsif find_code_ex(s,event).length>0
       disp_code_data(bot,event,s.split(' '))
     elsif find_enemy_ex(s,event).length>0
