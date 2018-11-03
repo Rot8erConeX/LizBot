@@ -2747,7 +2747,9 @@ bot.mention do |event|
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   name=args.join(' ')
   m=true
-  if ['find','list','search'].include?(args[0].downcase)
+  m=false if event.user.bot_account?
+  if !m
+  elsif ['find','list','search'].include?(args[0].downcase)
     args.shift
     find_servants(event,args)
     m=false
