@@ -734,7 +734,7 @@ end
 bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
   return nil unless event.user.id==167657750971547648 # only work when used by the developer
   puts 'FGO!reboot'
-  exec "cd C:/Users/Mini-Matt/Desktop/devkit && LizBot.rb 0"
+  exec "cd C:/Users/Mini-Matt/Desktop/devkit && LizBot.rb #{@shardizard}"
 end
 
 bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, subcommand|
