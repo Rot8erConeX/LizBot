@@ -832,7 +832,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -1434,9 +1434,9 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
   unless nophan.nil?
     nophan=@skills[nophan]
-    np="#{':* ' unless chain}#{nophan[3]}"
+    np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('┬á','')}"
   end
-  text="#{text}\n**Noble Phantasm:** *#{k[16]}#{np}" unless chain
+  text="#{text}\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('┬á','')}#{np}" unless chain
   npl=1
   npl=2 if event.message.text.downcase.split(' ').include?('np2')
   npl=3 if event.message.text.downcase.split(' ').include?('np3')
@@ -1444,14 +1444,14 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=5 if event.message.text.downcase.split(' ').include?('np5')
   unless nophan.nil?
     l=[nophan[5],nophan[6]]
-    text="#{text}\n**Type:** #{nophan[5]}\n**Target:** #{nophan[6]}\n\n**Rank:** #{nophan[4]}\n__**Effects**__"
+    text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','')}\n__**Effects**__"
     for i in 7...17
       unless nophan[i][0]=='-'
-        text="#{text}\n*#{nophan[i][0]}*"
+        text="#{text}\n*#{nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','')}*"
         if nophan[i][0].include?('<OVERCHARGE>') || (nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event))
-          text="#{text} - #{nophan[i][1]}\u00A0/\u00A0#{nophan[i][2]}\u00A0/\u00A0#{nophan[i][3]}\u00A0/\u00A0#{nophan[i][4]}\u00A0/\u00A0#{nophan[i][5]}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         else
-          text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
+          text="#{text} - #{nophan[i][npl].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
         end
       end
     end
@@ -2588,7 +2588,7 @@ end
 
 bot.command(:invite) do |event, user|
   usr=event.user
-  txt="You can invite me to your server with this link: <https://goo.gl/ox9CxB>\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: ~~(link not available yet)~~"
+  txt="You can invite me to your server with this link: <https://goo.gl/ox9CxB>\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/MarketingLiz.png"
   user_to_name="you"
   unless user.nil?
     if /<@!?(?:\d+)>/ =~ user
