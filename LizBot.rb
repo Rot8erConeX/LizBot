@@ -1567,6 +1567,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   qp=[100000,300000,1000000,3000000,200000,400000,1200000,1600000,4000000,5000000,10000000,12000000,20000000] if k[3]==5
   k[18]=k[18].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   k[19]=k[19].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
+  # <:QP:508802778982907920>
   flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}, #{numabr(qp[0])} QP\n**Second Ascension:** #{k[18][1].join(', ')}, #{numabr(qp[1])} QP\n**Third Ascension:** #{k[18][2].join(', ')}, #{numabr(qp[2])} QP\n**Final Ascension:** #{k[18][3].join(', ')}, #{numabr(qp[3])} QP"]]
   flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
   flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
@@ -1581,6 +1582,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
     for i in 0...k.length
       str=extend_message(str,k[i],event)
     end
+    str=extend_message(str,"\n#{ftr}",event)
     event.respond str
   else
     create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,flds)
