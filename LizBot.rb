@@ -850,7 +850,7 @@ def all_commands(include_nil=false,permissions=-1)
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
-     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','boop']
+     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -1569,11 +1569,13 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   k[18]=k[18].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   k[19]=k[19].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   # <:QP:508802778982907920>
-  flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}, #{numabr(qp[0])} QP\n**Second Ascension:** #{k[18][1].join(', ')}, #{numabr(qp[1])} QP\n**Third Ascension:** #{k[18][2].join(', ')}, #{numabr(qp[2])} QP\n**Final Ascension:** #{k[18][3].join(', ')}, #{numabr(qp[3])} QP"]]
+  qpd='<:QP:508802778982907920>'
+  qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
+  flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n**Second Ascension:** #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n**Third Ascension:** #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n**Final Ascension:** #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
   flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
-  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
-  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
-  flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[10])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[11])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[12])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
+  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n**Second Costume:** #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
+  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
+  flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n**Level 2\u21923:** #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n**Level 3\u21924:** #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n**Level 4\u21925:** #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n**Level 5\u21926:** #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n**Level 6\u21927:** #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n**Level 7\u21928:** #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n**Level 8\u21929:** #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n**Level 9\u219210:** #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   if flds.map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n").length>=1700
@@ -2219,35 +2221,6 @@ def find_servants(event,args=nil)
   end
 end
 
-bot.command(:boop) do |event|
-  data_load()
-  matz=@servants.map{|q| q[19].join("\n").split("\n")}
-  for i in 0...matz.length
-    for i2 in 0...matz[i].length
-      k="#{matz[i][i2]}"
-      matz[i][i2]=matz[i][i2].split(' ')
-      matz[i][i2].pop
-      matz[i][i2]=matz[i][i2].join(' ')
-    end
-  end
-  matz2=@servants.reject{|q| q[0]<2}.map{|q| q[18].join("\n").split("\n")}
-  for i in 0...matz2.length
-    for i2 in 0...matz2[i].length
-      k="#{matz2[i][i2]}"
-      matz2[i][i2]=matz2[i][i2].split(' ')
-      matz2[i][i2].pop
-      matz2[i][i2]=matz2[i][i2].join(' ')
-    end
-  end
-  matz="#{matz.join("\n")}\n#{matz2.join("\n")}".split("\n").map{|q| q.downcase.gsub(' ','_').gsub("'",'')}.uniq.sort
-  str=''
-  for i in 0...matz.length
-    str=extend_message(str,matz[i],event)
-  end
-  str=extend_message(str,"\n#{matz.length} total",event)
-  event.respond str
-end
-
 bot.command(:skill) do |event, *args|
   disp_skill_data(bot,event,args)
 end
@@ -2536,11 +2509,11 @@ end
 
 bot.command([:code]) do |event, *args|
   name=args.join(' ')
-  if find_clothing_ex(name,event,true).length>0
+  if find_clothes_ex(name,event,true).length>0
     disp_clothing_data(bot,event,args)
   elsif find_code_ex(name,event,true).length>0
     disp_code_data(bot,event,args)
-  elsif find_clothing_ex(name,event).length>0
+  elsif find_clothes_ex(name,event).length>0
     disp_clothing_data(bot,event,args)
   elsif find_code_ex(name,event).length>0
     disp_code_data(bot,event,args)
@@ -2637,11 +2610,13 @@ bot.command([:bugreport, :suggestion, :feedback]) do |event, *args|
   elsif event.server.nil?
     s="**#{s3} sent by PM**"
   else
-    s="**Server:** #{event.server.name} (#{event.server.id}) - #{["<:Shard_Colorless:443733396921909248> Transparent","<:Shard_Red:443733396842348545> Scarlet","<:Shard_Blue:443733396741554181> Azure","<:Shard_Green:443733397190344714> Verdant"][(event.server.id >> 22) % 4]} Shard\n**Channel:** #{event.channel.name} (#{event.channel.id})"
+    s="**Server:** #{event.server.name} (#{event.server.id}) - #{['Man','Sky','Earth','Star','Beast'][(event.server.id >> 22) % 4]} Attribute\n**Channel:** #{event.channel.name} (#{event.channel.id})"
   end
   f=event.message.text.split(' ')
   f="#{f[0]} "
   bot.user(167657750971547648).pm("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}")
+  bot.user(239973891626237952).pm("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}")
+  bot.channel(502288368777035777).send_message("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}")
   s3='Bug' if s3=='Bug Report'
   t=Time.now
   event << "Your #{s3.downcase} has been logged."
@@ -3056,11 +3031,11 @@ bot.mention do |event|
     m=false
   elsif ['code'].include?(args[0])
     args.shift
-    if find_clothing_ex(args.join(' '),event,true).length>0
+    if find_clothes_ex(args.join(' '),event,true).length>0
       disp_clothing_data(bot,event,args)
     elsif find_code_ex(args.join(' '),event,true).length>0
       disp_code_data(bot,event,args)
-    elsif find_clothing_ex(args.join(' '),event).length>0
+    elsif find_clothes_ex(args.join(' '),event).length>0
       disp_clothing_data(bot,event,args)
     elsif find_code_ex(args.join(' '),event).length>0
       disp_code_data(bot,event,args)
@@ -3101,7 +3076,7 @@ bot.mention do |event|
       end
     elsif find_skill_ex(name,event,true).length>0
       disp_skill_data(bot,event,args)
-    elsif find_clothing_ex(s,event,true).length>0
+    elsif find_clothes_ex(s,event,true).length>0
       disp_clothing_data(bot,event,args)
     elsif find_code_ex(name,event,true).length>0
       disp_code_data(bot,event,args)
@@ -3120,7 +3095,7 @@ bot.mention do |event|
       end
     elsif find_skill_ex(name,event).length>0
       disp_skill_data(bot,event,args)
-    elsif find_clothing_ex(s,event).length>0
+    elsif find_clothes_ex(s,event).length>0
       disp_clothing_data(bot,event,args)
     elsif find_code_ex(name,event).length>0
       disp_code_data(bot,event,args)
@@ -3156,7 +3131,7 @@ bot.message do |event|
       end
     elsif find_skill_ex(s,event,true).length>0
       disp_skill_data(bot,event,s.split(' '))
-    elsif find_clothing_ex(s,event,true).length>0
+    elsif find_clothes_ex(s,event,true).length>0
       disp_clothing_data(bot,event,s.split(' '))
     elsif find_code_ex(s,event,true).length>0
       disp_code_data(bot,event,s.split(' '))
@@ -3175,7 +3150,7 @@ bot.message do |event|
       end
     elsif find_skill_ex(s,event).length>0
       disp_skill_data(bot,event,s.split(' '))
-    elsif find_clothing_ex(s,event).length>0
+    elsif find_clothes_ex(s,event).length>0
       disp_clothing_data(bot,event,s.split(' '))
     elsif find_code_ex(s,event).length>0
       disp_code_data(bot,event,s.split(' '))
