@@ -421,7 +421,7 @@ end
 
 def safe_to_spam?(event) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
-  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504].include?(event.server.id) # it is safe to spam in the emoji servers
+  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id) # it is safe to spam in the emoji servers
   return true if ['bots','bot'].include?(event.channel.name.downcase) # channels named "bots" are safe to spam in
   return true if event.channel.name.downcase.include?('bot') && event.channel.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
   return true if event.channel.name.downcase.include?('bot') && event.channel.name.downcase.include?('command') # it is safe to spam in any bot spam channel
@@ -849,7 +849,7 @@ def all_commands(include_nil=false,permissions=-1)
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
-     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing']
+     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','boop']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -1153,6 +1153,22 @@ def find_clothes_ex(name,event,fullname=false)
     end
   end
   return []
+end
+
+def find_emote(bot,event,item)
+  k=event.message.text.downcase.split(' ')
+  return item if k.include?('colorblind') || k.include?('testmats')
+  k=item.split(' ')[-1]
+  item=item.split(' ')
+  item.pop
+  item=item.join(' ')
+  moji=bot.server(508792801455243266).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub("'",'')}
+  return "#{moji[0].mention}#{k}" if moji.length>0
+  moji=bot.server(508793141202255874).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub("'",'')}
+  return "#{moji[0].mention}#{k}" if moji.length>0
+  moji=bot.server(508793425664016395).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub("'",'')}
+  return "#{moji[0].mention}#{k}" if moji.length>0
+  return "#{item} #{k}"
 end
 
 def avg_color(c,mode=0)
@@ -1549,12 +1565,16 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   qp=[30000,100000,300000,900000,50000,100000,300000,400000,1000000,1250000,2500000,3000000,5000000] if k[3]==3
   qp=[50000,150000,500000,1500000,100000,200000,600000,800000,2000000,2500000,5000000,6000000,10000000] if k[3]==4
   qp=[100000,300000,1000000,3000000,200000,400000,1200000,1600000,4000000,5000000,10000000,12000000,20000000] if k[3]==5
+  k[18]=k[18].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
+  k[19]=k[19].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}, #{numabr(qp[0])} QP\n**Second Ascension:** #{k[18][1].join(', ')}, #{numabr(qp[1])} QP\n**Third Ascension:** #{k[18][2].join(', ')}, #{numabr(qp[2])} QP\n**Final Ascension:** #{k[18][3].join(', ')}, #{numabr(qp[3])} QP"]]
   flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
   flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}, 3mil QP" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
   flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}, 3mil QP#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
   flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[10])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[11])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[12])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds)
+  ftr=nil
+  ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,flds)
 end
 
 def disp_servant_art(bot,event,args=nil,riyodefault=false)
@@ -2186,6 +2206,35 @@ def find_servants(event,args=nil)
   end
 end
 
+bot.command(:boop) do |event|
+  data_load()
+  matz=@servants.map{|q| q[19].join("\n").split("\n")}
+  for i in 0...matz.length
+    for i2 in 0...matz[i].length
+      k="#{matz[i][i2]}"
+      matz[i][i2]=matz[i][i2].split(' ')
+      matz[i][i2].pop
+      matz[i][i2]=matz[i][i2].join(' ')
+    end
+  end
+  matz2=@servants.reject{|q| q[0]<2}.map{|q| q[18].join("\n").split("\n")}
+  for i in 0...matz2.length
+    for i2 in 0...matz2[i].length
+      k="#{matz2[i][i2]}"
+      matz2[i][i2]=matz2[i][i2].split(' ')
+      matz2[i][i2].pop
+      matz2[i][i2]=matz2[i][i2].join(' ')
+    end
+  end
+  matz="#{matz.join("\n")}\n#{matz2.join("\n")}".split("\n").map{|q| q.downcase.gsub(' ','_').gsub("'",'')}.uniq.sort
+  str=''
+  for i in 0...matz.length
+    str=extend_message(str,matz[i],event)
+  end
+  str=extend_message(str,"\n#{matz.length} total",event)
+  event.respond str
+end
+
 bot.command(:skill) do |event, *args|
   disp_skill_data(bot,event,args)
 end
@@ -2515,7 +2564,7 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
   f='' if f.nil?
   if event.server.nil?
     event.respond 'It is safe for me to send long replies here because this is my PMs with you.'
-  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504].include?(event.server.id)
+  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id)
     event.respond 'It is safe for me to send long replies here because this is one of my emoji servers.'
   elsif @shardizard==4
     event.respond 'It is safe for me to send long replies here because this is my debug mode.'
@@ -2696,7 +2745,7 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
 end
 
 bot.command(:sendmessage, from: 167657750971547648) do |event, channel_id, *args| # sends a message to a specific channel
-  return nil unless event.server.nil? || [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504].include?(event.server.id)
+  return nil unless event.server.nil? || [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id)
   if event.user.id==167657750971547648
   else
     event.respond 'Are you trying to use the `bugreport`, `suggestion`, or `feedback` command?'
@@ -2777,7 +2826,7 @@ bot.command(:snagstats) do |event, f, f2|
   f='' if f.nil?
   f2='' if f2.nil?
   bot.servers.values(&:members)
-  k=bot.servers.values.reject{|q| [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504].include?(q.id)}.length
+  k=bot.servers.values.reject{|q| [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(q.id)}.length
   k=1 if @shardizard==4 # Debug shard shares the five emote servers with the main account
   @server_data[0][@shardizard]=k
   @server_data[1][@shardizard]=bot.users.size
@@ -2910,7 +2959,7 @@ bot.server_create do |event|
     end
     chn=chnn[0] if chnn.length>0
   end
-  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504].include?(event.server.id) && @shardizard==4
+  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id) && @shardizard==4
     (chn.send_message("I am Mathoo's personal debug bot.  As such, I do not belong here.  You may be looking for one of my two facets, so I'll drop both their invite links here.\n\n**EliseBot** allows you to look up stats and skill data for characters in *Fire Emblem: Heroes*\nHere's her invite link: <https://goo.gl/HEuQK2>\n\n**FEIndex**, also known as **RobinBot**, is for *Fire Emblem: Awakening* and *Fire Emblem Fates*.\nHere's her invite link: <https://goo.gl/v3ADBG>") rescue nil)
     event.server.leave
   else
