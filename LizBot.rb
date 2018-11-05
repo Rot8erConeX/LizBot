@@ -1229,7 +1229,7 @@ def disp_servant_stats(bot,event,args=nil)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
   text="**0-star**" if k[3]==0
   np="*"
   np=":* #{@skills[@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}][3]}" unless @skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}.nil?
@@ -1237,13 +1237,13 @@ def disp_servant_stats(bot,event,args=nil)
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1]}" unless kx.nil?
-  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)\n**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\n**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5]} (NP type: #{k[17][6,1]})\n**Noble Phantasm:** *#{k[16]}#{np}\n\n#{bond}\n\n**Death Rate:** #{k[11]}%"
+  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)\n**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\n**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} *#{k[16]}#{np}\n\n#{bond}\n\n**Death Rate:** #{k[11]}%"
   fou=990
   fou=1000 if dispstr.include?('fou') && dispstr.include?('jp')
   fou=1000 if dispstr.include?('jpfou') || dispstr.include?('jp_fou') || dispstr.include?('foujp') || dispstr.include?('fou_jp')
   fou=1000 if dispstr.include?('fou-jp') || dispstr.include?('jp-fou')
-  flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*Atk* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*Atk* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*Atk* - #{longFormattedNumber(k[7][2])}  "]]
-  flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
+  flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*Atk* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*Atk* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100<:holy_grail:508802653829070886>**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*Atk* - #{longFormattedNumber(k[7][2])}  "]]
+  flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100<:holy_grail:508802653829070886>**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
   flds.push(["Attack Parameters","__**Hit Counts**__\n*Quick*: #{k[9][0]}\n*Arts*: #{k[9][1]}\n*Buster*: #{k[9][2]}\n*Extra*: #{k[9][3]}\n*NP*: #{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
@@ -1256,7 +1256,7 @@ def disp_servant_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [##{k[0]}]",text,xcolor,ftr,xpic,flds)
+  create_embed(event,"__**#{k[1]}**__ [##{k[0]}]",text,xcolor,ftr,xpic,flds,2)
 end
 
 def disp_tiny_stats(bot,event,args=nil)
@@ -1281,7 +1281,7 @@ def disp_tiny_stats(bot,event,args=nil)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
   text="**0-star**" if k[3]==0
   if dispfou==2000
     text="#{text}\u00A0\u00B7\u00A0<:GoldenFou:503453297068212224>"
@@ -1292,7 +1292,7 @@ def disp_tiny_stats(bot,event,args=nil)
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1]}" unless kx.nil?
-  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\u00A0\u00B7\u00A0**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5]} (NP type: #{k[17][6,1]})\n**Noble Phantasm:** #{k[16]}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}\u00A0Grail\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}\u00A0Grail\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0*Q:*\u00A0#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*A:*\u00A0#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0*B:*\u00A0#{k[9][2]}  \u00B7  *EX:*\u00A0#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0*NP:*\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
+  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\u00A0\u00B7\u00A0**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} #{k[16]}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}<:holy_grail:508802653829070886>\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}<:holy_grail:508802653829070886>\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0<:quick:509064606438653992>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:arts:509064605830742016>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:buster:509064606233133056>#{k[9][2]}  \u00B7  <:extra:509064605729816578>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0*NP:*\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -1316,7 +1316,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   text="#{text}\n**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*"
@@ -1352,7 +1352,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
-  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   actsklz=[]
@@ -1444,7 +1444,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   np="*"
@@ -1528,7 +1528,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
     xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
-    text="#{"<:Icon_Rarity_4:448266418459377684>"*ce[2]}\n**Cost:** #{ce[3]}"
+    text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
     text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6]}"
@@ -1536,7 +1536,8 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
       text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
       text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
     end
-    text="#{text}\n\n__**Additional info**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
+    text="#{text}\n\n__**Artist**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
+    text="#{text}\n\n__**Additional info**__\n#{ce[10]}" unless ce[10].nil? || ce[10].length.zero?
   end
   create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
@@ -1550,7 +1551,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:Icon_Rarity_5:448266417553539104>"*k[3]
+  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
@@ -1578,17 +1579,24 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n**Level 2\u21923:** #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n**Level 3\u21924:** #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n**Level 4\u21925:** #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n**Level 5\u21926:** #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n**Level 6\u21927:** #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n**Level 7\u21928:** #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n**Level 8\u21929:** #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n**Level 9\u219210:** #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  if flds.map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n").length>=1700
-    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds[0,flds.length-1])
+  if flds.map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n").length>=1500
+    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds[0,flds.length-1],1)
     k=flds[-1][1].split("\n")
     str="__**#{flds[-1][0]}**__"
+    respo=false
     for i in 0...k.length
       str=extend_message(str,k[i],event)
+      respo=true if str[0,1]!='_'
     end
     str=extend_message(str,"\n#{ftr}",event)
-    event.respond str
+    respo=true if str[0,1]!='_'
+    if respo
+      event.respond str
+    else
+      create_embed(event,'',str,xcolor)
+    end
   else
-    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,flds)
+    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,flds,2)
   end
 end
 
@@ -1626,10 +1634,32 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
   f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
   f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
-  f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| q[0]} unless artist.nil? || k[25].nil? || k[25].length<=0
+    f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| q[0]} unless artist.nil? || k[25].nil? || k[25].length<=0
     f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| q[0]}.reject{|q| f[2].include?(q)} unless artist.nil?
     f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| q[0]}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
+      f[2].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[-1]==k[25]
+    end
+    if !b[i][6].nil? && b[i][6].length>0
+      f[0].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[-1]!=k[25]
+    end
+    if !b[i][8].nil? && b[i][8].length>0
+      f[1].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[-1]==k[25]
+    end
+  end
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
     event.respond "#{text}#{"\n\n**Artist:** #{artist}" unless artist.nil?}#{"\n\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0}\n#{xpic}"
   else
     f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
@@ -1639,8 +1669,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     end
     f.compact!
     f=nil if f.length<=0
-    text="#{text}\n\n**Artist:** #{artist}" unless artist.nil?
-    text="#{text}\n\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0
+    text="#{text}\n" if !artist.nil? || !(k[25].nil? || k[25].length<=0)
+    text="#{text}\n**Artist:** #{artist}" unless artist.nil?
+    text="#{text}\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0
     if f.nil?
     elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1500 && safe_to_spam?(event)
       event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
@@ -1703,7 +1734,7 @@ def disp_ce_card(bot,event,args=nil)
   text=''
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
-  text="#{"<:Icon_Rarity_4:448266418459377684>"*ce[2]}\n**Cost:** #{ce[3]}"
+  text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
   text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless k.nil?
   text="#{text}\n**Availability:** #{ce[8]}" if k.nil?
   if ce[4]==ce[5] && ce[6]==ce[7]
@@ -1712,9 +1743,10 @@ def disp_ce_card(bot,event,args=nil)
     text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
     text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
   end
-  text="#{text}\n\n__**Additional info**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
+  text="#{text}\n\n__**Artist**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
+  text="#{text}\n\n__**Additional info**__\n#{ce[10]}" unless ce[10].nil? || ce[10].length.zero?
   ftr=nil
-  ftr='For the other CE given the title "Heaven\'s Feel", it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
+  ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   create_embed(event,"**#{ce[1]}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
 end
 
@@ -1729,7 +1761,7 @@ def disp_code_data(bot,event,args=nil)
   xcolor=0x7D4529
   xcolor=0x718F93 if ce[2]>2
   xcolor=0xF5D672 if ce[2]>3
-  text="#{"<:Icon_Rarity_3:448266417934958592>"*ce[2]}"
+  text="#{"<:FGO_icon_star_bronze:509072674970927117>"*ce[2]}"
   text="#{text}\n\n**Effect:** #{ce[3]}"
   text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
@@ -2288,7 +2320,6 @@ bot.command([:find,:list,:search]) do |event, *args|
 end
 
 bot.command([:embeds,:embed]) do |event|
-  return nil if overlap_prevent(event)
   metadata_load()
   if @embedless.include?(event.user.id)
     for i in 0...@embedless.length
