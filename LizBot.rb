@@ -1157,7 +1157,7 @@ end
 
 def find_emote(bot,event,item)
   k=event.message.text.downcase.split(' ')
-  return item if k.include?('colorblind') || k.include?('testmats')
+  return item if k.include?('colorblind') || k.include?('textmats')
   k=item.split(' ')[-1]
   item=item.split(' ')
   item.pop
@@ -1574,7 +1574,17 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}, #{numabr(qp[4])} QP\n**Level 2\u21923:** #{k[19][1].join(', ')}, #{numabr(qp[5])} QP\n**Level 3\u21924:** #{k[19][2].join(', ')}, #{numabr(qp[6])} QP\n**Level 4\u21925:** #{k[19][3].join(', ')}, #{numabr(qp[7])} QP\n**Level 5\u21926:** #{k[19][4].join(', ')}, #{numabr(qp[8])} QP\n**Level 6\u21927:** #{k[19][5].join(', ')}, #{numabr(qp[9])} QP\n**Level 7\u21928:** #{k[19][6].join(', ')}, #{numabr(qp[10])} QP\n**Level 8\u21929:** #{k[19][7].join(', ')}, #{numabr(qp[11])} QP\n**Level 9\u219210:** #{k[19][8].join(', ')}, #{numabr(qp[12])} QP"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,flds)
+  if flds.map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n").length>=1700
+    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds[0,flds.length-1])
+    k=flds[-1][1].split("\n")
+    str="__**#{flds[-1][0]}**__"
+    for i in 0...k.length
+      str=extend_message(str,k[i],event)
+    end
+    event.respond str
+  else
+    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,flds)
+  end
 end
 
 def disp_servant_art(bot,event,args=nil,riyodefault=false)
