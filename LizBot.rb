@@ -1204,12 +1204,12 @@ def servant_color(k)
 end
 
 def numabr(n)
-  return "#{n/1000000000}bil" if n>1000000000 && n%1000000000==0
-  return "#{n.to_f/1000000000}bil" if n>1000000000
-  return "#{n/1000000}mil" if n>1000000 && n%1000000==0
-  return "#{n.to_f/1000000}mil" if n>1000000
-  return "#{n/1000}k" if n>1000 && n%1000==0
-  return "#{n.to_f/1000}k" if n>1000
+  return "#{n/1000000000}bil" if n>=1000000000 && n%1000000000==0
+  return "#{n.to_f/1000000000}bil" if n>=1000000000
+  return "#{n/1000000}mil" if n>=1000000 && n%1000000==0
+  return "#{n.to_f/1000000}mil" if n>=1000000
+  return "#{n/1000}k" if n>=1000 && n%1000==0
+  return "#{n.to_f/1000}k" if n>=1000
   return n
 end
 
@@ -1650,13 +1650,13 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   for i in 0...b.length
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
-      f[2].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[-1]==k[25]
+      f[2].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
     end
     if !b[i][6].nil? && b[i][6].length>0
-      f[0].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[-1]!=k[25]
+      f[0].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
     end
     if !b[i][8].nil? && b[i][8].length>0
-      f[1].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[-1]==k[25]
+      f[1].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
     end
   end
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
