@@ -784,7 +784,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
   elsif ['bond','bondce'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Bond CE.",0xED619A)
-  elsif ['art'].include?(command.downcase)
+  elsif ['art','artist'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s art.\n\nDefaults to their normal art, but can be modified to other arts based on the following words:\nFirst/1st/FirstAscension/1stAscension\nSecond/2nd/SecondAscension/2ndAscension\nThird/3rd/ThirdAscension/3rdAscension\nFinal/Fourth/4th/FinalAscension/FourthAscension/4thAscension\nCostume/FirstCostume/1stCostume\nSecondCostume/2ndCostume\nRiyo/AprilFool's\n\nIf the requested art doesn't exist, reverts back to default art.",0xED619A)
   elsif ['riyo'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Riyo art, which is shown on April Fool's.",0xED619A)
@@ -850,7 +850,7 @@ def all_commands(include_nil=false,permissions=-1)
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
-     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing']
+     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -2562,7 +2562,7 @@ bot.command([:traits,:trait]) do |event, *args|
   end
 end
 
-bot.command([:art]) do |event, *args|
+bot.command([:art,:artist]) do |event, *args|
   disp_servant_art(bot,event,args)
   return nil
 end
