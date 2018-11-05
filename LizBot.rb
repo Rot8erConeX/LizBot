@@ -1603,13 +1603,18 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   xcolor=servant_color(k)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_s.gsub('.','p')}"
   disptext=event.message.text.downcase
+  artist=nil
+  artist=k[24] unless k[24].nil? || k[24].length<=0
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}2.png" if disptext.split(' ').include?('first') || disptext.split(' ').include?('firstascension') || disptext.split(' ').include?('first_ascension') || " #{disptext} ".include?(" first ascension ") || disptext.split(' ').include?('1st') || disptext.split(' ').include?('1stascension') || disptext.split(' ').include?('1st_ascension') || " #{disptext} ".include?(" 1st ascension ") || disptext.split(' ').include?('second') || disptext.split(' ').include?('secondascension') || disptext.split(' ').include?('second_ascension') || " #{disptext} ".include?(" second ascension ") || disptext.split(' ').include?('2nd') || disptext.split(' ').include?('2ndascension') || disptext.split(' ').include?('2nd_ascension') || " #{disptext} ".include?(" 2nd ascension ")
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}3.png" if disptext.split(' ').include?('third') || disptext.split(' ').include?('thirdascension') || disptext.split(' ').include?('third_ascension') || " #{disptext} ".include?(" third ascension ") || disptext.split(' ').include?('3rd') || disptext.split(' ').include?('3rdascension') || disptext.split(' ').include?('3rd_ascension') || " #{disptext} ".include?(" 3rd ascension ")
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}4.png" if disptext.split(' ').include?('fourth') || disptext.split(' ').include?('fourthascension') || disptext.split(' ').include?('fourth_ascension') || " #{disptext} ".include?(" fourth ascension ") || disptext.split(' ').include?('4th') || disptext.split(' ').include?('4thascension') || disptext.split(' ').include?('4th_ascension') || " #{disptext} ".include?(" 4th ascension ") || disptext.split(' ').include?('final') || disptext.split(' ').include?('finalascension') || disptext.split(' ').include?('final_ascension') || " #{disptext} ".include?(" final ascension ")
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}5.png" if disptext.split(' ').include?('costume') || disptext.split(' ').include?('firstcostume') || disptext.split(' ').include?('first_costume') || " #{disptext} ".include?(" first costume ") || disptext.split(' ').include?('1stcostume') || disptext.split(' ').include?('1st_costume') || " #{disptext} ".include?(" 1st costume ")
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}6.png" if disptext.split(' ').include?('secondcostume') || disptext.split(' ').include?('second_costume') || " #{disptext} ".include?(" second costume ") || disptext.split(' ').include?('2ndcostume') || disptext.split(' ').include?('2nd_costume') || " #{disptext} ".include?(" 2nd costume ")
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png" if riyodefault || disptext.split(' ').include?('riyo') || disptext.split(' ').include?('aprilfools') || disptext.split(' ').include?("aprilfool's") || disptext.split(' ').include?("april_fool's") || disptext.split(' ').include?("april_fools") || " #{disptext} ".include?(" april fool's ") || " #{disptext} ".include?(" april fools ")
+  if riyodefault || disptext.split(' ').include?('riyo') || disptext.split(' ').include?('aprilfools') || disptext.split(' ').include?("aprilfool's") || disptext.split(' ').include?("april_fool's") || disptext.split(' ').include?("april_fools") || " #{disptext} ".include?(" april fool's ") || " #{disptext} ".include?(" april fools ")
+    xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png"
+    artist='Riyo'
+  end
   text=''
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
@@ -1617,12 +1622,65 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
     text='Requested art not found.  Default art shown.'
   end
+  f=[[],[],[]]
+  f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
+  f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
+  f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
-    event.respond xpic
+  f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| q[0]} unless artist.nil? || k[25].nil? || k[25].length<=0
+    f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| q[0]}.reject{|q| f[2].include?(q)} unless artist.nil?
+    f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| q[0]}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+    event.respond "#{text}#{"\n\n**Artist:** #{artist}" unless artist.nil?}#{"\n\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0}\n#{xpic}"
   else
+    f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
+    for i in 0...f.length
+      f[i][1]=f[i][1].join("\n")
+      f[i]=nil if f[i][1].length<=0
+    end
+    f.compact!
+    f=nil if f.length<=0
+    text="#{text}\n\n**Artist:** #{artist}" unless artist.nil?
+    text="#{text}\n\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0
+    if f.nil?
+    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1500 && safe_to_spam?(event)
+      event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
+        embed.description=text
+        embed.color=xcolor
+        embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
+      end
+      if f.map{|q| q.join("\n")}.join("\n\n").length>=1900
+        for i in 0...f.length
+          event.channel.send_embed('') do |embed|
+            embed.color=xcolor
+            embed.add_field(name: f[i][0], value: f[i][1], inline: true)
+          end
+        end
+      else
+        event.channel.send_embed('') do |embed|
+          embed.color=xcolor
+          unless f.nil?
+            for i in 0...f.length
+              embed.add_field(name: f[i][0], value: f[i][1], inline: true)
+            end
+          end
+        end
+      end
+      return nil
+    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1800
+      text="#{text}\nThe list of units with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
+      f=nil
+    else
+      f[-1][2]=nil if f.length<3
+      f[-1].compact!
+    end
     event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
       embed.description=text
       embed.color=xcolor
+      unless f.nil?
+        for i in 0...f.length
+          embed.add_field(name: f[i][0], value: f[i][1], inline: f[i][2].nil?)
+        end
+      end
       embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
     end
   end
@@ -2053,7 +2111,7 @@ def find_servants(event,args=nil)
     attributes.push('Man') if ['man','men'].include?(args[i])
     attributes.push('Sky') if ['sky','skies','cloud','clouds','skys','sora','ventus'].include?(args[i])
     attributes.push('Star') if ['star','stars','space','spaces'].include?(args[i])
-    traits.push('Altria Face') if ['altriaface','altria','altrias','face'].include?(args[i])
+    traits.push('Altria Face') if ['altriaface','altria','altrias','face','saberface','saberfaces'].include?(args[i])
     traits.push('Arthur') if ['arthur','arthurs','kingarthur','kingarthurs'].include?(args[i])
     traits.push("Brynhild's Beloved") if ["brynhild'sbeloved","brynhild'sbeloveds",'brynhildsbeloved','brynhildsbeloveds',"brynhild's",'brynhilds','beloved','beloveds'].include?(args[i])
     traits.push('Demi-Servant') if ['demi-servant','demiservant','demi','demi-servants','demiservants','demis'].include?(args[i])
