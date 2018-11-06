@@ -1046,6 +1046,7 @@ def find_enemy(name,event,fullname=false)
   return [] if fullname
   k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @enemies[k] unless k.nil?
+  return find_enemy('Roman Soldier',event,fullname) if name=='rory' || name=='rorywilliams' || name=='plasticrory'
   return []
 end
 
