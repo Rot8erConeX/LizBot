@@ -1164,11 +1164,11 @@ def find_emote(bot,event,item)
   item=item.split(' ')
   item.pop
   item=item.join(' ')
-  moji=bot.server(508792801455243266).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub("'",'')}
+  moji=bot.server(508792801455243266).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{k}" if moji.length>0
-  moji=bot.server(508793141202255874).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub("'",'')}
+  moji=bot.server(508793141202255874).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{k}" if moji.length>0
-  moji=bot.server(508793425664016395).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub("'",'')}
+  moji=bot.server(508793425664016395).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{k}" if moji.length>0
   return "#{item} #{k}"
 end
@@ -1631,39 +1631,40 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
     text='Requested art not found.  Default art shown.'
   end
-  f=[[],[],[]]
-  f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
-  f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
-  f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
-    b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
-      b.push(line)
-    end
-  else
-    b=[]
-  end
-  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
-    f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| q[0]} unless artist.nil? || k[25].nil? || k[25].length<=0
-    f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| q[0]}.reject{|q| f[2].include?(q)} unless artist.nil?
-    f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| q[0]}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
-  end
-  for i in 0...b.length
-    b[i]=b[i].gsub("\n",'').split('\\'[0])
-    if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
-      f[2].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
-    end
-    if !b[i][6].nil? && b[i][6].length>0
-      f[0].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
-    end
-    if !b[i][8].nil? && b[i][8].length>0
-      f[1].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
-    end
-  end
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
     event.respond "#{text}#{"\n\n**Artist:** #{artist}" unless artist.nil?}#{"\n\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0}\n#{xpic}"
   else
+    f=[[],[],[]]
+    f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
+    f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
+    f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
+      b=[]
+      File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
+        b.push(line)
+      end
+    else
+      b=[]
+    end
+    for i in 0...b.length
+      b[i]=b[i].gsub("\n",'').split('\\'[0])
+      if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
+        f[2].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
+      end
+      if !b[i][6].nil? && b[i][6].length>0
+        f[0].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
+      end
+      if !b[i][8].nil? && b[i][8].length>0
+        f[1].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
+      end
+    end
     f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
+    if k[25].include?(' & ')
+      m=k[25].split(' & ')
+      for i in 0...m.length
+        f[1][1].push(@servants.reject{|q| q[25]!=m[i]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]} *[voice #{i+1}]*"}.join("\n"))
+      end
+    end
     for i in 0...f.length
       f[i][1]=f[i][1].join("\n")
       f[i]=nil if f[i][1].length<=0
