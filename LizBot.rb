@@ -3184,7 +3184,7 @@ bot.mention do |event|
       end
     elsif find_skill_ex(name,event,true).length>0
       disp_skill_data(bot,event,args)
-    elsif find_clothes_ex(s,event,true).length>0
+    elsif find_clothes_ex(name,event,true).length>0
       disp_clothing_data(bot,event,args)
     elsif find_code_ex(name,event,true).length>0
       disp_code_data(bot,event,args)
@@ -3203,7 +3203,7 @@ bot.mention do |event|
       end
     elsif find_skill_ex(name,event).length>0
       disp_skill_data(bot,event,args)
-    elsif find_clothes_ex(s,event).length>0
+    elsif find_clothes_ex(name,event).length>0
       disp_clothing_data(bot,event,args)
     elsif find_code_ex(name,event).length>0
       disp_code_data(bot,event,args)
