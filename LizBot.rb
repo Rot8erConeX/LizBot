@@ -1460,6 +1460,12 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=3 if event.message.text.downcase.split(' ').include?('np3')
   npl=4 if event.message.text.downcase.split(' ').include?('np4')
   npl=5 if event.message.text.downcase.split(' ').include?('np5')
+  if k[0]==112 && !safe_to_spam?(event)
+  unless nophan.nil?
+    l=[nophan[5],nophan[6]]
+    text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','')}\nTo see the effects, please use this command in PM"
+  end
+  else
   unless nophan.nil?
     l=[nophan[5],nophan[6]]
     text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','')}\n__**Effects**__"
@@ -1496,6 +1502,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
         end
       end
     end
+  end
   end
   ftr='You can also include NP# to show relevant stats at other merge counts.' if npl==1
   ftr=nil if safe_to_spam?(event)
@@ -1573,31 +1580,35 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   # <:QP:508802778982907920>
   qpd='<:QP:508802778982907920>'
   qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  flds=[['Ascension materials',"**First Ascension:** #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n**Second Ascension:** #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n**Third Ascension:** #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n**Final Ascension:** #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
-  flds[0]=['Ascension',"**First Ascension:** #{k[18][0].join(', ')}\n**Second Ascension:** #{k[18][1].join(', ')}\n**Third Ascension:** #{k[18][2].join(', ')}\n**Final Ascension:** #{k[18][3].join(', ')}"] if k[0]<2
-  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n**Second Costume:** #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
-  flds.push(['Costume materials',"**First Costume:** #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n**Second Costume:** #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
-  flds.push(['Skill Enhancement materials',"**Level 1\u21922:** #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n**Level 2\u21923:** #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n**Level 3\u21924:** #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n**Level 4\u21925:** #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n**Level 5\u21926:** #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n**Level 6\u21927:** #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n**Level 7\u21928:** #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n**Level 8\u21929:** #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n**Level 9\u219210:** #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
+  flds=[['Ascension materials',"*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
+  flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
+  flds.push(['Costume materials',"*First Costume:* #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
+  flds.push(['Costume materials',"*First Costume:* #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
+  flds.push(['Skill Enhancement materials',"*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  if flds.map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n").length>=1500
-    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,flds[0,flds.length-1],1)
-    k=flds[-1][1].split("\n")
+  str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
+  hdr="#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}"
+  if hdr.length+ftr.length+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
+    create_embed(event,hdr,str,xcolor,nil,xpic,nil,1)
     str="__**#{flds[-1][0]}**__"
-    respo=false
-    for i in 0...k.length
-      str=extend_message(str,k[i],event)
-      respo=true if str[0,1]!='_'
-    end
-    str=extend_message(str,"\n#{ftr}",event)
-    respo=true if str[0,1]!='_'
-    if respo
-      event.respond str
-    else
-      create_embed(event,'',str,xcolor)
-    end
+    hdr=''
+    xpic=''
   else
-    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,flds,2)
+    str=extend_message(str,"__**#{flds[-1][0]}**__",event,2)
+  end
+  k=flds[-1][1].split("\n")
+  respo=false
+  respo=true if str[0,1]!='_' && str[0,2]!='**' && str[0,2]!='<:' && ![str[0,1],str[0,2]].include?("\n")
+  for i in 0...k.length
+    str=extend_message(str,k[i],event)
+    respo=true if str[0,1]!='_' && str[0,2]!='**' && str[0,2]!='<:' && ![str[0,1],str[0,2]].include?("\n")
+  end
+  if respo
+    str=extend_message(str,ftr,event,2)
+    event.respond str
+  else
+    create_embed(event,hdr,str,xcolor,ftr,xpic,nil,1)
   end
 end
 
@@ -2113,6 +2124,7 @@ def find_servants(event,args=nil)
   args=args.map{|q| normalize(q.downcase)}
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
   clzz=[]
+  rarity=[]
   curves=[]
   attributes=[]
   traits=[]
@@ -2135,6 +2147,7 @@ def find_servants(event,args=nil)
     clzz.push('Ruler') if ['ruler','rulers','king','kings','queen','queens','leader','leaders','extra','extras'].include?(args[i])
     clzz.push('Saber') if ['saber','sabers','seiba','seibas'].include?(args[i])
     clzz.push('Shielder') if ['shielder','shielders','shield','shields','sheilder','sheilders','sheild','sheilds','extra','extras'].include?(args[i])
+    rarity.push(args[i].to_i) if args[i].to_i.to_s==args[i] && args[i].to_i>=0 && args[i].to_i<6
     curves.push('Linear') if ['linear','linear','line','lines'].include?(args[i])
     curves.push('Reverse S') if ['reverses','reverse','backwards','backward'].include?(args[i])
     curves.push('S') if ['s','ess','ses','esses'].include?(args[i])
@@ -2252,6 +2265,10 @@ def find_servants(event,args=nil)
   if clzz.length>0
     char=char.reject{|q| !clzz.include?(q[2])}.uniq
     search.push("*Classes*: #{clzz.join(', ')}")
+  end
+  if rarity.length>0
+    char=char.reject{|q| !rarity.include?(q[3])}.uniq
+    search.push("*Rarities*: #{rarity.map{|q| "#{q}<:fgo_icon_rarity:509064606166155304>"}.join(', ')}")
   end
   if curves.length>0
     char=char.reject{|q| !curves.include?(q[4])}.uniq
