@@ -420,17 +420,22 @@ def was_embedless_mentioned?(event) # used to detect if someone who wishes to se
   return false
 end
 
-def safe_to_spam?(event) # determines whether or not it is safe to send extremely long messages
+def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
   return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id) # it is safe to spam in the emoji servers
-  return true if ['bots','bot'].include?(event.channel.name.downcase) # channels named "bots" are safe to spam in
-  return true if event.channel.name.downcase.include?('bot') && event.channel.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
-  return true if event.channel.name.downcase.include?('bot') && event.channel.name.downcase.include?('command') # it is safe to spam in any bot spam channel
-  return true if event.channel.name.downcase.include?('bot') && event.channel.name.downcase.include?('channel') # it is safe to spam in any bot spam channel
-  return true if event.channel.name.downcase.include?('lizbot')  # it is safe to spam in channels designed specifically for LizBot
-  return true if event.channel.name.downcase.include?('liz-bot')
-  return true if event.channel.name.downcase.include?('liz_bot')
-  return true if @spam_channels.include?(event.channel.id)
+  chn=event.channel if chn.nil?
+  return true if ['bots','bot'].include?(chn.name.downcase) # channels named "bots" are safe to spam in
+  return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
+  return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('command') # it is safe to spam in any bot spam channel
+  return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('channel') # it is safe to spam in any bot spam channel
+  return true if chn.name.downcase.include?('lizbot')  # it is safe to spam in channels designed specifically for LizBot
+  return true if chn.name.downcase.include?('liz-bot')
+  return true if chn.name.downcase.include?('liz_bot')
+  return true if @spam_channels.include?(chn.id)
+  return false if mode==0
+  return true if chn.name.downcase.include?('fate') && chn.name.downcase.include?('grand') && chn.name.downcase.include?('order')
+  return true if chn.name.downcase.include?('fate') && chn.name.downcase.include?('go')
+  return true if chn.name.downcase.include?('fgo')
   return false
 end
 
@@ -850,7 +855,8 @@ def all_commands(include_nil=false,permissions=-1)
      'statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small',
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
-     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist']
+     'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
+     'spamlist']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
   k.push(nil) if include_nil
@@ -1361,8 +1367,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     actsklz.push('>None<')
   else
     for i in 0...k[14].length
-      str="#{'__' if safe_to_spam?(event)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event)}"
-      if safe_to_spam?(event)
+      str="#{'__' if safe_to_spam?(event,nil,1)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event,nil,1)}"
+      if safe_to_spam?(event,nil,1)
         k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}
         str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{@skills[k2][4]}"
         for i2 in 5...@skills[k2].length
@@ -1382,8 +1388,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
         end
       end
       unless k[14][i][1].nil?
-        str="#{str}\n#{"\n__" if safe_to_spam?(event)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event)}"
-        if safe_to_spam?(event)
+        str="#{str}\n#{"\n__" if safe_to_spam?(event,nil,1)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event,nil,1)}"
+        if safe_to_spam?(event,nil,1)
           k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && @skills[k2]!=q}
           str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{@skills[k2][4]}"
           for i2 in 5...@skills[k2].length
@@ -1460,12 +1466,6 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=3 if event.message.text.downcase.split(' ').include?('np3')
   npl=4 if event.message.text.downcase.split(' ').include?('np4')
   npl=5 if event.message.text.downcase.split(' ').include?('np5')
-  if k[0]==112 && !safe_to_spam?(event)
-  unless nophan.nil?
-    l=[nophan[5],nophan[6]]
-    text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','')}\nTo see the effects, please use this command in PM"
-  end
-  else
   unless nophan.nil?
     l=[nophan[5],nophan[6]]
     text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','')}\n__**Effects**__"
@@ -1502,7 +1502,6 @@ def disp_servant_np(bot,event,args=nil,chain=false)
         end
       end
     end
-  end
   end
   ftr='You can also include NP# to show relevant stats at other merge counts.' if npl==1
   ftr=nil if safe_to_spam?(event)
@@ -1710,7 +1709,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         end
       end
       return nil
-    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1800
+    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1800 || f.map{|q| q[1].length}.max>12
       text="#{text}\nThe list of units with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
       f=nil
     else
@@ -2444,7 +2443,7 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
         @aliases[i][2].push(srv)
         bot.channel(chn).send_message("The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in another server already.  Adding this server to those that can use it.")
         event.respond "The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in another server already.  Adding this server to those that can use it.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
-        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the character **#{unt[1]} [##{unt[0]}]** is used in quite a few servers.  It might be time to make this global") if @aliases[i][2].length >= bot.servers.length / 20 && @aliases[i][3].nil?
+        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the character **#{unt[1]} [##{unt[0]}]** is used in quite a few servers.  It might be time to make this global") if @aliases[i][2].length >= bot.servers.length / 20 && @aliases[i][2].length>=5 && @aliases[i][3].nil?
         bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**Alias:** #{newname} for #{unt[1]} [##{unt[0]}] - gained a new server that supports it.")
         double=true
       end
@@ -2688,6 +2687,12 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
     @spam_channels.push(event.channel.id)
     metadata_save()
     event.respond 'This channel is now marked as safe for me to send long replies to.'
+  elsif event.channel.name.downcase.include?('fate') && event.channel.name.downcase.include?('grand') && event.channel.name.downcase.include?('order')
+    event.respond 'It is safe for me to send __**certain**__ long replies here because the channel name includes the words "Fate", "Grand", and "Order".'
+  elsif event.channel.name.downcase.include?('fate') && event.channel.name.downcase.include?('go')
+    event.respond 'It is safe for me to send __**certain**__ long replies here because the channel name includes the words "Fate", "GO".'
+  elsif event.channel.name.downcase.include?('fgo')
+    event.respond 'It is safe for me to send __**certain**__ long replies here because the channel name includes "FGO".'
   else
     event << 'It is not safe for me to send long replies here.'
     event << ''
@@ -2695,6 +2700,30 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
     event << '- Change the channel name to "bots".'
     event << '- Change the channel name to include the word "bot" and one of the following words: "spam", "command(s)", "channel".'
     event << '- Have a server mod type `FGO!spam on` in this channel.'
+  end
+end
+
+bot.command([:channellist,:chanelist,:spamchannels,:spamlist]) do |event|
+  if event.server.nil?
+    event.respond "Yes, it is safe to spam here."
+    return nil
+  end
+  sfe=[[],[]]
+  for i in 0...event.server.channels.length
+    chn=event.server.channels[i]
+    if safe_to_spam?(event,chn)
+      sfe[0].push(chn.mention)
+    elsif safe_to_spam?(event,chn,1)
+      sfe[1].push(chn.mention)
+    end
+  end
+  event << '__**All long replies are safe**__'
+  event << sfe[0].join("\n")
+  event << 'In PM with any user'
+  if sfe[1].length>0
+    event << ''
+    event << '__**Certain long replies are safe**__'
+    event << sfe[1].join("\n")
   end
 end
 
