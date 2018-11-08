@@ -753,6 +753,8 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
   end
   if command.downcase=='reboot'
     create_embed(event,'**reboot**',"Reboots this shard of the bot, installing any updates.\n\n**This command is only able to be used by Rot8er_ConeX**",0x008b8b)
+  elsif command.downcase=='snagchannels'
+    create_embed(event,'**snagchannels** __server id number__',"Gets a list of all channels in `server id`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
   elsif command.downcase=='sendmessage'
     create_embed(event,'**sendmessage** __channel id__ __*message__',"Sends the message `message` to the channel with id `channel`\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
   elsif command.downcase=='leaveserver'
@@ -856,9 +858,9 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist']
+     'spamlist','snagchannels']
   k=['addalias','deletealias','removealias'] if permissions==1
-  k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot'] if permissions==2
+  k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
   return k
 end
@@ -2942,6 +2944,33 @@ bot.command(:cleanupaliases, from: 167657750971547648) do |event|
   }
   event << "#{k} aliases were removed due to being from servers I'm no longer in."
   event << "#{k2} aliases were removed due to being identical to the servant's name."
+end
+
+bot.command(:snagchannels, from: 167657750971547648) do |event, server_id|
+  server_id=event.server.id if server_id.nil?
+  return nil unless event.user.id==167657750971547648
+  if server_id.to_i==285663217261477889 && @shardizard != 4
+    event.respond 'That is the testing server.  Please run this command in the testing server for this information.'
+    return nil
+  elsif server_id.to_i != 285663217261477889 && @shardizard == 4
+    event.respond "The debug version of the bot can only see the debug server.  Please run this command in another server for the desired information.\nThat server ID (#{server_id}) is assigned the #{['Man','Sky','Earth','Star','Beast'][(server_id.to_i >> 22) % 4]} Attribute, that is likely your best bet."
+    return nil
+  elsif @shardizard == 4
+  elsif (bot.server(server_id.to_i) rescue nil).nil? || bot.user(bot.profile.id).on(server_id.to_i).nil?
+    event.respond 'I am not in that server.'
+    return nil
+  elsif @shardizard != (server_id.to_i >> 22) % 4
+    event.respond "This shard is unable to read the channel set of that server.  Perhaps it would be best to use the #{['Man','Sky','Earth','Star','Beast'][(server_id.to_i >> 22) % 4]} Attribute."
+    return nil
+  end
+  msg="__**#{bot.server(server_id.to_i).name}**__\n\n__*Text Channels*__"
+  srv=bot.server(server_id.to_i)
+  k=srv.channels.reject{|q| !bot.user(bot.profile.id).on(srv.id).can_read_messages?(q) || !q.type.zero?}
+  k=k.map{|q| "*#{q.name}*  (#{q.id})#{'  -  can post' if bot.user(bot.profile.id).on(srv.id).can_send_messages?(q)}"}.sort
+  for i in 0...k.length
+    msg=extend_message(msg,k[i],event)
+  end
+  event.respond msg
 end
 
 bot.command(:snagstats) do |event, f, f2|
