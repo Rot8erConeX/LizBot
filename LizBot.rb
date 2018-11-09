@@ -25,6 +25,7 @@ bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shar
 @skills=[]
 @crafts=[]
 @codes=[]
+@mats=[]
 @clothes=[]
 @enemies=[]
 @aliases=[]
@@ -687,6 +688,27 @@ def data_load()
     b[i][5]=b[i][5].split(', ').map{|q| q.to_i}
   end
   @clothes=b.map{|q| q}
+  k=@servants.map{|q| "#{q[18].join("\n")}\n#{q[19].join("\n")}"}.join("\n").split("\n").map{|q| q.split(' ')}
+  for i in 0...k.length
+    k[i].pop
+  end
+  k=k.map{|q| q.join(' ')}.uniq.sort
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt', 'w') { |f|
+    f.puts k.join("\n")
+    f.puts "\n"
+  }
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'')
+  end
+  @mats=b.map{|q| q}
 end
 
 def metadata_load()
@@ -715,6 +737,16 @@ def metadata_save()
     f.puts x[1].to_s
     f.puts x[2].to_s
     f.puts x[3].to_s
+    f.puts "\n"
+  }
+  data_load()
+  k=@servants.map{|q| "#{q[18].join("\n")}\n#{q[19].join("\n")}"}.join("\n").split("\n").map{|q| q.split(' ')}
+  for i in 0...k.length
+    k[i].pop
+  end
+  k=k.map{|q| q.join(' ')}.uniq.sort
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt', 'w') { |f|
+    f.puts k.join("\n")
     f.puts "\n"
   }
 end
@@ -775,6 +807,8 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
     create_embed(event,"**#{command.downcase}** __toggle__","Responds with whether or not the channel the command is invoked in is one in which I can send extremely long replies.\n\nIf the channel does not fill one of the many molds for acceptable channels, server mods can toggle the ability with the words \"on\" and \"off\".",0xED619A)
   elsif ['status'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*message__","Sets my status to `message`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+  elsif ['mat','material'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a material, shows information about the servants who require that material for ascension or for skill enhancement.\n\nIf it is safe to spam, the servants' names and uses for the material will be shown.\nIf not, only the *quantity* of servants that require the material will be shown.",0xED619A)
   elsif ['servant','data','unit'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats.  If you include the word \"Fou\", the combat stats will be displayed with Fou modifiers\n\nIf it is safe to spam, also shows information on `name`s skills, traits, Noble Phantasm, and Bond CE.",0xED619A)
   elsif ['tinystats','smallstats','smolstats','microstats','squashedstats','sstats','statstiny','statssmall','statssmol','statsmicro','statssquashed','statss','stattiny','statsmall','statsmol','statmicro','statsquashed','sstat','tinystat','smallstat','smolstat','microstat','squashedstat','tiny','small','micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little'].include?(command.downcase) || (['stat','stats'].include?(command.downcase) && ['tiny','small','micro','smol','squashed','little'].include?("#{subcommand}".downcase))
@@ -840,7 +874,7 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -858,7 +892,7 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist','snagchannels']
+     'spamlist','snagchannels','boop','mat','material']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -897,31 +931,6 @@ def find_servant(name,event,fullname=false)
   for i in name.length...@aliases.map{|q| q[0].length}.max
     k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
     return @servants[@servants.find_index{|q| q[0]==@aliases[k][1]}] unless k.nil?
-  end
-  return []
-end
-
-def find_servant_ex(name,event,fullname=false)
-  k=find_servant(name,event,true)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_servant(args[i,args.length-1-i-i2].join(' '),event,true)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return [] if fullname
-  k=find_servant(name,event)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_servant(args[i,args.length-1-i-i2].join(' '),event)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
   end
   return []
 end
@@ -968,31 +977,6 @@ def find_ce(name,event,fullname=false)
   return []
 end
 
-def find_ce_ex(name,event,fullname=false)
-  k=find_ce(name,event,true)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_ce(args[i,args.length-1-i-i2].join(' '),event,true)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return [] if fullname
-  k=find_ce(name,event)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_ce(args[i,args.length-1-i-i2].join(' '),event)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return []
-end
-
 def find_code(name,event,fullname=false)
   data_load()
   name=normalize(name)
@@ -1019,31 +1003,6 @@ def find_code(name,event,fullname=false)
   return []
 end
 
-def find_code_ex(name,event,fullname=false)
-  k=find_code(name,event,true)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_code(args[i,args.length-1-i-i2].join(' '),event,true)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return [] if fullname
-  k=find_code(name,event)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_code(args[i,args.length-1-i-i2].join(' '),event)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return []
-end
-
 def find_enemy(name,event,fullname=false)
   data_load()
   name=normalize(name)
@@ -1055,31 +1014,6 @@ def find_enemy(name,event,fullname=false)
   k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @enemies[k] unless k.nil?
   return find_enemy('Roman Soldier',event,fullname) if name=='rory' || name=='rorywilliams' || name=='plasticrory'
-  return []
-end
-
-def find_enemy_ex(name,event,fullname=false)
-  k=find_enemy(name,event,true)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_enemy(args[i,args.length-1-i-i2].join(' '),event,true)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return [] if fullname
-  k=find_enemy(name,event)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_enemy(args[i,args.length-1-i-i2].join(' '),event)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
   return []
 end
 
@@ -1102,31 +1036,6 @@ def find_skill(name,event,fullname=false)
   return []
 end
 
-def find_skill_ex(name,event,fullname=false)
-  k=find_skill(name,event,true)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_skill(args[i,args.length-1-i-i2].join(' '),event,true)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return [] if fullname
-  k=find_skill(name,event)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_skill(args[i,args.length-1-i-i2].join(' '),event)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
-  return []
-end
-
 def find_clothes(name,event,fullname=false)
   data_load()
   name=normalize(name)
@@ -1140,32 +1049,54 @@ def find_clothes(name,event,fullname=false)
   return []
 end
 
-def find_clothes_ex(name,event,fullname=false)
-  k=find_clothes(name,event,true)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_clothes(args[i,args.length-1-i-i2].join(' '),event,true)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
+def find_mat(name,event,fullname=false)
+  data_load()
+  name=normalize(name)
+  name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')
+  return [] if name.length<2
+  k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
   return [] if fullname
-  k=find_clothes(name,event)
-  return k if k.length>0
-  args=name.split(' ')
-  for i in 0...args.length-1
-    for i2 in 0...args.length-i
-      k=find_clothes(args[i,args.length-1-i-i2].join(' '),event)
-      k=[] if args[i,args.length-1-i-i2].length<=0
-      return k if k.length>0
-    end
-  end
+  k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
   return []
 end
 
-def find_emote(bot,event,item)
+def find_data_ex(callback,name,event,fullname=false)
+  k=method(callback).call(name,event,true)
+  return k if k.length>0
+  blank=[]
+  blank='' if [:find_mat].include?(callback)
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=method(callback).call(args[i,args.length-1-i-i2].join(' '),event,true)
+      return k if k.length>0 && args[i,args.length-1-i-i2].length>0
+    end
+  end
+  return blank if fullname
+  k=method(callback).call(name,event)
+  return k if k.length>0
+  args=name.split(' ')
+  for i in 0...args.length-1
+    for i2 in 0...args.length-i
+      k=method(callback).call(args[i,args.length-1-i-i2].join(' '),event)
+      return k if k.length>0 && args[i,args.length-1-i-i2].length>0
+    end
+  end
+  return blank
+end
+
+def find_emote(bot,event,item,mode=0)
+  if mode==1
+    moji=bot.server(508792801455243266).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    return "#{moji[0].icon_url}" if moji.length>0
+    moji=bot.server(508793141202255874).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    return "#{moji[0].icon_url}" if moji.length>0
+    moji=bot.server(508793425664016395).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    return "#{moji[0].icon_url}" if moji.length>0
+    return ''
+  end
   k=event.message.text.downcase.split(' ')
   return item if k.include?('colorblind') || k.include?('textmats')
   k=item.split(' ')[-1]
@@ -1232,7 +1163,7 @@ def disp_servant_stats(bot,event,args=nil)
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   dispfou=false
   dispfou=true if dispstr.include?('fou')
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -1284,7 +1215,7 @@ def disp_tiny_stats(bot,event,args=nil)
   dispfou=2000 if dispstr.include?('goldfou') || dispstr.include?('gold_fou') || dispstr.include?('fougold') || dispstr.include?('fou_gold')
   dispfou=2000 if dispstr.include?('fou-gold') || dispstr.include?('gold-fou') || dispstr.include?('goldenfou') || dispstr.include?('golden_fou')
   dispfou=2000 if dispstr.include?('fougolden') || dispstr.include?('fou_golden') || dispstr.include?('fou-golden') || dispstr.include?('golden-fou')
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -1319,7 +1250,7 @@ end
 def disp_servant_traits(bot,event,args=nil,chain=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.' unless chain
     return nil
@@ -1341,7 +1272,7 @@ end
 def disp_enemy_traits(bot,event,args=nil,chain=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_enemy_ex(args.join(' '),event)
+  k=find_data_ex(:find_enemy,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.' unless chain
     return nil
@@ -1352,7 +1283,7 @@ end
 def disp_servant_skills(bot,event,args=nil,chain=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.' unless chain
     return nil
@@ -1371,15 +1302,15 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     for i in 0...k[14].length
       str="#{'__' if safe_to_spam?(event,nil,1)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event,nil,1)}"
       if safe_to_spam?(event,nil,1)
-        k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}
-        str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{@skills[k2][4]}"
-        for i2 in 5...@skills[k2].length
-          unless @skills[k2][i2][0]=='-'
-            str="#{str}\n#{@skills[k2][i2][0]}"
-            unless @skills[k2][i2][1].nil?
-              x=@skills[k2][i2][1]
-              x2=@skills[k2][i2][6]
-              x3=@skills[k2][i2][10]
+        k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}].map{|q| q}
+        str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4]}"
+        for i2 in 5...k2.length
+          unless k2[i2][0]=='-'
+            str="#{str}\n#{k2[i2][0]}"
+            unless k2[i2][1].nil?
+              x=k2[i2][1]
+              x2=k2[i2][6]
+              x3=k2[i2][10]
               if x==x2 && x==x3
                 str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
               else
@@ -1392,15 +1323,15 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       unless k[14][i][1].nil?
         str="#{str}\n#{"\n__" if safe_to_spam?(event,nil,1)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event,nil,1)}"
         if safe_to_spam?(event,nil,1)
-          k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && @skills[k2]!=q}
-          str="#{str}\n*Cooldown:* #{@skills[k2][3]}\u00A0L#{micronumber(1)}  \u00B7  #{@skills[k2][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{@skills[k2][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{@skills[k2][4]}"
-          for i2 in 5...@skills[k2].length
-            unless @skills[k2][i2][0]=='-'
-              str="#{str}\n#{@skills[k2][i2][0]}"
-              unless @skills[k2][i2][1].nil?
-                x=@skills[k2][i2][1]
-                x2=@skills[k2][i2][6]
-                x3=@skills[k2][i2][10]
+          k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && k2 != q}].map{|q| q}
+          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4]}"
+          for i2 in 5...k2.length
+            unless k2[i2][0]=='-'
+              str="#{str}\n#{k2[i2][0]}"
+              unless k2[i2][1].nil?
+                x=k2[i2][1]
+                x2=k2[i2][6]
+                x3=k2[i2][10]
                 if x.to_f<1
                   x="#{(x.to_f*1000).to_i/10.0}%" 
                   x2="#{(x2.to_f*1000).to_i/10.0}%"
@@ -1425,8 +1356,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     for i in 0...k[15].length
       str="*#{k[15][i]}*"
-      k2=@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}
-      str="#{str}: #{@skills[k2][3]}"
+      k2=@skills[@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}]
+      str="#{str}: #{k2[3]}"
       passklz.push(str)
     end
   end
@@ -1447,7 +1378,7 @@ end
 def disp_servant_np(bot,event,args=nil,chain=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.' unless chain
     return nil
@@ -1464,6 +1395,8 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   end
   text="#{text}\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('┬á','')}#{np}" unless chain
   npl=1
+  npl=0 if ['Event','Welfare'].include?(k[20])
+  npl=1 if event.message.text.downcase.split(' ').include?('np2')
   npl=2 if event.message.text.downcase.split(' ').include?('np2')
   npl=3 if event.message.text.downcase.split(' ').include?('np3')
   npl=4 if event.message.text.downcase.split(' ').include?('np4')
@@ -1474,8 +1407,12 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     for i in 7...17
       unless nophan[i][0]=='-'
         text="#{text}\n*#{nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','')}*"
-        if nophan[i][0].include?('<OVERCHARGE>') || (nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event))
+        if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
+          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+        elsif nophan[i][0].include?('<OVERCHARGE>')
           text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+        elsif npl==0 && nophan[i][0].include?('<LEVEL>')
+          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         else
           text="#{text} - #{nophan[i][npl].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
         end
@@ -1496,8 +1433,12 @@ def disp_servant_np(bot,event,args=nil,chain=false)
       for i in 7...17
         unless nophan[i][0]=='-'
           text="#{text}\n*#{nophan[i][0]}*"
-          if nophan[i][0].include?('<OVERCHARGE>') || (nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event))
-            text="#{text} - #{nophan[i][1]}\u00A0/\u00A0#{nophan[i][2]}\u00A0/\u00A0#{nophan[i][3]}\u00A0/\u00A0#{nophan[i][4]}\u00A0/\u00A0#{nophan[i][5]}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
+            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          elsif nophan[i][0].include?('<OVERCHARGE>')
+            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          elsif npl==0 && nophan[i][0].include?('<LEVEL>')
+            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           else
             text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
           end
@@ -1507,13 +1448,13 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   end
   ftr='You can also include NP# to show relevant stats at other merge counts.' if npl==1
   ftr=nil if safe_to_spam?(event)
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}:** *#{np}*#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}:** *#{np}*#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.' unless chain
     return nil
@@ -1554,7 +1495,7 @@ end
 def disp_servant_mats(bot,event,args=nil,chain=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.' unless chain
     return nil
@@ -1583,8 +1524,8 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   flds=[['Ascension materials',"*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
   flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
-  flds.push(['Costume materials',"*First Costume:* #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
-  flds.push(['Costume materials',"*First Costume:* #{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
+  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
+  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
   flds.push(['Skill Enhancement materials',"*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
@@ -1616,7 +1557,7 @@ end
 def disp_servant_art(bot,event,args=nil,riyodefault=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_servant_ex(args.join(' '),event)
+  k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -1643,63 +1584,78 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
     text='Requested art not found.  Default art shown.'
   end
-  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
-    event.respond "#{text}#{"\n\n**Artist:** #{artist}" unless artist.nil?}#{"\n\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0}\n#{xpic}"
+  f=[[],[],[]]
+  f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
+  f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
+  f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+  crf=@crafts.map{|q| q}
+  for i in 0...crf.length
+    f[0].push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist
+  end
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
+      b.push(line)
+    end
   else
-    f=[[],[],[]]
-    f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
-    f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
-    f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
-    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
-      b=[]
-      File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
-        b.push(line)
-      end
-    else
-      b=[]
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
+      f[2].push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
     end
-    for i in 0...b.length
-      b[i]=b[i].gsub("\n",'').split('\\'[0])
-      if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
-        f[2].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
-      end
-      if !b[i][6].nil? && b[i][6].length>0
-        f[0].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
-      end
-      if !b[i][8].nil? && b[i][8].length>0
-        f[1].push("#{b[i][0]}#{' *[FEH]*' unless @embedless.include?(event.user.id) || was_embedless_mentioned?(event)}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
-      end
+    if !b[i][6].nil? && b[i][6].length>0
+      f[0].push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
     end
-    f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
-    if k[25].include?(' & ')
-      m=k[25].split(' & ')
-      for i in 0...m.length
-        f[1][1].push(@servants.reject{|q| q[25]!=m[i]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]} *[voice #{i+1}]*"}.join("\n"))
-      end
+    if !b[i][8].nil? && b[i][8].length>0
+      f[1].push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
     end
+  end
+  f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
+  if k[25].include?(' & ')
+    m=k[25].split(' & ')
+    for i in 0...m.length
+      f[1][1].push(@servants.reject{|q| q[25]!=m[i]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]} *[voice #{i+1}]*"}.join("\n"))
+    end
+  end
+  for i in 0...f.length
+    f[i][1]=f[i][1].join("\n")
+    f[i]=nil if f[i][1].length<=0
+  end
+  f.compact!
+  f=nil if f.length<=0
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
+    str=''
     for i in 0...f.length
-      f[i][1]=f[i][1].join("\n")
-      f[i]=nil if f[i][1].length<=0
+      str=extend_message(str,"__**#{f[i][0]}**__",event,2)
+      f[i][1]=f[i][1].split("\n")
+      for i2 in 0...f[i][1].length
+        ff='  -  '
+        ff="\n" if i2==0
+        str=extend_message(str,f[i][1][i2].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
+      end
     end
-    f.compact!
-    f=nil if f.length<=0
+    str=extend_message(str,"#{text}#{"#{"\n\n" if text.length>0}**Artist:** #{artist}" unless artist.nil?}#{"\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0}\n#{xpic}",event,2)
+    event.respond str
+  else
     text="#{text}\n" if !artist.nil? || !(k[25].nil? || k[25].length<=0)
     text="#{text}\n**Artist:** #{artist}" unless artist.nil?
     text="#{text}\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0
     if f.nil?
-    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1500 && safe_to_spam?(event)
-      event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
-        embed.description=text
-        embed.color=xcolor
-        embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
-      end
-      if f.map{|q| q.join("\n")}.join("\n\n").length>=1900
+    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1400 && safe_to_spam?(event)
+      if f.map{|q| q.join("\n")}.join("\n\n").length>=1400
+        str=''
         for i in 0...f.length
-          event.channel.send_embed('') do |embed|
-            embed.color=xcolor
-            embed.add_field(name: f[i][0], value: f[i][1], inline: true)
+          str=extend_message(str,"__**#{f[i][0]}**__",event,2)
+          f[i][1]=f[i][1].split("\n")
+          for i2 in 0...f[i][1].length
+            ff='  -  '
+            ff="\n" if i2==0
+            str=extend_message(str,f[i][1][i2].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
           end
         end
+        event.respond str
       else
         event.channel.send_embed('') do |embed|
           embed.color=xcolor
@@ -1710,8 +1666,13 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
           end
         end
       end
+      event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
+        embed.description=text
+        embed.color=xcolor
+        embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
+      end
       return nil
-    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1800 || f.map{|q| q[1].length}.max>12
+    elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1400 || (f.map{|q| q[1].split("\n").length}.max>12 && !safe_to_spam?(event))
       text="#{text}\nThe list of units with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
       f=nil
     else
@@ -1734,7 +1695,7 @@ end
 def disp_ce_card(bot,event,args=nil)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  ce=find_ce_ex(args.join(' '),event)
+  ce=find_data_ex(:find_ce,args.join(' '),event)
   if ce.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -1767,7 +1728,7 @@ end
 def disp_code_data(bot,event,args=nil)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  ce=find_code_ex(args.join(' '),event)
+  ce=find_data_ex(:find_code,args.join(' '),event)
   if ce.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -1785,7 +1746,7 @@ end
 def disp_skill_data(bot,event,args=nil)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_skill_ex(args.join(' '),event)
+  k=find_data_ex(:find_skill,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -1957,7 +1918,7 @@ end
 def disp_clothing_data(bot,event,args=nil)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
-  k=find_clothes_ex(args.join(' '),event)
+  k=find_data_ex(:find_clothes,args.join(' '),event)
   if k.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -1994,6 +1955,77 @@ def disp_clothing_data(bot,event,args=nil)
     text="#{text}\n\n__**Skills:**__\n#{k[2,3].map{|q| "*#{q}*"}.join("\n")}\n\n**Total EXP to reach level 10:** #{longFormattedNumber(k[5].inject(0){|sum,x| sum + x })}"
   end
   create_embed(event,"__**#{k[0]}**__",text,xcolor)
+end
+
+def disp_mat_data(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_data_ex(:find_mat,args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  ftr=nil
+  lst=[[],[],[]]
+  srvs=@servants.map{|q| q}
+  for i in 0...srvs.length
+    mts=[]
+    mts2=[]
+    rnk=['First','Second','Third','Final']
+    x=srvs[i][18]
+    for i2 in 0...x.length
+      for i3 in 0...x[i2].length
+        m=x[i2][i3].split(' ')
+        f=m.pop
+        mts.push("#{f.gsub('x','')} for #{rnk[i2]} Ascension") if m.join(' ')==k && i2<4
+        mts2.push("#{f.gsub('x','')} for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
+      end
+    end
+    lst[0].push("#{srvs[i][0]}#{'.' unless srvs[i][0]<2}) #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
+    lst[1].push("#{srvs[i][0]}#{'.' unless srvs[i][0]<2}) #{srvs[i][1]}  -  #{mts2.join(', ')}") if mts2.length>0
+    x=srvs[i][19]
+    mts=[]
+    for i2 in 0...x.length
+      for i3 in 0...x[i2].length
+        m=x[i2][i3].split(' ')
+        f=m.pop
+        mts.push("#{f.gsub('x','')} to reach L#{i2+2}") if m.join(' ')==k
+      end
+    end
+    lst[2].push("#{srvs[i][0]}#{'.' unless srvs[i][0]<2}) #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
+  end
+  text=''
+  unless safe_to_spam?(event)
+    ftr='For an actual list of servants who need this material, use this command in PM.'
+    text="#{text}\n#{lst[0].length} servants use this material for Ascension"
+    text="#{text}\n#{lst[1].length} servants use this material for Costumes" if lst[1].length>0
+    text="#{text}\n#{lst[2].length} servants use this material for Skill Enhancement"
+  end
+  create_embed(event,"__**#{k}**__",text,0x162C6E,ftr,find_emote(bot,event,k,1))
+  return nil unless safe_to_spam?(event)
+  str="__**Ascension uses for #{k}**__ (#{lst[0].length} total)"
+  if lst[0].length<=0
+    str="~~**#{k} is not used for Ascension**~~"
+  else
+    for i in 0...lst[0].length
+      str=extend_message(str,lst[0][i],event)
+    end
+  end
+  unless lst[1].length<=0
+    str=extend_message(str,"__**Costume uses for #{k}**__ (#{lst[1].length} total)",event,2)
+    for i in 0...lst[1].length
+      str=extend_message(str,lst[1][i],event)
+    end
+  end
+  if lst[2].length<=0
+    str=extend_message(str,"~~**#{k} is not used for Skill Enhancement**~~",event,2)
+  else
+    str=extend_message(str,"__**Enhancement uses for #{k}**__ (#{lst[2].length} total)",event,2)
+    for i in 0...lst[2].length
+      str=extend_message(str,lst[2][i],event)
+    end
+  end
+  event.respond str
 end
 
 def get_donor_list()
@@ -2033,12 +2065,12 @@ def disp_aliases(bot,event,args=nil,mode=0)
   data_load()
   nicknames_load()
   unless args.length.zero?
-    if find_servant_ex(args.join(''),event).length<=0
+    if find_data_ex(:find_servant,args.join(''),event).length<=0
       event.respond "#{args.join(' ')} is not a servant name or an alias."
       return nil
     end
   end
-  unit=find_servant_ex(args.join(''),event)
+  unit=find_data_ex(:find_servant,args.join(''),event)
   unit=nil if unit.length<=0 || args.length.zero?
   f=[]
   n=@aliases.map{|a| a}
@@ -2569,13 +2601,13 @@ end
 
 bot.command([:traits,:trait]) do |event, *args|
   name=args.join(' ')
-  if find_servant_ex(name,event,true).length>0
+  if find_data_ex(:find_servant,name,event,true).length>0
     disp_servant_traits(bot,event,args)
-  elsif find_enemy_ex(name,event,true).length>0
+  elsif find_data_ex(:find_enemy,name,event,true).length>0
     disp_enemy_traits(bot,event,args)
-  elsif find_servant_ex(name,event).length>0
+  elsif find_data_ex(:find_servant,name,event).length>0
     disp_servant_traits(bot,event,args)
-  elsif find_enemy_ex(name,event).length>0
+  elsif find_data_ex(:find_enemy,name,event).length>0
     disp_enemy_traits(bot,event,args)
   else
     event.respond "No matches found."
@@ -2599,13 +2631,13 @@ end
 
 bot.command([:ce,:CE,:craft,:essance,:craftessance]) do |event, *args|
   name=args.join(' ')
-  if find_ce_ex(name,event,true).length>0
+  if find_data_ex(:find_ce,name,event,true).length>0
     disp_ce_card(bot,event,args)
-  elsif find_servant_ex(name,event,true).length>0
+  elsif find_data_ex(:find_servant,name,event,true).length>0
     disp_servant_ce(bot,event,args)
-  elsif find_ce_ex(name,event).length>0
+  elsif find_data_ex(:find_ce,name,event).length>0
     disp_ce_card(bot,event,args)
-  elsif find_servant_ex(name,event).length>0
+  elsif find_data_ex(:find_servant,name,event).length>0
     disp_servant_ce(bot,event,args)
   else
     event.respond "No matches found."
@@ -2618,13 +2650,13 @@ end
 
 bot.command([:code]) do |event, *args|
   name=args.join(' ')
-  if find_clothes_ex(name,event,true).length>0
+  if find_data_ex(:find_clothes,name,event,true).length>0
     disp_clothing_data(bot,event,args)
-  elsif find_code_ex(name,event,true).length>0
+  elsif find_data_ex(:find_code,name,event,true).length>0
     disp_code_data(bot,event,args)
-  elsif find_clothes_ex(name,event).length>0
+  elsif find_data_ex(:find_clothes,name,event).length>0
     disp_clothing_data(bot,event,args)
-  elsif find_code_ex(name,event).length>0
+  elsif find_data_ex(:find_code,name,event).length>0
     disp_code_data(bot,event,args)
   else
     event.respond "No matches found."
@@ -2645,6 +2677,11 @@ bot.command([:mats,:ascension,:enhancement,:enhance,:materials]) do |event, *arg
   return nil
 end
 
+bot.command([:mat,:material]) do |event, *args|
+  disp_mat_data(bot,event,args)
+  return nil
+end
+
 bot.command(:skills) do |event, *args|
   disp_servant_skills(bot,event,args)
   return nil
@@ -2652,6 +2689,11 @@ end
 
 bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args|
   disp_tiny_stats(bot,event,args)
+  return nil
+end
+
+bot.command(:boop) do |event|
+  disp_mat_data(bot,event,args)
   return nil
 end
 
@@ -3187,6 +3229,10 @@ bot.mention do |event|
     args.shift
     disp_servant_mats(bot,event,args)
     m=false
+  elsif ['mat','material'].include?(args[0])
+    args.shift
+    disp_mat_data(bot,event,args)
+    m=false
   elsif ['command','commandcode'].include?(args[0])
     args.shift
     disp_code_data(bot,event,args)
@@ -3197,13 +3243,13 @@ bot.mention do |event|
     m=false
   elsif ['code'].include?(args[0])
     args.shift
-    if find_clothes_ex(args.join(' '),event,true).length>0
+    if find_data_ex(:find_clothes,args.join(' '),event,true).length>0
       disp_clothing_data(bot,event,args)
-    elsif find_code_ex(args.join(' '),event,true).length>0
+    elsif find_data_ex(:find_code,args.join(' '),event,true).length>0
       disp_code_data(bot,event,args)
-    elsif find_clothes_ex(args.join(' '),event).length>0
+    elsif find_data_ex(:find_clothes,args.join(' '),event).length>0
       disp_clothing_data(bot,event,args)
-    elsif find_code_ex(args.join(' '),event).length>0
+    elsif find_data_ex(:find_code,args.join(' '),event).length>0
       disp_code_data(bot,event,args)
     else
       event.respond "No matches found."
@@ -3215,13 +3261,13 @@ bot.mention do |event|
     m=false
   elsif ['ce','craft','essance','craftessance'].include?(args[0])
     args.shift
-    if find_ce_ex(args.join(' '),event,true).length>0
+    if find_data_ex(:find_ce,args.join(' '),event,true).length>0
       disp_ce_card(bot,event,args)
-    elsif find_servant_ex(args.join(' '),event,true).length>0
+    elsif find_data_ex(:find_servant,args.join(' '),event,true).length>0
       disp_servant_ce(bot,event,args)
-    elsif find_ce_ex(args.join(' '),event).length>0
+    elsif find_data_ex(:find_ce,args.join(' '),event).length>0
       disp_ce_card(bot,event,args)
-    elsif find_servant_ex(args.join(' '),event).length>0
+    elsif find_data_ex(:find_servant,args.join(' '),event).length>0
       disp_servant_ce(bot,event,args)
     else
       event.respond "No matches found."
@@ -3229,9 +3275,9 @@ bot.mention do |event|
     m=false
   end
   if m
-    if find_ce_ex(name,event,true).length>0
+    if find_data_ex(:find_ce,name,event,true).length>0
       disp_ce_card(bot,event,args)
-    elsif find_servant_ex(name,event,true).length>0
+    elsif find_data_ex(:find_servant,name,event,true).length>0
       disp_servant_stats(bot,event,args)
       disp_servant_skills(bot,event,args,true)
       if safe_to_spam?(event)
@@ -3240,17 +3286,19 @@ bot.mention do |event|
         disp_servant_ce(bot,event,args,true,true)
         disp_servant_mats(bot,event,args,true)
       end
-    elsif find_skill_ex(name,event,true).length>0
+    elsif find_data_ex(:find_skill,name,event,true).length>0
       disp_skill_data(bot,event,args)
-    elsif find_clothes_ex(name,event,true).length>0
+    elsif find_data_ex(:find_clothes,name,event,true).length>0
       disp_clothing_data(bot,event,args)
-    elsif find_code_ex(name,event,true).length>0
+    elsif find_data_ex(:find_code,name,event,true).length>0
       disp_code_data(bot,event,args)
-    elsif find_enemy_ex(name,event,true).length>0
+    elsif find_data_ex(:find_enemy,name,event,true).length>0
       disp_enemy_traits(bot,event,args)
-    elsif find_ce_ex(name,event).length>0
+    elsif find_data_ex(:find_mat,name,event,true).length>0
+      disp_mat_data(bot,event,args)
+    elsif find_data_ex(:find_ce,name,event).length>0
       disp_ce_card(bot,event,args)
-    elsif find_servant_ex(name,event).length>0
+    elsif find_data_ex(:find_servant,name,event).length>0
       disp_servant_stats(bot,event,args)
       disp_servant_skills(bot,event,args,true)
       if safe_to_spam?(event)
@@ -3259,13 +3307,15 @@ bot.mention do |event|
         disp_servant_ce(bot,event,args,true,true)
         disp_servant_mats(bot,event,args,true)
       end
-    elsif find_skill_ex(name,event).length>0
+    elsif find_data_ex(:find_skill,name,event).length>0
       disp_skill_data(bot,event,args)
-    elsif find_clothes_ex(name,event).length>0
+    elsif find_data_ex(:find_clothes,name,event).length>0
       disp_clothing_data(bot,event,args)
-    elsif find_code_ex(name,event).length>0
+    elsif find_data_ex(:find_code,name,event).length>0
       disp_code_data(bot,event,args)
-    elsif find_enemy_ex(name,event).length>0
+    elsif find_data_ex(:find_mat,name,event).length>0
+      disp_mat_data(bot,event,args)
+    elsif find_data_ex(:find_enemy,name,event).length>0
       disp_enemy_traits(bot,event,args)
     end
   end
@@ -3284,9 +3334,9 @@ bot.message do |event|
     s=s[5,s.length-5]
   end
   if m && !all_commands().include?(s.split(' ')[0])
-    if find_ce_ex(s,event,true).length>0
+    if find_data_ex(:find_ce,s,event,true).length>0
       disp_ce_card(bot,event,s.split(' '))
-    elsif find_servant_ex(s,event,true).length>0
+    elsif find_data_ex(:find_servant,s,event,true).length>0
       disp_servant_stats(bot,event,s.split(' '))
       disp_servant_skills(bot,event,s.split(' '),true)
       if safe_to_spam?(event)
@@ -3295,17 +3345,19 @@ bot.message do |event|
         disp_servant_ce(bot,event,s.split(' '),true,true)
         disp_servant_mats(bot,event,s.split(' '),true)
       end
-    elsif find_skill_ex(s,event,true).length>0
+    elsif find_data_ex(:find_skill,s,event,true).length>0
       disp_skill_data(bot,event,s.split(' '))
-    elsif find_clothes_ex(s,event,true).length>0
+    elsif find_data_ex(:find_clothes,s,event,true).length>0
       disp_clothing_data(bot,event,s.split(' '))
-    elsif find_code_ex(s,event,true).length>0
+    elsif find_data_ex(:find_code,s,event,true).length>0
       disp_code_data(bot,event,s.split(' '))
-    elsif find_enemy_ex(s,event,true).length>0
+    elsif find_data_ex(:find_mat,s,event,true).length>0
+      disp_mat_data(bot,event,s.split(' '))
+    elsif find_data_ex(:find_enemy,s,event,true).length>0
       disp_enemy_traits(bot,event,s.split(' '))
-    elsif find_ce_ex(s,event).length>0
+    elsif find_data_ex(:find_ce,s,event).length>0
       disp_ce_card(bot,event,s.split(' '))
-    elsif find_servant_ex(s,event).length>0
+    elsif find_data_ex(:find_servant,s,event).length>0
       disp_servant_stats(bot,event,s.split(' '))
       disp_servant_skills(bot,event,s.split(' '),true)
       if safe_to_spam?(event)
@@ -3314,13 +3366,15 @@ bot.message do |event|
         disp_servant_ce(bot,event,s.split(' '),true,true)
         disp_servant_mats(bot,event,s.split(' '),true)
       end
-    elsif find_skill_ex(s,event).length>0
+    elsif find_data_ex(:find_skill,s,event).length>0
       disp_skill_data(bot,event,s.split(' '))
-    elsif find_clothes_ex(s,event).length>0
+    elsif find_data_ex(:find_clothes,s,event).length>0
       disp_clothing_data(bot,event,s.split(' '))
-    elsif find_code_ex(s,event).length>0
+    elsif find_data_ex(:find_code,s,event).length>0
       disp_code_data(bot,event,s.split(' '))
-    elsif find_enemy_ex(s,event).length>0
+    elsif find_data_ex(:find_mat,s,event).length>0
+      disp_mat_data(bot,event,s.split(' '))
+    elsif find_data_ex(:find_enemy,s,event).length>0
       disp_enemy_traits(bot,event,s.split(' '))
     end
   end
