@@ -20,6 +20,7 @@ require 'active_support/core_ext/time' # Download link: https://rubygems.org/gem
 
 # The bot's token is basically their password, so is censored for obvious reasons
 bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: @prefix
+bot.gateway.check_heartbeat_acks = false
 
 @servants=[]
 @skills=[]
