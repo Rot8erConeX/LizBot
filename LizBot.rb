@@ -1181,8 +1181,8 @@ def disp_servant_stats(bot,event,args=nil)
   kx=@crafts.find_index{|q| q[0]==k[23]}
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
-  bond="**Bond CE:** #{@crafts[kx][1]}" unless kx.nil?
-  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)\n**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\n**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} *#{k[16]}#{np}\n\n#{bond}\n\n**Death Rate:** #{k[11]}%"
+  bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
+  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)\n**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Class:** *#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}\n\n#{bond}\n\n**Death Rate:** #{k[11]}%"
   fou=990
   fou=1000 if dispstr.include?('fou') && dispstr.include?('jp')
   fou=1000 if dispstr.include?('jpfou') || dispstr.include?('jp_fou') || dispstr.include?('foujp') || dispstr.include?('fou_jp')
@@ -1236,8 +1236,8 @@ def disp_tiny_stats(bot,event,args=nil)
   kx=@crafts.find_index{|q| q[0]==k[23]}
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
-  bond="**Bond CE:** #{@crafts[kx][1]}" unless kx.nil?
-  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20]}*\n\n**Class:** *#{k[2]}*\u00A0\u00B7\u00A0**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} #{k[16]}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}<:holy_grail:508802653829070886>\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}<:holy_grail:508802653829070886>\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0<:quick:509064606438653992>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:arts:509064605830742016>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:buster:509064606233133056>#{k[9][2]}  \u00B7  <:extra:509064605729816578>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:509239098888683521>\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
+  bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
+  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Class:** *#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\u00A0\u00B7\u00A0**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}<:holy_grail:508802653829070886>\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}<:holy_grail:508802653829070886>\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0<:quick:509064606438653992>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:arts:509064605830742016>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:buster:509064606233133056>#{k[9][2]}  \u00B7  <:extra:509064605729816578>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:509239098888683521>\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -1264,8 +1264,8 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   text="<:fgo_icon_rarity:509064606166155304>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
-  text="#{text}\n**Attribute:** *#{k[12]}*\n**Alignment:** *#{k[22]}*"
-  text="#{text}\n**Gender:** *#{k[13][0]}*" if ['Female','Male'].include?(k[13][0])
+  text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
   text="#{text}\n~~**Gender:** *Effeminate*~~" if [10,94,143].include?(k[0])
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
@@ -1308,7 +1308,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       str="#{'__' if safe_to_spam?(event,nil,1)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event,nil,1)}"
       if safe_to_spam?(event,nil,1)
         k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}].map{|q| q}
-        str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4]}"
+        str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         for i2 in 5...k2.length
           unless k2[i2][0]=='-'
             str="#{str}\n#{k2[i2][0]}"
@@ -1329,10 +1329,10 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
         str="#{str}\n#{"\n__" if safe_to_spam?(event,nil,1)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event,nil,1)}"
         if safe_to_spam?(event,nil,1)
           k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && k2 != q}].map{|q| q}
-          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4]}"
+          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
           for i2 in 5...k2.length
             unless k2[i2][0]=='-'
-              str="#{str}\n#{k2[i2][0]}"
+              str="#{str}\n#{k2[i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
               unless k2[i2][1].nil?
                 x=k2[i2][1]
                 x2=k2[i2][6]
@@ -1360,9 +1360,9 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     passklz.push('>None<')
   else
     for i in 0...k[15].length
-      str="*#{k[15][i]}*"
+      str="*#{k[15][i].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
       k2=@skills[@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}]
-      str="#{str}: #{k2[3]}"
+      str="#{str}: #{k2[3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
       passklz.push(str)
     end
   end
@@ -1373,10 +1373,10 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   ftr=nil
   ftr='For skill descriptions, use this command in PM or a bot spam channel.' unless safe_to_spam?(event)
   if actsklz.join("\n\n").length+passklz.join("\n").length+text.length+"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}".length>=1700
-    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}",xcolor,nil,xpic)
+    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}",xcolor,nil,xpic)
     create_embed(event,'__*Passive Skills*__',passklz.join("\n"),xcolor,ftr)
   else
-    create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
+    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
   end
 end
 
@@ -1396,9 +1396,9 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
   unless nophan.nil?
     nophan=@skills[nophan]
-    np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('┬á','')}"
+    np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}"
   end
-  text="#{text}\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('┬á','')}#{np}" unless chain
+  text="#{text}\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
   npl=1
   npl=0 if ['Event','Welfare'].include?(k[20])
   npl=1 if event.message.text.downcase.split(' ').include?('np2')
@@ -1408,26 +1408,26 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=5 if event.message.text.downcase.split(' ').include?('np5')
   unless nophan.nil?
     l=[nophan[5],nophan[6]]
-    text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','')}\n__**Effects**__"
+    text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
     for i in 7...17
       unless nophan[i][0]=='-'
-        text="#{text}\n*#{nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','')}*"
+        text="#{text}\n*#{nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
         if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
-          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         elsif nophan[i][0].include?('<OVERCHARGE>')
-          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         elsif npl==0 && nophan[i][0].include?('<LEVEL>')
-          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         else
-          text="#{text} - #{nophan[i][npl].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
+          text="#{text} - #{nophan[i][npl].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
         end
       end
     end
     nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}
     unless nophan.nil?
       nophan=@skills[nophan]
-      nophan[5]=nophan[5].encode(Encoding::UTF_8).gsub('┬á','')
-      nophan[6]=nophan[6].encode(Encoding::UTF_8).gsub('┬á','')
+      nophan[5]=nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+      nophan[6]=nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
       l[0]=(nophan[5]!=l[0] rescue (nophan[5].encode(Encoding::UTF_8)!=l[0].encode(Encoding::UTF_8)))
       l[1]=(nophan[6]!=l[1] rescue (nophan[6].encode(Encoding::UTF_8)!=l[1].encode(Encoding::UTF_8)))
       text="#{text}#{"\n" if l[0] || l[1]}"
@@ -1439,11 +1439,11 @@ def disp_servant_np(bot,event,args=nil,chain=false)
         unless nophan[i][0]=='-'
           text="#{text}\n*#{nophan[i][0]}*"
           if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
-            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           elsif nophan[i][0].include?('<OVERCHARGE>')
-            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           elsif npl==0 && nophan[i][0].include?('<LEVEL>')
-            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+            text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           else
             text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
           end
@@ -1484,17 +1484,17 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
     xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
     text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless chain
+    text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
-      text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6]}"
+      text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
     else
-      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
-      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
+      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
     end
-    text="#{text}\n\n__**Artist**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
-    text="#{text}\n\n__**Additional info**__\n#{ce[10]}" unless ce[10].nil? || ce[10].length.zero?
+    text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
+    text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
   end
-  create_embed(event,"#{"**#{ce[1]}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+  create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
 
 def disp_servant_mats(bot,event,args=nil,chain=false)
@@ -1680,18 +1680,13 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1400 || (f.map{|q| q[1].split("\n").length}.max>12 && !safe_to_spam?(event))
       text="#{text}\nThe list of units with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
       f=nil
-    else
-      f[-1][2]=nil if f.length<3
-      f[-1].compact!
+    end
+    for i in 0...f.length
+      text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
     end
     event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
       embed.description=text
       embed.color=xcolor
-      unless f.nil?
-        for i in 0...f.length
-          embed.add_field(name: f[i][0], value: f[i][1], inline: f[i][2].nil?)
-        end
-      end
       embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
     end
   end
@@ -1715,19 +1710,19 @@ def disp_ce_card(bot,event,args=nil)
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
   text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-  text="#{text}\n**Bond CE for:** *#{k[1]} [##{k[0]}]*" unless k.nil?
-  text="#{text}\n**Availability:** #{ce[8]}" if k.nil?
+  text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
+  text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
   if ce[4]==ce[5] && ce[6]==ce[7]
-    text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6]}"
+    text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
   else
-    text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6]}"
-    text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7]}"
+    text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
   end
-  text="#{text}\n\n__**Artist**__\n#{ce[9]}" unless ce[9].nil? || ce[9].length.zero?
-  text="#{text}\n\n__**Additional info**__\n#{ce[10]}" unless ce[10].nil? || ce[10].length.zero?
+  text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
+  text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
-  create_embed(event,"**#{ce[1]}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
+  create_embed(event,"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
 end
 
 def disp_code_data(bot,event,args=nil)
@@ -1761,7 +1756,7 @@ def disp_skill_data(bot,event,args=nil)
   text=''
   ftr=nil
   if k[0].is_a?(Array)
-    header="__**#{k[0][0]}**__ [#{'Active' if k[0][2]=='Skill'}#{'Passive' if k[0][2]=='Passive'}#{'Clothing' if k[0][2]=='Clothes'} Skill Family]"
+    header="__**#{k[0][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [#{'Active' if k[0][2]=='Skill'}#{'Passive' if k[0][2]=='Passive'}#{'Clothing' if k[0][2]=='Clothes'} Skill Family]"
     xcolor=0x0080B0
     xcolor=0xB08000 if k[0][2]=='Clothes'
     xcolor=0x008000 if k[0][2]=='Passive'
@@ -1770,10 +1765,10 @@ def disp_skill_data(bot,event,args=nil)
       xcolor=0x5000A0
       text2=''
       for i in 0...k.length
-        text2="__**Version: #{k[i][0].gsub('Primordial Rune (','').gsub(')','')}**__\n*Rank:* #{k[i][1]}\n*Cooldown:* #{k[i][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k[i][4]}"
+        text2="__**Version: #{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('Primordial Rune (','').gsub(')','')}**__\n*Rank:* #{k[i][1]}\n*Cooldown:* #{k[i][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         for i2 in 5...k[i].length
           unless k[i][i2][0]=='-'
-            text2="#{text2}\n*#{k[i][i2][0]}*"
+            text2="#{text2}\n*#{k[i][i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
             if k[i][i2][1].nil? || k[i][i2][1].length<=0 || k[i][i2][1]=='-'
             elsif k[i][i2][1,10].uniq.length<=1
               text2="#{text2}  \u00B7  Constant #{k[i][i2][1]}"
@@ -1808,12 +1803,12 @@ def disp_skill_data(bot,event,args=nil)
     ftr="You may also mean: #{list_lift(m,'or')}" if m.length>0
     for i in 0...k.length
       if k[i][2]=='Passive'
-        text="#{text}\n**Rank #{k[i][1]}:** #{k[i][3]}"
+        text="#{text}\n**Rank #{k[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}:** #{k[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
       elsif k[i][2]=='Clothes'
         text="#{text}\n*Cooldown:* #{k[i][1]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][1]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][1]-2}\u00A0L#{micronumber(10)}" unless k.map{|q| q[1]}.uniq.length<=1
         for i2 in 3...k[i].length
           unless k[i][i2][0]=='-'
-            text="#{text}\n*#{k[i][i2][0]}*"
+            text="#{text}\n*#{k[i][i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
             if k[i][i2][1].nil? || k[i][i2][1].length<=0 || k[i][i2][1]=='-'
             elsif k[i][i2][1,10].uniq.length<=1
               text="#{text}  \u00B7  Constant #{k[i][i2][1]}"
@@ -1824,15 +1819,15 @@ def disp_skill_data(bot,event,args=nil)
         end
       else
         if k[0][0]=='Innocent Monster' && k.reject{|q| q[1][0,2]=='EX'}.length<=0
-          text="#{text}\n\n__**Variation: #{k[i][1].gsub('EX(','').gsub(')','')}**__"
+          text="#{text}\n\n__**Variation: #{k[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('EX(','').gsub(')','')}**__"
         else
-          text="#{text}\n\n__**Rank: #{k[i][1]}**__"
+          text="#{text}\n\n__**Rank: #{k[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__"
         end
         text="#{text}\n*Cooldown:* #{k[i][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][3]-2}\u00A0L#{micronumber(10)}" unless k.map{|q| q[3]}.uniq.length<=1
-        text="#{text}\n*Target:* #{k[i][4]}" unless k.map{|q| q[4]}.uniq.length<=1
+        text="#{text}\n*Target:* #{k[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless k.map{|q| q[4]}.uniq.length<=1
         for i2 in 5...k[i].length
           unless k[i][i2][0]=='-'
-            text="#{text}\n*#{k[i][i2][0]}*"
+            text="#{text}\n*#{k[i][i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
             if k[i][i2][1].nil? || k[i][i2][1].length<=0 || k[i][i2][1]=='-'
             elsif k[i][i2][1,10].uniq.length<=1
               text="#{text}  \u00B7  Constant #{k[i][i2][1]}"
@@ -1844,9 +1839,9 @@ def disp_skill_data(bot,event,args=nil)
       end
     end
   elsif k[2]=='Passive'
-    header="__**#{k[0]} #{k[1]}**__ [Passive Skill]"
+    header="__**#{k[0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} #{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Passive Skill]"
     xcolor=0x006000
-    text="**Effect:** #{k[3]}"
+    text="**Effect:** #{k[3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
   elsif k[2]=='Clothes'
     header="__**#{k[0]}**__ [Clothing Skill]"
     xcolor=0x806000
@@ -1857,7 +1852,7 @@ def disp_skill_data(bot,event,args=nil)
     for i in 3...k.length
       unless k[i][0]=='-'
         m+=1
-        text="#{text}\n\n**Effect #{m}:** #{k[i][0]}"
+        text="#{text}\n\n**Effect #{m}:** #{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         if k[i][1].nil? || k[i][1].length<=0 || k[i][1]=='-'
         elsif k[i][1,10].uniq.length<=1
           text="#{text}\nConstant #{k[i][1]}"
@@ -1872,7 +1867,7 @@ def disp_skill_data(bot,event,args=nil)
       end
     end
   else
-    header="__**#{k[0]}#{" #{k[1]}" unless k[1]=='-'}**__ [Active Skill]"
+    header="__**#{k[0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{" #{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless k[1]=='-'}**__ [Active Skill]"
     xcolor=0x006080
     text="**Cooldown:** #{k[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[3]-2}\u00A0L#{micronumber(10)}\n**Target:** #{k[4]}"
     ftr='Use this command in PM for a list of servants who have this skill.' unless safe_to_spam?(event)
@@ -1882,7 +1877,7 @@ def disp_skill_data(bot,event,args=nil)
     for i in 5...k.length
       unless k[i][0]=='-'
         m+=1
-        text="#{text}\n\n**Effect #{m}:** #{k[i][0]}"
+        text="#{text}\n\n**Effect #{m}:** #{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         if k[i][1].nil? || k[i][1].length<=0 || k[i][1]=='-'
         elsif k[i][1,10].uniq.length<=1
           text="#{text}\nConstant #{k[i][1]}"
@@ -1929,10 +1924,10 @@ def disp_clothing_data(bot,event,args=nil)
     return nil
   end
   xcolor=0xF08000
-  text="**Availability:** #{k[1]}"
+  text="**Availability:** #{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
   if safe_to_spam?(event)
     for i in 2...5
-      text="#{text}\n\n__Skill #{i-1}: **#{k[i]}**__"
+      text="#{text}\n\n__Skill #{i-1}: **#{k[i].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__"
       skl=@skills.find_index{|q| q[2]=='Clothes' && q[0]==k[i]}
       if skl.nil?
         text="#{text}\n~~No data found~~"
@@ -1941,7 +1936,7 @@ def disp_clothing_data(bot,event,args=nil)
         text="#{text}\n*Cooldown:* #{skl[1]}\u00A0L#{micronumber(1)}  \u00B7  #{skl[1]-1}\u00A0L#{micronumber(6)}  \u00B7  #{skl[1]-2}\u00A0L#{micronumber(10)}"
         for i2 in 3...skl.length
           unless skl[i2][0]=='-'
-            text="#{text}\n*#{skl[i2][0]}*"
+            text="#{text}\n*#{skl[i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
             if skl[i2][1].nil? || skl[i2][1].length<=0 || skl[i2][1]=='-'
             elsif skl[i2][1,10].uniq.length<=1
               text="#{text}  \u00B7  Constant #{skl[i2][1]}"
@@ -1959,7 +1954,7 @@ def disp_clothing_data(bot,event,args=nil)
   else
     text="#{text}\n\n__**Skills:**__\n#{k[2,3].map{|q| "*#{q}*"}.join("\n")}\n\n**Total EXP to reach level 10:** #{longFormattedNumber(k[5].inject(0){|sum,x| sum + x })}"
   end
-  create_embed(event,"__**#{k[0]}**__",text,xcolor)
+  create_embed(event,"__**#{k[0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__",text,xcolor)
 end
 
 def disp_mat_data(bot,event,args=nil)
