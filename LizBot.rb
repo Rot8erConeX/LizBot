@@ -693,7 +693,7 @@ def data_load()
   for i in 0...k.length
     k[i].pop
   end
-  k=k.map{|q| q.join(' ')}.uniq.sort
+  k=k.reject{|q| q.length<=0}.map{|q| q.join(' ')}.uniq.sort
   open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt', 'w') { |f|
     f.puts k.join("\n")
     f.puts "\n"
@@ -1057,8 +1057,12 @@ def find_mat(name,event,fullname=false)
   return [] if name.length<2
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,7]=='Gem of ' && "#{q.gsub('Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
   return [] if fullname
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,7]=='Gem of ' && "#{q.gsub('Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
   return []
 end
@@ -1527,12 +1531,12 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
   flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
   flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
-  flds.push(['Skill Enhancement materials',"*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[19].nil? || k[19][0].nil? || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
+  flds.push(['Skill Enhancement materials',"*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
   hdr="#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}"
-  if hdr.length+ftr.length+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
+  if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
     create_embed(event,hdr,str,xcolor,nil,xpic,nil,1)
     str="__**#{flds[-1][0]}**__"
     hdr=''
@@ -1968,6 +1972,9 @@ def disp_mat_data(bot,event,args=nil)
   end
   ftr=nil
   lst=[[],[],[]]
+  fff=[]
+  fff2=0
+  fff3=0
   srvs=@servants.map{|q| q}
   for i in 0...srvs.length
     mts=[]
@@ -1978,31 +1985,40 @@ def disp_mat_data(bot,event,args=nil)
       for i3 in 0...x[i2].length
         m=x[i2][i3].split(' ')
         f=m.pop
-        mts.push("#{f.gsub('x','')} for #{rnk[i2]} Ascension") if m.join(' ')==k && i2<4
-        mts2.push("#{f.gsub('x','')} for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
+        mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4
+        mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
+        fff3+=f.gsub('x','').to_i if m.join(' ')==k
       end
     end
-    lst[0].push("#{srvs[i][0]}#{'.' unless srvs[i][0]<2}) #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
-    lst[1].push("#{srvs[i][0]}#{'.' unless srvs[i][0]<2}) #{srvs[i][1]}  -  #{mts2.join(', ')}") if mts2.length>0
+    lst[0].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
+    lst[1].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts2.join(', ')}") if mts2.length>0
+    fff.push(srvs[i][0]) if mts.length>0 || mts2.length>0
+    fff2+=mts.length+mts2.length
     x=srvs[i][19]
     mts=[]
     for i2 in 0...x.length
       for i3 in 0...x[i2].length
         m=x[i2][i3].split(' ')
         f=m.pop
-        mts.push("#{f.gsub('x','')} to reach L#{i2+2}") if m.join(' ')==k
+        mts.push("**#{f.gsub('x','')}** to reach L#{i2+2}") if m.join(' ')==k
+        fff3+=3*f.gsub('x','').to_i if m.join(' ')==k
       end
     end
-    lst[2].push("#{srvs[i][0]}#{'.' unless srvs[i][0]<2}) #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
+    lst[2].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
+    fff.push(srvs[i][0]) if mts.length>0 && !fff.include?(srvs[i][0])
+    fff2+=mts.length
   end
   text=''
   unless safe_to_spam?(event)
     ftr='For an actual list of servants who need this material, use this command in PM.'
     text="#{text}\n#{lst[0].length} servants use this material for Ascension"
-    text="#{text}\n#{lst[1].length} servants use this material for Costumes" if lst[1].length>0
     text="#{text}\n#{lst[2].length} servants use this material for Skill Enhancement"
+    text="#{text}\n#{lst[1].length} servants use this material for Costumes" if lst[1].length>0
+    text="#{text}\n\n#{fff.length} total servants use this material"
+    text="#{text}\n#{fff2} total uses for this material"
+    text="#{text}\n#{fff3} total copies of this material are required to max everyone"
   end
-  create_embed(event,"__**#{k}**__",text,0x162C6E,ftr,find_emote(bot,event,k,1))
+  create_embed(event,"__**#{k}**__#{"\n#{k.gsub('Gem of ','')} Gem" if k[0,7]=='Gem of '}",text,0x162C6E,ftr,find_emote(bot,event,k,1))
   return nil unless safe_to_spam?(event)
   str="__**Ascension uses for #{k}**__ (#{lst[0].length} total)"
   if lst[0].length<=0
@@ -2010,12 +2026,6 @@ def disp_mat_data(bot,event,args=nil)
   else
     for i in 0...lst[0].length
       str=extend_message(str,lst[0][i],event)
-    end
-  end
-  unless lst[1].length<=0
-    str=extend_message(str,"__**Costume uses for #{k}**__ (#{lst[1].length} total)",event,2)
-    for i in 0...lst[1].length
-      str=extend_message(str,lst[1][i],event)
     end
   end
   if lst[2].length<=0
@@ -2026,6 +2036,13 @@ def disp_mat_data(bot,event,args=nil)
       str=extend_message(str,lst[2][i],event)
     end
   end
+  unless lst[1].length<=0
+    str=extend_message(str,"__**Costume uses for #{k}**__ (#{lst[1].length} total)",event,2)
+    for i in 0...lst[1].length
+      str=extend_message(str,lst[1][i],event)
+    end
+  end
+  str=extend_message(str,"#{fff.length} total servants use this material\n#{fff2} total uses for this material\n#{longFormattedNumber(fff3)} total copies of this material are required to max everyone",event,2)
   event.respond str
 end
 
