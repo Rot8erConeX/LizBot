@@ -608,7 +608,7 @@
 608\Heroic Spirit Formal Dress: Euryale\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\AKIRA\Fate/Grand Order Fes. 2017 2nd Anniversary CE
 609\Heroic Spirit Formal Dress: Scathach\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\Koyama Hirokazu\Fate/Grand Order Fes. 2017 2nd Anniversary CE
 610\Heroic Spirit Formal Dress: Karna\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\pako\Fate/Grand Order Fes. 2017 2nd Anniversary CE
-611\Heroic Spirit Formal Dress: Altria Pendragon\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\Ishida Akira\Fate/Grand Order Fes. 2017 2nd Anniversary CE
+611\Heroic Spirit Formal Dress: Altria Pendragon [Lancer]\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\Ishida Akira\Fate/Grand Order Fes. 2017 2nd Anniversary CE
 612\Heroic Spirit Formal Dress: Altria Pendragon [Alter]\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\Ishida Akira\Fate/Grand Order Fes. 2017 2nd Anniversary CE
 613\Heroic Spirit Formal Dress: Romulus\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\Koyama Hirokazu\Fate/Grand Order Fes. 2017 2nd Anniversary CE
 614\Heroic Spirit Formal Dress: Medusa\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\BLACK\Fate/Grand Order Fes. 2017 2nd Anniversary CE
@@ -824,7 +824,7 @@
 824\Heroic Spirit Travel Dress: Arjuna\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\pako\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 825\Heroic Spirit Travel Dress: Altera\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\huke\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 826\Heroic Spirit Travel Dress: Altria Pendragon\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Takeuchi Takashi\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
-827\Heroic Spirit Travel Dress: Altria Pendragon\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Ishida Akira\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
+827\Heroic Spirit Travel Dress: Altria Pendragon [Lancer]\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Ishida Akira\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 828\Heroic Spirit Travel Dress: Antonio Salieri\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\PFALZ\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 829\Heroic Spirit Travel Dress: Ereshkigal\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Morii Shizuki\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 830\Heroic Spirit Travel Dress: Okeanos Caster\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Hidari\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
