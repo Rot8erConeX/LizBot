@@ -1724,6 +1724,7 @@ def disp_ce_card(bot,event,args=nil)
   text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
+  ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
   create_embed(event,"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
 end
 
