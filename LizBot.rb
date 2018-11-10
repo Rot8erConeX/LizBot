@@ -1681,8 +1681,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       text="#{text}\nThe list of units with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
       f=nil
     end
-    for i in 0...f.length
-      text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
+    unless f.nil?
+      for i in 0...f.length
+        text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
+      end
     end
     event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
       embed.description=text
