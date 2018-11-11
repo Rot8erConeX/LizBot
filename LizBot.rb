@@ -1845,16 +1845,19 @@ def disp_skill_data(bot,event,args=nil)
         end
       end
     end
+    ftr='If you\'re looking for a servants\' aliases, the command name is "aliases", not "alias".' if k[0][0][0,5].downcase=='alias'
   elsif k[2]=='Passive'
     header="__**#{k[0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} #{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Passive Skill]"
     xcolor=0x006000
     text="**Effect:** #{k[3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    ftr='If you\'re looking for a servants\' aliases, the command name is "aliases", not "alias".' if k[0][0,5].downcase=='alias'
   elsif k[2]=='Clothes'
     header="__**#{k[0]}**__ [Clothing Skill]"
     xcolor=0x806000
     text="**Cooldown:** #{k[1]}\u00A0L#{micronumber(1)}  \u00B7  #{k[1]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[1]-2}\u00A0L#{micronumber(10)}"
     mx=@skills.reject{|q| q[0][0,k[0].length+2]!="#{k[0]} (" || q[1]!=k[1]}.map{|q| "#{q[0]} #{q[1]}"}.uniq
     ftr="You may also mean: #{list_lift(mx,'or')}" if mx.length>0
+    ftr='If you\'re looking for a servants\' aliases, the command name is "aliases", not "alias".' if k[0][0,5].downcase=='alias'
     m=0
     for i in 3...k.length
       unless k[i][0]=='-'
@@ -1880,6 +1883,7 @@ def disp_skill_data(bot,event,args=nil)
     ftr='Use this command in PM for a list of servants who have this skill.' unless safe_to_spam?(event)
     mx=@skills.reject{|q| q[0][0,k[0].length+2]!="#{k[0]} (" || q[1]!=k[1]}.map{|q| "#{q[0]} #{q[1]}"}.uniq
     ftr="You may also mean: #{list_lift(mx,'or')}" if mx.length>0
+    ftr='If you\'re looking for a servants\' aliases, the command name is "aliases", not "alias".' if k[0][0,5].downcase=='alias'
     m=0
     for i in 5...k.length
       unless k[i][0]=='-'
