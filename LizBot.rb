@@ -287,6 +287,8 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,'**reboot**',"Reboots this shard of the bot, installing any updates.\n\n**This command is only able to be used by Rot8er_ConeX**",0x008b8b)
   elsif command.downcase=='snagchannels'
     create_embed(event,'**snagchannels** __server id number__',"Gets a list of all channels in `server id`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+  elsif ['donation','donate'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}**",'Responds with information regarding potential donations to my developer.',0xED619A)
   elsif command.downcase=='sendmessage'
     create_embed(event,'**sendmessage** __channel id__ __*message__',"Sends the message `message` to the channel with id `channel`\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
   elsif command.downcase=='leaveserver'
