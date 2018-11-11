@@ -2446,11 +2446,11 @@ bot.command(:sendmessage, from: 167657750971547648) do |event, channel_id, *args
 end
 
 bot.command(:sendpm, from: 167657750971547648) do |event, user_id, *args| # sends a PM to a specific user
-  dev_pm(bot,event)
+  dev_pm(bot,event,user_id)
 end
 
 bot.command(:ignoreuser, from: 167657750971547648) do |event, user_id| # causes Liz to ignore the specified user
-  bliss_mode(bot,event)
+  bliss_mode(bot,event,user_id)
 end
 
 bot.command(:leaveserver, from: 167657750971547648) do |event, server_id| # forces Liz to leave a server
