@@ -776,7 +776,7 @@ bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
   exec "cd C:/Users/Mini-Matt/Desktop/devkit && LizBot.rb #{@shardizard}"
 end
 
-bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, subcommand|
+bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, command, subcommand|
   command='' if command.nil?
   k=0
   k=event.server.id unless event.server.nil?
