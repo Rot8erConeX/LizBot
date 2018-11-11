@@ -1588,6 +1588,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
   if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
+    artist=k[24] unless k[24].nil? || k[24].length<=0
     text='Requested art not found.  Default art shown.'
   end
   f=[[],[],[]]
