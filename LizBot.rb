@@ -31,7 +31,7 @@ bot.gateway.check_heartbeat_acks = false
 @enemies=[]
 @aliases=[]
 @embedless=[]
-@spam_channels=[]
+@spam_channels=[[],[]]
 @server_data=[]
 @ignored=[]
 @embedless=[]
@@ -433,11 +433,12 @@ def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe t
   return true if chn.name.downcase.include?('lizbot')  # it is safe to spam in channels designed specifically for LizBot
   return true if chn.name.downcase.include?('liz-bot')
   return true if chn.name.downcase.include?('liz_bot')
-  return true if @spam_channels.include?(chn.id)
+  return true if @spam_channels[0].include?(chn.id)
   return false if mode==0
   return true if chn.name.downcase.include?('fate') && chn.name.downcase.include?('grand') && chn.name.downcase.include?('order')
   return true if chn.name.downcase.include?('fate') && chn.name.downcase.include?('go')
   return true if chn.name.downcase.include?('fgo')
+  return true if @spam_channels[1].include?(chn.id)
   return false
 end
 
@@ -728,7 +729,7 @@ def metadata_load()
   @server_data=b[2]
   @server_data=[[0,0,0,0,0],[0,0,0,0,0]] if @server_data.nil?
   @spam_channels=b[3]
-  @spam_channels=[] if @spam_channels.nil?
+  @spam_channels=[[],[]] if @spam_channels.nil?
 end
 
 def metadata_save()
@@ -2718,6 +2719,7 @@ end
 
 bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, f|
   f='' if f.nil?
+  metadata_load()
   if event.server.nil?
     event.respond 'It is safe for me to send long replies here because this is my PMs with you.'
   elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id)
@@ -2734,20 +2736,23 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
     event.respond 'It is safe for me to send long replies here because the channel name includes both the word "bot" and the word "channel".'
   elsif event.channel.name.downcase.include?('lizbot') || event.channel.name.downcase.include?('liz-bot') || event.channel.name.downcase.include?('liz_bot')
     event.respond 'It is safe for me to send long replies here because the channel name specifically calls attention to the fact that it is made for me.'
-  elsif @spam_channels.include?(event.channel.id)
+  elsif @spam_channels[0].include?(event.channel.id)
     if is_mod?(event.user,event.server,event.channel) && ['off','no','false'].include?(f.downcase)
       metadata_load()
-      @spam_channels.delete(event.channel.id)
+      @spam_channels[0].delete(event.channel.id)
+      @spam_channels[1].delete(event.channel.id)
       metadata_save()
       event.respond 'This channel is no longer marked as safe for me to send long replies to.'
     else
       event << 'This channel has been specifically designated for me to be safe to send long replies to.'
       event << ''
-      event << 'If you wish to change that, ask a server mod to type `FGO!spam off` in this channel.'
+      event << 'If you wish to turn them partially off (so commands like `skills` show all data but commands like `art` do not), ask a server mod to type `FGO!spam semi` in this channel.'
+      event << 'If you wish to turn them entirely off, ask a server mod to type `FGO!spam off` in this channel.'
     end
   elsif is_mod?(event.user,event.server,event.channel,1) && ['on','yes','true'].include?(f.downcase)
     metadata_load()
-    @spam_channels.push(event.channel.id)
+    @spam_channels[0].push(event.channel.id)
+    @spam_channels[1].delete(event.channel.id)
     metadata_save()
     event.respond 'This channel is now marked as safe for me to send long replies to.'
   elsif event.channel.name.downcase.include?('fate') && event.channel.name.downcase.include?('grand') && event.channel.name.downcase.include?('order')
@@ -2756,6 +2761,25 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
     event.respond 'It is safe for me to send __**certain**__ long replies here because the channel name includes the words "Fate", "GO".'
   elsif event.channel.name.downcase.include?('fgo')
     event.respond 'It is safe for me to send __**certain**__ long replies here because the channel name includes "FGO".'
+  elsif @spam_channels[1].include?(event.channel.id)
+    if is_mod?(event.user,event.server,event.channel) && ['off','no','false'].include?(f.downcase)
+      metadata_load()
+      @spam_channels[0].delete(event.channel.id)
+      @spam_channels[1].delete(event.channel.id)
+      metadata_save()
+      event.respond 'This channel is no longer marked as safe for me to send long replies to.'
+    else
+      event << 'This channel has been specifically designated for me to be safe to send __**certain**__ long replies to.'
+      event << ''
+      event << 'If you wish to turn them entirely on, ask a server mod to type `FGO!spam on` in this channel.'
+      event << 'If you wish to turn them entirely off, ask a server mod to type `FGO!spam off` in this channel.'
+    end
+  elsif is_mod?(event.user,event.server,event.channel,1) && ['semi','demi','pseudo','half'].include?(f.downcase)
+    metadata_load()
+    @spam_channels[0].delete(event.channel.id)
+    @spam_channels[1].push(event.channel.id)
+    metadata_save()
+    event.respond 'This channel is now marked as safe for me to send long replies to.'
   else
     event << 'It is not safe for me to send long replies here.'
     event << ''
@@ -2763,6 +2787,12 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
     event << '- Change the channel name to "bots".'
     event << '- Change the channel name to include the word "bot" and one of the following words: "spam", "command(s)", "channel".'
     event << '- Have a server mod type `FGO!spam on` in this channel.'
+    event << ''
+    event << 'If you wish to make it so certain long replies appear, such as the longer form of the `skills` command, try one of the following:'
+    event << '- Change the channel name to "FGO".'
+    event << '- Change the channel name to include the word "Fate" and the word "GO".'
+    event << '- Change the channel name to include the words "Fate", "Grand", and "Order".'
+    event << '- Have a server mod type `FGO!spam semi` in this channel.'
   end
 end
 
