@@ -1900,7 +1900,7 @@ def disp_skill_data(bot,event,args=nil)
     end
   end
   create_embed(event,header,text,xcolor,ftr)
-  if safe_to_spam?(event)
+  if safe_to_spam?(event,nil,1)
     srv=[]
     srv2=[]
     if k[0].is_a?(Array)
@@ -1918,7 +1918,7 @@ def disp_skill_data(bot,event,args=nil)
       text=flds[0][0]
       flds=triple_finish(flds[0][1].split("\n"),true)
     end
-    create_embed(event,'',text,xcolor,nil,nil,flds) if flds.length>0
+    create_embed(event,'',text,xcolor,nil,nil,flds) if flds.length>0 && (safe_to_spam?(event) || srv.length+srv2.length<=25)
   end
 end
 
