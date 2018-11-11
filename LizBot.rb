@@ -797,9 +797,9 @@ bot.command([:help,:commands,:command_list,:commandlist]) do |event, command, su
   elsif ['bugreport','suggestion','feedback'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __*message__",'PMs my developer with your username, the server, and the contents of the message `message`',0xED619A)
   elsif command.downcase=='addalias'
-    create_embed(event,'**addalias** __new alias__ __servant__',"Adds `new alias` to `servant`'s aliases.\nIf the arguments are listed in the opposite order, the command will auto-switch them.\n\nInforms you if the alias already belongs to someone.\nAlso informs you if the servant you wish to give the alias to does not exist.",0xC31C19)
+    create_embed(event,'**addalias** __new alias__ __servant__',"Adds `new alias` to `servant`'s aliases.\nIf the arguments are listed in the opposite order, the command will auto-switch them.\n\nInforms you if the alias already belongs to someone.\nAlso informs you if the servant you wish to give the alias to does not exist.\n\n**This command is only able to be used by server mods**.",0xC31C19)
   elsif ['deletealias','removealias'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __alias__",'Removes `alias` from the list of aliases, regardless of who it was for.',0xC31C19)
+    create_embed(event,"**#{command.downcase}** __alias__","Removes `alias` from the list of aliases, regardless of who it was for.\n\n**This command is only able to be used by server mods**.",0xC31C19)
   elsif ['backupaliases'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**","Backs up the alias list.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
   elsif ['restorealiases'].include?(command.downcase)
@@ -1594,6 +1594,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
   f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
   f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+  f[0].push("~~Every servant's April Fool's Day art~~") if artist=='Riyo'
   crf=@crafts.map{|q| q}
   for i in 0...crf.length
     f[0].push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist
@@ -3177,7 +3178,7 @@ bot.server_create do |event|
     event.server.leave
   else
     bot.user(167657750971547648).pm("Joined server **#{event.server.name}** (#{event.server.id})\nOwner: #{event.server.owner.distinct} (#{event.server.owner.id})\nAssigned the #{['Man','Sky','Earth','Star'][(event.server.id >> 22) % 4]} attribute")
-    bot.user(239973891626237952).pm("Joined server **#{event.server.name}** (#{event.server.id})\nOwner: #{event.server.owner.distinct} (#{event.server.owner.id})\nAssigned the #{['Man','Sky','Earth','Star'][(event.server.id >> 22) % 4]} attribute")
+   # bot.user(239973891626237952).pm("Joined server **#{event.server.name}** (#{event.server.id})\nOwner: #{event.server.owner.distinct} (#{event.server.owner.id})\nAssigned the #{['Man','Sky','Earth','Star'][(event.server.id >> 22) % 4]} attribute")
     metadata_load()
     @server_data[0][((event.server.id >> 22) % 4)] += 1
     metadata_save()
@@ -3188,7 +3189,7 @@ end
 bot.server_delete do |event|
   unless @shardizard==4
     bot.user(167657750971547648).pm("Left server **#{event.server.name}**")
-    bot.user(239973891626237952).pm("Left server **#{event.server.name}**")
+   # bot.user(239973891626237952).pm("Left server **#{event.server.name}**")
     metadata_load()
     @server_data[0][((event.server.id >> 22) % 4)] -= 1
     metadata_save()
