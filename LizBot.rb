@@ -1026,6 +1026,7 @@ def find_skill(name,event,fullname=false)
   return [] if name.length<2
   return sklz.reject{|q| q[0][0,17]!='Primordial Rune ('} if name=='primordialrune'
   return sklz.reject{|q| q[0]!='Innocent Monster' || q[1][0,2]!='EX'} if name=='innocentmonsterex'
+  return sklz.reject{|q| q[0]!='Whim of the Goddess' || q[1][0,1]!='A'} if name=='whimofthegoddessa'
   k=sklz.find_index{|q| "#{q[0]} #{q[1]}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return sklz[k] unless k.nil?
   k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
