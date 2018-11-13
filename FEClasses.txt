@@ -1,0 +1,158 @@
+Hoshido Noble\Fates\Hoshido\15, 15, 10, 10, 10, 10, 15, 0\60, 34, 28, 29, 30, 33, 31, 28\19, 10, 4, 5, 6, 4, 7, 3\**Promotes from:**/n*Nohr Prince/ss [Birthright/Revelation]*/t(Nobility, Dragon Fang)\\Dragon Ward, Hoshidan Unity\Swords, A; Dragonstones, A; Staves, B
+Samurai\Fates\Hoshido\10, 10, 0, 15, 20, 15, 0, 10\40, 20, 16, 23, 25, 24, 18, 20\17, 4, 0, 5, 8, 3, 3, 3\\Swordmaster, Master of Arms\Duelist's Blow, Vantage\Swords, B
+Swordmaster\Fates\Hoshido\10, 10, 5, 15, 20, 15, 0, 10\55, 30, 28, 32, 35, 33, 27, 31\18, 6, 2, 7, 11, 4, 5, 5\\\Astra, Swordfaire\Swords, S
+Master of Arms\Fates\Hoshido\20, 15, 0, 10, 10, 10, 10, 0\65, 33, 25, 30, 30, 31, 31, 28\20, 8, 0, 6, 9, 3, 7, 3\\\Seal Strength, Life and Death\Swords, A; Lances, B; Axes, B
+Oni Savage\Fates\Hoshido\20, 20, 10, 0, 10, 0, 20, 0\45, 24, 19, 16, 20, 17, 23, 18\18, 6, 1, 2, 5, 0, 7, 1\\Oni Chieftain, Blacksmith\Seal Resistance, Shove\Axes, B
+Oni Chieftain\Fates\Hoshido\10, 20, 15, 0, 10, 0, 20, 5\60, 34, 28, 25, 30, 25, 36, 31\19, 9, 5, 2, 7, 0, 10, 5\\\Death Blow, Counter\Axes, A; Tomes, B
+Blacksmith\Fates\Hoshido\20, 15, 0, 15, 10, 5, 15, 0\65, 33, 25, 32, 31, 30, 32, 27\21, 8, 0, 9, 8, 3, 8, 2\\\Salvage Blow, Lancebreaker\Swords, B; Axes, A
+Spear Fighter\Fates\Hoshido\15, 15, 0, 15, 15, 5, 10, 5\40, 22, 15, 23, 22, 21, 22, 21\17, 6, 0, 6, 6, 2, 5, 2\\Spear Master, Basara\Seal Defense, Swap\Lances, B
+Spear Master\Fates\Hoshido\15, 15, 0, 15, 15, 5, 10, 5\60, 34, 25, 33, 32, 29, 30, 29\18, 9, 0, 8, 8, 3, 7, 3\\\Seal Speed, Lancefaire\Lances, S
+Basara\Fates\Hoshido\20, 10, 10, 10, 10, 15, 5, 10\65, 31, 30, 30, 31, 35, 30, 32\20, 7, 5, 7, 7, 5, 7, 6\\\Rend Heaven, Quixotic\Lances, A; Tomes, B
+Diviner\Fates\Hoshido\0, 5, 15, 10, 15, 5, 0, 10\35, 17, 22, 20, 23, 19, 16, 20\15, 0, 4, 5, 6, 1, 1, 3\\Basara, Onmyoji\Magic +2, Future Sight\Tomes, B
+Onmyoji\Fates\Hoshido\0, 0, 20, 10, 15, 0, 0, 15\45, 25, 33, 31, 32, 27, 25, 31\16, 0, 7, 6, 7, 2, 3, 6\\\Rally Magic, Tomefaire\Tomes, A; Staves, B
+Monk\Fates\Hoshido\0, 5, 10, 10, 15, 15, 0, 20\35, 18, 21, 20, 22, 23, 17, 24\16, 0, 3, 5, 5, 4, 2, 5\\Onmyoji, Great Master\Miracle, Rally Luck\Staves, B
+Shrine Maiden\Fates\Hoshido\0, 5, 10, 10, 15, 15, 0, 20\35, 18, 21, 20, 22, 23, 17, 24\16, 0, 3, 5, 5, 4, 2, 5\\Onmyoji, Priestess\Miracle, Rally Luck\Staves, B
+Healer\Fates\Hoshido\0, 5, 10, 10, 15, 15, 0, 20\35, 18, 21, 20, 22, 23, 17, 24\16, 0, 3, 5, 5, 4, 2, 5\\Onmyoji\Miracle, Rally Luck\Staves, B
+Great Master\Fates\Hoshido\10, 15, 5, 5, 15, 15, 10, 10\55, 32, 30, 31, 33, 32, 28, 32\19, 8, 6, 6, 8, 5, 6, 7\\\Renewal, Countermagic\Lances, B; Staves, A
+Great Priest\Fates\Hoshido\10, 10, 10, 5, 15, 15, 0, 20\50, 29, 32, 30, 33, 34, 26, 34\19, 6, 7, 6, 9, 5, 5, 8\\\Renewal, Countermagic\Bows, B; Staves, A
+Priestess\Fates\Hoshido\10, 10, 10, 5, 15, 15, 0, 20\50, 29, 32, 30, 33, 34, 26, 34\19, 6, 7, 6, 9, 5, 5, 8\\\Renewal, Countermagic\Bows, B; Staves, A
+Great Mistress\Fates\Hoshido\10, 15, 5, 5, 15, 15, 10, 10\55, 32, 30, 31, 33, 32, 28, 32\19, 8, 6, 6, 8, 5, 6, 7\\\Renewal, Countermagic\Lances, B; Staves, A
+Great Healer\Fates\Hoshido\10, 12, 8, 10, 15, 15, 5, 15\53, 31, 31, 31, 33, 33, 27, 33\19, 7, 7, 6, 8, 5, 5, 8\\\Renewal, Countermagic\Bows, C; Lances, C; Staves, A
+Sky Knight\Fates\Hoshido\0, 10, 0, 10, 15, 20, 0, 20\35, 19, 16, 21, 23, 25, 18, 25\16, 3, 0, 5, 7, 4, 2, 6\\Falcon Knight, Kinshi Knight\Darting Blow, Camaraderie\Lances, B
+Falcon Knight\Fates\Hoshido\0, 10, 10, 10, 15, 20, 0, 20\55, 28, 27, 30, 34, 35, 27, 35\18, 5, 4, 6, 10, 5, 5, 9\\\Rally Speed, Warding Blow\Lances, A; Staves, B
+Kinshi Knight\Fates\Hoshido\0, 5, 0, 15, 15, 15, 0, 15\50, 27, 26, 33, 31, 34, 25, 31\17, 4, 1, 9, 8, 5, 4, 7\\\Air Superiority, Amaterasu\Lances, B; Bows, A
+Archer\Fates\Hoshido\10, 15, 0, 15, 15, 5, 10, 0\40, 21, 15, 23, 21, 20, 20, 17\17, 5, 0, 7, 5, 2, 4, 1\\Kinshi Knight, Sniper\Skill +2, Quick Draw\Bows, B
+Sniper\Fates\Hoshido\10, 15, 0, 20, 15, 5, 10, 0\55, 31, 25, 35, 33, 30, 31, 28\19, 7, 0, 10, 9, 3, 6, 2\\\Certain Blow, Bowfaire\Bows, S
+Ninja\Fates\Hoshido\5, 5, 0, 20, 20, 0, 5, 15\35, 17, 15, 25, 25, 18, 19, 20\16, 3, 0, 8, 8, 1, 3, 3\\Mechanist, Master Ninja\Locktouch, Poison Strike\Daggers, B
+Master Ninja\Fates\Hoshido\5, 5, 0, 20, 20, 0, 5, 20\55, 27, 25, 35, 35, 28, 26, 34\17, 5, 0, 10, 11, 2, 4, 8\\\Lethality, Shurikenfaire\Swords, B; Daggers, S
+Mechanist\Fates\Hoshido\10, 10, 0, 15, 10, 5, 5, 15\60, 30, 25, 33, 30, 30, 31, 31\18, 7, 0, 9, 7, 2, 6, 6\\\Golembane, Replicate\Bows, B; Daggers, A
+Apothecary\Fates\Hoshido\20, 20, 0, 10, 10, 5, 10, 5\45, 24, 15, 19, 19, 21, 23, 20\18, 6, 0, 4, 4, 2, 6, 2\\Merchant, Mechanist\Potent Potion, Quick Salve\Bows, B
+Merchant\Fates\Hoshido\20, 20, 0, 10, 5, 15, 10, 5\65, 33, 25, 29, 28, 32, 33, 30\20, 8, 0, 6, 5, 4, 8, 5\\\Profiteer, Spendthrift\Lances, B; Bows, A
+Kitsune\Fates\Hoshido\10, 10, 0, 15, 20, 10, 0, 20\40, 20, 18, 23, 24, 24, 18, 23\16, 5, 1, 6, 8, 4, 1, 4\\Nine-Tails\Evenhanded, Beastbane\Beaststones, B
+Nine-Tails\Fates\Hoshido\10, 10, 0, 15, 20, 10, 0, 20\55, 29, 29, 33, 34, 33, 27, 34\19, 6, 2, 9, 10, 5, 2, 8\\\Even Better, Grisly Wound\Beaststones, S
+Songstress\Fates\Hoshido\0, 10, 0, 20, 20, 20, 0, 0\45, 28, 27, 31, 31, 35, 27, 28\16, 3, 0, 6, 5, 3, 2, 3\Special\\Luck +4, Inspiring Song, Voice of Peace, Foreign Princess\Lances, C
+Villager\Fates\Hoshido\10, 10, 0, 10, 10, 20, 10, 0\35, 19, 15, 19, 19, 22, 18, 15\17, 5, 0, 4, 5, 3, 4, 0\\Master of Arms, Merchant\Aptitude, Underdog\Lances, C
+Nohrian Royal\Fates\Corrin\15, 15, 10, 10, 10, 10, 10, 5\40, 23, 17, 19, 21, 22, 21, 19\17, 7, 3, 4, 5, 2, 5, 2\**Promotes into:**/n*Hoshido Noble [Birthright/Revelation]*/t(Dragon Ward, Hoshidian Unity)/n*Nohr Noble [Conquest/Revelation]*/t(Draconic Hex, Nohrian Trust)\Hoshido Noble, Nohr Noble\Nobility, Dragon Fang\Swords, B; Dragonstones, B
+Nohr Prince\Fates\Corrin\15, 15, 10, 10, 10, 10, 10, 5\40, 23, 17, 19, 21, 22, 21, 19\17, 7, 3, 4, 5, 2, 5, 2\**Promotes into:**/n*Hoshido Noble [Birthright/Revelation]*/t(Dragon Ward, Hoshidian Unity)/n*Nohr Noble [Conquest/Revelation]*/t(Draconic Hex, Nohrian Trust)\Hoshido Noble, Nohr Noble\Nobility, Dragon Fang\Swords, B; Dragonstones, B
+Nohr Princess\Fates\Corrin\15, 15, 10, 10, 10, 10, 10, 5\40, 23, 17, 19, 21, 22, 21, 19\17, 7, 3, 4, 5, 2, 5, 2\**Promotes into:**/n*Hoshido Noble [Birthright/Revelation]*/t(Dragon Ward, Hoshidian Unity)/n*Nohr Noble [Conquest/Revelation]*/t(Draconic Hex, Nohrian Trust)\Hoshido Noble, Nohr Noble\Nobility, Dragon Fang\Swords, B; Dragonstones, B
+Nohr Noble\Fates\Nohr\15, 10, 15, 5, 15, 5, 5, 15\60, 32, 31, 28, 32, 27, 29, 32\18, 8, 6, 4, 7, 2, 6, 6\**Promotes from:**/n*Nohr Prince/ss [Conquest/Revelation]*/t(Nobility, Dragon Fang)\\Draconic Hex, Nohrian Trust\Swords, A; Dragonstones, A; Tomes, B
+Cavalier\Fates\Nohr\10, 15, 0, 10, 10, 15, 10, 5\40, 22, 15, 21, 20, 24, 22, 21\17, 6, 0, 5, 5, 3, 5, 3\\Paladin, Great Knight\Elbow Room, Shelter\Swords, B; Lances, B
+Paladin\Fates\Nohr\10, 15, 0, 10, 10, 15, 10, 10\60, 31, 26, 30, 30, 32, 32, 32\19, 8, 1, 7, 7, 4, 7, 6\\\Defender, Aegis\Swords, A; Lances, A
+Great Knight\Fates\Nohr\20, 20, 0, 10, 5, 5, 20, 0\65, 35, 25, 29, 27, 28, 37, 28\21, 10, 0, 6, 6, 3, 10, 2\\\Luna, Armored Blow\Swords, B; Lances, A; Axes, B
+Knight\Fates\Nohr\20, 20, 0, 15, 5, 10, 20, 0\45, 24, 15, 22, 17, 22, 26, 18\19, 8, 0, 5, 3, 3, 8, 1\\Great Knight, General\Defense +2, Natural Cover\Lances, A
+General\Fates\Nohr\25, 20, 0, 15, 0, 10, 20, 5\70, 38, 25, 32, 25, 32, 40, 30\22, 11, 0, 7, 3, 4, 12, 3\\\Wary Fighter, Pavise\Lances, A; Axes, B
+Fighter\Fates\Nohr\20, 20, 0, 15, 15, 5, 5, 0\45, 25, 15, 23, 22, 21, 19, 18\19, 7, 0, 6, 6, 2, 4, 1\\Berserker, Hero\HP +5, Gamble\Axes, B
+Berserker\Fates\Nohr\30, 25, 0, 15, 15, 0, 0, 0\70, 40, 25, 32, 33, 25, 27, 25\24, 12, 0, 8, 9, 0, 5, 0\\\Rally Strength, Axefaire\Axes, S
+Mercenary\Fates\Nohr\10, 15, 0, 20, 15, 5, 10, 5\40, 22, 15, 24, 22, 20, 21, 19\17, 5, 0, 7, 6, 2, 5, 2\\Hero, Bow Knight\Good Fortune, Strong Risposte\Swords, B
+Hero\Fates\Nohr\20, 15, 0, 20, 15, 5, 10, 0\60, 32, 25, 35, 32, 31, 30, 27\20, 8, 0, 10, 8, 3, 7, 2\\\Sol, Axebreaker\Swords, A; Axes, B
+Bow Knight\Fates\Nohr\10, 10, 0, 15, 15, 10, 0, 10\55, 29, 25, 32, 33, 30, 27, 32\18, 6, 0, 8, 9, 3, 5, 6\\\Rally Skill, Shurikenbreaker\Swords, B; Bows, A
+Outlaw\Fates\Nohr\0, 10, 5, 10, 20, 0, 0, 20\35, 19, 18, 20, 24, 18, 17, 22\16, 3, 1, 4, 8, 1, 2, 4\\Bow Knight, Adventurer\Locktouch, Movement +1\Bows, B
+Adventurer\Fates\Nohr\0, 5, 15, 5, 20, 0, 0, 20\50, 27, 31, 27, 34, 27, 25, 34\17, 4, 6, 6, 10, 2, 3, 8\\\Lucky Seven, Pass\Bows, A; Staves, B
+Wyvern Rider\Fates\Nohr\10, 15, 5, 10, 10, 5, 20, 0\40, 22, 17, 21, 20, 19, 24, 15\17, 6, 0, 5, 4, 2, 7, 0\\Wyvern Lord, Malig Knight\Strength +2, Lunge\Axes, B
+Wyvern Lord\Fates\Nohr\10, 15, 0, 15, 10, 5, 20, 0\60, 33, 25, 33, 29, 28, 35, 26\19, 8, 0, 9, 6, 3, 10, 1\\\Rally Defense, Swordbreaker\Axes, A; Lances, B
+Malig Knight\Fates\Nohr\0, 15, 15, 10, 5, 0, 10, 15\55, 31, 30, 28, 27, 25, 31, 31\18, 7, 6, 6, 5, 0, 8, 6\\\Savage Blow, Trample\Axes, A; Tomes, B
+Dark Mage\Fates\Nohr\0, 10, 20, 0, 10, 0, 5, 10\35, 19, 24, 16, 19, 18, 19, 22\16, 0, 6, 3, 3, 1, 3, 5\\Sorcerer, Dark Knight\Heartseeker, Malefic Aura\Tomes, B; Dark Tomes, B
+Sorcerer\Fates\Nohr\0, 0, 25, 0, 10, 0, 5, 15\50, 25, 35, 26, 29, 26, 29, 33\17, 0, 9, 4, 6, 1, 5, 8\\\Vengeance, Bowbreaker\Tomes, S; Dark Tomes, S
+Dark Knight\Fates\Nohr\15, 20, 10, 5, 5, 5, 15, 5\55, 32, 31, 28, 27, 31, 34, 30\19, 8, 6, 6, 5, 3, 8, 6\\\Seal Magic, Lifetaker\Swords, B; Tomes, A
+Troubadour\Fates\Nohr\0, 0, 10, 20, 10, 15, 0, 15\35, 16, 19, 24, 20, 23, 16, 21\15, 0, 3, 7, 5, 4, 1, 4\**Promotes into:**/n*Butler [male], Maid [female]*/t(Live to Serve, Tomebreaker)/n*Strategist*/t(Rally Resistance, Inspiration)/n**Skills learned:**/n*Resistance +2* [level 1]/t(Resistance +2)/n*Gentilhomme* [level 10 male]/t(Female allies within a 2 tile radius receive 2 less damage during battles)/n*Demoiselle* [level 10 female]/t(Male allies within a 2 tile radius receive 2 less damage during battles)\Butler, Maid, Servant, Strategist\Resistance +2, Gentilhomme, Demoiselle\Staves, B
+Strategist\Fates\Nohr\0, 0, 15, 5, 10, 20, 0, 15\45, 25, 33, 28, 31, 33, 25, 32\16, 0, 7, 6, 7, 5, 2, 7\\\Rally Resistance, Inspiration\Tomes, B; Staves, A
+Butler\Fates\Nohr\0, 10, 10, 15, 15, 10, 5, 10\50, 28, 31, 33, 33, 32, 29, 29\18, 4, 5, 9, 8, 4, 5, 4\**Promotes from:**/n*Troubadour [male]*/t(Resistance +2, Gentilhomme)\\Live to Serve, Tomebreaker\Staves, S; Daggers, B
+Maid\Fates\Nohr\0, 10, 10, 15, 15, 10, 5, 10\50, 28, 31, 33, 33, 32, 29, 29\18, 4, 5, 9, 8, 4, 5, 4\**Promotes from:**/n*Troubadour [female]*/t(Resistance +2, Demoiselle)\\Live to Serve, Tomebreaker\Staves, S; Daggers, B
+Servant\Fates\Nohr\0, 10, 10, 15, 15, 10, 5, 10\50, 28, 31, 33, 33, 32, 29, 29\18, 4, 5, 9, 8, 4, 5, 4\\\Live to Serve, Tomebreaker\Staves, S; Daggers, B
+Wolfskin\Fates\Nohr\20, 20, 0, 5, 15, 5, 10, 0\45, 24, 15, 18, 22, 17, 21, 15\19, 8, 0, 4, 6, 0, 4, 0\\Wolfssegner\Odd Shaped, Beastbane\Beaststones, B
+Wolfssegner\Fates\Nohr\20, 20, 0, 5, 15, 5, 10, 0\65, 36, 25, 29, 31, 26, 32, 26\22, 11, 0, 6, 7, 1, 7, 1\\\Better Odds, Grisly Wound\Beaststones, S
+Valla Noble\Fates\Valla\15, 13, 13, 8, 13, 8, 10, 8\60, 33, 30, 29, 31, 30, 30, 30\19, 9, 5, 4, 7, 3, 6, 5\**Promotes from:**/n*Nohr Prince/ss [Revelation]*/t(Nobility, Dragon Fang)\\\Swords, A; Dragonstones, S; Daggers, B
+Lancer\Fates\Unavailable\10, 10, 0, 10, 10, 5, 10, 10\60, 31, 25, 29, 29, 30, 31, 29\17, 5, 0, 5, 5, 2, 5, 2\Unavailable\\\Lances, B
+Lord\Fates\Unavailable\15, 15, 0, 5, 20, 10, 15, 0\60, 33, 25, 30, 31, 34, 32, 29\18, 6, 0, 5, 7, 4, 7, 0\Unavailable\\\Swords, A
+Cleric\Fates\Unavailable\0, 5, 15, 0, 15, 15, 0, 20\50, 27, 33, 27, 32, 34, 27, 34\16, 0, 4, 3, 6, 4, 1, 6\Unavailable\\\Staves, C
+Nohrian King\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\80, 40, 40, 40, 40, 40, 40, 40\18, 8, 6, 4, 7, 2, 6, 6\Unavailable\\\Axes, S
+Faceless\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\70, 30, 27, 29, 31, 25, 36, 32\18, 5, 2, 5, 6, 0, 6, 5\Unavailable\\\Gauntlets, A
+Stoneborn\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\70, 40, 25, 25, 25, 20, 40, 28\20, 8, 0, 4, 3, 0, 8, 3\Unavailable\\\Rocks, A
+Automaton\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\60, 28, 25, 34, 33, 20, 29, 33\16, 5, 0, 8, 7, 0, 4, 6\Unavailable\\\Saws, A; Bows, A
+Feral Dragon\Fates\Unavailable\15, 15, 10, 10, 10, 10, 10, 5\60, 32, 31, 28, 32, 27, 29, 32\17, 25, 20, 20, 14, 18, 19, 12\Unavailable\\\Breath, B
+Astral Dragon\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\60, 28, 35, 29, 33, 35, 30, 35\18, 4, 9, 5, 6, 4, 5, 8\Unavailable\\\Breath, A; Staves, A
+Blight Dragon\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\80, 40, 40, 40, 40, 40, 40, 40\18, 8, 6, 4, 7, 2, 6, 6\Unavailable\\\Breath, A
+Silent Dragon\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\80, 40, 40, 40, 40, 40, 40, 40\21, 10, 0, 6, 6, 3, 10, 2\Unavailable\\\Breath, S
+Empty Vessel\Fates\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\80, 40, 40, 40, 40, 40, 40, 40\19, 7, 0, 10, 9, 3, 6, 2\Unavailable\\\Axes, S
+Dread Fighter\Fates\Path Bonus\15, 15, 5, 5, 15, 0, 5, 20\55, 32, 28, 29, 31, 26, 29, 34\19, 8, 3, 6, 8, 1, 6, 9\DLC\\Even Keel, Iron Will, Clarity, Aggressor\Swords, A; Axes, B; Daggers, B
+Dark Falcon\Fates\Path Bonus\0, 10, 15, 5, 15, 15, 0, 20\45, 27, 32, 28, 33, 32, 26, 34\17, 4, 7, 5, 9, 4, 3, 9\DLC\\Speed +2, Relief, Rally Movement, Galeforce\Lances, B; Tomes, A
+Ballistician\Fates\DLC\5, 25, 0, 15, 0, 10, 5, 5\50, 39, 25, 31, 25, 32, 27, 26\18, 10, 0, 7, 2, 4, 3, 1\DLC\\Survey, Opportunity Shot, Rifled Barrel, Surefooted\Bows, B
+Witch\Fates\DLC\5, 0, 25, 5, 20, 5, 0, 10\50, 25, 36, 27, 34, 28, 26, 29\17, 0, 10, 5, 9, 3, 4, 5\DLC\\Shadowgift, Witch's Brew, Warp, Toxic Brew\Tomes, S; Dark Tomes, S
+Warlock\Fates\DLC\5, 0, 25, 5, 20, 5, 0, 10\50, 25, 36, 27, 34, 28, 26, 29\17, 0, 10, 5, 9, 3, 4, 5\DLC\\Shadowgift, Witch's Brew, Warp, Toxic Brew\Tomes, S; Dark Tomes, S
+Great Sorcerer\Fates\DLC\5, 0, 25, 5, 20, 5, 0, 10\50, 25, 36, 27, 34, 28, 26, 29\17, 0, 10, 5, 9, 3, 4, 5\DLC\\Shadowgift, Witch's Brew, Warp, Toxic Brew\Tomes, S; Dark Tomes, S
+Lodestar\Fates\Amiibo\15, 10, 0, 20, 10, 25, 5, 5\60, 29, 26, 35, 33, 40, 30, 29\19, 7, 0, 10, 9, 7, 7, 2\Amiibo\\Dancing Blade, Charm, Dual Guardsman, Speedtaker\Swords, S
+Vanguard\Fates\Amiibo\20, 20, 0, 5, 5, 10, 15, 0\65, 36, 25, 29, 30, 30, 32, 27\21, 10, 0, 6, 7, 3, 9, 1\Amiibo\\Heavy Blade, Veteran Intuition, Aether, Strengthtaker\Swords, A; Axes, B
+Great Lord\Fates\Amiibo\15, 15, 0, 10, 10, 15, 10, 5\60, 30, 25, 32, 34, 35, 29, 31\18, 8, 1, 8, 9, 5, 7, 3\Amiibo\\Dual Striker, Charm, Aether, Awakening\Swords, A; Lances, B
+Grandmaster\Fates\Amiibo\10, 15, 15, 15, 5, 0, 5, 15\55, 31, 33, 33, 29, 26, 28, 33\18, 7, 6, 8, 7, 2, 6, 8\Amiibo\\Tactical Advice, Solidarity, Ignis, Rally Spectrum\Swords, B; Tomes, A
+Pegasus Knight\Fates\Cipher\0, 10, 0, 15, 20, 20, 0, 20\55, 30, 26, 31, 34, 35, 26, 35\18, 6, 1, 7, 10, 5, 4, 9\Cipher\\Speed +2, Relief, Rally Speed, Warding Blow\Lances, B
+Lord\Awakening\Ylisse\40, 20, 0, 20, 20, 0, 10, 5\60, 25, 20, 26, 28, 30, 25, 25\18, 6, 0, 5, 7, 0, 7, 0\\Great Lord\Dual Strike+, Charm\Swords, A
+Tactician\Awakening\Ylisse\40, 15, 15, 15, 15, 0, 10, 10\60, 25, 25, 25, 25, 30, 25, 25\16, 4, 3, 5, 5, 0, 5, 3\\Grandmaster\Veteran, Solidarity\Swords, A; Tomes, A
+Cavalier\Awakening\Ylisse\45, 20, 0, 20, 20, 0, 10, 5\60, 26, 20, 25, 25, 30, 26, 26\18, 6, 0, 5, 6, 0, 7, 0\\Paladin, Great Knight\Discipline, Outdoor Fighter\Swords, A; Lances, A
+Knight\Awakening\Ylisse\50, 25, 0, 15, 10, 0, 15, 5\60, 30, 20, 26, 23, 30, 30, 22\20, 7, 6, 7, 7, 0, 7, 5\\Great Knight, General\Defense +2, Indoor Fighter\Lances, A
+Myrmidon\Awakening\Regna Ferox\40, 20, 0, 25, 25, 0, 5, 5\60, 24, 22, 27, 28, 30, 22, 24\18, 8, 0, 4, 2, 0, 11, 0\\Swordmaster, Assassin\Avoid +10, Vantage\Swords, A
+Mercenary\Awakening\Regna Ferox\45, 20, 0, 25, 20, 0, 10, 5\60, 26, 20, 28, 26, 30, 25, 23\18, 5, 0, 8, 7, 0, 5, 0\\Hero, Bow Knight\Armsthrift, Patience\Swords, A
+Fighter\Awakening\Ylisse\45, 25, 0, 20, 15, 0, 10, 5\60, 29, 20, 26, 25, 30, 25, 23\20, 8, 0, 5, 5, 0, 4, 0\\Warrior, Hero\HP +5, Zeal\Axes, A
+Barbarian\Awakening\Ylisse\50, 25, 0, 15, 20, 0, 5, 5\60, 30, 20, 23, 27, 30, 22, 20\22, 8, 0, 3, 8, 0, 3, 0\\Berserker, Warrior\Despoil, Gamble\Axes, A
+Archer\Awakening\Rosanne\45, 15, 0, 30, 15, 0, 10, 5\60, 26, 20, 29, 25, 30, 25, 21\16, 5, 0, 8, 6, 0, 5, 0\\Sniper, Bow Knight\Skill +2, Prescience\Bows, A
+Thief\Awakening\Ylisse\35, 15, 5, 25, 25, 0, 5, 5\60, 22, 20, 30, 28, 30, 21, 20\16, 3, 0, 6, 8, 0, 2, 0\\Assassin, Trickster\Locktouch, Movement +1\Swords, A
+Pegasus Knight\Awakening\Ylisse\40, 15, 5, 25, 25, 0, 5, 10\60, 24, 23, 28, 27, 30, 22, 25\16, 4, 2, 7, 8, 0, 4, 6\\Falcon Knight, Dark Flier\Speed +2, Relief\Lances, A
+Wyvern Rider\Awakening\Rosanne\45, 30, 0, 15, 15, 0, 10, 5\60, 28, 20, 24, 24, 30, 28, 20\19, 7, 0, 6, 5, 0, 8, 0\\Wyvern Lord, Griffon Rider\Strength +2, Tantivy\Axes, A
+Mage\Awakening\Ylisse\35, 0, 20, 20, 20, 0, 5, 10\60, 20, 28, 27, 26, 30, 21, 25\16, 0, 4, 3, 4, 0, 2, 3\\Sage, Dark Knight\Magic +2, Focus\Tomes, A
+Dark Mage\Awakening\Plegia\50, 5, 15, 15, 15, 0, 10, 10\60, 20, 27, 25, 25, 30, 25, 27\18, 1, 3, 2, 3, 0, 4, 4\\Sorcerer, Dark Knight\Hex, Anathema\Tomes, A; Dark Tomes, A
+Priest\Awakening\Ylisse\35, 5, 15, 15, 15, 0, 5, 15\60, 22, 25, 24, 25, 30, 22, 27\16, 0, 3, 2, 4, 0, 1, 6\\War Monk, Sage\Miracle, Healtouch\Staves, A
+Cleric\Awakening\Ylisse\35, 5, 15, 15, 15, 0, 5, 15\60, 22, 25, 24, 25, 30, 22, 27\16, 0, 3, 2, 4, 0, 1, 6\\War Cleric, Sage\Miracle, Healtouch\Staves, A
+Healer\Awakening\Ylisse\35, 5, 15, 15, 15, 0, 5, 15\60, 22, 25, 24, 25, 30, 22, 27\16, 0, 3, 2, 4, 0, 1, 6\\War Healer, Sage\Miracle, Healtouch\Staves, A
+Troubadour\Awakening\Ylisse\35, 0, 20, 10, 20, 0, 5, 15\60, 20, 26, 24, 26, 30, 20, 28\16, 0, 3, 2, 5, 0, 1, 5\\War Cleric, Valkyrie\Resistance +2, Demoiselle\Staves, A
+Great Lord (C)\Awakening\Ylisse\40, 20, 0, 20, 20, 0, 10, 5\80, 41, 30, 41, 43, 45, 41, 40\22, 9, 1, 8, 10, 0, 9, 3\\\Aether, Rightful King\Swords, A; Lances, A
+Great Lord (M)\Awakening\Ylisse\40, 20, 0, 20, 20, 0, 10, 5\80, 43, 30, 40, 41, 45, 42, 40\23, 10, 0, 7, 9, 0, 10, 3\\\Aether, Rightful King\Swords, A; Lances, A
+Great Lord (F)\Awakening\Ylisse\40, 20, 0, 20, 20, 0, 10, 5\80, 40, 30, 42, 44, 45, 40, 40\20, 8, 1, 9, 11, 0, 8, 4\\\Aether, Rightful King\Swords, A; Lances, A
+Grandmaster\Awakening\Ylisse\40, 15, 15, 15, 15, 0, 10, 10\80, 40, 40, 40, 40, 45, 40, 40\20, 7, 6, 7, 7, 0, 7, 5\\\Ignis, Rally Spectrum\Swords, A; Tomes, A
+Paladin\Awakening\Ylisse\45, 20, 0, 20, 20, 0, 10, 10\80, 42, 30, 40, 40, 45, 42, 42\25, 9, 1, 7, 8, 0, 10, 6\\\Defender, Aegis\Swords, A; Lances, A
+Great Knight\Awakening\Ylisse\50, 25, 0, 15, 15, 0, 15, 5\80, 48, 20, 34, 37, 45, 48, 30\26, 11, 0, 6, 5, 0, 14, 1\\\Luna, Dual Guard+\Swords, A; Lances, A; Axes, A
+General\Awakening\Ylisse\50, 25, 0, 15, 10, 0, 15, 10\80, 50, 30, 41, 35, 45, 50, 35\28, 12, 0, 7, 4, 0, 15, 3\\\Rally Defense, Pavise\Lances, A; Axes, A
+Swordmaster\Awakening\Regna Ferox\40, 20, 0, 25, 25, 0, 5, 10\80, 38, 34, 44, 46, 45, 33, 38\20, 7, 2, 11, 13, 0, 6, 4\\\Astra, Swordfaire\Swords, A
+Hero\Awakening\Ylisse\45, 20, 0, 25, 20, 0, 10, 5\80, 42, 30, 46, 42, 45, 40, 36\22, 8, 1, 11, 10, 0, 8, 3\\\Sol, Axebreaker\Swords, A; Axes, A
+Warrior\Awakening\Ylisse\45, 25, 0, 20, 15, 0, 10, 5\80, 48, 30, 42, 40, 45, 40, 35\28, 12, 0, 8, 7, 0, 7, 3\\\Rally Strength, Counter\Axes, A; Bows, A
+Berserker\Awakening\Ylisse\50, 25, 0, 15, 20, 0, 5, 5\80, 50, 30, 35, 44, 45, 34, 30\30, 13, 0, 5, 11, 0, 5, 1\\\Wrath, Axefaire\Axes, A
+Sniper\Awakening\Rosanne\45, 15, 0, 30, 15, 0, 15, 5\80, 41, 30, 48, 40, 45, 40, 31\20, 7, 1, 12, 9, 0, 10, 3\\\Hit Rate +20, Bowfaire\Bows, A
+Bow Knight\Awakening\Rosanne\50, 20, 0, 25, 20, 0, 5, 5\80, 40, 30, 43, 41, 45, 35, 30\24, 8, 0, 10, 10, 0, 6, 2\\\Rally Skill, Bowbreaker\Bows, A; Swords, A
+Assassin\Awakening\Regna Ferox\40, 20, 0, 30, 25, 0, 5, 5\80, 40, 30, 48, 46, 45, 31, 30\21, 8, 0, 13, 12, 0, 5, 1\\\Lethality, Pass\Swords, A; Bows, A
+Trickster\Awakening\Ylisse\35, 10, 15, 25, 20, 0, 5, 10\80, 35, 38, 45, 43, 45, 30, 40\19, 4, 4, 10, 11, 0, 3, 5\\\Lucky Seven, Acrobat\Swords, A; Staves, A
+Falcon Knight\Awakening\Ylisse\40, 15, 10, 25, 25, 0, 5, 10\80, 38, 35, 45, 44, 45, 33, 40\20, 6, 3, 10, 11, 0, 6, 9\\\Rally Speed, Lancefaire\Lances, A; Staves, A
+Dark Flier\Awakening\Plegia\40, 10, 15, 20, 20, 0, 5, 10\80, 36, 42, 41, 42, 45, 32, 41\19, 5, 6, 8, 10, 0, 5, 9\\\Rally Movement, Galeforce\Lances, A; Tomes, A
+Wyvern Lord\Awakening\Rosanne\45, 30, 0, 15, 15, 0, 10, 5\80, 46, 30, 38, 38, 45, 46, 30\24, 11, 0, 8, 7, 0, 11, 3\\\Quick Burn, Swordbreaker\Axes, A; Lances, A
+Griffon Rider\Awakening\Rosanne\45, 25, 0, 20, 20, 0, 5, 5\80, 40, 30, 43, 41, 45, 40, 30\22, 9, 0, 10, 9, 0, 8, 3\\\Deliverer, Lancebreaker\Axes, A
+Sage\Awakening\Ylisse\35, 0, 20, 20, 20, 0, 5, 10\80, 30, 46, 43, 42, 45, 31, 40\20, 1, 7, 5, 7, 0, 4, 5\\\Rally Magic, Tomefaire\Tomes, A; Staves, A
+Sorcerer\Awakening\Plegia\45, 0, 20, 15, 15, 0, 10, 10\80, 30, 44, 38, 40, 45, 41, 44\23, 2, 6, 4, 4, 0, 7, 7\\\Vengeance, Tomebreaker\Tomes, A; Dark Tomes, A
+Dark Knight\Awakening\Plegia\50, 15, 15, 15, 15, 0, 10, 5\80, 38, 41, 40, 40, 45, 42, 38\25, 4, 5, 6, 5, 0, 9, 5\\\Slow Burn, Lifetaker\Tomes, A; Swords, A
+War Monk\Awakening\Ylisse\45, 15, 15, 10, 15, 0, 10, 10\80, 40, 40, 38, 41, 45, 38, 43\24, 5, 5, 4, 6, 0, 6, 6\\\Rally Luck, Renewal\Staves, A; Axes, A
+War Cleric\Awakening\Ylisse\45, 15, 15, 10, 15, 0, 10, 10\80, 40, 40, 38, 41, 45, 38, 43\24, 5, 5, 4, 6, 0, 6, 6\\\Rally Luck, Renewal\Staves, A; Axes, A
+War Healer\Awakening\Ylisse\45, 15, 15, 10, 15, 0, 10, 10\80, 40, 40, 38, 41, 45, 38, 43\24, 5, 5, 4, 6, 0, 6, 6\\\Rally Luck, Renewal\Staves, A; Axes, A
+Valkyrie\Awakening\Ylisse\35, 0, 20, 10, 20, 0, 5, 15\80, 30, 42, 38, 43, 45, 30, 45\19, 0, 5, 4, 8, 0, 3, 8\\\Rally Resistance, Dual Support+\Staves, A; Tomes, A
+Villager\Awakening\Ylisse\35, 10, 0, 5, 5, 0, 10, 5\60, 20, 20, 20, 20, 30, 20, 20\16, 1, 0, 1, 1, 0, 1, 0\Special\\Aptitude, Underdog\Lances, A
+Dancer\Awakening\Regna Ferox\35, 5, 0, 25, 25, 0, 5, 5\80, 30, 30, 40, 40, 45, 30, 30\16, 1, 1, 5, 8, 0, 3, 1\Special\\Luck +4, Special Dance\Swords, A
+Taguel (C)\Awakening\Warren\42, 17, 0, 17, 17, 0, 12, 5\80, 35, 30, 40, 40, 45, 35, 30\18, 2, 0, 4, 5, 0, 3, 2\Special\\Even Rhythm, Beastbane\Beaststones, -
+Taguel (F)\Awakening\Warren\40, 15, 0, 20, 20, 0, 10, 5\80, 35, 30, 40, 40, 45, 35, 30\18, 2, 0, 4, 5, 0, 3, 2\Special\\Even Rhythm, Beastbane\Beaststones, -
+Taguel (M)\Awakening\Warren\45, 20, 0, 15, 15, 0, 15, 5\80, 35, 30, 40, 40, 45, 35, 30\18, 2, 0, 4, 5, 0, 3, 2\Special\\Even Rhythm, Beastbane\Beaststones, -
+Manakete\Awakening\Ylisse\50, 20, 5, 20, 20, 0, 15, 15\80, 40, 35, 35, 35, 45, 40, 40\18, 2, 0, 1, 1, 0, 2, 2\Special\\Odd Rhythm, Wyrmsbane\Dragonstones, -
+Lodestar\Awakening\DLC\40, 20, 0, 20, 20, 0, 10, 5\80, 41, 30, 43, 43, 45, 41, 40\21, 9, 1, 10, 10, 0, 8, 4\Special\\\Swords, A
+Dread Fighter\Awakening\DLC\40, 20, 10, 20, 20, 0, 10, 10\80, 42, 38, 40, 41, 45, 39, 43\22, 8, 4, 7, 9, 0, 7, 10\DLC\\Resistance +10, Aggressor\Swords, A; Axes, A; Tomes, A
+Bride\Awakening\DLC\40, 20, 10, 20, 20, 0, 10, 10\80, 40, 39, 42, 42, 45, 41, 40\21, 7, 6, 11, 10, 0, 7, 6\DLC\\Rally Heart, Bond\Lances, A; Bows, A; Staves, A
+Groom\Awakening\DLC\40, 20, 10, 20, 20, 0, 10, 10\80, 40, 39, 42, 42, 45, 41, 40\21, 7, 6, 11, 10, 0, 7, 6\DLC\\Rally Heart, Bond\Lances, A; Bows, A; Staves, A
+Wedding Guest\Awakening\DLC\40, 20, 10, 20, 20, 0, 10, 10\80, 40, 39, 42, 42, 45, 41, 40\21, 7, 6, 11, 10, 0, 7, 6\DLC\\Rally Heart, Bond\Lances, A; Bows, A; Staves, A
+Soldier\Awakening\Unavailable\40, 10, 0, 10, 10, 0, 5, 5\80, 30, 30, 30, 30, 45, 30, 30\16, 3, 0, 3, 3, 0, 3, 0\Unavailable\\\Lances, A
+Merchant\Awakening\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\60, 20, 20, 20, 20, 30, 20, 20\18, 3, 0, 2, 2, 0, 4, 1\Unavailable\\\Lances, A
+Revenant\Awakening\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\80, 30, 20, 25, 25, 30, 30, 30\18, 3, 0, 0, 0, 0, 0, 0\Unavailable\\\Claws, A
+Entombed\Awakening\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\80, 40, 30, 35, 35, 45, 35, 30\20, 3, 1, 2, 2, 0, 2, 1\Unavailable\\\Claws, A
+Conqueror\Awakening\Valm\50, 20, 5, 15, 15, 0, 10, 10\80, 45, 25, 40, 40, 45, 45, 35\24, 10, 3, 9, 8, 0, 12, 5\Unavailable\\\Swords, A; Lances, A; Axes, A
+Grima\Awakening\Unavailable\0, 0, 0, 0, 0, 0, 0, 0\99, 50, 40, 50, 45, 45, 50, 50\30, 15, 15, 15, 15, 0, 15, 10\Unavailable\\\Breath, A
+Thief\Fates\Penumbra\5, 15, 5, 25, 25, 5, 5, 5\35, 17, 18, 20, 24, 20, 15, 20\17, 4, 1, 7, 9, 2, 2, 5\\Assassin, Trickster\Locktouch, Movement +1\Swords, B
+Assassin\Fates\Penumbra\0, 20, 0, 30, 25, 5, 5, 5\55, 31, 25, 41, 33, 28, 28, 35\16, 8, 0, 8, 11, 3, 4, 5\\\Lethality, Pass\Swords, A; Daggers, B
+Trickster\Fates\Penumbra\5, 10, 15, 5, 20, 10, 5, 10\50, 22, 31, 27, 34, 32, 25, 34\18, 5, 6, 6, 10, 2, 5, 9\\\Lucky Seven, Acrobat\Swords, A; Staves, B
+Ailuran\Fates\Penumbra\15, 15, 0, 10, 20, 5, 5, 10\45, 22, 16, 21, 23, 20, 19, 19\19, 7, 1, 7, 8, 2, 3, 4\\Nemeos, Tigris\Shove, Grisly Wound\Beaststones, B
+Nemeos\Fates\Penumbra\15, 15, 0, 10, 20, 5, 5, 10\60, 33, 26, 30, 32, 30, 29, 31\21, 10, 0, 8, 8, 3, 3, 6\\\Evenly Balanced, Roar\Beaststones, S
+Tigris\Fates\Penumbra\15, 15, 0, 10, 20, 5, 5, 10\60, 32, 28, 32, 33, 29, 31, 29\21, 7, 2, 7, 9, 3, 6, 3\\\Oddly Paced, Rend\Beaststones, S
+Soldier\Fates\Penumbra\10, 10, 0, 10, 10, 5, 10, 10\40, 22, 15, 23, 23, 20, 23, 20\17, 5, 0, 5, 5, 2, 5, 2\\General, Spear Master\Seal Defense, Natural Cover\Lances, B
+Bride\Fates\Penumbra\15, 5, 5, 15, 15, 15, 5, 10\50, 28, 30, 32, 32, 34, 30, 31\19, 3, 8, 5, 8, 2, 9, 6\DLC\\Odd Feeling, Rally Heart, Bond, White Veil\Lances, B; Bows, B; Staves, A
+Groom\Fates\Penumbra\15, 5, 5, 15, 15, 15, 5, 10\50, 28, 30, 32, 32, 34, 30, 31\19, 3, 8, 5, 8, 2, 9, 6\DLC\\Odd Feeling, Rally Heart, Bond, White Veil\Lances, B; Bows, B; Staves, A
+Wedding Guest\Fates\Penumbra\15, 5, 5, 15, 15, 15, 5, 10\50, 28, 30, 32, 32, 34, 30, 31\19, 3, 8, 5, 8, 2, 9, 6\DLC\\Odd Feeling, Rally Heart, Bond, White Veil\Lances, B; Bows, B; Staves, A
