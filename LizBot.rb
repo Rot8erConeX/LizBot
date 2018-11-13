@@ -285,12 +285,14 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
   end
   if command.downcase=='reboot'
     create_embed(event,'**reboot**',"Reboots this shard of the bot, installing any updates.\n\n**This command is only able to be used by Rot8er_ConeX**",0x008b8b)
-  elsif command.downcase=='snagchannels'
-    create_embed(event,'**snagchannels** __server id number__',"Gets a list of all channels in `server id`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
   elsif ['donation','donate'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**",'Responds with information regarding potential donations to my developer.',0xED619A)
   elsif command.downcase=='sendmessage'
     create_embed(event,'**sendmessage** __channel id__ __*message__',"Sends the message `message` to the channel with id `channel`\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
+  elsif command.downcase=='sendpm'
+    create_embed(event,'**sendpm** __user id__ __*message__',"Sends the message `message` to the user with id `user`\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
+  elsif command.downcase=='ignoreuser'
+    create_embed(event,'**ignoreuser** __user id__',"Causes me to ignore the user with id `user`\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
   elsif command.downcase=='leaveserver'
     create_embed(event,'**leaveserver** __server id number__',"Forces me to leave the server with the id `server id`.\n\n**This command is only able to be used by Rot8er_ConeX**, and only in PM.",0x008b8b)
   elsif ['shard','attribute'].include?(command.downcase)
@@ -394,7 +396,7 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist','snagchannels','boop','mat','material','donation','donate']
+     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -575,20 +577,20 @@ def find_data_ex(callback,name,event,fullname=false)
   blank=[]
   blank='' if [:find_mat].include?(callback)
   args=name.split(' ')
-  for i in 0...args.length-1
+  for i in 0...args.length
     for i2 in 0...args.length-i
-      k=method(callback).call(args[i,args.length-1-i-i2].join(' '),event,true)
-      return k if k.length>0 && args[i,args.length-1-i-i2].length>0
+      k=method(callback).call(args[i,args.length-i-i2].join(' '),event,true)
+      return k if k.length>0 && args[i,args.length-i-i2].length>0
     end
   end
   return blank if fullname
   k=method(callback).call(name,event)
   return k if k.length>0
   args=name.split(' ')
-  for i in 0...args.length-1
+  for i in 0...args.length
     for i2 in 0...args.length-i
-      k=method(callback).call(args[i,args.length-1-i-i2].join(' '),event)
-      return k if k.length>0 && args[i,args.length-1-i-i2].length>0
+      k=method(callback).call(args[i,args.length-i-i2].join(' '),event)
+      return k if k.length>0 && args[i,args.length-i-i2].length>0
     end
   end
   return blank
@@ -988,10 +990,10 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
     text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
-      text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
-      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
-      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
     text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
     text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
@@ -1029,11 +1031,11 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   # <:QP:508802778982907920>
   qpd='<:QP:508802778982907920>'
   qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  flds=[['Ascension materials',"*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
+  flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)","*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
   flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
   flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
   flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
-  flds.push(['Skill Enhancement materials',"*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
+  flds.push(["Skill Enhancement materials (#{numabr(3*(qp[4,9].inject(0){|sum,x| sum + x }))}#{qpd} total)","*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
@@ -1219,10 +1221,10 @@ def disp_ce_card(bot,event,args=nil)
   text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
   text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
   if ce[4]==ce[5] && ce[6]==ce[7]
-    text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
   else
-    text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
-    text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
   end
   text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
   text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
@@ -1487,6 +1489,7 @@ def disp_mat_data(bot,event,args=nil)
     mts2=[]
     rnk=['First','Second','Third','Final']
     x=srvs[i][18]
+    srvtot=[0,0,0]
     for i2 in 0...x.length
       for i3 in 0...x[i2].length
         m=x[i2][i3].split(' ')
@@ -1494,10 +1497,12 @@ def disp_mat_data(bot,event,args=nil)
         mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4
         mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
         fff3+=f.gsub('x','').to_i if m.join(' ')==k
+        srvtot[0]+=f.gsub('x','').to_i if m.join(' ')==k && i2<4
+        srvtot[1]+=f.gsub('x','').to_i if m.join(' ')==k && i2>3
       end
     end
-    lst[0].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
-    lst[1].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts2.join(', ')}") if mts2.length>0
+    lst[0].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}#{"  -  __#{srvtot[0]}__ total" if mts.length>1}") if mts.length>0
+    lst[1].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts2.join(', ')}#{"  -  __#{srvtot[1]}__ total" if mts2.length>1}") if mts2.length>0
     fff.push(srvs[i][0]) if mts.length>0 || mts2.length>0
     fff2+=mts.length+mts2.length
     x=srvs[i][19]
@@ -1508,9 +1513,10 @@ def disp_mat_data(bot,event,args=nil)
         f=m.pop
         mts.push("**#{f.gsub('x','')}** to reach L#{i2+2}") if m.join(' ')==k
         fff3+=3*f.gsub('x','').to_i if m.join(' ')==k
+        srvtot[2]+=3*f.gsub('x','').to_i if m.join(' ')==k
       end
     end
-    lst[2].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}") if mts.length>0
+    lst[2].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}  -  __#{srvtot[2]}__ total for all skills") if mts.length>0
     fff.push(srvs[i][0]) if mts.length>0 && !fff.include?(srvs[i][0])
     fff2+=mts.length
   end
@@ -2499,7 +2505,7 @@ bot.command(:snagstats) do |event, f, f2|
   f='' if f.nil?
   f2='' if f2.nil?
   bot.servers.values(&:members)
-  k=bot.servers.values.reject{|q| [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(q.id)}.length
+  k=bot.servers.values.length
   k=1 if @shardizard==4 # Debug shard shares the five emote servers with the main account
   @server_data[0][@shardizard]=k
   @server_data[1][@shardizard]=bot.users.size
@@ -2513,16 +2519,28 @@ bot.command(:snagstats) do |event, f, f2|
     return nil
   elsif ['code','lines','line','sloc'].include?(f.downcase)
     event.channel.send_temporary_message('Calculating data, please wait...',3)
-    b=[[],[]]
+    b=[[],[],[],[],[]]
     File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.rb').each_line do |line|
       l=line.gsub("\n",'')
       b[0].push(l)
+      b[3].push(l)
       l=line.gsub("\n",'').gsub(' ','')
       b[1].push(l) unless l.length<=0
     end
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/rot8er_functs.rb').each_line do |line|
+      l=line.gsub("\n",'')
+      b[0].push(l)
+      b[4].push(l)
+      l=line.gsub("\n",'').gsub(' ','')
+      b[2].push(l) unless l.length<=0
+    end
     event << "**I am #{longFormattedNumber(File.foreach("C:/Users/Mini-Matt/Desktop/devkit/LizBot.rb").inject(0) {|c, line| c+1})} lines of code long.**"
     event << "Of those, #{longFormattedNumber(b[1].length)} are SLOC (non-empty)."
-    event << "~~When fully collapsed, I appear to be #{longFormattedNumber(b[0].reject{|q| q.length>0 && (q[0,2]=='  ' || q[0,3]=='end' || q[0,4]=='else')}.length)} lines of code long.~~"
+    event << "~~When fully collapsed, I appear to be #{longFormattedNumber(b[3].reject{|q| q.length>0 && (q[0,2]=='  ' || q[0,3]=='end' || q[0,4]=='else')}.length)} lines of code long.~~"
+    event << ''
+    event << "**I rely on a library that is #{longFormattedNumber(File.foreach("C:/Users/Mini-Matt/Desktop/devkit/rot8er_functs.rb").inject(0) {|c, line| c+1})} lines of code long.**"
+    event << "Of those, #{longFormattedNumber(b[2].length)} are SLOC (non-empty)."
+    event << "~~When fully collapsed, it appears to be #{longFormattedNumber(b[4].reject{|q| q.length>0 && (q[0,2]=='  ' || q[0,3]=='end' || q[0,4]=='else')}.length)} lines of code long.~~"
     event << ''
     event << "**There are #{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command('}.length)} commands, invoked with #{longFormattedNumber(all_commands().length)} different phrases.**"
     event << 'This includes:'
