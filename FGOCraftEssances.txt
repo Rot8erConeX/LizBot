@@ -404,7 +404,7 @@
 404\Huwawa's Flowers\4\9\100, 100\100, 100\When equipped to Enkidu (Lancer) only. Restore HP of all allies by 500 per turn while he's on the field\\-\\Enkidu Bond Lv.10
 405\Piedra del Sol\4\9\100, 100\100, 100\When equipped to Quetzalcotl (Rider) only. Increase Arts and Buster Card effectiveness of all allies by 10% while she's on the field\\-\\Quetzalcotl Bond Lv.10
 406\Door to the Sea\4\9\100, 100\100, 100\When equipped to Jeanne d'Arc Alter Santa Lily (Lancer) only. Increase HP Recovery Amount of all allies by 30% while she's on the field\\-\\Jeanne d'Arc Alter Santa Lily Bond Lv.10
-407\Tablet of Fate\4\9\100, 100\100, 100\When equipped to Gilgamesh (Caster) only. Increase NP Strength of all allies by 20% while she's on the field\\-\\Gilgamesh Bond Lv.10
+407\Tablet of Fate\4\9\100, 100\100, 100\When equipped to Gilgamesh (Caster) only. Increase NP Strength of all allies by 20% while he's on the field\\-\\Gilgamesh Bond Lv.10
 408\Chrysaor\4\9\100, 100\100, 100\When equipped to Gorgon (Avenger) only. Increase Buster Card effectiveness and NP Gain of all allies by 10% while she's on the field\\-\\Gorgon Bond Lv.10
 409\The Tomorrow Not Meant to Be\4\9\100, 100\100, 100\When equipped to Medusa (Lancer) only. Increase Quick Card effectiveness & NP Gain of all allies by 10% while she's on the field\\-\\Medusa Bond Lv.10
 410\Primordial Fire\4\9\100, 100\100, 100\When equipped to Jaguar Warrior (Lancer) only. Increase Buster Card effectiveness of all allies by 15% while she's on the field\\-\\Jaguar Man Bond Lv.10
