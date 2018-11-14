@@ -1186,7 +1186,7 @@
 ["NobunagaBerserker", 178]
 ["NobunagaSummer", 178]
 ["NobuSummer", 178]
-["NobuZerker", 178, [354569233910202368]]
+["NobuZerker", 178]
 ["OdaNobunagaSummer", 178]
 ["SummerNobu", 178]
 ["SummerNobunaga", 178]
