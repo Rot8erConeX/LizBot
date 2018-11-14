@@ -986,7 +986,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     return nil if chain
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
-    xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
+    xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
     text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
     text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
@@ -1228,7 +1228,7 @@ def disp_ce_card(bot,event,args=nil)
   xcolor=servant_color(k) unless k.nil?
   text=''
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
-  xpic="https://fate-go.cirnopedia.org/icons/essence/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.jpg"
+  xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
   text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
   text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
   text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
