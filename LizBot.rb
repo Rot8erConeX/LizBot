@@ -1086,7 +1086,16 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png"
     artist='Riyo'
   end
-  text=''
+  ftr=nil
+  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2
+    cex=@crafts[k[0]-1]
+    ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
+  elsif event.message.text.split(' ').include?('1') && k[0]<2
+    cex=@crafts[0]
+    ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
+  end
+  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="**0-star**" if k[3]==0
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
   if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
@@ -1147,6 +1156,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         str=extend_message(str,f[i][1][i2].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
       end
     end
+    str=extend_message(str,ftr,event,2) unless ftr.nil?
     str=extend_message(str,"#{text}#{"#{"\n\n" if text.length>0}**Artist:** #{artist}" unless artist.nil?}#{"\n**VA (Japanese):** #{k[25]}" unless k[25].nil? || k[25].length<=0}\n#{xpic}",event,2)
     event.respond str
   else
@@ -1180,11 +1190,12 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
         embed.description=text
         embed.color=xcolor
+        embed.footer={"text"=>ftr} unless ftr.nil?
         embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
       end
       return nil
     elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1400 || (f.map{|q| q[1].split("\n").length}.max>12 && !safe_to_spam?(event))
-      text="#{text}\nThe list of units with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
+      text="#{text}\nThe list of servants and CEs with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
       f=nil
     end
     unless f.nil?
@@ -1195,6 +1206,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
       embed.description=text
       embed.color=xcolor
+      embed.footer={"text"=>ftr} unless ftr.nil?
       embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
     end
   end
@@ -1232,6 +1244,101 @@ def disp_ce_card(bot,event,args=nil)
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
   create_embed(event,"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
+end
+
+def disp_ce_art(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  ce=find_data_ex(:find_ce,args.join(' '),event)
+  if ce.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  xcolor=0x7D4529
+  xcolor=0x718F93 if ce[2]>2
+  xcolor=0xF5D672 if ce[2]>3
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Crafts/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
+  text="<:FGO_icon_star_mono:509072675344351232>"*ce[2]
+  m=false
+  IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+  text='Requested art not found.' if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+  artist=nil
+  artist=ce[9] unless ce[9].nil? || ce[9].length<=0
+  f=[]
+  unless artist.nil?
+    f=@servants.reject{|q| q[24]!=artist}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}
+    f.push("~~Every servant's April Fool's Day art~~") if artist=='Riyo'
+    crf=@crafts.map{|q| q}
+    for i in 0...crf.length
+      f.push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist && crf[i][0]!=ce[0]
+    end
+    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
+      b=[]
+      File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
+        b.push(line)
+      end
+    else
+      b=[]
+    end
+    for i in 0...b.length
+      b[i]=b[i].gsub("\n",'').split('\\'[0])
+      if !b[i][6].nil? && b[i][6].length>0
+        f.push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist
+      end
+    end
+  end
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
+    str=''
+    unless artist.nil?
+      str='__**Same artist**__'
+      for i in 0...f.length
+        ff='  -  '
+        ff="\n" if i==0
+        str=extend_message(str,f[i].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
+      end
+    end
+    str=extend_message(str,"#{text}#{"#{"\n\n" if text.length>0}**Artist:** #{artist}" unless artist.nil?}\n#{xpic}",event,2)
+    event.respond str
+  else
+    unless artist.nil?
+      text="#{text}\n\n**Artist:** #{artist}"
+    end
+    if f.nil?
+    elsif f.join("\n").length>=1400 && safe_to_spam?(event)
+      if f.join("\n").length>=1400
+        str='__**Same Artist**__'
+        puts f.map{|q| q.to_s}
+        for i in 0...f.length
+          ff='  -  '
+          ff="\n" if i==0
+          str=extend_message(str,f[i].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
+        end
+        event.respond str
+      else
+        event.channel.send_embed('') do |embed|
+          embed.color=xcolor
+          unless f.nil?
+            embed.add_field(name: 'Same VA', value: f.join("\n"), inline: true)
+          end
+        end
+      end
+      event.channel.send_embed("__**#{ce[1]}**__ [CE ##{ce[0]}]") do |embed|
+        embed.description=text
+        embed.color=xcolor
+        embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
+      end
+      return nil
+    elsif f.join("\n").length>=1400 || (f.length>12 && !safe_to_spam?(event))
+      text="#{text}\nThe list of servants/CEs with the same artist is so long that I cannot fit it into a single embed. Please use this command in PM."
+      f=nil
+    end
+    text="#{text}\n\n__**Same Artist**__\n#{f.join("\n")}" unless f.nil? || f.length<=0
+    event.channel.send_embed("__**#{ce[1]}**__ [CE ##{ce[0]}]") do |embed|
+      embed.description=text
+      embed.color=xcolor
+      embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
+    end
+  end
 end
 
 def disp_code_data(bot,event,args=nil)
@@ -2145,7 +2252,18 @@ bot.command([:traits,:trait]) do |event, *args|
 end
 
 bot.command([:art,:artist]) do |event, *args|
-  disp_servant_art(bot,event,args)
+  name=args.join(' ')
+  if find_data_ex(:find_ce,name,event,true).length>0
+    disp_ce_art(bot,event,args)
+  elsif find_data_ex(:find_servant,name,event,true).length>0
+    disp_servant_art(bot,event,args)
+  elsif find_data_ex(:find_ce,name,event).length>0
+    disp_ce_art(bot,event,args)
+  elsif find_data_ex(:find_servant,name,event).length>0
+    disp_servant_art(bot,event,args)
+  else
+    event.respond "No matches found."
+  end
   return nil
 end
 
@@ -2735,6 +2853,19 @@ bot.mention do |event|
   elsif ['mysticcode','mysticode','mystic','clothing','clothes'].include?(args[0])
     args.shift
     disp_clothing_data(bot,event,args)
+    m=false
+  elsif ['art','artist'].include?(args[0])
+    if find_data_ex(:find_ce,args.join(' '),event,true).length>0
+      disp_ce_art(bot,event,args)
+    elsif find_data_ex(:find_servant,args.join(' '),event,true).length>0
+      disp_servant_art(bot,event,args)
+    elsif find_data_ex(:find_ce,args.join(' '),event).length>0
+      disp_ce_art(bot,event,args)
+    elsif find_data_ex(:find_servant,args.join(' '),event).length>0
+      disp_servant_art(bot,event,args)
+    else
+      event.respond "No matches found."
+    end
     m=false
   elsif ['code'].include?(args[0])
     args.shift
