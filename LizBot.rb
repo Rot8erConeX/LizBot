@@ -353,8 +353,10 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
       event << 'This help window is not in an embed so that people who need this command can see it.'
     end
     return nil
-  elsif ['find','list','search'].include?(command.downcase)
+  elsif ['find','search'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Attribute\n- Traits\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+  elsif ['sort','list'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Attribute\n- Traits\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif ['aliases','checkaliases','seealiases'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __servant__","Responds with a list of all `servant`'s aliases.\nIf no servant is listed, responds with a list of all aliases and who they are for.\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif command.downcase=='snagstats'
@@ -378,7 +380,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `list` or `search`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -396,7 +398,7 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser']
+     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -1788,7 +1790,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
   return nil
 end
 
-def find_servants(event,args=nil)
+def find_in_servants(event,args=nil,mode=0)
   data_load()
   args=normalize(event.message.text.downcase).split(' ') if args.nil?
   args=args.map{|q| normalize(q.downcase)}
@@ -1981,11 +1983,25 @@ def find_servants(event,args=nil)
     end
   end
   char=char.reject{|q| !has_any?(q[22].split(' / '),align)}.uniq if align.length>0
-  char=char.sort{|a,b| a[0]<=>b[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.uniq
-  if (char.length>50 || char.join("\n").length+search.join("\n").length+textra.length>=1900) && !safe_to_spam?(event)
+  if (char.length>50 || char.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.join("\n").length+search.join("\n").length+textra.length>=1900) && !safe_to_spam?(event) && mode==0
     event.respond "Too much data is trying to be displayed.  Please use this command in PM."
     return nil
-  elsif @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || char.join("\n").length+search.join("\n").length+textra.length>=1900
+  else
+    return [search,textra,char]
+  end
+end
+
+def find_servants(event,args=nil)
+  args=normalize(event.message.text.downcase).split(' ') if args.nil?
+  args=args.map{|q| normalize(q.downcase)}
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  k=find_in_servants(event,args)
+  return nil if k.nil?
+  search=k[0]
+  textra=k[1]
+  char=k[2]
+  char=char.sort{|a,b| a[0]<=>b[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.uniq
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || char.join("\n").length+search.join("\n").length+textra.length>=1900
     str="__**Search**__\n#{search.join("\n")}#{"\n\n#{textra}" if textra.length>0}\n\n__**Results**__"
     for i in 0...char.length
       str=extend_message(str,char[i],event)
@@ -2000,11 +2016,77 @@ def find_servants(event,args=nil)
   end
 end
 
+def sort_servants(event,args=nil)
+  args=normalize(event.message.text.downcase).split(' ') if args.nil?
+  args=args.map{|q| normalize(q.downcase)}
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  k=find_in_servants(event,args,1)
+  return nil if k.nil?
+  search=k[0]
+  textra=k[1]
+  char=k[2]
+  srt=[2,2,2]
+  srtt=0
+  lvl=-1
+  for i in 0...args.length
+    lvl=0 if ['lvl1','level1','base','1level','1lvl'].include?(args[i].downcase)
+    lvl=1 if ['max'].include?(args[i].downcase)
+    lvl=2 if ['lvl100','level100','grail','100level','100lvl'].include?(args[i].downcase)
+    if ['hp','health'].include?(args[i].downcase) && !srt.include?(6)
+      srt[srtt]=6
+      srtt+=1
+    elsif ['atk','att','attack'].include?(args[i].downcase) && !srt.include?(7)
+      srt[srtt]=7
+      srtt+=1
+    end
+  end
+  if lvl<0 && srt.reject{|q| q==2}.length>0
+    textra="#{textra}\n\nNo level was included, so I am sorting by default maximum level.\nIf you wish to change that, include the word \"Base\" (for level 1) or \"Grail\" (for level 100)."
+    lvl=1
+  end
+  for i in 0...char.length
+    char[i][2]=@servants.length+100-char[i][0]
+    char[i][6]=char[i][6][lvl]
+    char[i][7]=char[i][7][lvl]
+  end
+  char.sort!{|b,a| (supersort(a,b,srt[0])==0 ? (supersort(a,b,srt[1])==0 ? supersort(a,b,srt[2]) : supersort(a,b,srt[1])) : supersort(a,b,srt[0]))}
+  d=['ID','Name','X','Rarity','Growth','Level','HP','Atk']
+  disp=[]
+  for i in 0...char.length
+    m=[]
+    for i2 in 0...srt.length
+      m.push("#{longFormattedNumber(char[i][srt[i2]])} #{d[srt[i2]]}") if srt[i2]>2
+    end
+    disp.push("#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{"  -  #{m.join('  -  ')}" if m.length>0}")
+  end
+  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
+  str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
+  if str.length+disp.join("\n").length>1900 && !safe_to_spam?(event)
+    textra="#{textra}\n\nToo much data is trying to be displayed.\nShowing top ten results."
+    disp=disp[0,[10,disp.length].min]
+  end
+  t=textra.split("\n")
+  for i in 0...5
+    t.shift if t.length>0 && t[0].length<=0
+  end
+  textra=t.join("\n")
+  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
+  str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
+  for i in 0...disp.length
+    str=extend_message(str,disp[i],event)
+  end
+  event.respond str
+end
+
 bot.command(:skill) do |event, *args|
   disp_skill_data(bot,event,args)
 end
 
-bot.command([:find,:list,:search]) do |event, *args|
+bot.command([:sort,:list]) do |event, *args|
+  sort_servants(event,args)
+end
+
+bot.command([:find,:search]) do |event, *args|
   find_servants(event,args)
 end
 
