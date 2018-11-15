@@ -2773,7 +2773,7 @@ bot.server_create do |event|
     event.server.leave
   else
     bot.user(167657750971547648).pm("Joined server **#{event.server.name}** (#{event.server.id})\nOwner: #{event.server.owner.distinct} (#{event.server.owner.id})\nAssigned the #{['Man','Sky','Earth','Star'][(event.server.id >> 22) % 4]} attribute")
-   # bot.user(239973891626237952).pm("Joined server **#{event.server.name}** (#{event.server.id})\nOwner: #{event.server.owner.distinct} (#{event.server.owner.id})\nAssigned the #{['Man','Sky','Earth','Star'][(event.server.id >> 22) % 4]} attribute")
+    bot.user(239973891626237952).pm("Joined server **#{event.server.name}** (#{event.server.id})\nOwner: #{event.server.owner.distinct} (#{event.server.owner.id})\nAssigned the #{['Man','Sky','Earth','Star'][(event.server.id >> 22) % 4]} attribute")
     metadata_load()
     @server_data[0][((event.server.id >> 22) % 4)] += 1
     metadata_save()
@@ -2784,7 +2784,7 @@ end
 bot.server_delete do |event|
   unless @shardizard==4
     bot.user(167657750971547648).pm("Left server **#{event.server.name}**")
-   # bot.user(239973891626237952).pm("Left server **#{event.server.name}**")
+    bot.user(239973891626237952).pm("Left server **#{event.server.name}**")
     metadata_load()
     @server_data[0][((event.server.id >> 22) % 4)] -= 1
     metadata_save()
