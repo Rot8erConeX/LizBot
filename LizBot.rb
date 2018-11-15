@@ -2030,7 +2030,7 @@ def sort_servants(event,args=nil)
   lvl=-1
   for i in 0...args.length
     lvl=0 if ['lvl1','level1','base','1level','1lvl'].include?(args[i].downcase)
-    lvl=1 if ['max'].include?(args[i].downcase)
+    lvl=1 if ['max','default'].include?(args[i].downcase)
     lvl=2 if ['lvl100','level100','grail','100level','100lvl'].include?(args[i].downcase)
     if ['hp','health'].include?(args[i].downcase) && !srt.include?(6)
       srt[srtt]=6
@@ -2881,9 +2881,13 @@ bot.mention do |event|
   m=true
   m=false if event.user.bot_account?
   if !m
-  elsif ['find','list','search'].include?(args[0].downcase)
+  elsif ['find','search'].include?(args[0].downcase)
     args.shift
     find_servants(event,args)
+    m=false
+  elsif ['sort','find'].include?(args[0].downcase)
+    args.shift
+    sort_servants(event,args)
     m=false
   elsif ['servant','data','unit'].include?(args[0].downcase)
     args.shift
