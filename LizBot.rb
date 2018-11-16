@@ -904,7 +904,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     nophan=@skills[nophan]
     np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}"
   end
-  text="#{text}\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
+  text="#{text}\n\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
   npl=1
   npl=0 if ['Event','Welfare'].include?(k[20])
   npl=1 if event.message.text.downcase.split(' ').include?('np2')
@@ -914,7 +914,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=5 if event.message.text.downcase.split(' ').include?('np5')
   unless nophan.nil?
     l=[nophan[5],nophan[6]]
-    text="#{text}\n**Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
+    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992> Quick').gsub('A','<:arts:509064605830742016> Arts').gsub('B','<:buster:509064606233133056> Buster')}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
     for i in 7...17
       unless nophan[i][0]=='-'
         text="#{text}\n*#{nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
@@ -937,7 +937,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
       l[0]=(nophan[5]!=l[0] rescue (nophan[5].encode(Encoding::UTF_8)!=l[0].encode(Encoding::UTF_8)))
       l[1]=(nophan[6]!=l[1] rescue (nophan[6].encode(Encoding::UTF_8)!=l[1].encode(Encoding::UTF_8)))
       text="#{text}#{"\n" if l[0] || l[1]}"
-      text="#{text}#{"\n**Type:** #{nophan[5].encode(Encoding::UTF_8)}" if l[0]}"
+      text="#{text}#{"\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8)}" if l[0]}"
       text="#{text}#{"\n**Target:** #{nophan[6].encode(Encoding::UTF_8)}" if l[1]}"
       text="#{text}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8)}"
       text="#{text}\n__**Effects**__"
