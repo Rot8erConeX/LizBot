@@ -398,7 +398,7 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort']
+     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','boop']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -812,6 +812,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     for i in 0...k[14].length
       str="#{'__' if safe_to_spam?(event,nil,1)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event,nil,1)}"
+      str="#{str}\n*Obtained in Interlude or Rank-Up Quest*" if [19,21,9,32,42,28,23,29,35,31,15,34,16,53,56,13,25,22,36,48,45,54,46,41,5,103].include?(k[0]) && i==k[14].length-1
       if safe_to_spam?(event,nil,1)
         k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}].map{|q| q}
         str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
@@ -2422,11 +2423,6 @@ bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstat
   return nil
 end
 
-bot.command(:boop) do |event|
-  disp_mat_data(bot,event,args)
-  return nil
-end
-
 bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, f|
   f='' if f.nil?
   metadata_load()
@@ -2489,7 +2485,7 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
     @spam_channels[0].delete(event.channel.id)
     @spam_channels[1].push(event.channel.id)
     metadata_save()
-    event.respond 'This channel is now marked as safe for me to send long replies to.'
+    event.respond 'This channel is now marked as safe for me to send __**certain**__ long replies to.'
   else
     event << 'It is not safe for me to send long replies here.'
     event << ''
