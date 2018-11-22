@@ -2156,11 +2156,11 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
   cck=nil
   cck=unt[12].split(', ')[1][0,1].downcase if unt[12].split(', ').length>1
   if checkstr.downcase =~ /(7|t)+?h+?(o|0)+?(7|t)+?/
-    event.respond "That name has __***NOT***__ been added to #{unt[0]}'s aliases."
+    event.respond "That name has __***NOT***__ been added to #{unt[1]}'s aliases.#{"\nhttps://cdn.discordapp.com/attachments/344355510281043969/514973942218227722/Storylineatroriaisagirlposing_c4361e8dc51f0451389bd016c9796bab.jpg" if unt[0]==99}"
     bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**Alias:** #{newname} for #{unt[1]} [##{unt[0]}]~~\n**Reason for rejection:** Begone, alias.")
     return nil
   elsif checkstr.downcase =~ /n+?((i|1)+?|(e|3)+?)(b|g|8)+?(a|4|(e|3)+?r+?)+?/
-    event.respond "That name has __***NOT***__ been added to #{unt[0]}'s aliases."
+    event.respond "That name has __***NOT***__ been added to #{unt[1]}'s aliases."
     bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**Alias:** >Censored< for #{unt[1]} [##{unt[0]}]~~\n**Reason for rejection:** Begone, alias.")
     return nil
   end
