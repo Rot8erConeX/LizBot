@@ -311,6 +311,8 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}** __toggle__","Responds with whether or not the channel the command is invoked in is one in which I can send extremely long replies.\n\nIf the channel does not fill one of the many molds for acceptable channels, server mods can toggle the ability with the words \"on\", \"semi\", and \"off\".",0xED619A)
   elsif ['status'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*message__","Sets my status to `message`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+  elsif ['tools','links'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}**",'Responds with a list of links useful to players of *Fate/Grand Order*.',0xED619A)
   elsif ['mat','material'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a material, shows information about the servants who require that material for ascension or for skill enhancement.\n\nIf it is safe to spam, the servants' names and uses for the material will be shown.\nIf not, only the *quantity* of servants that require the material will be shown.",0xED619A)
   elsif ['servant','data','unit'].include?(command.downcase)
@@ -380,7 +382,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`tools` - for a list of tools aside from me that may aid you\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -398,7 +400,7 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','boop']
+     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','boop']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -565,14 +567,76 @@ def find_mat(name,event,fullname=false)
   return @mats[k] unless k.nil?
   k=@mats.find_index{|q| q[0,7]=='Gem of ' && "#{q.gsub('Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,13]=='Magic Gem of ' && "Magic #{q.gsub('Magic Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Secret #{q.gsub('Secret Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "#{q.gsub('Secret Gem of ','')} Cookie".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,7]=='Gem of ' && "Blue #{q.gsub('Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,7]=='Gem of ' && "Blue Gem of #{q.gsub('Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,13]=='Magic Gem of ' && "Red #{q.gsub('Magic Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,13]=='Magic Gem of ' && "Red Gem of #{q.gsub('Magic Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Yellow #{q.gsub('Secret Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Yellow Gem of #{q.gsub('Secret Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Cookie of #{q.gsub('Secret Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
+  return @mats[k] unless k.nil?
   return find_mat('Meteor Horseshoe',event,fullname) if name.downcase=='horseshoe'
+  return find_mat('Heart of the Foreign God',event,fullname) if name.downcase=='heart'
+  return find_mat('Evil Bone',event,fullname) if name.downcase=='bone'
+  return find_mat('Phoenix Feather',event,fullname) if name.downcase=='feather'
+  return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'
+  return find_mat('Spirit Root',event,fullname) if name.downcase=='root'
+  return find_mat('Great Knight Medal',event,fullname) if ['medal','metal'].include?(name.downcase)
+  return find_mat('Homunculus Baby',event,fullname) if ['baby','bebe'].include?(name.downcase)
+  return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'
+  return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'
+  return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'
+  return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'
   return [] if fullname
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
   k=@mats.find_index{|q| q[0,7]=='Gem of ' && "#{q.gsub('Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,13]=='Magic Gem of ' && "Magic #{q.gsub('Magic Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Secret #{q.gsub('Secret Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "#{q.gsub('Secret Gem of ','')} Cookie".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,7]=='Gem of ' && "Blue #{q.gsub('Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,7]=='Gem of ' && "Blue Gem of #{q.gsub('Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,13]=='Magic Gem of ' && "Red #{q.gsub('Magic Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,13]=='Magic Gem of ' && "Red Gem of #{q.gsub('Magic Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Yellow #{q.gsub('Secret Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Yellow Gem of #{q.gsub('Secret Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
+  k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Cookie of #{q.gsub('Secret Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
+  return @mats[k] unless k.nil?
   return find_mat('Meteor Horseshoe',event,fullname) if name.downcase=='horseshoe'[0,name.length]
+  return find_mat('Heart of the Foreign God',event,fullname) if name.downcase=='heart'[0,name.length]
+  return find_mat('Evil Bone',event,fullname) if name.downcase=='bone'[0,name.length]
+  return find_mat('Phoenix Feather',event,fullname) if name.downcase=='feather'[0,name.length]
+  return find_mat('Spirit Root',event,fullname) if name.downcase=='root'[0,name.length]
+  return find_mat('Great Knight Medal',event,fullname) if ['medal','metal'].map{|q| q[0,name.length]}.include?(name.downcase)
+  return find_mat('Homunculus Baby',event,fullname) if ['baby','bebe'].map{|q| q[0,name.length]}.include?(name.downcase)
+  return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'[0,name.length]
+  return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'[0,name.length]
+  return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'[0,name.length]
+  return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'[0,name.length]
+  return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'[0,name.length]
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'[0,name.length]
   return []
 end
@@ -1083,6 +1147,8 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   disptext=event.message.text.downcase
   artist=nil
   artist=k[24] unless k[24].nil? || k[24].length<=0
+  t=Time.now
+  riyodefault= !riyodefault if t.month==4 && t.day==1
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}2.png" if disptext.split(' ').include?('first') || disptext.split(' ').include?('firstascension') || disptext.split(' ').include?('first_ascension') || " #{disptext} ".include?(" first ascension ") || disptext.split(' ').include?('1st') || disptext.split(' ').include?('1stascension') || disptext.split(' ').include?('1st_ascension') || " #{disptext} ".include?(" 1st ascension ") || disptext.split(' ').include?('second') || disptext.split(' ').include?('secondascension') || disptext.split(' ').include?('second_ascension') || " #{disptext} ".include?(" second ascension ") || disptext.split(' ').include?('2nd') || disptext.split(' ').include?('2ndascension') || disptext.split(' ').include?('2nd_ascension') || " #{disptext} ".include?(" 2nd ascension ")
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}3.png" if disptext.split(' ').include?('third') || disptext.split(' ').include?('thirdascension') || disptext.split(' ').include?('third_ascension') || " #{disptext} ".include?(" third ascension ") || disptext.split(' ').include?('3rd') || disptext.split(' ').include?('3rdascension') || disptext.split(' ').include?('3rd_ascension') || " #{disptext} ".include?(" 3rd ascension ")
@@ -2234,6 +2300,44 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
     bot.channel(logchn).send_message('Alias list has been backed up.')
   end
   return nil
+end
+
+bot.command([:tools,:links]) do |event|
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
+    event << '**Useful tools for players of** ***Fate/Grand Order***'
+    event << '__Download the game__'
+    event << 'Google Play (NA): <https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US>'
+    event << 'Google Play (JP): <https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US>'
+    event << 'Apple App Store (NA): <https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8>'
+    event << 'Apple App Store (JP): <https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8>'
+    event << ''
+    event << '__Wikis and databases__'
+    event << 'Cirnopedia: <https://fate-go.cirnopedia.org>'
+    event << 'Wikia: <https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia>'
+    event << ''
+    event << '__Important lists and spreadsheets__'
+    event << 'Interlude info: <https://goo.gl/SCsKJn>'
+    event << 'Material location guide: <https://goo.gl/ijqefs>'
+    event << 'List of Singularity maps with drops: <https://imgur.com/a/6nXq9#f8dRAp5>'
+    event << 'Rate-up History (NA): <http://fate-go.cirnopedia.org/summon_us.php>'
+    event << 'Rate-up History (JP): <http://fate-go.cirnopedia.org/summon.php>'
+    event << 'Order of Interludes and Strengthening Quests: <https://kazemai.github.io/fgo-vz/relate_quest.html>'
+    event << 'Palingenesis data: <https://fategrandorder.fandom.com/wiki/Palingenesis>'
+    event << 'Current Master Missions: <http://fate-go.cirnopedia.org/master_mission.php>'
+    event << ''
+    event << '__Calculators and Planners__'
+    event << 'Damage calculator: <https://tinyurl.com/yc2tuzn9>'
+    event << 'EXP calculator: <https://grandorder.gamepress.gg/exp-calculator>'
+    event << 'Material planner: <http://fgosimulator.webcrow.jp/Material/>'
+    event << 'Servant planner: <https://grandorder.gamepress.gg/servant-planner>'
+  else
+    xpic='https://lh3.googleusercontent.com/gXUStNHv8sT8NjdXBOJmzqK_JIYlPP_6jKBjEOIyP-28CSsnPempO86swUYhVhVgvH4f=s180-rw'
+    t=Time.now
+    xpic='https://vignette.wikia.nocookie.net/fategrandorder/images/a/ac/FGO_GO_App_Icon.png' if t.month==4 && t.day==1
+    create_embed(event,'**Useful tools for players of** ***Fate/Grand Order***',"__Download the game__\n[Google Play (NA)](https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US)  \u00B7  [Google Play (JP)](https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US)\n[Apple App Store (NA)](https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8)  \u00B7  [Apple App Store (JP)](https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8)\n\n__Wikis and databases__\n[Cirnopedia](https://fate-go.cirnopedia.org)\n[Wikia](https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia)\n\n__Important lists and spreadsheets__\n[Interlude info](https://goo.gl/SCsKJn)\n[Material location guide](https://goo.gl/ijqefs)\n[List of Singularity maps with drops](https://imgur.com/a/6nXq9#f8dRAp5)\n[Rate-up History (NA)](http://fate-go.cirnopedia.org/summon_us.php)  \u00B7  [Rate-up History (JP)](http://fate-go.cirnopedia.org/summon.php)\n[Order of Interludes and Strengthening Quests](https://kazemai.github.io/fgo-vz/relate_quest.html)\n[Palingenesis data](https://fategrandorder.fandom.com/wiki/Palingenesis)\n[Current Master Missions](http://fate-go.cirnopedia.org/master_mission.php)\n\n__Calculators and Planners__\n[Damage Calculator](https://tinyurl.com/yc2tuzn9)\n[EXP calculator](https://grandorder.gamepress.gg/exp-calculator)\n[Material planner](http://fgosimulator.webcrow.jp/Material/)\n[Servant planner](https://grandorder.gamepress.gg/servant-planner)",0xED619A,nil,xpic)
+    event.respond 'If you are on a mobile device and cannot click the links in the embed above, type `FGO!tools mobile` to receive this message as plaintext.'
+  end
+  event << ''
 end
 
 bot.command([:checkaliases,:aliases,:seealiases]) do |event, *args|
