@@ -2177,6 +2177,44 @@ bot.command([:embeds,:embed]) do |event|
   return nil
 end
 
+bot.command([:tools,:links]) do |event|
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
+    event << '**Useful tools for players of** ***Fate/Grand Order***'
+    event << '__Download the game__'
+    event << 'Google Play (NA): <https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US>'
+    event << 'Google Play (JP): <https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US>'
+    event << 'Apple App Store (NA): <https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8>'
+    event << 'Apple App Store (JP): <https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8>'
+    event << ''
+    event << '__Wikis and databases__'
+    event << 'Cirnopedia: <https://fate-go.cirnopedia.org>'
+    event << 'Wikia: <https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia>'
+    event << ''
+    event << '__Important lists and spreadsheets__'
+    event << 'Interlude info: <https://goo.gl/SCsKJn>'
+    event << 'Material location guide: <https://goo.gl/ijqefs>'
+    event << 'List of Singularity maps with drops: <https://imgur.com/a/6nXq9#f8dRAp5>'
+    event << 'Rate-up History (NA): <http://fate-go.cirnopedia.org/summon_us.php>'
+    event << 'Rate-up History (JP): <http://fate-go.cirnopedia.org/summon.php>'
+    event << 'Order of Interludes and Strengthening Quests: <https://kazemai.github.io/fgo-vz/relate_quest.html>'
+    event << 'Palingenesis data: <https://fategrandorder.fandom.com/wiki/Palingenesis>'
+    event << 'Current Master Missions: <http://fate-go.cirnopedia.org/master_mission.php>'
+    event << ''
+    event << '__Calculators and Planners__'
+    event << 'Damage calculator: <https://tinyurl.com/yc2tuzn9>'
+    event << 'EXP calculator: <https://grandorder.gamepress.gg/exp-calculator>'
+    event << 'Material planner: <http://fgosimulator.webcrow.jp/Material/>'
+    event << 'Servant planner: <https://grandorder.gamepress.gg/servant-planner>'
+  else
+    xpic='https://lh3.googleusercontent.com/gXUStNHv8sT8NjdXBOJmzqK_JIYlPP_6jKBjEOIyP-28CSsnPempO86swUYhVhVgvH4f=s180-rw'
+    t=Time.now
+    xpic='https://vignette.wikia.nocookie.net/fategrandorder/images/a/ac/FGO_GO_App_Icon.png' if t.month==4 && t.day==1
+    create_embed(event,'**Useful tools for players of** ***Fate/Grand Order***',"__Download the game__\n[Google Play (NA)](https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US)  \u00B7  [Google Play (JP)](https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US)\n[Apple App Store (NA)](https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8)  \u00B7  [Apple App Store (JP)](https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8)\n\n__Wikis and databases__\n[Cirnopedia](https://fate-go.cirnopedia.org)\n[Wikia](https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia)\n\n__Important lists and spreadsheets__\n[Interlude info](https://goo.gl/SCsKJn)\n[Material location guide](https://goo.gl/ijqefs)\n[List of Singularity maps with drops](https://imgur.com/a/6nXq9#f8dRAp5)\n[Rate-up History (NA)](http://fate-go.cirnopedia.org/summon_us.php)  \u00B7  [Rate-up History (JP)](http://fate-go.cirnopedia.org/summon.php)\n[Order of Interludes and Strengthening Quests](https://kazemai.github.io/fgo-vz/relate_quest.html)\n[Palingenesis data](https://fategrandorder.fandom.com/wiki/Palingenesis)\n[Current Master Missions](http://fate-go.cirnopedia.org/master_mission.php)\n\n__Calculators and Planners__\n[Damage Calculator](https://tinyurl.com/yc2tuzn9)\n[EXP calculator](https://grandorder.gamepress.gg/exp-calculator)\n[Material planner](http://fgosimulator.webcrow.jp/Material/)\n[Servant planner](https://grandorder.gamepress.gg/servant-planner)",0xED619A,nil,xpic)
+    event.respond 'If you are on a mobile device and cannot click the links in the embed above, type `FGO!tools mobile` to receive this message as plaintext.'
+  end
+  event << ''
+end
+
 bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
   data_load()
   nicknames_load()
@@ -2267,7 +2305,8 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
         @aliases[i][2].push(srv)
         bot.channel(chn).send_message("The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in another server already.  Adding this server to those that can use it.")
         event.respond "The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in another server already.  Adding this server to those that can use it.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
-        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the character **#{unt[1]} [##{unt[0]}]** is used in quite a few servers.  It might be time to make this global") if @aliases[i][2].length >= bot.servers.length / 20 && @aliases[i][2].length>=5 && @aliases[i][3].nil?
+        metadata_load()
+        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the character **#{unt[1]} [##{unt[0]}]** is used in quite a few servers.  It might be time to make this global") if @aliases[i][2].length >= @server_data[0].inject(0){|sum,x| sum + x } / 20 && @aliases[i][2].length>=5 && @aliases[i][3].nil?
         bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**Alias:** #{newname} for #{unt[1]} [##{unt[0]}] - gained a new server that supports it.")
         double=true
       end
@@ -2300,44 +2339,6 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
     bot.channel(logchn).send_message('Alias list has been backed up.')
   end
   return nil
-end
-
-bot.command([:tools,:links]) do |event|
-  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
-    event << '**Useful tools for players of** ***Fate/Grand Order***'
-    event << '__Download the game__'
-    event << 'Google Play (NA): <https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US>'
-    event << 'Google Play (JP): <https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US>'
-    event << 'Apple App Store (NA): <https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8>'
-    event << 'Apple App Store (JP): <https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8>'
-    event << ''
-    event << '__Wikis and databases__'
-    event << 'Cirnopedia: <https://fate-go.cirnopedia.org>'
-    event << 'Wikia: <https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia>'
-    event << ''
-    event << '__Important lists and spreadsheets__'
-    event << 'Interlude info: <https://goo.gl/SCsKJn>'
-    event << 'Material location guide: <https://goo.gl/ijqefs>'
-    event << 'List of Singularity maps with drops: <https://imgur.com/a/6nXq9#f8dRAp5>'
-    event << 'Rate-up History (NA): <http://fate-go.cirnopedia.org/summon_us.php>'
-    event << 'Rate-up History (JP): <http://fate-go.cirnopedia.org/summon.php>'
-    event << 'Order of Interludes and Strengthening Quests: <https://kazemai.github.io/fgo-vz/relate_quest.html>'
-    event << 'Palingenesis data: <https://fategrandorder.fandom.com/wiki/Palingenesis>'
-    event << 'Current Master Missions: <http://fate-go.cirnopedia.org/master_mission.php>'
-    event << ''
-    event << '__Calculators and Planners__'
-    event << 'Damage calculator: <https://tinyurl.com/yc2tuzn9>'
-    event << 'EXP calculator: <https://grandorder.gamepress.gg/exp-calculator>'
-    event << 'Material planner: <http://fgosimulator.webcrow.jp/Material/>'
-    event << 'Servant planner: <https://grandorder.gamepress.gg/servant-planner>'
-  else
-    xpic='https://lh3.googleusercontent.com/gXUStNHv8sT8NjdXBOJmzqK_JIYlPP_6jKBjEOIyP-28CSsnPempO86swUYhVhVgvH4f=s180-rw'
-    t=Time.now
-    xpic='https://vignette.wikia.nocookie.net/fategrandorder/images/a/ac/FGO_GO_App_Icon.png' if t.month==4 && t.day==1
-    create_embed(event,'**Useful tools for players of** ***Fate/Grand Order***',"__Download the game__\n[Google Play (NA)](https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US)  \u00B7  [Google Play (JP)](https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US)\n[Apple App Store (NA)](https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8)  \u00B7  [Apple App Store (JP)](https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8)\n\n__Wikis and databases__\n[Cirnopedia](https://fate-go.cirnopedia.org)\n[Wikia](https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia)\n\n__Important lists and spreadsheets__\n[Interlude info](https://goo.gl/SCsKJn)\n[Material location guide](https://goo.gl/ijqefs)\n[List of Singularity maps with drops](https://imgur.com/a/6nXq9#f8dRAp5)\n[Rate-up History (NA)](http://fate-go.cirnopedia.org/summon_us.php)  \u00B7  [Rate-up History (JP)](http://fate-go.cirnopedia.org/summon.php)\n[Order of Interludes and Strengthening Quests](https://kazemai.github.io/fgo-vz/relate_quest.html)\n[Palingenesis data](https://fategrandorder.fandom.com/wiki/Palingenesis)\n[Current Master Missions](http://fate-go.cirnopedia.org/master_mission.php)\n\n__Calculators and Planners__\n[Damage Calculator](https://tinyurl.com/yc2tuzn9)\n[EXP calculator](https://grandorder.gamepress.gg/exp-calculator)\n[Material planner](http://fgosimulator.webcrow.jp/Material/)\n[Servant planner](https://grandorder.gamepress.gg/servant-planner)",0xED619A,nil,xpic)
-    event.respond 'If you are on a mobile device and cannot click the links in the embed above, type `FGO!tools mobile` to receive this message as plaintext.'
-  end
-  event << ''
 end
 
 bot.command([:checkaliases,:aliases,:seealiases]) do |event, *args|
