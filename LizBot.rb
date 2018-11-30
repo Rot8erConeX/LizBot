@@ -845,7 +845,15 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
   xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,nil,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+  ftr=nil
+  unless chain
+    ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+  end
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
 end
 
 def disp_enemy_traits(bot,event,args=nil,chain=false)
@@ -946,6 +954,13 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   dispnum="0016" if k[0]==1.2
   xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
   ftr=nil
+  unless chain
+    ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+  end
   ftr='For skill descriptions, use this command in PM or a bot spam channel.' unless safe_to_spam?(event)
   if actsklz.join("\n\n").length+passklz.join("\n").length+text.length+"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}".length>=1700
     create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}",xcolor,nil,xpic)
@@ -1027,7 +1042,17 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   ftr='You can also include NP# to show relevant stats at other merge counts.' if npl==1
-  ftr=nil if safe_to_spam?(event)
+  if safe_to_spam?(event)
+    ftr=nil
+    unless chain
+      ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+      ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+      ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+      ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+      ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+    end
+  end
+  return nil if chain && text.length<=0
   create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}:** *#{np}*#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
@@ -1044,8 +1069,15 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
   ce=@crafts.find_index{|q| q[0]==k[23]}
   ce=@crafts[ce] unless ce.nil?
   ftr=nil
+  unless chain
+    ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+  end
   if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2 && !skipftr
-    cex=@crafts[k[0]-1]
+    cex=@crafts[k[0]-@crafts[0][0]]
     ftr="This is the Bond CE for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
   elsif event.message.text.split(' ').include?('1') && k[0]<2 && !skipftr
     cex=@crafts[0]
@@ -1079,6 +1111,8 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   if k.length.zero?
     event.respond 'No matches found.' unless chain
     return nil
+  elsif k[20]=='Unavailable' && chain
+    return nil
   end
   xcolor=servant_color(k)
   text="<:fgo_icon_rarity:509064606166155304>"*k[3]
@@ -1109,6 +1143,13 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds.push(["Skill Enhancement materials (#{numabr(3*(qp[4,9].inject(0){|sum,x| sum + x }))}#{qpd} total)","*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
+  if chain
+    ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+  end
   str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
   hdr="#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}"
   if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
@@ -1160,8 +1201,14 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     artist='Riyo'
   end
   ftr=nil
+  unless chain
+    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+  end
   if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2
-    cex=@crafts[k[0]-1]
+    cex=@crafts[k[0]-@crafts[0][0]]
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
   elsif event.message.text.split(' ').include?('1') && k[0]<2
     cex=@crafts[0]
