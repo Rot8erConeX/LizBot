@@ -2156,6 +2156,10 @@ def sort_servants(event,args=nil)
       srtt+=1
     end
   end
+  unless textra.include?('Unavailable') || event.message.text.downcase.split(' ').include?('all')
+    char=char.reject{|q| q[20]=='Unavailable'}.uniq
+    textra="#{textra}\n\nFor usefulness, I have removed servants that are unavailable to Masters.\nIf you would like to include those servants, include the word \"all\" in your message."
+  end
   if lvl<0 && srt.reject{|q| q==2}.length>0
     textra="#{textra}\n\nNo level was included, so I am sorting by default maximum level.\nIf you wish to change that, include the word \"Base\" (for level 1) or \"Grail\" (for level 100)."
     lvl=1
@@ -2173,7 +2177,7 @@ def sort_servants(event,args=nil)
     for i2 in 0...srt.length
       m.push("#{longFormattedNumber(char[i][srt[i2]])} #{d[srt[i2]]}") if srt[i2]>2
     end
-    disp.push("#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{"  -  #{m.join('  -  ')}" if m.length>0}")
+    disp.push("Srv-#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{"  -  #{m.join('  -  ')}" if m.length>0}")
   end
   str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
   str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
