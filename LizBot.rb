@@ -356,9 +356,9 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     end
     return nil
   elsif ['find','search'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Attribute\n- Traits\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+    create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif ['sort','list'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Attribute\n- Traits\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+    create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
   elsif ['aliases','checkaliases','seealiases'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __servant__","Responds with a list of all `servant`'s aliases.\nIf no servant is listed, responds with a list of all aliases and who they are for.\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif command.downcase=='snagstats'
@@ -1201,12 +1201,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     artist='Riyo'
   end
   ftr=nil
-  unless chain
-    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
-    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
-    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
-    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  end
+  ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+  ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+  ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+  ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2
     cex=@crafts[k[0]-@crafts[0][0]]
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
