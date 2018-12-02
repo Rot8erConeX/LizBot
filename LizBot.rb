@@ -986,7 +986,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
   unless nophan.nil?
     nophan=@skills[nophan]
-    np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}"
+    np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}" if nophan[3].length>0
   end
   text="#{text}\n\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
   npl=1
@@ -1053,7 +1053,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   return nil if chain && text.length<=0
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}:** *#{np}*#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
