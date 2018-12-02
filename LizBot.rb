@@ -1614,8 +1614,8 @@ def disp_skill_data(bot,event,args=nil)
     m=0
     for i in 5...k.length
       unless k[i][0]=='-'
-        m+=1
-        text="#{text}\n\n**Effect #{m}:** #{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+        m+=1 unless k[i][0][0,1]=='>'
+        text="#{text}\n\n#{"**Effect #{m}:** " unless k[i][0][0,1]=='>'}#{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         if k[i][1].nil? || k[i][1].length<=0 || k[i][1]=='-'
         elsif k[i][1,10].uniq.length<=1
           text="#{text}\nConstant #{k[i][1]}"
