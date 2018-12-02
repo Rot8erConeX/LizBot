@@ -18,6 +18,7 @@ Claw of Chaos
 Crystal Ball
 Crystalized Lore
 Cursed Beast Gallstone
+Dawn's Light Core
 Deadly Poison Stinger
 Dharmapala's Stick
 Dragon Fang
@@ -65,6 +66,7 @@ Octuplet Crystals
 Phoenix Feather
 Primordial Lanugo
 Proof of Hero
+Quiet Antique Bell
 Ranjatai
 Reactive Gunpowder
 Ribbon of Memories

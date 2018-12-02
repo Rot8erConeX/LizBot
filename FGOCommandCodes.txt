@@ -1,13 +1,13 @@
-1\Code: Mortal\1\Apply Special Attack [Human] 5%\Friend Point Summon
-2\Code: Brute\1\Apply Special Attack [Beast] 5%\Friend Point Summon
-3\Code: Corpse\1\Apply Special Attack [Undead] 5%\Friend Point Summon
-4\Code: Evil\1\Apply Special Attack [Demonic] 5%\Friend Point Summon
-5\Code: Nimbus\1\Apply Special Attack [Divine] 5%\Friend Point Summon
-6\Code: Breath\2\Restore own HP by 100 when used to attack\Friend Point Summon
-7\Code: Glitter\2\Increase Critical Star Drop Rate by 20%\Friend Point Summon
-8\Code: Burst\2\Increase Critical Strength by 3%\Friend Point Summon
-9\Code: Focus\2\Increase Critical Star Gather Rate by 25%\Friend Point Summon
-10\Code: Cure\2\Remove 1 Poison, Curse, or Burn Debuff from self\Friend Point Summon
+1\Mortal\1\Apply Special Attack [Human] 5%\Friend Point Summon
+2\Brute\1\Apply Special Attack [Beast] 5%\Friend Point Summon
+3\Corpse\1\Apply Special Attack [Undead] 5%\Friend Point Summon
+4\Evil\1\Apply Special Attack [Demonic] 5%\Friend Point Summon
+5\Nimbus\1\Apply Special Attack [Divine] 5%\Friend Point Summon
+6\Breath\2\Restore own HP by 100 when used to attack\Friend Point Summon
+7\Glitter\2\Increase Critical Star Drop Rate by 20%\Friend Point Summon
+8\Burst\2\Increase Critical Strength by 3%\Friend Point Summon
+9\Focus\2\Increase Critical Star Gather Rate by 25%\Friend Point Summon
+10\Cure\2\Remove 1 Poison, Curse, or Burn Debuff from self\Friend Point Summon
 11\Lucky Beast\3\Restore own HP by 200 when used to attack\Command Code Release Commemoration Quest
 12\Crest of Humanity\3\Increase Critical Star Drop Rate by 30%\Servant Summer Festival!
 13\Armament of Victory\4\Increase Critical Star Gather Rate by 100%\Servant Summer Festival!
@@ -18,3 +18,4 @@
 18\Command Spells of the White Vessel\3\Remove 1 Debuff from self\ONILAND of the Mysterious Kingdom!!
 19\Sword of the Dragon Slayer\4\Increase Critical Strength against [Dragon] by 25%\ONILAND of the Mysterious Kingdom!!
 20\Evil Dragon of the Twilight\5\Apply Special Attack [Dragon] 20%\ONILAND of the Mysterious Kingdom!!
+21\Hunter of Love\3\Apply Sure Hit\15M DL Commemoration Campaign
