@@ -311,7 +311,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}** __toggle__","Responds with whether or not the channel the command is invoked in is one in which I can send extremely long replies.\n\nIf the channel does not fill one of the many molds for acceptable channels, server mods can toggle the ability with the words \"on\", \"semi\", and \"off\".",0xED619A)
   elsif ['status'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*message__","Sets my status to `message`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
-  elsif ['tools','links'].include?(command.downcase)
+  elsif ['tools','tool','links','link','resources','resource'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**",'Responds with a list of links useful to players of *Fate/Grand Order*.',0xED619A)
   elsif ['mat','material'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a material, shows information about the servants who require that material for ascension or for skill enhancement.\n\nIf it is safe to spam, the servants' names and uses for the material will be shown.\nIf not, only the *quantity* of servants that require the material will be shown.",0xED619A)
@@ -400,7 +400,8 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','boop']
+     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
+     'boop']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -2157,8 +2158,9 @@ def sort_servants(event,args=nil)
     end
   end
   unless textra.include?('Unavailable') || event.message.text.downcase.split(' ').include?('all')
-    char=char.reject{|q| q[20]=='Unavailable'}.uniq
-    textra="#{textra}\n\nFor usefulness, I have removed servants that are unavailable to Masters.\nIf you would like to include those servants, include the word \"all\" in your message."
+    char2=char.reject{|q| q[20]=='Unavailable'}.uniq
+    textra="#{textra}\n\nFor usefulness, I have removed servants that are unavailable to Masters.\nIf you would like to include those servants, include the word \"all\" in your message." unless char2.length==char.length
+    char=char2.map{|q| q}
   end
   if lvl<0 && srt.reject{|q| q==2}.length>0
     textra="#{textra}\n\nNo level was included, so I am sorting by default maximum level.\nIf you wish to change that, include the word \"Base\" (for level 1) or \"Grail\" (for level 100)."
@@ -2170,7 +2172,7 @@ def sort_servants(event,args=nil)
     char[i][7]=char[i][7][lvl]
   end
   char.sort!{|b,a| (supersort(a,b,srt[0])==0 ? (supersort(a,b,srt[1])==0 ? supersort(a,b,srt[2]) : supersort(a,b,srt[1])) : supersort(a,b,srt[0]))}
-  d=['ID','Name','X','Rarity','Growth','Level','HP','Atk']
+  d=['ID','Name','Servant ID','Rarity','Growth','Level','HP','Atk']
   disp=[]
   for i in 0...char.length
     m=[]
@@ -2179,7 +2181,7 @@ def sort_servants(event,args=nil)
     end
     disp.push("Srv-#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{"  -  #{m.join('  -  ')}" if m.length>0}")
   end
-  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
+  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted by:* #{srt.uniq.map{|q| d[q]}.join(', ')}\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
   str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
   if str.length+disp.join("\n").length>1900 && !safe_to_spam?(event)
     textra="#{textra}\n\nToo much data is trying to be displayed.\nShowing top ten results."
@@ -2190,7 +2192,7 @@ def sort_servants(event,args=nil)
     t.shift if t.length>0 && t[0].length<=0
   end
   textra=t.join("\n")
-  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
+  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted by:* #{srt.uniq.map{|q| d[q]}.join(', ')}\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
   str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
   for i in 0...disp.length
     str=extend_message(str,disp[i],event)
@@ -2226,7 +2228,7 @@ bot.command([:embeds,:embed]) do |event|
   return nil
 end
 
-bot.command([:tools,:links]) do |event|
+bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
     event << '**Useful tools for players of** ***Fate/Grand Order***'
     event << '__Download the game__'
