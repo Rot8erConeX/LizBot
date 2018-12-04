@@ -2698,7 +2698,7 @@ end
 
 bot.command(:invite) do |event, user|
   usr=event.user
-  txt="You can invite me to your server with this link: <https://goo.gl/ox9CxB>\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/MarketingLiz.png"
+  txt="**You can invite me to your server with this link: <https://goo.gl/ox9CxB>**\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/MarketingLiz.png"
   user_to_name="you"
   unless user.nil?
     if /<@!?(?:\d+)>/ =~ user
