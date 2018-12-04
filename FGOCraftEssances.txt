@@ -397,9 +397,9 @@
 397\Faith from the Deepest Earth\4\9\100, 100\100, 100\When equipped to Vlad III [EXTRA] (Lancer) only. Increase Quick and Buster Card effectiveness of all allies by 10% while he's on the field\\-\\Vlad III [EXTRA] Bond Lv.10
 398\Invitation to Halloween\4\9\100, 100\100, 100\When equipped to Elisabeth [Brave] (Saber) only. Increase Buster Card effectiveness of all allies by 20% but decrease DEF by 10% [Demerit] while she's on the field\\-\\Elisabeth Bathory [Brave] Bond Lv.10
 399\First Order\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Gotou Keisuke\Fate Project New Year TV Special Campaign.
-400\Demonic Bodhisattva\5\12\400, 250\1600, 1000\Increase NP Gauge by 50% at the start of battle; Increase NP Overcharge by 2 levels (1 time)\Increase NP Gauge by 60% at the start of battle; Increase NP Overcharge by 2 levels (1 time)\-\I-IV
-401\Room Guarder\4\9\600, 0\2250, 0\Increase Critical Star Gather Rate by 300%; Apply Damage Cut 300\Increase Critical Star Gather Rate by 400%; Apply Damage Cut 400\-\Shima Drill
-402\Miracle Seeker\3\5\0, 200\0, 1000\Increase NP Strength by 15% when equipped to a [Divine] Servant\Increase NP Strength by 25% when equipped to a [Divine] Servant\-\Shima Drill
+400\Devilish Bodhisattva\5\12\400, 250\1600, 1000\Increase NP Gauge by 50% at the start of battle; Increase NP Overcharge by 2 levels (1 time)\Increase NP Gauge by 60% at the start of battle; Increase NP Overcharge by 2 levels (1 time)\-\I-IV
+401\Room Guard\4\9\600, 0\2250, 0\Increase Critical Star Gather Rate by 300%; Apply Damage Cut 300\Increase Critical Star Gather Rate by 400%; Apply Damage Cut 400\-\Shima Drill
+402\Seeker of Miracles\3\5\0, 200\0, 1000\Increase NP Strength by 15% when equipped to a [Divine] Servant\Increase NP Strength by 25% when equipped to a [Divine] Servant\-\Shima Drill
 403\Seven-Headed Cita Mace\4\9\100, 100\100, 100\When equipped to Ishtar (Archer) only. Increase Buster Card effectiveness of all allies by 20% but decrease Debuff Resist by 20% [Demerit] while she's on the field\\-\\Ishtar Bond Lv.10
 404\Huwawa's Flowers\4\9\100, 100\100, 100\When equipped to Enkidu (Lancer) only. Restore HP of all allies by 500 per turn while he's on the field\\-\\Enkidu Bond Lv.10
 405\Piedra del Sol\4\9\100, 100\100, 100\When equipped to Quetzalcotl (Rider) only. Increase Arts and Buster Card effectiveness of all allies by 10% while she's on the field\\-\\Quetzalcotl Bond Lv.10
@@ -915,4 +915,4 @@
 915\In the Land of the Eternal Bird \4\9\320, 200\1200, 750\Increase NP Gauge by 4% per turn, Increase NP Gain by 10%\Increase NP Gauge by 5% per turn, Increase NP Gain by 15%\-\Azuma Toh
 916\Huiji Type-0 Blueprints\4\9\100, 100\100, 100\When equiped to Xiang Yu (Berserker) only, Increase Quick and Buster effectiveness of all allies by 10% while he's on the field.\\-\-\Xiang Yu Bond Lv. 10
 917\My Poison Cup, My Mask\4\9\100, 100\100, 100\When equiped to Lan Ling Wang (Saber) only, Increase Arts Card effectiveness & NP Gain of all allies while he's on the field. \\-\-\Lan Ling Wang Bond Lv. 10
-918\Wood of the Ash Tree\4\9\100, 100\100, 100\When equiped to Qin Liangyu (Lancer) only, Increase Quick and Arts effectiveness of all allies by 10% while she's on the field. \\-\-
+918\Wood of the Ash Tree\4\9\100, 100\100, 100\When equiped to Qin Liangyu (Lancer) only, Increase Quick and Arts effectiveness of all allies by 10% while she's on the field. \\-\-\Qin Liangyu Bond Lv. 10
