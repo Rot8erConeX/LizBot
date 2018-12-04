@@ -599,6 +599,7 @@ def find_mat(name,event,fullname=false)
   return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'
   return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'
   return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'
+  return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'
   return [] if fullname
@@ -636,6 +637,7 @@ def find_mat(name,event,fullname=false)
   return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'[0,name.length]
   return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'[0,name.length]
   return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'[0,name.length]
+  return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'[0,name.length]
   return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'[0,name.length]
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'[0,name.length]
@@ -1971,7 +1973,7 @@ def find_in_servants(event,args=nil,mode=0)
     traits.push('Wild Beast') if ['wildbeast','wild','beastattribute'].include?(args[i])
     avail.push('Event') if ['event','event','welfare','welfares'].include?(args[i])
     avail.push('Limited') if ['limited','limit','limits','seasonal','seasonals'].include?(args[i])
-    avail.push('NonLimited') if ['nonlimited','nonlimit','notlimits','notlimited','notlimit','notlimits','nolimits','limitless','default','non'].include?(args[i])
+    avail.push('NonLimited') if ['nonlimited','nonlimit','notlimits','notlimited','notlimit','notlimits','nolimits','limitless','non'].include?(args[i])
     avail.push('Starter') if ['starter','starters','start','starting'].include?(args[i])
     avail.push('StoryLocked') if ['story','stories','storylocked','storylock','storylocks','locked','lock','locks'].include?(args[i])
     avail.push('StoryPromo') if ['storypromo','storypromos','storypromotion','promotion','promotions','storypromotions'].include?(args[i])
@@ -2076,7 +2078,7 @@ def find_in_servants(event,args=nil,mode=0)
       char=char.reject{|q| !has_any?(traits,q[13])}.uniq
     else
       search[-1]="#{search[-1]}\n(searching for servants with all listed traits)" if traits.length>1
-      textra="#{textra}\n\nTraits searching defaults to searching for servants with all listed traits.  To search for servants with any of the listed traits, perform the search again with the word \"any\" in your message." if traits.length>1
+      textra="#{textra}\n\nTraits searching defaults to searching for servants with all listed traits.\nTo search for servants with any of the listed traits, perform the search again with the word \"any\" in your message." if traits.length>1
       for i in 0...traits.length
         char=char.reject{|q| !q[13].include?(traits[i])}.uniq
       end
