@@ -602,6 +602,7 @@ def find_mat(name,event,fullname=false)
   return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'
+  return find_mat('Magic Cerebrospinal Fluid',event,fullname) if name.downcase=='fluid'
   return [] if fullname
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
@@ -641,6 +642,7 @@ def find_mat(name,event,fullname=false)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'[0,name.length]
   return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'[0,name.length]
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'[0,name.length]
+  return find_mat('Magic Cerebrospinal Fluid',event,fullname) if name.downcase=='fluid'[0,name.length]
   return []
 end
 
@@ -1692,6 +1694,7 @@ def disp_clothing_data(bot,event,args=nil)
     for i in 0...k[5].length
       text="#{text}\n*Level #{i+1}\u2192#{i+2}:*  #{longFormattedNumber(k[5][i])}"
     end
+    text="#{text}\n**Total EXP to reach level 10:** #{longFormattedNumber(k[5].inject(0){|sum,x| sum + x })}"
   else
     text="#{text}\n\n__**Skills:**__\n#{k[2,3].map{|q| "*#{q}*"}.join("\n")}\n\n**Total EXP to reach level 10:** #{longFormattedNumber(k[5].inject(0){|sum,x| sum + x })}"
   end
