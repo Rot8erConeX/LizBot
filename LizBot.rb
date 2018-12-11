@@ -1013,6 +1013,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
           text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         elsif npl==0 && nophan[i][0].include?('<LEVEL>')
           text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+        elsif nophan[i].length<=1
         else
           text="#{text} - #{nophan[i][npl].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
         end
@@ -1039,6 +1040,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
             text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           elsif npl==0 && nophan[i][0].include?('<LEVEL>')
             text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          elsif nophan[i].length<=1
           else
             text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
           end
