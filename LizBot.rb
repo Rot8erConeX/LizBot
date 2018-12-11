@@ -1670,7 +1670,7 @@ def disp_clothing_data(bot,event,args=nil)
   end
   xcolor=0xF08000
   text="**Availability:** #{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
-  if safe_to_spam?(event)
+  if safe_to_spam?(event,nil,1)
     for i in 2...5
       text="#{text}\n\n__Skill #{i-1}: **#{k[i].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__"
       skl=@skills.find_index{|q| q[2]=='Clothes' && q[0]==k[i]}
