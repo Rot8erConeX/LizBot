@@ -102,6 +102,7 @@ def data_load()
     b[i][19]=b[i][19].split('; ').map{|q| q.split(', ')}
     b[i][21]=b[i][21].to_i
     b[i][23]=b[i][23].to_i
+    b[i][26]=b[i][26].split(', ').map{|q| q.to_i} unless b[i][26].nil?
   end
   @servants=b.map{|q| q}
   if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkills.txt')
@@ -593,8 +594,12 @@ def find_mat(name,event,fullname=false)
   return find_mat('Evil Bone',event,fullname) if name.downcase=='bone'
   return find_mat('Phoenix Feather',event,fullname) if name.downcase=='feather'
   return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'
+  return find_mat('Black Beast Grease',event,fullname) if name.downcase=='grease'
+  return find_mat('Eternal Gear',event,fullname) if name.downcase=='gear'
+  return find_mat('Chichi Divine Wine',event,fullname) if name.downcase=='vase'
   return find_mat('Spirit Root',event,fullname) if name.downcase=='root'
   return find_mat('Great Knight Medal',event,fullname) if ['medal','metal'].include?(name.downcase)
+  return find_mat('Reactive Gunpowder',event,fullname) if ['gunpowder','bullet'].include?(name.downcase)
   return find_mat('Homunculus Baby',event,fullname) if ['baby','bebe'].include?(name.downcase)
   return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'
   return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'
@@ -603,6 +608,8 @@ def find_mat(name,event,fullname=false)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'
   return find_mat('Magic Cerebrospinal Fluid',event,fullname) if name.downcase=='fluid'
+  return find_mat('Primordial Lanugo',event,fullname) if name.downcase=='lanugo'
+  return find_mat('Dragon Fang',event,fullname) if name.downcase=='fang'
   return [] if fullname
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
@@ -628,21 +635,27 @@ def find_mat(name,event,fullname=false)
   return @mats[k] unless k.nil?
   k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Cookie of #{q.gsub('Secret Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
+  return find_mat('Chichi Divine Wine',event,fullname) if name.downcase=='vase'[0,name.length]
   return find_mat('Meteor Horseshoe',event,fullname) if name.downcase=='horseshoe'[0,name.length]
   return find_mat('Heart of the Foreign God',event,fullname) if name.downcase=='heart'[0,name.length]
   return find_mat('Evil Bone',event,fullname) if name.downcase=='bone'[0,name.length]
   return find_mat('Phoenix Feather',event,fullname) if name.downcase=='feather'[0,name.length]
   return find_mat('Spirit Root',event,fullname) if name.downcase=='root'[0,name.length]
+  return find_mat('Black Beast Grease',event,fullname) if name.downcase=='grease'[0,name.length]
+  return find_mat('Reactive Gunpowder',event,fullname) if ['gunpowder','bullet'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat('Great Knight Medal',event,fullname) if ['medal','metal'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat('Homunculus Baby',event,fullname) if ['baby','bebe'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'[0,name.length]
   return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'[0,name.length]
+  return find_mat('Eternal Gear',event,fullname) if name.downcase=='gear'[0,name.length]
   return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'[0,name.length]
   return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'[0,name.length]
   return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'[0,name.length]
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'[0,name.length]
   return find_mat('Magic Cerebrospinal Fluid',event,fullname) if name.downcase=='fluid'[0,name.length]
+  return find_mat('Primordial Lanugo',event,fullname) if name.downcase=='lanugo'[0,name.length]
+  return find_mat('Dragon Fang',event,fullname) if name.downcase=='fang'[0,name.length]
   return []
 end
 
