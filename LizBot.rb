@@ -338,6 +338,8 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Riyo art, which is shown on April Fool's.",0xED619A)
   elsif ['ce','craft','essance','craftessance'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a CE, shows that CE's info.\nIf `name` is the name of a servant, shows that servant's Bond CE.\n\nIf `name` is a number, prioritizes servant ID over Craft Essence ID.",0xED619A)
+  elsif ['valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece',"valentine's"].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a servant, shows that servant's Valentine's CE.",0xED619A)
   elsif ['commandcode','command'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows the information about the command code named `name`.",0xED619A)
   elsif ['mysticcode','mysticode','mystic','clothing','clothes'].include?(command.downcase)
@@ -402,7 +404,7 @@ def all_commands(include_nil=false,permissions=-1)
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
-     'boop']
+     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -1111,7 +1113,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
     text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
+    text="#{text}\n**<:Bond:523610403356278785> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
@@ -1122,6 +1124,78 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
   end
   create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+end
+
+def disp_servant_ce2(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  k=find_data_ex(:find_servant,args.join(' '),event)
+  puts k.map{|q| q.to_s}
+  if k.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  elsif k[26].nil? || k[26].length<=0
+    event.respond "#{k[1]} [Srv-##{k[0]}] has no Valentine's CEs"
+    return nil
+  end
+  xcolor=servant_color(k)
+  xcolor=0xFF42AC
+  text=''
+  ce=@crafts.find_index{|q| q[0]==k[26][0]}
+  ce=@crafts[ce] unless ce.nil?
+  ftr=nil
+  ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+  ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+  ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+  ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+  ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+  if ce.nil?
+    xpic=nil
+    text=">No CE information known<"
+  else
+    ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+    xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
+    text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
+    text="#{text}\n**<:Valentines:523608734614945802> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+    if ce[4]==ce[5] && ce[6]==ce[7]
+      text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    else
+      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    end
+    text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
+    text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
+  end
+  create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+  if k[26].length>1
+    text=''
+    ce=@crafts.find_index{|q| q[0]==k[26][1]}
+    ce=@crafts[ce] unless ce.nil?
+    ftr=nil
+    ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+    if ce.nil?
+      xpic=nil
+      text=">No CE information known<"
+    else
+      ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+      xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
+      text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
+      text="#{text}\n**<:Valentines:523608734614945802> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+      if ce[4]==ce[5] && ce[6]==ce[7]
+        text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      else
+        text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+        text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      end
+      text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
+      text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
+    end
+    create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+  end
 end
 
 def disp_servant_mats(bot,event,args=nil,chain=false)
@@ -1362,13 +1436,17 @@ def disp_ce_card(bot,event,args=nil)
   xcolor=0x718F93 if ce[2]>2
   xcolor=0xF5D672 if ce[2]>3
   k=@servants.find_index{|q| q[23]==ce[0]}
+  k2=@servants.find_index{|q| !q[26].nil? && q[26].include?(ce[0])}
   k=@servants[k] unless k.nil?
+  k2=@servants[k2] unless k2.nil?
   xcolor=servant_color(k) unless k.nil?
+  xcolor=0xFF42AC unless k2.nil?
   text=''
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
   text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-  text="#{text}\n**Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
+  text="#{text}\n**<:Bond:523610403356278785> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
+  text="#{text}\n**<:Valentines:523608734614945802> Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k2[0]}]*" unless k2.nil?
   text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
   if ce[4]==ce[5] && ce[6]==ce[7]
     text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
@@ -2555,6 +2633,17 @@ bot.command([:ce,:CE,:craft,:essance,:craftessance]) do |event, *args|
   end
 end
 
+bot.command([:valentines,:valentine,:valentinesce,:cevalentines,:valentinece,:cevalentine,:chocolate]) do |event, *args|
+  name=args.join(' ')
+  if find_data_ex(:find_servant,name,event,true).length>0
+    disp_servant_ce2(bot,event,args)
+  elsif find_data_ex(:find_servant,name,event).length>0
+    disp_servant_ce2(bot,event,args)
+  else
+    event.respond "No matches found."
+  end
+end
+
 bot.command([:command,:commandcode]) do |event, *args|
   disp_code_data(bot,event,args)
 end
@@ -3147,9 +3236,16 @@ bot.mention do |event|
     args.shift
     disp_tiny_stats(bot,event,args)
     m=false
+  elsif ['valentines','valentine','chocolate',"valentine's"].include?(args[0])
+    args.shift
+    disp_servant_ce2(bot,event,args)
+    m=false
   elsif ['ce','craft','essance','craftessance'].include?(args[0])
     args.shift
-    if find_data_ex(:find_ce,args.join(' '),event,true).length>0
+    if ['valentines','valentine','chocolate',"valentine's"].include?(args[0])
+      args.shift
+      disp_servant_ce2(bot,event,args)
+    elsif find_data_ex(:find_ce,args.join(' '),event,true).length>0
       disp_ce_card(bot,event,args)
     elsif find_data_ex(:find_servant,args.join(' '),event,true).length>0
       disp_servant_ce(bot,event,args)
