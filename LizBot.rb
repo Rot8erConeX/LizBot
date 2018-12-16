@@ -39,7 +39,7 @@ bot.gateway.check_heartbeat_acks = false
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
-  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id) # it is safe to spam in the emoji servers
+  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
   return true if ['bots','bot'].include?(chn.name.downcase) # channels named "bots" are safe to spam in
   return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
@@ -688,11 +688,15 @@ end
 
 def find_emote(bot,event,item,mode=0)
   if mode==1
-    moji=bot.server(508792801455243266).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
-    moji=bot.server(508793141202255874).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    moji=bot.server(523830882453422120).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
-    moji=bot.server(508793425664016395).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    moji=bot.server(523824424437415946).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    return "#{moji[0].icon_url}" if moji.length>0
+    moji=bot.server(523825319916994564).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    return "#{moji[0].icon_url}" if moji.length>0
+    moji=bot.server(523822789308841985).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
     return ''
   end
@@ -702,11 +706,15 @@ def find_emote(bot,event,item,mode=0)
   item=item.split(' ')
   item.pop
   item=item.join(' ')
-  moji=bot.server(508792801455243266).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+  moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{k}" if moji.length>0
-  moji=bot.server(508793141202255874).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+  moji=bot.server(523830882453422120).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{k}" if moji.length>0
-  moji=bot.server(508793425664016395).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+  moji=bot.server(523824424437415946).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+  return "#{moji[0].mention}#{k}" if moji.length>0
+  moji=bot.server(523825319916994564).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+  return "#{moji[0].mention}#{k}" if moji.length>0
+  moji=bot.server(523822789308841985).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{k}" if moji.length>0
   return "#{item} #{k}"
 end
@@ -752,6 +760,68 @@ def numabr(n)
   return n
 end
 
+def servant_superclass(bot,event,k)
+  color='gold'
+  color='silver' if k[3]<4
+  color='bronze' if k[3]<3
+  color='black' if k[3]<1
+  moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{k[2].downcase.gsub(' ','')}_#{color}"}
+  if moji.length>0
+    clsmoji=moji[0].mention
+  else
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_unknown_#{color}"}
+    if moji.length>0
+      clsmoji=moji[0].mention
+    else
+      clsmoji='<:class_unknown_blue:523948997229019136>'
+    end
+  end
+  return "**Class:** *#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+end
+
+def servant_moji(bot,event,k,mode=0)
+  color='gold'
+  color='silver' if k[3]<4
+  color='bronze' if k[3]<3
+  color='black' if k[3]<1
+  moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{k[2].downcase.gsub(' ','')}_#{color}"}
+  if moji.length>0
+    clsmoji=moji[0].mention
+  else
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_unknown_#{color}"}
+    if moji.length>0
+      clsmoji=moji[0].mention
+    else
+      clsmoji='<:class_unknown_blue:523948997229019136>'
+    end
+  end
+  return clsmoji if mode==1
+  deckmoji=''
+  m=k[17][0,5]
+  if m.include?('QQQ')
+    deckmoji="#{deckmoji}<:Quick_x3:523975575866572800>"
+  elsif m.include?('QQ')
+    deckmoji="#{deckmoji}<:Quick_x2:523975575933812746>"
+  else
+    deckmoji="#{deckmoji}<:Quick_x:523975575329701902>"
+  end
+  if m.include?('AAA')
+    deckmoji="#{deckmoji}<:Arts_x3:523975575656857611>"
+  elsif m.include?('AA')
+    deckmoji="#{deckmoji}<:Arts_x2:523975575849926665>"
+  else
+    deckmoji="#{deckmoji}<:Arts_x:523975575552000000>"
+  end
+  if m.include?('BBB')
+    deckmoji="#{deckmoji}<:Buster_x3:523975575648469020>"
+  elsif m.include?('BB')
+    deckmoji="#{deckmoji}<:Buster_x2:523975576294260737>"
+  else
+    deckmoji="#{deckmoji}<:Buster_x:523975575359193089>"
+  end
+  return "#{clsmoji}#{deckmoji}#{k[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')}"
+end
+
 def disp_servant_stats(bot,event,args=nil)
   dispstr=event.message.text.downcase.split(' ')
   if dispstr.include?('tiny') || dispstr.include?('small') || dispstr.include?('smol') || dispstr.include?('micro') || dispstr.include?('little') || !safe_to_spam?(event)
@@ -768,7 +838,7 @@ def disp_servant_stats(bot,event,args=nil)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   np="*"
   np=":* #{@skills[@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}][3]}" unless @skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}.nil?
@@ -776,14 +846,14 @@ def disp_servant_stats(bot,event,args=nil)
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
-  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)\n**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Class:** *#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}\n\n#{bond}\n\n**Death Rate:** #{k[11]}%"
+  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)\n**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n#{servant_superclass(bot,event,k)}\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}\n\n#{bond}\n\n**Death Rate:** #{k[11]}%"
   fou=990
   fou=1000 if dispstr.include?('fou') && dispstr.include?('jp')
   fou=1000 if dispstr.include?('jpfou') || dispstr.include?('jp_fou') || dispstr.include?('foujp') || dispstr.include?('fou_jp')
   fou=1000 if dispstr.include?('fou-jp') || dispstr.include?('jp-fou')
-  flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*Atk* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*Atk* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100<:holy_grail:508802653829070886>**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*Atk* - #{longFormattedNumber(k[7][2])}  "]]
-  flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100<:holy_grail:508802653829070886>**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
-  flds.push(["Attack Parameters","__**Hit Counts**__\n<:quick:509064606438653992>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:arts:509064605830742016>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:buster:509064606233133056>#{k[9][2]}\n<:Blank:509232907555045386><:extra:509064605729816578>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:509239098888683521>#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
+  flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*Atk* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*Atk* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*Atk* - #{longFormattedNumber(k[7][2])}  "]]
+  flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
+  flds.push(["Attack Parameters","__**Hit Counts**__\n<:Quick_x:523975575329701902>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_x:523975575552000000>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_x:523975575359193089>#{k[9][2]}\n<:Blank:509232907555045386><:Extra_x:523987173951930376>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -795,7 +865,7 @@ def disp_servant_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [##{k[0]}]",text,xcolor,ftr,xpic,flds,2)
+  create_embed(event,"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k,1)}",text,xcolor,ftr,xpic,flds,2)
 end
 
 def disp_tiny_stats(bot,event,args=nil)
@@ -820,7 +890,7 @@ def disp_tiny_stats(bot,event,args=nil)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   if dispfou==2000
     text="#{text}\u00A0\u00B7\u00A0<:GoldenFou:503453297068212224>"
@@ -831,7 +901,7 @@ def disp_tiny_stats(bot,event,args=nil)
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
-  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Class:** *#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\u00A0\u00B7\u00A0**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992>').gsub('A','<:arts:509064605830742016>').gsub('B','<:buster:509064606233133056>')} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}<:holy_grail:508802653829070886>\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}<:holy_grail:508802653829070886>\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0<:quick:509064606438653992>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:arts:509064605830742016>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:buster:509064606233133056>#{k[9][2]}  \u00B7  <:extra:509064605729816578>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:509239098888683521>\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
+  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n#{servant_superclass(bot,event,k)}\n\n**Command Deck:** #{k[17][0,5]}\n**Noble Phantasm:** #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}<:holy_grail:523842742992764940>\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}<:holy_grail:523842742992764940>\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0<:Quick_x:523975575329701902>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_x:523975575552000000>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_x:523975575359193089>#{k[9][2]}  \u00B7  <:Extra_x:523987173951930376>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
@@ -843,7 +913,7 @@ def disp_tiny_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [##{k[0]}]",text,xcolor,ftr,xpic)
+  create_embed(event,"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}",text,xcolor,ftr,xpic)
 end
 
 def disp_servant_traits(bot,event,args=nil,chain=false)
@@ -855,7 +925,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
@@ -873,7 +943,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
 end
 
 def disp_enemy_traits(bot,event,args=nil,chain=false)
@@ -899,7 +969,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
-  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   actsklz=[]
@@ -986,7 +1056,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}",xcolor,nil,xpic)
     create_embed(event,'__*Passive Skills*__',passklz.join("\n"),xcolor,ftr)
   else
-    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
+    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
   end
 end
 
@@ -999,7 +1069,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   np="*"
@@ -1018,7 +1088,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=5 if event.message.text.downcase.split(' ').include?('np5')
   unless nophan.nil?
     l=[nophan[5],nophan[6]]
-    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q','<:quick:509064606438653992> Quick').gsub('A','<:arts:509064605830742016> Arts').gsub('B','<:buster:509064606233133056> Buster')}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
+    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105> Quick').gsub('A','<:arts:523854803013730316> Arts').gsub('B','<:buster:523854810286391296> Buster')}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
     for i in 7...17
       unless nophan[i][0]=='-'
         text="#{text}\n*#{nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
@@ -1075,7 +1145,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   return nil if chain && text.length<=0
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}]#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
@@ -1112,8 +1182,8 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-    text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**<:Bond:523610403356278785> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
+    text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
+    text="#{text}\n**<:Bond:523903660913197056> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
@@ -1155,8 +1225,8 @@ def disp_servant_ce2(bot,event,args=nil)
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-    text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**<:Valentines:523608734614945802> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+    text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
+    text="#{text}\n**<:Valentines:523903633453219852> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
@@ -1183,8 +1253,8 @@ def disp_servant_ce2(bot,event,args=nil)
     else
       ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
       xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-      text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-      text="#{text}\n**<:Valentines:523608734614945802> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+      text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
+      text="#{text}\n**<:Valentines:523903633453219852> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
       if ce[4]==ce[5] && ce[6]==ce[7]
         text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       else
@@ -1209,7 +1279,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
@@ -1227,8 +1297,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   qp=[100000,300000,1000000,3000000,200000,400000,1200000,1600000,4000000,5000000,10000000,12000000,20000000] if k[3]==5
   k[18]=k[18].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   k[19]=k[19].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
-  # <:QP:508802778982907920>
-  qpd='<:QP:508802778982907920>'
+  qpd='<:QP:523842660407181324>'
   qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)","*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
   flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
@@ -1245,7 +1314,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
-  hdr="#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}"
+  hdr="#{"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}"
   if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
     create_embed(event,hdr,str,xcolor,nil,xpic,nil,1)
     str="__**#{flds[-1][0]}**__"
@@ -1306,7 +1375,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     cex=@crafts[0]
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
-  text="<:fgo_icon_rarity:509064606166155304>"*k[3]
+  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
@@ -1415,7 +1484,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
       end
     end
-    event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
+    event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}") do |embed|
       embed.description=text
       embed.color=xcolor
       embed.footer={"text"=>ftr} unless ftr.nil?
@@ -1444,9 +1513,9 @@ def disp_ce_card(bot,event,args=nil)
   text=''
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-  text="#{"<:FGO_icon_star_mono:509072675344351232>"*ce[2]}\n**Cost:** #{ce[3]}"
-  text="#{text}\n**<:Bond:523610403356278785> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
-  text="#{text}\n**<:Valentines:523608734614945802> Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k2[0]}]*" unless k2.nil?
+  text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
+  text="#{text}\n**<:Bond:523903660913197056> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
+  text="#{text}\n**<:Valentines:523903633453219852> Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k2[0]}]*" unless k2.nil?
   text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
   if ce[4]==ce[5] && ce[6]==ce[7]
     text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
@@ -1474,7 +1543,7 @@ def disp_ce_art(bot,event,args=nil)
   xcolor=0x718F93 if ce[2]>2
   xcolor=0xF5D672 if ce[2]>3
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Crafts/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-  text="<:FGO_icon_star_mono:509072675344351232>"*ce[2]
+  text="<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
   text='Requested art not found.' if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
@@ -1568,7 +1637,7 @@ def disp_code_data(bot,event,args=nil)
   xcolor=0x7D4529
   xcolor=0x718F93 if ce[2]>2
   xcolor=0xF5D672 if ce[2]>3
-  text="#{"<:FGO_icon_star_bronze:509072674970927117>"*ce[2]}"
+  text="#{"<:FGO_icon_rarity_rust:523903558928826372>"*ce[2]}"
   text="#{text}\n\n**Effect:** #{ce[3]}"
   text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
@@ -2155,7 +2224,7 @@ def find_in_servants(event,args=nil,mode=0)
   end
   if rarity.length>0
     char=char.reject{|q| !rarity.include?(q[3])}.uniq
-    search.push("*Rarities*: #{rarity.map{|q| "#{q}<:fgo_icon_rarity:509064606166155304>"}.join(', ')}")
+    search.push("*Rarities*: #{rarity.map{|q| "#{q}<:fgo_icon_rarity:523858991571533825>"}.join(', ')}")
   end
   if curves.length>0
     char=char.reject{|q| !curves.include?(q[4])}.uniq
@@ -2231,7 +2300,7 @@ def find_servants(event,args=nil)
   end
 end
 
-def sort_servants(event,args=nil)
+def sort_servants(bot,event,args=nil)
   args=normalize(event.message.text.downcase).split(' ') if args.nil?
   args=args.map{|q| normalize(q.downcase)}
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
@@ -2240,7 +2309,7 @@ def sort_servants(event,args=nil)
   search=k[0]
   textra=k[1]
   char=k[2]
-  srt=[2,2,2]
+  srt=[4,4,4]
   srtt=0
   lvl=-1
   for i in 0...args.length
@@ -2265,7 +2334,7 @@ def sort_servants(event,args=nil)
     lvl=1
   end
   for i in 0...char.length
-    char[i][2]=@servants.length+100-char[i][0]
+    char[i][4]=@servants.length+100-char[i][0]
     char[i][6]=char[i][6][lvl]
     char[i][7]=char[i][7][lvl]
   end
@@ -2275,9 +2344,9 @@ def sort_servants(event,args=nil)
   for i in 0...char.length
     m=[]
     for i2 in 0...srt.length
-      m.push("#{longFormattedNumber(char[i][srt[i2]])} #{d[srt[i2]]}") if srt[i2]>2
+      m.push("#{longFormattedNumber(char[i][srt[i2]])} #{d[srt[i2]]}") if srt[i2]>4
     end
-    disp.push("Srv-#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{"  -  #{m.join('  -  ')}" if m.length>0}")
+    disp.push("Srv-#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{servant_moji(bot,event,char[i],1)}#{"  -  #{m.join('  -  ')}" if m.length>0}")
   end
   str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted by:* #{srt.uniq.map{|q| d[q]}.join(', ')}\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
   str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
@@ -2303,7 +2372,7 @@ bot.command(:skill) do |event, *args|
 end
 
 bot.command([:sort,:list]) do |event, *args|
-  sort_servants(event,args)
+  sort_servants(bot,event,args)
 end
 
 bot.command([:find,:search]) do |event, *args|
@@ -2697,7 +2766,7 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
   metadata_load()
   if event.server.nil?
     event.respond 'It is safe for me to send long replies here because this is my PMs with you.'
-  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id)
+  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985].include?(event.server.id)
     event.respond 'It is safe for me to send long replies here because this is one of my emoji servers.'
   elsif @shardizard==4
     event.respond 'It is safe for me to send long replies here because this is my debug mode.'
@@ -3115,7 +3184,7 @@ bot.server_create do |event|
     end
     chn=chnn[0] if chnn.length>0
   end
-  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id) && @shardizard==4
+  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985].include?(event.server.id) && @shardizard==4
     (chn.send_message("I am Mathoo's personal debug bot.  As such, I do not belong here.  You may be looking for one of my two facets, so I'll drop both their invite links here.\n\n**EliseBot** allows you to look up stats and skill data for characters in *Fire Emblem: Heroes*\nHere's her invite link: <https://goo.gl/HEuQK2>\n\n**FEIndex**, also known as **RobinBot**, is for *Fire Emblem: Awakening* and *Fire Emblem Fates*.\nHere's her invite link: <https://goo.gl/v3ADBG>") rescue nil)
     event.server.leave
   else
@@ -3152,7 +3221,7 @@ bot.mention do |event|
     m=false
   elsif ['sort','find'].include?(args[0].downcase)
     args.shift
-    sort_servants(event,args)
+    sort_servants(bot,event,args)
     m=false
   elsif ['servant','data','unit'].include?(args[0].downcase)
     args.shift
