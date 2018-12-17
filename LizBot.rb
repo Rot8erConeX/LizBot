@@ -2662,6 +2662,7 @@ bot.command([:traits,:trait]) do |event, *args|
 end
 
 bot.command([:art,:artist]) do |event, *args|
+  event.channel.send_temporary_message('Calculating data, please wait...',1)
   name=args.join(' ')
   if find_data_ex(:find_servant,name,event,true).length>0
     disp_servant_art(bot,event,args)
@@ -3275,6 +3276,7 @@ bot.mention do |event|
     disp_clothing_data(bot,event,args)
     m=false
   elsif ['art','artist'].include?(args[0])
+    event.channel.send_temporary_message('Calculating data, please wait...',1)
     if find_data_ex(:find_servant,args.join(' '),event,true).length>0
       disp_servant_art(bot,event,args)
     elsif find_data_ex(:find_ce,args.join(' '),event,true).length>0
