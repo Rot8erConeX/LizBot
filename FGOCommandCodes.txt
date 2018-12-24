@@ -19,3 +19,6 @@
 19\Sword of the Dragon Slayer\4\Increase Critical Strength against [Dragon] by 25%\ONILAND of the Mysterious Kingdom!!
 20\Evil Dragon of the Twilight\5\Apply Special Attack [Dragon] 20%\ONILAND of the Mysterious Kingdom!!
 21\Hunter of Love\3\Apply Sure Hit\15M DL Commemoration Campaign
+22\Command Spells of the Black Follower\3\Remove 1 DEF Up Buff from the enemy
+23\Sword of the Beginning and the End\4\Increase damage by 1000
+24\Polar Lights of the Holy Night\5\Gain 4 Critical Stars
