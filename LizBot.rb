@@ -152,6 +152,8 @@ def data_load()
     b[i][3]=b[i][3].to_i
     b[i][4]=b[i][4].split(', ').map{|q| q.to_i}
     b[i][5]=b[i][5].split(', ').map{|q| q.to_i}
+    b[i][10]='' if b[i][10].nil?
+    b[i][10]=b[i][10].split(', ')
   end
   @crafts=b.map{|q| q}
   if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt')
@@ -283,6 +285,7 @@ end
 
 bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, command, subcommand|
   command='' if command.nil?
+  subcommand='' if subcommand.nil?
   k=0
   k=event.server.id unless event.server.nil?
   if ['help','commands','command_list','commandlist'].include?(command.downcase)
@@ -329,9 +332,9 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s stats.\n\nIf you include the word \"Fou\", the combat stats will be displayed with Fou modifiers.\n\nIf it is not safe to spam, this command automatically reverts to the `smol` command, and thus you need to include the word \"GoldenFou\" to display combat stats with Golden Fou modifiers.",0xED619A)
   elsif ['traits','trait'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s traits.\n\nUnlike other servant-based commands, this one also accepts enemy fighter names.",0xED619A)
-  elsif ['skills'].include?(command.downcase)
+  elsif ['skills','skils'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s skills.\n\nIf it is safe to spam, each skill will also be given additional information.",0xED619A)
-  elsif ['skill'].include?(command.downcase)
+  elsif ['skill','skil'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows the skill data for the skill `name`.\nIf no rank is given and `name` is a skill with multiple ranks, shows all.",0xED619A)
   elsif ['np','noble','phantasm','noblephantasm'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
@@ -364,7 +367,43 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     end
     return nil
   elsif ['find','search'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+    lookout=[]
+    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+      lookout=[]
+      File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+        lookout.push(eval line)
+      end
+    end
+    lookout=lookout.map{|q| q[0]}
+    if ['skill','skills','skil','skils'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __\*filters__","Displays all skills and CE effects that fit `filters`.\n\nYou can search by:\n- Skill type (Active, Passive, CE, Clothing, NP)\n- Effect tag#{' (seen below)' if safe_to_spam?(event)}\n\nIf too many skills and/or CEs are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+      if safe_to_spam?(event)
+        if lookout.join("\n").length>=1900
+          str=lookout[0]
+          for i in 1...lookout.length
+            str=extend_message(str,lookout[i],event,1,',  ')
+          end
+          event.respond str
+        else
+          create_embed(event,'Skill tags','',0x40C0F0,nil,nil,triple_finish(lookout)) if safe_to_spam?(event)
+        end
+      end
+    elsif ['ce','ces','craft','crafts','essence','essences'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __\*filters__","Displays CEs effects that fit `filters`.\n\nYour search options can be #{'seen below' if safe_to_spam?(event)}#{'shown if you repeat this command in PM' unless safe_to_spam?(event)}\n\nIf too many CEs are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+      if safe_to_spam?(event)
+        if lookout.join("\n").length>=1900
+          str=lookout[0]
+          for i in 1...lookout.length
+            str=extend_message(str,lookout[i],event,1,',  ')
+          end
+          event.respond str
+        else
+          create_embed(event,'Skill tags','',0x40C0F0,nil,nil,triple_finish(lookout)) if safe_to_spam?(event)
+        end
+      end
+    else
+      create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+    end
   elsif ['sort','list'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
   elsif ['aliases','checkaliases','seealiases'].include?(command.downcase)
@@ -409,7 +448,7 @@ def all_commands(include_nil=false,permissions=-1)
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
-     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags']
+     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -1211,7 +1250,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
       text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
     text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
-    text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
+    text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
   end
   create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
@@ -1254,7 +1293,7 @@ def disp_servant_ce2(bot,event,args=nil)
       text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
     text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
-    text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
+    text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
   end
   create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
   if k[26].length>1
@@ -1282,7 +1321,7 @@ def disp_servant_ce2(bot,event,args=nil)
         text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       end
       text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
-      text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
+      text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
     end
     create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
   end
@@ -1544,7 +1583,7 @@ def disp_ce_card(bot,event,args=nil)
     text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
   end
   text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
-  text="#{text}\n\n__**Additional info**__\n#{ce[10].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[10].nil? || ce[10].length.zero?
+  text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
@@ -2345,6 +2384,133 @@ def find_in_servants(bot,event,args=nil,mode=0)
   end
 end
 
+def find_skills(bot,event,args=nil,ces_only=false)
+  data_load()
+  args=normalize(event.message.text.downcase).split(' ') if args.nil?
+  args=args.map{|q| normalize(q.downcase).gsub('-','').gsub('_','')}
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  types=[]
+  tags=[]
+  lookout=[]
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+    lookout=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+      lookout.push(eval line)
+    end
+  end
+  for i in 0...args.length
+    types.push('Skill') if ['active','activeskill','activeskil'].include?(args[i])
+    types.push('Passive') if ['passive','passiveskill','passiveskil'].include?(args[i])
+    types.push('Noble') if ['np','noble','phantasm','noblephantasm'].include?(args[i])
+    types.push('Clothes') if ['clothes','clothing','clothingskill','clothesskill','clothingskil','clothesskil','clotheskil','clotheskill','mystic','mysticcode'].include?(args[i])
+    types.push('CEs') if ['ce','ces','craft','crafts','essence','essences'].include?(args[i])
+    for i2 in 0...lookout.length
+      tags.push(lookout[i2][0]) if lookout[i2][1].include?(args[i])
+    end
+  end
+  types=['CEs'] if ces_only
+  types.uniq!
+  tags.uniq!
+  str="__**Search**__"
+  skz=@skills.map{|q| q}
+  if types.length>0
+    skz=skz.reject{|q| !types.include?(q[2])}
+    for i in 0...types.length
+      types[i]='Active' if types[i]=='Skill'
+      types[i]='Noble Phantasm' if types[i]=='Noble'
+      types[i]='Craft Essence' if types[i]=='CEs'
+    end
+    str="#{str}\n*Skill types:* #{types.join(', ')}"
+  end
+  for i in 0...skz.length
+    skz[i]=[skz[i][0],skz[i][1],skz[i][2],skz[i][5]] if skz[i][2]=='Skill'
+    skz[i]=[skz[i][0],skz[i][1],skz[i][2],skz[i][4]] if skz[i][2]=='Passive'
+    if skz[i][2]=='Noble'
+      skz[i][1]="#{skz[i][1]}b" if i<skz.length-1 && skz[i+1][2]=='Noble' && skz[i+1][1]=="#{skz[i][1]}u"
+      skz[i]=[skz[i][0],skz[i][1],skz[i][2],skz[i][7]]
+    end
+    skz[i]=[skz[i][0],skz[i][1],skz[i][2],skz[i][3]] if skz[i][2]=='Clothes'
+  end
+  ces=@crafts.map{|q| [q[1],q[0],'CE',q[10]]}
+  if types.length<=0 || types.include?('CEs') || types.include?('Craft Essence')
+    for i in 0...ces.length
+      skz.push(ces[i])
+    end
+  end
+  if tags.length>0
+    skz=skz.reject{|q| !has_any?(tags,q[3])}
+    str="#{str}\n*Tags:* #{tags.join(', ')}"
+  end
+  str="#{str}\n\n__**Results**__"
+  m=[['Active Skills',[]],['Passive Skills',[]],['Noble Phantasms',[]],['Craft Essances',[]],['Clothing Skills',[]],['Other',[]]]
+  for i in 0...skz.length
+    if skz[i][2]=='Skill'
+      if i>0 && skz[i-1][2]=='Skill' && skz[i-1][0]==skz[i][0]
+      elsif skz[i][1]=='-'
+        m[0][1].push(skz[i][0])
+      else
+        m[0][1].push("#{skz[i][0]} #{skz.reject{|q| q[2]!='Skill' || q[0]!=skz[i][0]}.map{|q| q[1]}.join('/')}")
+      end
+    elsif skz[i][2]=='Passive'
+      if i>0 && skz[i-1][2]=='Passive' && skz[i-1][0]==skz[i][0]
+      elsif skz[i][1]=='-'
+        m[1][1].push(skz[i][0])
+      else
+        m[1][1].push("#{skz[i][0]} #{skz.reject{|q| q[2]!='Passive' || q[0]!=skz[i][0]}.map{|q| q[1]}.join('/')}")
+      end
+    elsif skz[i][2]=='Noble'
+      if i>0 && skz[i-1][2]=='Noble' && skz[i-1][1]==skz[i][1].gsub('u','b')
+      elsif i<skz.length-1 && skz[i+1][2]=='Noble' && skz[i+1][1]==skz[i][1].gsub('b','u')
+        m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]}")
+      elsif skz[i][1].include?('b')
+        m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]} *[Before Upgrading]*")
+      elsif skz[i][1].include?('u')
+        m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]} *[After Upgrading]*")
+      else
+        m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]}")
+      end
+    elsif skz[i][2]=='CE'
+      m[3][1].push("CE-#{skz[i][1]}.) #{skz[i][0]}")
+    elsif skz[i][2]=='Clothes'
+      m[4][1].push(skz[i][0])
+    end
+  end
+  ftr="#{m.map{|q| q[1]}.join("\n").split("\n").reject{|q| q.nil? || q.length<=0}.length} Total (#{m[0][1].length} Active, #{m[1][1].length} Passive, #{m[2][1].length} Noble, #{m[3][1].length} CE, #{m[4][1].length} Clothing)"
+  f=m.map{|q| q[1].length}
+  for i in 0...5
+    if f[i]<=f.max/3 && f[i]>0
+      m[5][1].push("__**#{m[i][0]}**__\n#{m[i][1].join("\n")}\n")
+      m[i][1]=[]
+    end
+  end
+  m=m.reject{|q| q[1].length<=0}
+  if m.length<=0
+    event.respond "#{str}\n~~none~~"
+    return nil
+  elsif m.length==1
+    m=triple_finish(m[0][1])
+  else
+    m=m.map{|q| [q[0],q[1].join("\n")]}
+  end
+  if m.map{|q| q.join("\n")}.join("\n\n").length+str.length+ftr.length>1900
+    if !safe_to_spam?(event,nil,1)
+      event.respond 'There are too many skills trying to be displayed.  Please retry this command in PM.'
+    else
+      str=str.gsub("\n\n","\n\n\n")
+      for i in 0...m.length
+        str=extend_message(str,"__*#{m[i][0]}*__",event,2)
+        f=m[i][1].split("\n")
+        for i2 in 0...f.length
+          str=extend_message(str,f[i2],event)
+        end
+      end
+    end
+    event.respond str
+    return nil
+  end
+  create_embed(event,str,'',0xED619A,ftr,nil,m)
+end
+
 def find_servants(bot,event,args=nil)
   args=normalize(event.message.text.downcase).split(' ') if args.nil?
   args=args.map{|q| normalize(q.downcase)}
@@ -2418,7 +2584,7 @@ def sort_servants(bot,event,args=nil)
     end
     disp.push("Srv-#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{servant_moji(bot,event,char[i],1)}#{"  -  #{m.join('  -  ')}" if m.length>0}")
   end
-  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted by:* #{srt.uniq.map{|q| d[q]}.join(', ')}\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
+  str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted by:* #{srt.reject{|q| q==4}.uniq.map{|q| d[q]}.join(', ')}\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
   str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
   if str.length+disp.join("\n").length>1900 && !safe_to_spam?(event)
     textra="#{textra}\n\nToo much data is trying to be displayed.\nShowing top ten results."
@@ -2437,21 +2603,12 @@ def sort_servants(bot,event,args=nil)
   event.respond str
 end
 
-bot.command(:tags) do |event|
-  return nil unless safe_to_spam?(event)
-  skz=@skills.reject{|q| q[2]!='Skill'}.map{|q| q[5]}.join("\n").split("\n")
-  pass=@skills.reject{|q| q[2]!='Passive'}.map{|q| q[4]}.join("\n").split("\n")
-  noble=@skills.reject{|q| q[2]!='Noble'}.map{|q| q[7]}.join("\n").split("\n")
-  cloth=@skills.reject{|q| q[2]!='Clothing'}.map{|q| q[3]}.join("\n").split("\n")
-  x=[skz,pass,noble,cloth].join("\n").split("\n").uniq.sort
-  str=''
-  for i in 0...x.length
-    str=extend_message(str,x[i],event)
+bot.command([:skill,:skil]) do |event, *args|
+  if ['find','search'].include?(args[0].downcase)
+    args.shift
+    find_skills(bot,event,args)
+    return nil
   end
-  event.respond str
-end
-
-bot.command(:skill) do |event, *args|
   disp_skill_data(bot,event,args)
 end
 
@@ -2460,6 +2617,15 @@ bot.command([:sort,:list]) do |event, *args|
 end
 
 bot.command([:find,:search]) do |event, *args|
+  if ['skill','skills','skil','skils'].include?(args[0].downcase)
+    args.shift
+    find_skills(bot,event,args)
+    return nil
+  elsif ['ce','ces','craft','crafts','essence','essences'].include?(args[0].downcase)
+    args.shift
+    find_skills(bot,event,args,true)
+    return nil
+  end
   find_servants(bot,event,args)
 end
 
@@ -2774,6 +2940,11 @@ bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
 end
 
 bot.command([:ce,:CE,:craft,:essance,:craftessance]) do |event, *args|
+  if ['find','search'].include?(args[0].downcase)
+    args.shift
+    find_skills(bot,event,args,true)
+    return nil
+  end
   name=args.join(' ')
   if find_data_ex(:find_ce,name,event,true).length>0
     disp_ce_card(bot,event,args)
@@ -2837,7 +3008,12 @@ bot.command([:mat,:material]) do |event, *args|
   return nil
 end
 
-bot.command(:skills) do |event, *args|
+bot.command([:skills,:skils]) do |event, *args|
+  if ['find','search'].include?(args[0].downcase)
+    args.shift
+    find_skills(bot,event,args)
+    return nil
+  end
   disp_servant_skills(bot,event,args)
   return nil
 end
@@ -3303,9 +3479,14 @@ bot.mention do |event|
   if !m
   elsif ['find','search'].include?(args[0].downcase)
     args.shift
-    find_servants(bot,event,args)
+    if ['skill','skills','skil','skils'].include?(args[0].downcase)
+      args.shift
+      find_skills(bot,event,args)
+    else
+      find_servants(bot,event,args)
+    end
     m=false
-  elsif ['sort','find'].include?(args[0].downcase)
+  elsif ['sort','list'].include?(args[0].downcase)
     args.shift
     sort_servants(bot,event,args)
     m=false
@@ -3326,11 +3507,21 @@ bot.mention do |event|
     m=false
   elsif ['skills'].include?(args[0])
     args.shift
-    disp_servant_skills(bot,event,args)
+    if ['find','search'].include?(args[0].downcase)
+      args.shift
+      find_skills(bot,event,args,true)
+    else
+      disp_servant_skills(bot,event,args)
+    end
     m=false
   elsif ['skill'].include?(args[0])
     args.shift
-    disp_skill_sata(bot,event,args)
+    if ['find','search'].include?(args[0].downcase)
+      args.shift
+      find_skills(bot,event,args,true)
+    else
+      disp_skill_sata(bot,event,args)
+    end
     m=false
   elsif ['traits','trait'].include?(args[0])
     args.shift
@@ -3398,7 +3589,10 @@ bot.mention do |event|
     m=false
   elsif ['ce','craft','essance','craftessance'].include?(args[0])
     args.shift
-    if ['valentines','valentine','chocolate',"valentine's"].include?(args[0])
+    if ['find','search'].include?(args[0].downcase)
+      args.shift
+      find_skills(bot,event,args,true)
+    elsif ['valentines','valentine','chocolate',"valentine's"].include?(args[0])
       args.shift
       disp_servant_ce2(bot,event,args)
     elsif find_data_ex(:find_ce,args.join(' '),event,true).length>0
