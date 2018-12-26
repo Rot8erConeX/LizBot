@@ -651,6 +651,7 @@ def find_mat(name,event,fullname=false)
   return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'
   return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'
   return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].include?(name.downcase)
+  return find_mat('Ghost Lantern',event,fullname) if ['lantern','lanturn','ghostlylantern','ghostlanturn','ghostlylanturn','chandelure'].include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'
   return find_mat('Magic Cerebrospinal Fluid',event,fullname) if name.downcase=='fluid'
@@ -697,6 +698,7 @@ def find_mat(name,event,fullname=false)
   return find_mat('Eternal Gear',event,fullname) if name.downcase=='gear'[0,name.length]
   return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'[0,name.length]
   return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].map{|q| q[0,name.length]}.include?(name.downcase)
+  return find_mat('Ghost Lantern',event,fullname) if ['lantern','lanturn','ghostlylantern','ghostlanturn','ghostlylanturn','chandelure'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'[0,name.length]
   return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'[0,name.length]
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'[0,name.length]
