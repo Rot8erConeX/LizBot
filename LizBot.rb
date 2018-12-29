@@ -651,6 +651,7 @@ def find_mat(name,event,fullname=false)
   return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'
   return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'
   return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].include?(name.downcase)
+  return find_mat('Quiet Antique Bell',event,fullname) if ['ancientbelloftranquility','bell'].include?(name.downcase)
   return find_mat('Ghost Lantern',event,fullname) if ['lantern','lanturn','ghostlylantern','ghostlanturn','ghostlylanturn','chandelure'].include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'
   return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'
@@ -658,6 +659,7 @@ def find_mat(name,event,fullname=false)
   return find_mat('Primordial Lanugo',event,fullname) if name.downcase=='lanugo'
   return find_mat('Dragon Fang',event,fullname) if name.downcase=='fang'
   return find_mat('Kukulcan Mask',event,fullname) if name.downcase=='mask'
+  return find_mat('Bell-Ringing Branch',event,fullname) if name.downcase=='branch'
   return [] if fullname
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
@@ -698,6 +700,7 @@ def find_mat(name,event,fullname=false)
   return find_mat('Eternal Gear',event,fullname) if name.downcase=='gear'[0,name.length]
   return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'[0,name.length]
   return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].map{|q| q[0,name.length]}.include?(name.downcase)
+  return find_mat('Quiet Antique Bell',event,fullname) if ['ancientbelloftranquility','bell'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat('Ghost Lantern',event,fullname) if ['lantern','lanturn','ghostlylantern','ghostlanturn','ghostlylanturn','chandelure'].map{|q| q[0,name.length]}.include?(name.downcase)
   return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'[0,name.length]
   return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'[0,name.length]
@@ -706,6 +709,7 @@ def find_mat(name,event,fullname=false)
   return find_mat('Primordial Lanugo',event,fullname) if name.downcase=='lanugo'[0,name.length]
   return find_mat('Dragon Fang',event,fullname) if name.downcase=='fang'[0,name.length]
   return find_mat('Kukulcan Mask',event,fullname) if name.downcase=='mask'[0,name.length]
+  return find_mat('Bell-Ringing Branch',event,fullname) if name.downcase=='branch'[0,name.length]
   return []
 end
 
@@ -3474,7 +3478,7 @@ bot.command(:today) do |event|
          '<:class_lancer_gold:523838511485419522>Lancer + <:class_assassin_gold:523838617693716480>Assassin',
          '<:class_saber_gold:523838273479507989>Saber + <:class_rider_gold:523838542577664012>Rider',
          '<:class_archer_gold:523838461195714576>Archer + <:class_caster_gold:523838570893672473>Caster']
-  matz=["Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Eternal Gears, Shell of Reminiscence, Spirit Root, Saber Piece, Saber Monument, Gem of Saber, Magic Gem of Saber, Secret Gem of Saber",
+  matz=["Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Eternal Gear, Shell of Reminiscence, Spirit Root, Saber Piece, Saber Monument, Gem of Saber, Magic Gem of Saber, Secret Gem of Saber",
         "Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Meteor Horseshoe, Tearstone of Blood, Archer Piece, Archer Monument, Gem of Archer, Magic Gem of Archer, Secret Gem of Archer",
         "Proof of Hero, Evil Bone, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Homunculus Baby, Warhorse's Young Horn, Lancer Piece, Lancer Monument, Gem of Lancer, Magic Gem of Lancer, Secret Gem of Lancer",
         "Proof of Hero, Void's Dust, Octuplet Crystals, Claw of Chaos, Berserker Piece, Berserker Monument, Gem of Berserker, Magic Gem of Berserker, Secret Gem of Berserker",
