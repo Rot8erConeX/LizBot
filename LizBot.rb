@@ -2084,7 +2084,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
         msg=''
         for i in 0...n.length
           untnme=@servants[@servants.find_index{|q| q[0]==n[i][1]}][1]
-          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Srv-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
         end
         event.respond msg
         return nil
@@ -2092,9 +2092,9 @@ def disp_aliases(bot,event,args=nil,mode=0)
       for i in 0...n.length
         untnme=@servants[@servants.find_index{|q| q[0]==n[i][1]}][1]
         if n[i][2].nil?
-          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [##{n[i][1]}]")
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
-          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2103,17 +2103,17 @@ def disp_aliases(bot,event,args=nil,mode=0)
               a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
             end
           end
-          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
         end
       end
     else
-      event.respond 'Please either specify a unit name or use this command in PM.'
+      event.respond 'Please either specify a servant name or use this command in PM.'
       return nil
     end
   else
     k=0
     k=event.server.id unless event.server.nil?
-    f.push("__**#{unit[1]}**__ [##{unit[0]}]#{"'s server-specific aliases" if mode==1}")
+    f.push("__**#{unit[1]}**__ [##{unit[0]}]#{servant_moji(bot,event,unit)}#{"'s server-specific aliases" if mode==1}")
     f.push(unit[1].gsub(' ','').gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')) if unit[1].include?('(') || unit[1].include?(')') || unit[1].include?(' ') || unit[1].include?('!') || unit[1].include?('_') || unit[1].include?('?') || unit[1].include?("'") || unit[1].include?('"')
     f.push(unit[0])
     for i in 0...n.length
