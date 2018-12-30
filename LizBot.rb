@@ -448,7 +448,7 @@ def all_commands(include_nil=false,permissions=-1)
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
-     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today']
+     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -738,7 +738,7 @@ def find_data_ex(callback,name,event,fullname=false)
   return blank
 end
 
-def find_emote(bot,event,item,mode=0)
+def find_emote(bot,event,item,mode=0,forcemote=false)
   if mode==1
     moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
@@ -753,7 +753,7 @@ def find_emote(bot,event,item,mode=0)
     return ''
   end
   k=event.message.text.downcase.split(' ')
-  return item if k.include?('colorblind') || k.include?('textmats')
+  return item if (k.include?('colorblind') || k.include?('textmats')) && !forcemote
   k=item.split(' ')[-1]
   if mode==2
     k=''
@@ -3448,7 +3448,9 @@ bot.command(:snagstats) do |event, f, f2|
   return nil
 end
 
-def disp_date(t)
+def disp_date(t,mode=0)
+  return "#{t.day}#{['','Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'][t.month]}#{t.year}" if mode==2
+  return "#{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year}" if mode==1
   return "#{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year} (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]})"
 end
 
@@ -3568,6 +3570,383 @@ bot.command(:today) do |event|
     str="#{str}\n*Ember Gathering:* #{ember[t_na.wday]}"
     str="#{str}\n\n~~You can include the word \"JP\" in your message to show JP data.~~"
   end
+  event.respond str
+end
+
+bot.command(:next) do |event|
+  msg=event.message.text.downcase.split(' ')
+  jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
+  mat_block=''
+  mat_block=', ' if msg.include?('colorblind') || msg.include?('textmats')
+  tx=-1
+  for i in 0...msg.length
+    unless tx>0
+      tx=1 if ['training','ground','grounds','train','traininggrounds','trainingground','trainingrounds','traininground','training-grounds','training-ground','training_grounds','training_ground'].include?(msg[i])
+      tx=2 if ['ember','embers','gathering','gather','embergathering','embergather','ember_gathering','ember_gather','ember-gathering','ember-gather'].include?(msg[i])
+      tx=3 if ['mats','mat','materials','material'].include?(msg[i])
+    end
+  end
+  if tx<0 && !safe_to_spam?(event,nil,1)
+    event.respond "Too much data is trying to be displayed.  Please try again with one of the following modifiers, or try again in PM.\n- Training / Ground(s)\n- Ember(s) / Gather(ing)\n- Mat(s) / Material(s) ~~this one only works fully in PM.~~"
+    return nil
+  end
+  t=Time.now
+ # t+=6*60*60
+  timeshift=-5
+  timeshift-=1 unless t.dst?
+  t_na=t-60*60*timeshift
+  timeshift=-14
+  timeshift-=1 unless t.dst?
+  t_jp=t-60*60*timeshift
+  training=['<:class_saber_gold:523838273479507989>Saber',
+            '<:class_archer_gold:523838461195714576>Archer',
+            '<:class_lancer_gold:523838511485419522>Lancer',
+            '<:class_berserker_gold:523838648370724897>Berserker',
+            '<:class_rider_gold:523838542577664012>Rider',
+            '<:class_caster_gold:523838570893672473>Caster',
+            '<:class_assassin_gold:523838617693716480>Assassin']
+  ember=['<:class_unknown_gold:523838979825467392>Random Ember Gather',
+         '<:class_lancer_gold:523838511485419522>Lancer + <:class_assassin_gold:523838617693716480>Assassin',
+         '<:class_saber_gold:523838273479507989>Saber + <:class_rider_gold:523838542577664012>Rider',
+         '<:class_archer_gold:523838461195714576>Archer + <:class_caster_gold:523838570893672473>Caster',
+         '<:class_lancer_gold:523838511485419522>Lancer + <:class_assassin_gold:523838617693716480>Assassin',
+         '<:class_saber_gold:523838273479507989>Saber + <:class_rider_gold:523838542577664012>Rider',
+         '<:class_archer_gold:523838461195714576>Archer + <:class_caster_gold:523838570893672473>Caster']
+  matz=["Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Eternal Gear, Shell of Reminiscence, Spirit Root, Saber Piece, Saber Monument, Gem of Saber, Magic Gem of Saber, Secret Gem of Saber",
+        "Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Meteor Horseshoe, Tearstone of Blood, Archer Piece, Archer Monument, Gem of Archer, Magic Gem of Archer, Secret Gem of Archer",
+        "Proof of Hero, Evil Bone, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Homunculus Baby, Warhorse's Young Horn, Lancer Piece, Lancer Monument, Gem of Lancer, Magic Gem of Lancer, Secret Gem of Lancer",
+        "Proof of Hero, Void's Dust, Octuplet Crystals, Claw of Chaos, Berserker Piece, Berserker Monument, Gem of Berserker, Magic Gem of Berserker, Secret Gem of Berserker",
+        "Dragon Fang, Void's Dust, Meteor Horseshoe, Dragon's Reverse Scale, Rider Piece, Rider Monument, Gem of Rider, Magic Gem of Rider, Secret Gem of Rider",
+        "Serpent Jewel, Void's Dust, Forbidden Page, Heart of the Foreign God, Caster Piece, Caster Monument, Gem of Caster, Magic Gem of Caster, Secret Gem of Caster",
+        "Dragon Fang, Void's Dust, Seed of Yggdrasil, Ghost Lantern, Eternal Gear, Black Beast Grease, Assassin Piece, Assassin Monument, Gem of Assassin, Magic Gem of Assassin, Secret Gem of Assassin"]
+  jp_shift=false
+  if disp_date(t_na)==disp_date(t_jp) && safe_to_spam?(event,nil,1)
+    str="__**North America**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2017,6,25)-6*60*60
+    t2=t_na-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Days since game release*: #{longFormattedNumber(date)}"
+    str="#{str}\n\n__**Japan**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2015,7,29)-9*60*60
+    t2=t_jp-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str="#{str}\n\n__**Both**__"
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
+    str3=''
+    t_tot=t_na
+  elsif safe_to_spam?(event)
+    str="__**North America**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2017,6,25)-6*60*60
+    t2=t_na-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str2="__**Japan**__"
+    str2="#{str2}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
+    str2="#{str2}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2015,7,29)-9*60*60
+    t2=t_jp-t2
+    date=(((t2.to_i/60)/60)/24)
+    str2="#{str2}\n*Date assuming mat reset is at midnight:* #{disp_date(t_jp)}"
+    str2="#{str2}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str=extend_message(str,str2,event,2)
+    str3=''
+    t_tot=t_na
+    jp_shift=true
+  elsif jp
+    str="__**Japan**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2015,7,29)-9*60*60
+    t2=t_jp-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_jp)}"
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str3=''
+    t_tot=t_jp
+  else
+    str="__**North America**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2017,6,25)-6*60*60
+    t2=t_na-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str3="~~You can include the word \"JP\" in your message to show JP data.~~"
+    t_tot=t_na
+  end
+  if [-1,1].include?(tx)
+    training=training.rotate(t_tot.wday)
+    t_d=t_tot+24*60*60
+    str2="__**Training Grounds**__"
+    if jp_shift
+      str2="#{str2}\n*#{training[0]}* - #{disp_date(t_tot,1)} - Today in NA - ~~Yesterday in JP~~\n*#{training[1]}* - #{disp_date(t_d,1)} - Tomorrow in NA - Today in JP"
+    else
+      str2="#{str2}\n*#{training[0]}* - Today\n*#{training[1]}* - Tomorrow (#{disp_date(t_d,1)})"
+    end
+    for i in 2...7
+      t_d=t_tot+i*24*60*60
+      if jp_shift
+        if i==2
+          str2="#{str2}\n*#{training[i]}* - #{disp_date(t_d,1)} - #{i} days from now in NA - Tomorrow in JP"
+        else
+          str2="#{str2}\n*#{training[i]}* - #{disp_date(t_d,1)} - #{i} days from now in NA - #{i-1} days from now in JP"
+        end
+      else
+        str2="#{str2}\n*#{training[i]}* - #{i} days from now (#{disp_date(t_d,1)})"
+      end
+    end
+    t_d=t_tot+7*24*60*60
+    if jp_shift
+      str2="#{str2}\n*#{training[0]}* - #{disp_date(t_d,1)} - 7 days from now in NA - 6 days from now in JP"
+      t_d=t_tot+8*24*60*60
+      str2="#{str2}\n*#{training[1]}* - #{disp_date(t_d,1)} - ~~8 days from now in NA~~ - 7 days from now in JP"
+    else
+      str2="#{str2}\n*#{training[0]}* - 7 days from now (#{disp_date(t_d,1)})"
+    end
+    str=extend_message(str,str2,event,2)
+  end
+  if [-1,2].include?(tx)
+    t_d=t_tot+24*60*60
+    ember=ember.rotate(t_tot.wday)
+    str2="__**Ember Gathering**__"
+    if jp_shift
+      ember.push(ember[0])
+      ember.push(ember[1]) if ember[1]=='<:class_unknown_gold:523838979825467392>Random Ember Gather'
+      str2="#{str2}\n*#{ember[0]}* - #{disp_date(t_tot,1)} - Today in NA - ~~Yesterday in JP~~\n*#{ember[1]}* - #{disp_date(t_d,1)} - Tomorrow in NA - Today in JP"
+      for i in 2...ember.length
+        t_d=t_tot+i*24*60*60
+        if ember[i]==ember[1]
+          str2="#{str2}\n*#{ember[i]}* - #{disp_date(t_d,1)} - ~~#{i} days from now in NA~~ - #{i-1} days from now in JP"
+        elsif ember[i]==ember[2] && i>2
+        elsif ember[i]==ember[3] && i>3
+        elsif ember[i]==ember[4] && i>4
+        elsif ember[i]==ember[5] && i>5
+        elsif i==2
+          str2="#{str2}\n*#{ember[i]}* - #{disp_date(t_d,1)} - #{i} days from now in NA - Tomorrow in JP"
+        else
+          str2="#{str2}\n*#{ember[i]}* - #{disp_date(t_d,1)} - #{i} days from now in NA - #{i-1} days from now in JP"
+        end
+      end
+    else
+      for i in 0...ember.length
+        ember[i]=[ember[i],i]
+      end
+      ember.push([ember[0][0],7])
+      ember.sort!{|a,b| (a[0]<=>b[0])==0 ? (a[1]<=>b[1]) : (a[0]<=>b[0])}
+      for i in 1...ember.length
+        ember[i]=nil if !ember[i-1].nil? && ember[i][0]==ember[i-1][0] && ember[i-1][1]>0
+      end
+      ember.compact!
+      ember.sort!{|a,b| (a[1]<=>b[1])}
+      for i in 0...ember.length
+        if ember[i][1]==0
+          str2="#{str2}\n*#{ember[i][0]}* - Today"
+        elsif ember[i][1]==1
+          t_d=t_tot+24*60*60
+          str2="#{str2}\n*#{ember[i][0]}* - Tomorrow (#{disp_date(t_d,1)})"
+        else
+          t_d=t_tot+ember[i][1]*24*60*60
+          str2="#{str2}\n*#{ember[i][0]}* - #{ember[i][1]} days from now (#{disp_date(t_d,1)})"
+        end
+      end
+    end
+    str=extend_message(str,str2,event,2)
+  end
+  if [-1,3].include?(tx)
+    matz=matz.rotate(t_tot.wday)
+    if !safe_to_spam?(event)
+      if tx<0
+        str=extend_message(str,'Materials available in Training Grounds makes this list so long I would rather you tried this command in PM.',event,2)
+      else
+        str2="__**Materials** found in the Training Grounds__\nI will not display every mat available in the Training Grounds as that is a lot of data.\nIf you wish to see the whole list, please try the command again in PM.\nOtherwise, here are today's and tomorrow's mats."
+        str4=['**Today**','**Tomorrow**']
+        str4=['**North America** (today)','**Japan** (today) - also doubles as NA tomorrow'] if jp_shift
+        str2="#{str2}\n\n__#{str4[0]}__\n#{matz[0].split(', ').sort.map{|q| "#{find_emote(bot,event,q,2,true)}#{q}"}.join('  -  ')}"
+        str=extend_message(str,str2,event,2)
+        str2="__#{str4[1]}__\n#{matz[1].split(', ').sort.map{|q| "#{find_emote(bot,event,q,2,true)}#{q}"}.join('  -  ')}"
+        str=extend_message(str,str2,event,2)
+        if jp_shift
+          str2="__**Japan** (tomorrow)__\n#{matz[2].split(', ').sort.map{|q| "#{find_emote(bot,event,q,2,true)}#{q}"}.join('  -  ')}"
+          str=extend_message(str,str2,event,2)
+        end
+      end
+    elsif jp_shift
+      mmzz=[]
+      for i in 0...matz.length
+        m=matz[i].split(', ')
+        for i2 in 0...m.length
+          mmzz.push([m[i2],[i]])
+          mmzz.push([m[i2],[7]]) if i==0
+        end
+      end
+      mmzz.sort!{|a,b| (a[0]<=>b[0])==0 ? (a[1][0]<=>b[1][0]) : (a[0]<=>b[0])}
+      mmzz.reverse!
+      for i in 0...mmzz.length-1
+        if mmzz[i][0]==mmzz[i+1][0]
+          mmzz[i+1][1][1]=mmzz[i][1][0]*1 unless mmzz[i+1][1][0]>0
+          mmzz[i]=nil
+        end
+      end
+      mmzz.compact!
+      mmzz.reverse!
+      matz=matz.rotate(1)
+      mmzz2=[]
+      for i in 0...matz.length
+        m=matz[i].split(', ')
+        for i2 in 0...m.length
+          mmzz2.push([m[i2],[i]])
+          mmzz2.push([m[i2],[7]]) if i==0
+        end
+      end
+      mmzz2.sort!{|a,b| (a[0]<=>b[0])==0 ? (a[1][0]<=>b[1][0]) : (a[0]<=>b[0])}
+      mmzz2.reverse!
+      for i in 0...mmzz2.length-1
+        if mmzz2[i][0]==mmzz2[i+1][0]
+          mmzz2[i+1][1][1]=mmzz2[i][1][0]*1 unless mmzz2[i+1][1][0]>0
+          mmzz2[i]=nil
+        end
+      end
+      mmzz2.compact!
+      mmzz2.reverse!
+      for i in 0...mmzz.length
+        mmzz[i][2]=mmzz2[i][1].map{|q| q}
+      end
+      str2="__**Materials** found in the Training Grounds__"
+      str=extend_message(str,str2,event,2)
+      strpost=false
+      for i in 0...mmzz.length
+        str2="#{find_emote(bot,event,mmzz[i][0],2,true)}*#{mmzz[i][0]}* -"
+        if mmzz[i][1][0]==0 && mmzz[i][2][0]==0 # today in NA and JP
+          str2="#{str2} **Today in both NA and JP**"
+          if mmzz[i][1][1]==mmzz[i][2][1]
+            if mmzz[i][1][1].nil? || mmzz[i][1][1]<=0
+            elsif mmzz[i][1][1]==1
+              t_d=t_tot+1*24*60*60
+              t_d2=t_tot+2*24*60*60
+              str2="#{str2} - Next available tomorrow (#{disp_date(t_d,2)} in NA, #{disp_date(t_d2,2)} in JP)"
+            else
+              t_d=t_tot+mmzz[i][1][1]*24*60*60
+              t_d2=t_tot+(mmzz[i][1][1]+1)*24*60*60
+              str2="#{str2} - Next available #{mmzz[i][1][1]} days from now (#{disp_date(t_d,2)} in NA, #{disp_date(t_d2,2)} in JP)"
+            end
+          else
+            unless mmzz[i][1][1].nil? || mmzz[i][1][1]<=0
+              t_d=t_tot+mmzz[i][1][1]*24*60*60
+              if mmzz[i][1][1]==1
+                str2="#{str2} - Next available tomorrow (#{disp_date(t_d,2)}) in NA"
+              else
+                str2="#{str2} - Next available #{mmzz[i][1][1]} days from now (#{disp_date(t_d,2)}) in NA"
+              end
+            end
+            unless mmzz[i][2][1].nil? || mmzz[i][2][1]<=0
+              t_d=t_tot+(1+mmzz[i][2][1])*24*60*60
+              if mmzz[i][2][1]==1
+                str2="#{str2} - Next available tomorrow (#{disp_date(t_d,2)}) in JP"
+              else
+                str2="#{str2} - Next available #{mmzz[i][2][1]} days from now (#{disp_date(t_d,2)}) in JP"
+              end
+            end
+          end
+        elsif mmzz[i][1][0]==0 # today in NA but not JP
+          if mmzz[i][1][1]==mmzz[i][2][0]+1
+            t_d=t_tot+mmzz[i][1][1]*24*60*60
+            str2="#{str2} #{disp_date(t_tot,1)} - **Today in NA** - ~~Yesterday in JP~~ - Next available #{disp_date(t_d,2)} (#{mmzz[i][1][1]} days left in NA, #{mmzz[i][2][0]} days left in JP)"
+          else
+            str2="#{str2} #{disp_date(t_tot,1)} - **Today in NA**"
+            unless mmzz[i][1][1].nil? || mmzz[i][1][1]<=0
+              t_d=t_tot+mmzz[i][1][1]*24*60*60
+              str2="#{str2}, next available #{mmzz[i][1][1]} days from now (#{disp_date(t_d,2)})"
+            end
+            str2="#{str2} - ~~Yesterday in JP~~, next available"
+            t_d=t_tot+(1+mmzz[i][2][0])*24*60*60
+            if mmzz[i][2][0]==1
+              str2="#{str2} tomorrow (#{disp_date(t_d,2)})"
+            else
+              str2="#{str2} #{mmzz[i][2][0]} days from now (#{disp_date(t_d,2)})"
+            end
+          end
+        elsif mmzz[i][2][0]==0 # today in JP but not NA
+          t_d=t_tot+1*24*60*60
+          str2="#{str2} #{disp_date(t_tot,1)} - Tomorrow in NA - **Today in JP**"
+          t_d=t_tot+(1+mmzz[i][2][1])*24*60*60
+          if mmzz[i][2][1]==1
+            str2="#{str2}, next available tomorrow (#{disp_date(t_d,2)})"
+          else
+            str2="#{str2}, next available #{mmzz[i][2][1]} days from now (#{disp_date(t_d,2)})"
+          end
+        else # today in neither JP nor NA
+          t_d=t_tot+mmzz[i][1][0]*24*60*60
+          str2="#{str2} #{disp_date(t_d,1)} -"
+          if mmzz[i][1][0]==1
+            str2="#{str2} Tomorrow in NA -"
+          else
+            str2="#{str2} #{mmzz[i][1][0]} days from now in NA -"
+          end
+          if mmzz[i][2][0]==1
+            str2="#{str2} Tomorrow in JP"
+          else
+            str2="#{str2} #{mmzz[i][2][0]} days from now in JP"
+          end
+        end
+        str=extend_message(str,str2,event)
+      end
+    else
+      mmzz=[]
+      for i in 0...matz.length
+        m=matz[i].split(', ')
+        for i2 in 0...m.length
+          mmzz.push([m[i2],i])
+          mmzz.push([m[i2],7]) if i==0
+        end
+      end
+      mmzz.sort!{|a,b| (a[0]<=>b[0])==0 ? (a[1]<=>b[1]) : (a[0]<=>b[0])}
+      mmzz.reverse!
+      for i in 0...mmzz.length-1
+        if mmzz[i][0]==mmzz[i+1][0]
+          mmzz[i+1][2]=mmzz[i][1]*1 unless mmzz[i+1][1]>0
+          mmzz[i]=nil
+        end
+      end
+      mmzz.compact!
+      mmzz.reverse!
+      str2="__**Materials** found in the Training Grounds__"
+      str=extend_message(str,str2,event,2)
+      strpost=false
+      for i in 0...mmzz.length
+        str2="#{find_emote(bot,event,mmzz[i][0],2,true)}*#{mmzz[i][0]}* -"
+        if mmzz[i][1]==0
+          str2="#{str2} **Today**#{' - Next available' unless mmzz[i][2].nil? || mmzz[i][2]<=0}"
+          if mmzz[i][2].nil? || mmzz[i][2]<=0
+          else
+            t_d=t_tot+mmzz[i][2]*24*60*60
+            if mmzz[i][2]==1
+              str2="#{str2} tomorrow (#{disp_date(t_d,1)})"
+            else
+              str2="#{str2} #{mmzz[i][2]} days from now (#{disp_date(t_d,1)})"
+            end
+          end
+        else
+          t_d=t_tot+mmzz[i][1]*24*60*60
+          if mmzz[i][1]==1
+            str2="#{str2} Tomorrow (#{disp_date(t_d,1)})"
+          else
+            str2="#{str2} #{mmzz[i][1]} days from now (#{disp_date(t_d,1)})"
+          end
+        end
+        str=extend_message(str,str2,event)
+      end
+    end
+  end
+  str=extend_message(str,str3,event,2)
   event.respond str
 end
 
