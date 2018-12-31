@@ -274,7 +274,7 @@ def nicknames_load(mode=1)
   else
     b=[]
   end
-  @aliases=b.reject{|q| q.nil? || q[1].nil?}.uniq
+  @aliases=b.reject{|q| q.nil? || q[1].nil? || q[2].nil?}.uniq
 end
 
 bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
@@ -476,17 +476,18 @@ def find_servant(name,event,fullname=false)
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return @servants[k] unless k.nil?
   nicknames_load()
+  alz=@aliases.reject{|q| q[0]!='Servant'}.map{|q| [q[1],q[2],q[3]]}
   g=0
   g=event.server.id unless event.server.nil?
-  k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
-  return @servants[@servants.find_index{|q| q[0]==@aliases[k][1]}] unless k.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
+  return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   return [] if fullname
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @servants[k] unless k.nil?
   nicknames_load()
-  for i in name.length...@aliases.map{|q| q[0].length}.max
-    k=@aliases.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
-    return @servants[@servants.find_index{|q| q[0]==@aliases[k][1]}] unless k.nil?
+  for i in name.length...alz.map{|q| q[0].length}.max
+    k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
+    return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   end
   return []
 end
@@ -635,31 +636,12 @@ def find_mat(name,event,fullname=false)
   return @mats[k] unless k.nil?
   k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Cookie of #{q.gsub('Secret Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return @mats[k] unless k.nil?
-  return find_mat('Meteor Horseshoe',event,fullname) if name.downcase=='horseshoe'
-  return find_mat('Heart of the Foreign God',event,fullname) if name.downcase=='heart'
-  return find_mat('Evil Bone',event,fullname) if name.downcase=='bone'
-  return find_mat('Phoenix Feather',event,fullname) if name.downcase=='feather'
-  return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'
-  return find_mat('Black Beast Grease',event,fullname) if name.downcase=='grease'
-  return find_mat('Eternal Gear',event,fullname) if name.downcase=='gear'
-  return find_mat('Chichi Divine Wine',event,fullname) if name.downcase=='vase'
-  return find_mat('Spirit Root',event,fullname) if name.downcase=='root'
-  return find_mat('Great Knight Medal',event,fullname) if ['medal','metal'].include?(name.downcase)
-  return find_mat('Reactive Gunpowder',event,fullname) if ['gunpowder','bullet'].include?(name.downcase)
-  return find_mat('Homunculus Baby',event,fullname) if ['baby','bebe'].include?(name.downcase)
-  return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'
-  return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'
-  return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'
-  return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].include?(name.downcase)
-  return find_mat('Quiet Antique Bell',event,fullname) if ['ancientbelloftranquility','bell'].include?(name.downcase)
-  return find_mat('Ghost Lantern',event,fullname) if ['lantern','lanturn','ghostlylantern','ghostlanturn','ghostlylanturn','chandelure'].include?(name.downcase)
-  return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'
-  return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'
-  return find_mat('Magic Cerebrospinal Fluid',event,fullname) if name.downcase=='fluid'
-  return find_mat('Primordial Lanugo',event,fullname) if name.downcase=='lanugo'
-  return find_mat('Dragon Fang',event,fullname) if name.downcase=='fang'
-  return find_mat('Kukulcan Mask',event,fullname) if name.downcase=='mask'
-  return find_mat('Bell-Ringing Branch',event,fullname) if name.downcase=='branch'
+  nicknames_load()
+  alz=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
+  g=0
+  g=event.server.id unless event.server.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
+  return alz[k][1] unless k.nil?
   return [] if fullname
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
@@ -685,31 +667,10 @@ def find_mat(name,event,fullname=false)
   return @mats[k] unless k.nil?
   k=@mats.find_index{|q| q[0,14]=='Secret Gem of ' && "Cookie of #{q.gsub('Secret Gem of ','')}".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
-  return find_mat('Chichi Divine Wine',event,fullname) if name.downcase=='vase'[0,name.length]
-  return find_mat('Meteor Horseshoe',event,fullname) if name.downcase=='horseshoe'[0,name.length]
-  return find_mat('Heart of the Foreign God',event,fullname) if name.downcase=='heart'[0,name.length]
-  return find_mat('Evil Bone',event,fullname) if name.downcase=='bone'[0,name.length]
-  return find_mat('Phoenix Feather',event,fullname) if name.downcase=='feather'[0,name.length]
-  return find_mat('Spirit Root',event,fullname) if name.downcase=='root'[0,name.length]
-  return find_mat('Black Beast Grease',event,fullname) if name.downcase=='grease'[0,name.length]
-  return find_mat('Reactive Gunpowder',event,fullname) if ['gunpowder','bullet'].map{|q| q[0,name.length]}.include?(name.downcase)
-  return find_mat('Great Knight Medal',event,fullname) if ['medal','metal'].map{|q| q[0,name.length]}.include?(name.downcase)
-  return find_mat('Homunculus Baby',event,fullname) if ['baby','bebe'].map{|q| q[0,name.length]}.include?(name.downcase)
-  return find_mat("Warhorse's Young Horn",event,fullname) if name.downcase=='horn'[0,name.length]
-  return find_mat("Void's Dust",event,fullname) if name.downcase=='dust'[0,name.length]
-  return find_mat('Eternal Gear',event,fullname) if name.downcase=='gear'[0,name.length]
-  return find_mat("Dragon's Reverse Scale",event,fullname) if name.downcase=='scale'[0,name.length]
-  return find_mat('Deadly Poisonous Needle',event,fullname) if ['stinger','needle'].map{|q| q[0,name.length]}.include?(name.downcase)
-  return find_mat('Quiet Antique Bell',event,fullname) if ['ancientbelloftranquility','bell'].map{|q| q[0,name.length]}.include?(name.downcase)
-  return find_mat('Ghost Lantern',event,fullname) if ['lantern','lanturn','ghostlylantern','ghostlanturn','ghostlylanturn','chandelure'].map{|q| q[0,name.length]}.include?(name.downcase)
-  return find_mat("Fool's Chain",event,fullname) if name.downcase=='chain'[0,name.length]
-  return find_mat('Forbidden Page',event,fullname) if name.downcase=='page'[0,name.length]
-  return find_mat('Cursed Beast Gallstone',event,fullname) if name.downcase=='gallstone'[0,name.length]
-  return find_mat('Magic Cerebrospinal Fluid',event,fullname) if name.downcase=='fluid'[0,name.length]
-  return find_mat('Primordial Lanugo',event,fullname) if name.downcase=='lanugo'[0,name.length]
-  return find_mat('Dragon Fang',event,fullname) if name.downcase=='fang'[0,name.length]
-  return find_mat('Kukulcan Mask',event,fullname) if name.downcase=='mask'[0,name.length]
-  return find_mat('Bell-Ringing Branch',event,fullname) if name.downcase=='branch'[0,name.length]
+  for i in name.length...alz.map{|q| q[0].length}.max
+    k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
+    return alz[k][1] unless k.nil?
+  end
   return []
 end
 
@@ -1997,7 +1958,23 @@ def disp_mat_data(bot,event,args=nil)
     text="#{text}\n#{fff2} total uses for this material"
     text="#{text}\n#{fff3} total copies of this material are required to max everyone"
   end
-  create_embed(event,"__**#{k}**__#{"\n#{k.gsub('Gem of ','')} Gem" if k[0,7]=='Gem of '}",text,0x162C6E,ftr,find_emote(bot,event,k,1))
+  mmkk=[]
+  if k[0,7]=='Gem of '
+    mmkk.push("#{k.gsub('Gem of ','')} Gem")
+    mmkk.push("Blue #{k.gsub('Gem of ','')} Gem")
+    mmkk.push("Blue #{k}")
+  elsif k[0,13]=='Magic Gem of '
+    mmkk.push("Magic #{k.gsub('Magic Gem of ','')} Gem")
+    mmkk.push("Red #{k.gsub('Magic Gem of ','')} Gem")
+    mmkk.push("Red Gem of #{k.gsub('Magic Gem of ','')}")
+  elsif k[0,14]=='Secret Gem of '
+    mmkk.push("Secret #{k.gsub('Secret Gem of ','')} Gem")
+    mmkk.push("Yellow #{k.gsub('Secret Gem of ','')} Gem")
+    mmkk.push("Yellow Gem of #{k.gsub('Secret Gem of ','')}")
+    mmkk.push("#{k.gsub('Secret Gem of ','')} Cookie")
+    mmkk.push("Cookie of #{k.gsub('Secret Gem of ','')}")
+  end
+  create_embed(event,"__**#{k}**__#{"\n#{mmkk.join("\n")}" if mmkk.length>0}",text,0x162C6E,ftr,find_emote(bot,event,k,1))
   return nil unless safe_to_spam?(event)
   str="__**Ascension uses for #{k}**__ (#{lst[0].length} total)"
   if lst[0].length<=0
@@ -2062,17 +2039,22 @@ def disp_aliases(bot,event,args=nil,mode=0)
   data_load()
   nicknames_load()
   unless args.length.zero?
-    if find_data_ex(:find_servant,args.join(''),event).length<=0
+    if find_data_ex(:find_servant,args.join(''),event).length>0
+    elsif find_data_ex(:find_mat,args.join(''),event).length>0
+    else
       event.respond "#{args.join(' ')} is not a servant name or an alias."
       return nil
     end
   end
   unit=find_data_ex(:find_servant,args.join(''),event)
   unit=nil if unit.length<=0 || args.length.zero?
+  mat=find_data_ex(:find_mat,args.join(''),event)
+  mat=nil if mat.length<=0 || args.length.zero?
+  puts mat.to_s
   f=[]
-  n=@aliases.map{|a| a}
+  n=@aliases.reject{|q| q[0]!='Servant'}.map{|q| [q[1],q[2],q[3]]}
   h=''
-  if unit.nil?
+  if unit.nil? && mat.nil?
     if safe_to_spam?(event) || mode==1
       n=n.reject{|q| q[2].nil?} if mode==1
       unless event.server.nil?
@@ -2081,14 +2063,35 @@ def disp_aliases(bot,event,args=nil,mode=0)
           event.respond "There are so many aliases that I don't want to spam the server.  Please use the command in PM."
           return nil
         end
-        msg=''
+        msg='__**Servant Aliases**__'
         for i in 0...n.length
           untnme=@servants[@servants.find_index{|q| q[0]==n[i][1]}][1]
           msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Srv-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
         end
+        msg=extend_message(msg,'__**Material Aliases**__',event,2)
+        n=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
+        mmkk=['Archer','Assassin','Berserker','Caster','Lancer','Rider','Saber']
+        for i in 0...mmkk.length
+          n.push(["#{mmkk[i]} Gem","Gem of #{mmkk[i]}"])
+          n.push(["Blue #{mmkk[i]} Gem","Gem of #{mmkk[i]}"])
+          n.push(["Blue Gem of #{mmkk[i]}","Gem of #{mmkk[i]}"])
+          n.push(["Magic #{mmkk[i]} Gem","Magic Gem of #{mmkk[i]}"])
+          n.push(["Red #{mmkk[i]} Gem","Magic Gem of #{mmkk[i]}"])
+          n.push(["Red Gem of #{mmkk[i]}","Magic Gem of #{mmkk[i]}"])
+          n.push(["Secret #{mmkk[i]} Gem","Secret Gem of #{mmkk[i]}"])
+          n.push(["Yellow #{mmkk[i]} Gem","Secret Gem of #{mmkk[i]}"])
+          n.push(["Yellow Gem of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
+          n.push(["#{mmkk[i]} Cookie","Secret Gem of #{mmkk[i]}"])
+          n.push(["Cookie of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
+        end
+        n.sort! {|a,b| (a[1]<=>b[1]) ? (a[0]<=>b[0]) : (a[1]<=>b[1])}
+        for i in 0...n.length
+          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+        end
         event.respond msg
         return nil
       end
+      f.push('__**Servant Aliases**__')
       for i in 0...n.length
         untnme=@servants[@servants.find_index{|q| q[0]==n[i][1]}][1]
         if n[i][2].nil?
@@ -2106,11 +2109,43 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
         end
       end
+      f.push("\n__**Material Aliases*__")
+      n=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
+      for i in 0...mmkk.length
+        n.push(["#{mmkk[i]} Gem","Gem of #{mmkk[i]}"])
+        n.push(["Blue #{mmkk[i]} Gem","Gem of #{mmkk[i]}"])
+        n.push(["Blue Gem of #{mmkk[i]}","Gem of #{mmkk[i]}"])
+        n.push(["Magic #{mmkk[i]} Gem","Magic Gem of #{mmkk[i]}"])
+        n.push(["Red #{mmkk[i]} Gem","Magic Gem of #{mmkk[i]}"])
+        n.push(["Red Gem of #{mmkk[i]}","Magic Gem of #{mmkk[i]}"])
+        n.push(["Secret #{mmkk[i]} Gem","Secret Gem of #{mmkk[i]}"])
+        n.push(["Yellow #{mmkk[i]} Gem","Secret Gem of #{mmkk[i]}"])
+        n.push(["Yellow Gem of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
+        n.push(["#{mmkk[i]} Cookie","Secret Gem of #{mmkk[i]}"])
+        n.push(["Cookie of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
+      end
+      n.sort! {|a,b| (a[1]<=>b[1]) ? (a[0]<=>b[0]) : (a[1]<=>b[1])}
+      for i in 0...n.length
+        if n[i][2].nil?
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
+        elsif !event.server.nil? && n[i][2].include?(event.server.id)
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        else
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        end
+      end
     else
       event.respond 'Please either specify a servant name or use this command in PM.'
       return nil
     end
-  else
+  elsif !unit.nil?
     k=0
     k=event.server.id unless event.server.nil?
     f.push("__**#{unit[1]}**__ [##{unit[0]}]#{servant_moji(bot,event,unit)}#{"'s server-specific aliases" if mode==1}")
@@ -2118,6 +2153,42 @@ def disp_aliases(bot,event,args=nil,mode=0)
     f.push(unit[0])
     for i in 0...n.length
       if n[i][1]==unit[0]
+        if event.server.nil? && !n[i][2].nil?
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\\_')} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        elsif n[i][2].nil?
+          f.push(n[i][0].gsub('_','\\_')) unless mode==1
+        else
+          f.push("#{n[i][0].gsub('_','\\_')}#{" *(in this server only)*" unless mode==1}") if n[i][2].include?(k)
+        end
+      end
+    end
+  elsif !mat.nil?
+    f.push("__**#{mat}**__ #{find_emote(bot,event,mat,2,true)}")
+    if mat[0,7]=='Gem of '
+      f.push("#{mat.gsub('Gem of ','')} Gem")
+      f.push("Blue #{mat.gsub('Gem of ','')} Gem")
+      f.push("Blue #{mat}")
+    elsif mat[0,13]=='Magic Gem of '
+      f.push("Magic #{mat.gsub('Magic Gem of ','')} Gem")
+      f.push("Red #{mat.gsub('Magic Gem of ','')} Gem")
+      f.push("Red Gem of #{mat.gsub('Magic Gem of ','')}")
+    elsif mat[0,14]=='Secret Gem of '
+      f.push("Secret #{mat.gsub('Secret Gem of ','')} Gem")
+      f.push("Yellow #{mat.gsub('Secret Gem of ','')} Gem")
+      f.push("Yellow Gem of #{mat.gsub('Secret Gem of ','')}")
+      f.push("#{mat.gsub('Secret Gem of ','')} Cookie")
+      f.push("Cookie of #{mat.gsub('Secret Gem of ','')}")
+    end
+    n=@aliases.reject{|q| q[0]!='Material' || q[2]!=mat}.map{|q| [q[1],q[2],q[3]]}
+    for i in 0...n.length
+      if n[i][1]==mat
         if event.server.nil? && !n[i][2].nil?
           a=[]
           for j in 0...n[i][2].length
@@ -2770,18 +2841,18 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
   unit=unt[0]
   double=false
   for i in 0...@aliases.length
-    if @aliases[i][2].nil?
-    elsif @aliases[i][0].downcase==newname.downcase && @aliases[i][1]==unit
+    if @aliases[i][3].nil?
+    elsif @aliases[i][1].downcase==newname.downcase && @aliases[i][2]==unit
       if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?
-        @aliases[i][2]=nil
         @aliases[i][3]=nil
+        @aliases[i][4]=nil
         @aliases[i].compact!
         bot.channel(chn).send_message("The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in a server already.  Making it global now.")
         event.respond "The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in a server already.  Making it global now.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
         bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**Alias:** #{newname} for #{unt[1]} [##{unt[0]}] - gone global.")
         double=true
       else
-        @aliases[i][2].push(srv)
+        @aliases[i][3].push(srv)
         bot.channel(chn).send_message("The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in another server already.  Adding this server to those that can use it.")
         event.respond "The alias #{newname} for #{unt[1]} [##{unt[0]}] exists in another server already.  Adding this server to those that can use it.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
         metadata_load()
@@ -2792,8 +2863,8 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
     end
   end
   unless double
-    @aliases.push([newname,unit,m].compact)
-    @aliases.sort! {|a,b| (a[1] <=> b[1]) == 0 ? (a[0].downcase <=> b[0].downcase) : (a[1] <=> b[1])}
+    @aliases.push(['Servant',newname,unit,m].compact)
+    @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
     bot.channel(chn).send_message("#{newname} has been added to #{unt[1]} [##{unt[0]}]'s aliases#{" globally" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?}.\nPlease test to be sure that the alias stuck.")
     event.respond "#{newname} has been added to #{unt[1]} [##{unt[0]}]'s aliases#{" globally" if event.user.id==167657750971547648 && !modifier.nil?}." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
     bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**Alias:** #{newname} for #{unt[1]} [##{unt[0]}]#{" - global alias" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?}")
@@ -2808,7 +2879,7 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
   nicknames_load()
   nzz=nicknames_load(2)
   nzzz=@aliases.map{|a| a}
-  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][1]>=nzz[nzz.length-1][1]
+  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][2]>=nzz[nzz.length-1][2]
     bot.channel(logchn).send_message('Alias list saved.')
     open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
       for i in 0...nzzz.length
@@ -2847,18 +2918,18 @@ bot.command([:deletealias,:removealias]) do |event, name|
   k=0
   k=event.server.id unless event.server.nil?
   for izzz in 0...@aliases.length
-    if @aliases[izzz][0].downcase==name.downcase
-      if @aliases[izzz][2].nil? && event.user.id != 167657750971547648
+    if @aliases[izzz][1].downcase==name.downcase
+      if @aliases[izzz][3].nil? && event.user.id != 167657750971547648
         event.respond 'You cannot remove a global alias'
         return nil
-      elsif @aliases[izzz][2].nil? || @aliases[izzz][2].include?(k)
-        unless @aliases[izzz][2].nil?
-          for izzz2 in 0...@aliases[izzz][2].length
-            @aliases[izzz][2][izzz2]=nil if @aliases[izzz][2][izzz2]==k
+      elsif @aliases[izzz][3].nil? || @aliases[izzz][3].include?(k)
+        unless @aliases[izzz][3].nil?
+          for izzz2 in 0...@aliases[izzz][3].length
+            @aliases[izzz][3][izzz2]=nil if @aliases[izzz][3][izzz2]==k
           end
-          @aliases[izzz][2].compact!
+          @aliases[izzz][3].compact!
         end
-        @aliases[izzz]=nil if @aliases[izzz][2].nil? || @aliases[izzz][2].length<=0
+        @aliases[izzz]=nil if @aliases[izzz][3].nil? || @aliases[izzz][3].length<=0
       end
     end
   end
@@ -2879,7 +2950,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
   nicknames_load()
   nzz=nicknames_load(2)
   nzzz=@aliases.map{|a| a}
-  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][1]>=nzz[nzz.length-1][1]
+  if nzzz[nzzz.length-1].length>2 && nzzz[nzzz.length-1][2]>=nzz[nzz.length-1][2]
     bot.channel(logchn).send_message("Alias list saved.")
     open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
       for i in 0...nzzz.length
@@ -3184,7 +3255,7 @@ bot.command(:sortaliases, from: 167657750971547648) do |event, *args|
   data_load()
   nicknames_load()
   @aliases.uniq!
-  @aliases.sort! {|a,b| (a[1] <=> b[1]) == 0 ? (a[0].downcase <=> b[0].downcase) : (a[1] <=> b[1])}
+  @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
   open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
     for i in 0...@aliases.length
       f.puts "#{@aliases[i].to_s}#{"\n" if i<@aliases.length-1}"
@@ -3204,8 +3275,8 @@ bot.command(:backupaliases, from: 167657750971547648) do |event|
   nicknames_load()
   nzz=nicknames_load(2)
   @aliases.uniq!
-  @aliases.sort! {|a,b| (a[1] <=> b[1]) == 0 ? (a[0].downcase <=> b[0].downcase) : (a[1] <=> b[1])}
-  if @aliases[@aliases.length-1].length<=1 || @aliases[@aliases.length-1][1]<nzz[nzz.length-1][1]
+  @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
+  if @aliases[@aliases.length-1].length<=2 || @aliases[@aliases.length-1][2]<nzz[nzz.length-1][2]
     event.respond 'Alias list has __***NOT***__ been backed up, as alias list has been corrupted.'
     bot.gateway.check_heartbeat_acks = true
     event.respond 'FGO!restorealiases'
@@ -3278,21 +3349,21 @@ bot.command(:cleanupaliases, from: 167657750971547648) do |event|
   k=0
   k2=0
   for i in 0...nmz.length
-    if nmz[i][2].nil?
-      if nmz[i][0]==@servants[@servants.find_index{|q| q[0]==nmz[i][1]}][1].gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
+    if nmz[i][3].nil?
+      if nmz[i][1]==@servants[@servants.find_index{|q| q[0]==nmz[i][1]}][1].gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','')
         k2+=1
         nmz[i]=nil
       end
     else
-      for i2 in 0...nmz[i][2].length
-        srv=(bot.server(nmz[i][2][i2]) rescue nil)
+      for i2 in 0...nmz[i][3].length
+        srv=(bot.server(nmz[i][3][i2]) rescue nil)
         if srv.nil? || bot.user(502288364838322176).on(srv.id).nil?
           k+=1
-          nmz[i][2][i2]=nil
+          nmz[i][3][i2]=nil
         end
       end
-      nmz[i][2].compact!
-      nmz[i]=nil if nmz[i][2].length<=0
+      nmz[i][3].compact!
+      nmz[i]=nil if nmz[i][3].length<=0
     end
   end
   nmz.compact!
@@ -3378,8 +3449,8 @@ bot.command(:snagstats) do |event, f, f2|
     return nil
   elsif ['alias','aliases','name','names','nickname','nicknames'].include?(f.downcase)
     event.channel.send_temporary_message('Calculating data, please wait...',1)
-    glbl=@aliases.reject{|q| !q[2].nil?}
-    srv_spec=@aliases.reject{|q| q[2].nil?}
+    glbl=@aliases.reject{|q| q[0]!='Servant' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    srv_spec=@aliases.reject{|q| q[0]!='Servant' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
     all_units=@servants.map{|q| [q[0],q[1],0,0]}
     for j in 0...all_units.length
       all_units[j][2]+=glbl.reject{|q| q[1]!=all_units[j][0]}.length
@@ -3387,23 +3458,34 @@ bot.command(:snagstats) do |event, f, f2|
     end
     k=all_units.reject{|q| q[2]!=all_units.map{|q2| q2[2]}.max}.map{|q| "*#{q[1]}* [##{q[0]}]"}
     k=all_units.reject{|q| q[2]!=all_units.map{|q2| q2[2]}.max}.map{|q| "##{q[0]}"} if k.length>8 && !safe_to_spam?(event)
-    str="**There are #{longFormattedNumber(glbl.length)} global aliases.**\nThe servant#{"s" unless k.length==1} with the most global aliases #{"is" if k.length==1}#{"are" unless k.length==1} #{list_lift(k,"and")}, with #{all_units.map{|q2| q2[2]}.max} global aliases#{" each" unless k.length==1}."
+    str="**There are #{longFormattedNumber(glbl.length)} global servant aliases.**\nThe servant#{"s" unless k.length==1} with the most global aliases #{"is" if k.length==1}#{"are" unless k.length==1} #{list_lift(k,"and")}, with #{all_units.map{|q2| q2[2]}.max} global aliases#{" each" unless k.length==1}."
     k=all_units.reject{|q| q[2]>0}.map{|q| "*#{q[1]}* [##{q[0]}]"}
     k=all_units.reject{|q| q[2]>0}.map{|q| "##{q[0]}"} if k.length>8 && !safe_to_spam?(event) 
     str="#{str}\nThe following servant#{"s" unless k.length==1} have no global aliases: #{list_lift(k,"and")}." if k.length>0
-    str2="**There are #{longFormattedNumber(srv_spec.length)} server-specific aliases.**"
+    str2="**There are #{longFormattedNumber(srv_spec.length)} server-specific servant aliases.**"
     if event.server.nil? && @shardizard==4
       str2="#{str2}\nDue to being the debug version, I cannot show more information."
     elsif event.server.nil?
-      str2="#{str2}\nServers you and I share account for #{@aliases.reject{|q| q[2].nil? || q[2].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those."
+      str2="#{str2}\nServers you and I share account for #{@aliases.reject{|q| q[0]!='Servant' || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those."
     else
-      str2="#{str2}\nThis server accounts for #{@aliases.reject{|q| q[2].nil? || !q[2].include?(event.server.id)}.length} of those."
+      str2="#{str2}\nThis server accounts for #{@aliases.reject{|q| q[0]!='Servant' || q[3].nil? || !q[3].include?(event.server.id)}.length} of those."
     end
     k=all_units.reject{|q| q[3]!=all_units.map{|q2| q2[3]}.max}.map{|q| "*#{q[1]}* [##{q[0]}]"}
     k=all_units.reject{|q| q[3]!=all_units.map{|q2| q2[3]}.max}.map{|q| "##{q[0]}"} if k.length>8 && !safe_to_spam?(event)
     str2="#{str2}\nThe servant#{"s" unless k.length==1} with the most server-specific aliases #{"is" if k.length==1}#{"are" unless k.length==1} #{list_lift(k,"and")}, with #{all_units.map{|q2| q2[3]}.max} server-specific aliases#{" each" unless k.length==1}."
     k=srv_spec.map{|q| q[2].length}.inject(0){|sum,x| sum + x }
     str2="#{str2}\nCounting each alias/server combo as a unique alias, there are #{longFormattedNumber(k)} server-specific aliases"
+    str=extend_message(str,str2,event,2)
+    glbl=@aliases.reject{|q| q[0]!='Material' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    srv_spec=@aliases.reject{|q| q[0]!='Material' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    str2="**There are #{longFormattedNumber(glbl.length+77)} global material aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific material aliases.**"
+    if event.server.nil? && @shardizard==4
+      str2="#{str2} (Due to being the debug version, I cannot show more information.)"
+    elsif event.server.nil?
+      str2="#{str2} - Servers you and I share account for #{@aliases.reject{|q| q[0]!='Material' || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those"
+    else
+      str2="#{str2} - This server accounts for #{@aliases.reject{|q| q[0]!='Material' || q[3].nil? || !q[3].include?(event.server.id)}.length} of those."
+    end
     str=extend_message(str,str2,event,2)
     event.respond str
     return nil
@@ -3417,8 +3499,8 @@ bot.command(:snagstats) do |event, f, f2|
     event.respond s2
     return nil
   end
-  glbl=@aliases.reject{|q| !q[2].nil?}
-  srv_spec=@aliases.reject{|q| q[2].nil?}
+  glbl=@aliases.reject{|q| q[0]!='Servant' || !q[3].nil?}
+  srv_spec=@aliases.reject{|q| q[0]!='Servant' || q[3].nil?}
   b=[]
   File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.rb').each_line do |line|
     l=line.gsub(' ','').gsub("\n",'')
