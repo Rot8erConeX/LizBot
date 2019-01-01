@@ -73,12 +73,12 @@
 73\Necromancy\4\9\600, 0\2400, 0\50% chance to apply Guts (500 HP) when HP reaches 0\50% chance to apply Guts (1000 HP) when HP reaches 0\-\Konoe Ototsugu\
 74\Awakened Will\4\9\300, 200\1125, 750\60% chance to increase NP Gauge by 12% per turn; Take 500 damage per turn [Demerit]\60% chance to increase NP Gauge by 15% per turn; Take 500 damage per turn [Demerit]\-\Kinuta Kouji\
 75\500-Year Obsession\5\12\0, 600\0, 2400\Effect activates when defeated by an enemy; Inflict NP Seal (2 turns); Inflict Curse (1000 damage, 10 turns)\Effect activates when defeated by an enemy; Inflict NP Seal (2 turns); Inflict Curse (2000 damage, 10 turns)\-\Azusa\
-76\Peacefulness of 2016\3\5\300, 0\1500, 0\Restore 200 HP per turn; Decrease ATK by 10% [Demerit]\Restore 300 HP per turn; Decrease ATK by 10% [Demerit]\-\\\New Year 2016
-77\Heroic New Year\4\9\320, 200\1200, 750\Apply Debuff Immune (1 time); Increase DEF by 8%\Apply Debuff Immune (1 time); Increase DEF by 10%\-\TAa\\New Year 2016
-78\Law of the Jungle\3\5\0, 200\0, 1000\Increase QP from clearing quests by 2,015\Increase QP from clearing quests by 2016\-\Riyo\\New Year 2016
-79\Grand New Year\5\12\750, 0\3000, 0\Apply Target Focus (1 turn); Apply Invincible (1 turn); Increase Debuff Resist by 10%\Apply Target Focus (1 turn); Apply Invincible (1 turn); Increase Debuff Resist by 20%\-\Takeuchi Takashi\\New Year 2016
-80\Mona Lisa\5\12\400, 250\1600, 1000\Increase QP from enemy drops by 2%\Increase QP from enemy drops by 10%\-\Simosi\\Da Vinci's Wokshop "Mana Prism Exchange"; Deadline: 31 March 2016
-81\Happy x3 Order\4\3\2016, 0\2016, 0\Gain 1 Critical Star per turn; Received at Lv.80 with Max Limit unlocked\Gain 1 Critical Star per turn\-\Nakahara\\New Year 2016
+76\Peacefulness of (Year)\3\5\300, 0\1500, 0\Restore 200 HP per turn; Decrease ATK by 10% [Demerit]\\-\\\New Year 2016(JP)/2018(NA)
+77\Heroic New Year\4\9\320, 200\1200, 750\Apply Debuff Immune (1 time); Increase DEF by 8%\Apply Debuff Immune (1 time); Increase DEF by 10%\-\TAa\\New Year 2016(JP)/2018(NA)
+78\Law of the Jungle\3\5\0, 200\0, 1000\Increase QP from clearing quests by 2016 (JP); Increase QP from clearing quests by 2018 (NA)\\-\Riyo\\New Year 2016(JP)/2018(NA)
+79\Grand New Year\5\12\750, 0\3000, 0\Apply Target Focus (1 turn); Apply Invincible (1 turn); Increase Debuff Resist by 10%\Apply Target Focus (1 turn); Apply Invincible (1 turn); Increase Debuff Resist by 20%\-\Takeuchi Takashi\\New Year 2016(JP)/2018(NA)
+80\Mona Lisa\5\12\400, 250\1600, 1000\Increase QP from enemy drops by 2%\Increase QP from enemy drops by 10%\-\Simosi\\Da Vinci's Wokshop "Mana Prism Exchange"; Deadline: 31 March 2016(JP)/2018(NA)
+81\Happy x3 Order\4\3\2016, 0\2018, 0\Gain 1 Critical Star per turn; Received at Lv.80 with Max Limit unlocked\\-\Nakahara\NewYear\New Year 2016(JP)/2018(NA)
 82\Purely Bloom\5\12\0, 500\0, 2000\Increase NP Strength by 5% per turn (40% max); Increase ATK Strength by 100%\Increase NP Strength by 5% per turn (50% max); Increase ATK Strength by 200%\-\MoRoMi\\Saber Wars ~Lily's Cosmic Warrior Training~
 83\Star of Altria\5\12\0, 500\0, 2000\Apply Guts with 1 HP (1 time); Increase Debuff Resist by 5%; Increase ATK Strength of all allies (including sub members) by 50%\Apply Guts with 1 HP (1 time); Increase Debuff Resist by 10%; Increase ATK Strength of all allies (including sub members) by 100%\-\Ishida Akira\\Saber Wars ~Lily's Cosmic Warrior Training~
 84\Trueshot\3\5\0, 200\0, 1000\Apply Sure Hit; Increase Critical Strength by 3%; Increase Transistor drop amount by 1\Apply Sure Hit; Increase Critical Strength by 5%; Increase Transistor drop amount by 2\-\Kinuta Kouji\\Saber Wars ~Lily's Cosmic Warrior Training~
@@ -151,7 +151,7 @@
 151\Wonderful Life\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Ichihashi Makoto\
 152\Hexagon Chocobolt\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\
 153\St. Orleans\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\
-154\Decapitating Bunny 2016\5\12\0, 500\0, 2000\Apply Ignore Invincible; Increase Quick Card effectiveness by 8%; Increase [Vengeful Spirit of Seven People] appearance rate by 25%\Apply Ignore Invincible; Increase Quick Card effectiveness by 10%; Increase [Vengeful Spirit of Seven People] appearance rate by 50%\-\Sudou Tomonori (ufotable)\\Kara no Kyoukai/The Garden of Order
+154\Decapitating Bunny\5\12\0, 500\0, 2000\Apply Ignore Invincible; Increase Quick Card effectiveness by 8%; Increase [Vengeful Spirit of Seven People] appearance rate by 25%\Apply Ignore Invincible; Increase Quick Card effectiveness by 10%; Increase [Vengeful Spirit of Seven People] appearance rate by 50%\-\Sudou Tomonori (ufotable)\\Kara no Kyoukai/The Garden of Order
 155\Mature Gentleman\5\12\750, 0\3000, 0\Increase Death Resist by 60%; Increase Black Cat Figurine drop amount by 1\Increase Death Resist by 80%; Increase Black Cat Figurine drop amount by 2\-\Sudou Tomonori (ufotable)\\Kara no Kyoukai/The Garden of Order
 156\Grand Puppeteer\5\12\250, 400\1000, 1600\Increase NP Gauge by 50% at the start of battle; Increase Arts Card effectiveness by 15% (3 turns); Increase Black Cat Figurine drop amount by 1\Increase NP Gauge by 60% at the start of battle; Increase Arts Card effectiveness by 20% (3 turns); Increase Black Cat Figurine drop amount by 2\-\Sudou Tomonori (ufotable)\\Kara no Kyoukai/The Garden of Order
 157\Threefold Barrier\5\12\750, 0\3000, 0\Apply Damage Cut 1,000 (3 times); Increase [Base Model] appearance rate by 25%\Apply Damage Cut 1,200 (3 times); Increase [Base Model] appearance rate by 50%\-\Takahashi Takuro (ufotable)\\Kara no Kyoukai/The Garden of Order
@@ -409,10 +409,10 @@
 409\The Tomorrow Not Meant to Be\4\9\100, 100\100, 100\When equipped to Medusa (Lancer) only. Increase Quick Card effectiveness & NP Gain of all allies by 10% while she's on the field\\-\\
 410\Primordial Fire\4\9\100, 100\100, 100\When equipped to Jaguar Warrior (Lancer) only. Increase Buster Card effectiveness of all allies by 15% while she's on the field\\-\\
 411\Tower at the End of the World\4\9\100, 100\100, 100\When equipped to Merlin (Caster) only. Increase Buster Card effectiveness of all allies by 10% & Critical Strength by 15% while he's on the field\\-\\
-412\First Sunrise\5\12\0, 500\0, 2000\Increase Buster Card effectiveness by 15%; Increase NP Gauge by 40% at the start of battle\Increase Buster Card effectiveness by 20%; Increase NP Gauge by 50% at the start of battle\-\Mifuji Kiichi\\New Year 2017
-413\First Arrow Shot\4\9\320, 200\1200, 750\Apply Sure Hit; Increase Arts Card effectiveness by 8%\Apply Sure Hit; Increase Arts Card effectiveness by 10%\-\Suzuki Jirou\\New Year 2017
-414\One Flew Over the Cuckoo's Nest\3\5\0, 200\0, 1000\Increase QP from clearing quests by 2017\Increase QP from clearing quests by 2017; Apply Damage Plus 17\-\Riyo\\New Year 2017
-415\Cheers to 2017\4\9\2017, 0\2017, 0\Restore 100 HP per turn\\-\Mika Pikazo\\New Year 2017
+412\First Sunrise\5\12\0, 500\0, 2000\Increase Buster Card effectiveness by 15%; Increase NP Gauge by 40% at the start of battle\Increase Buster Card effectiveness by 20%; Increase NP Gauge by 50% at the start of battle\-\Mifuji Kiichi\\New Year 2017(JP)/2019(NA)
+413\First Arrow Shot\4\9\320, 200\1200, 750\Apply Sure Hit; Increase Arts Card effectiveness by 8%\Apply Sure Hit; Increase Arts Card effectiveness by 10%\-\Suzuki Jirou\\New Year 2017(JP)/2019(NA)
+414\One Flew Over the Cuckoo's Nest\3\5\0, 200\0, 1000\Increase QP from clearing quests by 2017 (JP); Increase QP from clearing quests by 2019 (NA)\Increase QP from clearing quests by 2017(JP)/2019(NA); Apply Damage Plus 17(JP)/19(NA)\-\Riyo\\New Year 2017(JP)/2019(NA)
+415\Cheers to (Year)\4\9\2017, 0\2019, 0\Restore 100 HP per turn\\-\Mika Pikazo\NewYear\New Year 2017(JP)/2019(NA)
 416\Buddha of Emptiness\4\9\100, 100\100, 100\When equipped to Miyamoto Musashi (Saber) only. Increase NP Strength by 30%; Apply Debuff Immune (3 times)\\-\\
 417\Abyss of the Valley\4\9\100, 100\100, 100\When equipped to ""First Hassan"(Assassin) only. Increase Debuff Resist by 100%\\-\\
 418\Reality Marble\3\5\160, 100\800, 500\Increase NP Strength by 15% when equipped to an [Archer] class\Increase NP Strength by 25% when equipped to an [Archer] class\-\\
