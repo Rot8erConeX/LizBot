@@ -470,6 +470,20 @@ def find_servant(name,event,fullname=false)
     elsif name2.to_f.to_s==name2 && name2.to_f<2
       return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
     end
+  elsif name[0,4].downcase=='srv-' || name.downcase[0,4]=='srv_'
+    name2=name[4,name.length-4]
+    if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
+      return @servants[@servants.find_index{|q| q[0]==name2.to_i}]
+    elsif name2.to_f.to_s==name2 && name2.to_f<2
+      return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
+    end
+  elsif name[0,3].downcase=='srv'
+    name2=name[3,name.length-3]
+    if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
+      return @servants[@servants.find_index{|q| q[0]==name2.to_i}]
+    elsif name2.to_f.to_s==name2 && name2.to_f<2
+      return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
+    end
   end
   name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')
   return [] if name.length<2
@@ -499,8 +513,6 @@ def find_ce(name,event,fullname=false)
     return []
   elsif name.to_i.to_s==name && name.to_i<=@crafts[-1][0] && name.to_i>0
     return @crafts[@crafts.find_index{|q| q[0]==name.to_f}]
-  elsif name.to_i==2030
-    return @crafts[@crafts.find_index{|q| q[1].include?('2030')}]
   end
   if name[0,1]=='#'
     name2=name[1,name.length-1]
@@ -508,8 +520,16 @@ def find_ce(name,event,fullname=false)
       return []
     elsif name2.to_i.to_s==name2 && name2.to_i<=@crafts[-1][0] && name2.to_i>0
       return @crafts[@crafts.find_index{|q| q[0]==name2.to_f}]
-    elsif name2.to_i==2030
-      return @crafts[@crafts.find_index{|q| q[1].include?('2030')}]
+    end
+  elsif name[0,3].downcase=='ce-' || name[0,3].downcase=='ce_'
+    name2=name[3,name.length-3]
+    if name2.to_i.to_s==name2 && name2.to_i<=@crafts[-1][0] && name2.to_i>0
+      return @crafts[@crafts.find_index{|q| q[0]==name2.to_f}]
+    end
+  elsif name[0,2].downcase=='ce'
+    name2=name[2,name.length-2]
+    if name2.to_i.to_s==name2 && name2.to_i<=@crafts[-1][0] && name2.to_i>0
+      return @crafts[@crafts.find_index{|q| q[0]==name2.to_f}]
     end
   end
   name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')
@@ -522,6 +542,12 @@ def find_ce(name,event,fullname=false)
   return @crafts[k] unless k.nil?
   k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')=="an#{name}" && q[1][0,3].downcase=='an '}
   return @crafts[k] unless k.nil?
+  nicknames_load()
+  alz=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
+  g=0
+  g=event.server.id unless event.server.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
+  return @crafts[@crafts.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   return [] if fullname
   k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @crafts[k] unless k.nil?
@@ -531,6 +557,8 @@ def find_ce(name,event,fullname=false)
   return @crafts[k] unless k.nil?
   k=@crafts.find_index{|q| q[1].downcase.gsub('an ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[1][0,3].downcase=='an '}
   return @crafts[k] unless k.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && (q[2].nil? || q[2].include?(g))}
+  return @crafts[@crafts.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   return []
 end
 
@@ -587,10 +615,22 @@ def find_skill(name,event,fullname=false)
   return sklz[k] unless k.nil?
   k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return sklz.reject{|q| q[0]!=sklz[k][0] || q[2]!=sklz[k][2]} unless k.nil?
+  nicknames_load()
+  alz=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3],q[0]]}
+  g=0
+  g=event.server.id unless event.server.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
+  unless k.nil?
+    m=sklz.find_index{|q| "#{q[0]} #{q[1]}"==alz[k][1] && q[2]==alz[k][3].gsub('ClothingSkill','Clothes').gsub('Active','Skill')}
+    return sklz[m] unless m.nil?
+    return sklz.reject{|q| q[0]!=alz[k][1] || q[2]!=alz[k][3].gsub('ClothingSkill','Clothes').gsub('Active','Skill')}
+  end
   return [] if fullname
   return sklz.reject{|q| q[0][0,17]!='Primordial Rune ('} if name=='primordialrune'[0,name.length]
   k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return sklz.reject{|q| q[0]!=sklz[k][0] || q[2]!=sklz[k][2]} unless k.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && (q[2].nil? || q[2].include?(g))}
+  return sklz.reject{|q| q[0]!=alz[k][1] || q[2]!=alz[k][3].gsub('ClothingSkill','Clothes').gsub('Active','Skill')} unless k.nil?
   return []
 end
 
@@ -1547,7 +1587,16 @@ def disp_ce_card(bot,event,args=nil)
   text="#{text}\n**<:Bond:523903660913197056> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
   text="#{text}\n**<:Valentines:523903633453219852> Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k2[0]}]*" unless k2.nil?
   text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
-  if ce[4]==ce[5] && ce[6]==ce[7]
+  if !ce[10].nil? && ce[10].include?('NewYear')
+    text="#{text}\n\n__**Japan** stats__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}"
+    text="#{text}\n\n__**North America** stats__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}"
+    if ce[6]==ce[7]
+      text="#{text}\n\n__**Effect**__\n#{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    else
+      text="#{text}\n\n__**Base Limit**__\n#{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n__**Max Limit**__\n#{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    end
+  elsif ce[4]==ce[5] && ce[6]==ce[7]
     text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
   else
     text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
@@ -2040,22 +2089,80 @@ def disp_aliases(bot,event,args=nil,mode=0)
   nicknames_load()
   unless args.length.zero?
     if find_data_ex(:find_servant,args.join(''),event).length>0
+    elsif find_data_ex(:find_skill,args.join(''),event).length>0
+    elsif find_data_ex(:find_ce,args.join(''),event).length>0
     elsif find_data_ex(:find_mat,args.join(''),event).length>0
+    elsif has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars','skill','skills','skil','skils','ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances','mat','mats','materials','material'])
     else
-      event.respond "#{args.join(' ')} is not a servant name or an alias."
+      event.respond "#{args.join(' ')} is not a servant/skill/CE/material name or an alias."
       return nil
     end
   end
   unit=find_data_ex(:find_servant,args.join(''),event)
   unit=nil if unit.length<=0 || args.length.zero?
+  skl=find_data_ex(:find_skill,args.join(''),event)
+  skl=nil if skl.length<=0 || args.length.zero?
+  ce=find_data_ex(:find_ce,args.join(''),event)
+  ce=nil if ce.length<=0 || args.length.zero?
   mat=find_data_ex(:find_mat,args.join(''),event)
   mat=nil if mat.length<=0 || args.length.zero?
   puts mat.to_s
   f=[]
   n=@aliases.reject{|q| q[0]!='Servant'}.map{|q| [q[1],q[2],q[3]]}
   h=''
-  if unit.nil? && mat.nil?
-    if safe_to_spam?(event) || mode==1
+  if unit.nil? && skl.nil? && ce.nil? && mat.nil?
+    if has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars'])
+      n=n.reject{|q| q[2].nil?} if mode==1
+      msg='__**Servant Aliases**__'
+      for i in 0...n.length
+        untnme=@servants[@servants.find_index{|q| q[0]==n[i][1]}][1]
+        msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Srv-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+      end
+      event.respond msg
+      return nil
+    elsif has_any?(args,['skill','skills','skil','skils'])
+      msg='__**Skill Aliases**__'
+      n=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+      n=n.reject{|q| q[2].nil?} if mode==1
+      for i in 0...n.length
+        msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+      end
+      event.respond msg
+      return nil
+    elsif has_any?(args,['ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances'])
+      msg='__**Craft Essance Aliases**__'
+      n=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
+      for i in 0...n.length
+        untnme=@crafts[@crafts.find_index{|q| q[0]==n[i][1]}][1]
+        msg=extend_message(msg,"#{n[i][0]} = #{untnme} [CE-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+      end
+      event.respond msg
+      return nil
+    elsif has_any?(args,['mat','mats','materials','material'])
+      msg='__**Material Aliases**__'
+      n=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
+      mmkk=['Archer','Assassin','Berserker','Caster','Lancer','Rider','Saber']
+      for i in 0...mmkk.length
+        n.push(["#{mmkk[i]} Gem","Gem of #{mmkk[i]}"])
+        n.push(["Blue #{mmkk[i]} Gem","Gem of #{mmkk[i]}"])
+        n.push(["Blue Gem of #{mmkk[i]}","Gem of #{mmkk[i]}"])
+        n.push(["Magic #{mmkk[i]} Gem","Magic Gem of #{mmkk[i]}"])
+        n.push(["Red #{mmkk[i]} Gem","Magic Gem of #{mmkk[i]}"])
+        n.push(["Red Gem of #{mmkk[i]}","Magic Gem of #{mmkk[i]}"])
+        n.push(["Secret #{mmkk[i]} Gem","Secret Gem of #{mmkk[i]}"])
+        n.push(["Yellow #{mmkk[i]} Gem","Secret Gem of #{mmkk[i]}"])
+        n.push(["Yellow Gem of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
+        n.push(["#{mmkk[i]} Cookie","Secret Gem of #{mmkk[i]}"])
+        n.push(["Cookie of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
+      end
+      n.sort! {|a,b| (a[1]<=>b[1]) == 0 ? (a[0]<=>b[0]) : (a[1]<=>b[1])}
+      n=n.reject{|q| q[2].nil?} if mode==1
+      for i in 0...n.length
+        msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+      end
+      event.respond msg
+      return nil
+    elsif safe_to_spam?(event) || mode==1
       n=n.reject{|q| q[2].nil?} if mode==1
       unless event.server.nil?
         n=n.reject{|q| !q[2].nil? && !q[2].include?(event.server.id)}
@@ -2067,6 +2174,19 @@ def disp_aliases(bot,event,args=nil,mode=0)
         for i in 0...n.length
           untnme=@servants[@servants.find_index{|q| q[0]==n[i][1]}][1]
           msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Srv-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+        end
+        msg=extend_message(msg,'__**Skill Aliases**__',event,2)
+        n=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+        n=n.reject{|q| q[2].nil?} if mode==1
+        for i in 0...n.length
+          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+        end
+        msg=extend_message(msg,'__**Craft Essance Aliases**__',event,2)
+        n=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
+        n=n.reject{|q| q[2].nil?} if mode==1
+        for i in 0...n.length
+          untnme=@crafts[@crafts.find_index{|q| q[0]==n[i][1]}][1]
+          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [CE-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
         end
         msg=extend_message(msg,'__**Material Aliases**__',event,2)
         n=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
@@ -2085,6 +2205,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           n.push(["Cookie of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
         end
         n.sort! {|a,b| (a[1]<=>b[1]) ? (a[0]<=>b[0]) : (a[1]<=>b[1])}
+        n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
           msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
         end
@@ -2109,6 +2230,43 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
         end
       end
+      f.push("\n__**Skill Aliases*__")
+      n=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+      for i in 0...n.length
+        if n[i][2].nil?
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
+        elsif !event.server.nil? && n[i][2].include?(event.server.id)
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        else
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        end
+      end
+      f.push("\n__**Craft Essance Aliases**__")
+      n=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
+      for i in 0...n.length
+        untnme=@crafts[@crafts.find_index{|q| q[0]==n[i][1]}][1]
+        if n[i][2].nil?
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]")
+        elsif !event.server.nil? && n[i][2].include?(event.server.id)
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        else
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        end
+      end
       f.push("\n__**Material Aliases*__")
       n=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
       for i in 0...mmkk.length
@@ -2124,7 +2282,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
         n.push(["#{mmkk[i]} Cookie","Secret Gem of #{mmkk[i]}"])
         n.push(["Cookie of #{mmkk[i]}","Secret Gem of #{mmkk[i]}"])
       end
-      n.sort! {|a,b| (a[1]<=>b[1]) ? (a[0]<=>b[0]) : (a[1]<=>b[1])}
+      n.sort! {|a,b| (a[1]<=>b[1]) == 0 ? (a[0]<=>b[0]) : (a[1]<=>b[1])}
       for i in 0...n.length
         if n[i][2].nil?
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
@@ -2148,7 +2306,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
   elsif !unit.nil?
     k=0
     k=event.server.id unless event.server.nil?
-    f.push("__**#{unit[1]}**__ [##{unit[0]}]#{servant_moji(bot,event,unit)}#{"'s server-specific aliases" if mode==1}")
+    f.push("__**#{unit[1]}**__ [Srv-##{unit[0]}]#{servant_moji(bot,event,unit)}#{"'s server-specific aliases" if mode==1}")
     f.push(unit[1].gsub(' ','').gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')) if unit[1].include?('(') || unit[1].include?(')') || unit[1].include?(' ') || unit[1].include?('!') || unit[1].include?('_') || unit[1].include?('?') || unit[1].include?("'") || unit[1].include?('"')
     f.push(unit[0])
     for i in 0...n.length
@@ -2169,8 +2327,54 @@ def disp_aliases(bot,event,args=nil,mode=0)
         end
       end
     end
+  elsif !skl.nil?
+    skl=skl[0] if skl[0].is_a?(Array)
+    n=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+    f.push("__**#{skl[0]}**__#{"'s server-specific aliases" if mode==1}")
+    f.push(skl[0].gsub(' ','').gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')) if skl[0].include?('(') || skl[0].include?(')') || skl[0].include?(' ') || skl[0].include?('!') || skl[0].include?('_') || skl[0].include?('?') || skl[0].include?("'") || skl[0].include?('"')
+    for i in 0...n.length
+      if n[i][1]==skl[0]
+        if event.server.nil? && !n[i][2].nil?
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\\_')} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        elsif n[i][2].nil?
+          f.push(n[i][0].gsub('_','\\_')) unless mode==1
+        else
+          f.push("#{n[i][0].gsub('_','\\_')}#{" *(in this server only)*" unless mode==1}") if n[i][2].include?(k)
+        end
+      end
+    end
+  elsif !ce.nil?
+    n=@aliases.reject{|q| q[0]!='Craft' || q[2]!=ce[0]}.map{|q| [q[1],q[2],q[3]]}
+    f.push("__**#{ce[1]}**__ [CE-##{ce[0]}]#{"'s server-specific aliases" if mode==1}")
+    f.push(ce[1].gsub(' ','').gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')) if ce[1].include?('(') || ce[1].include?(')') || ce[1].include?(' ') || ce[1].include?('!') || ce[1].include?('_') || ce[1].include?('?') || ce[1].include?("'") || ce[1].include?('"')
+    f.push(ce[0]) if ce[0]>@servants.map{|q| q[0]}.max
+    for i in 0...n.length
+      if n[i][1]==ce[0]
+        if event.server.nil? && !n[i][2].nil?
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\\_')} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        elsif n[i][2].nil?
+          f.push(n[i][0].gsub('_','\\_')) unless mode==1
+        else
+          f.push("#{n[i][0].gsub('_','\\_')}#{" *(in this server only)*" unless mode==1}") if n[i][2].include?(k)
+        end
+      end
+    end
   elsif !mat.nil?
-    f.push("__**#{mat}**__ #{find_emote(bot,event,mat,2,true)}")
+    f.push("__**#{mat}**__ #{find_emote(bot,event,mat,2,true)}#{"'s server-specific aliases" if mode==1}")
     if mat[0,7]=='Gem of '
       f.push("#{mat.gsub('Gem of ','')} Gem")
       f.push("Blue #{mat.gsub('Gem of ','')} Gem")
@@ -2910,11 +3114,49 @@ bot.command([:deletealias,:removealias]) do |event, name|
   elsif !is_mod?(event.user,event.server,event.channel)
     event.respond 'You are not a mod.'
     return nil
-  elsif find_servant(name,event).length<=0
-    event.respond "#{name} is not anyone's alias!"
+  elsif find_servant(name,event).length<=0 && find_skill(name,event).length<=0 && find_ce(name,event).length<=0 && find_mat(name,event).length<=0
+    event.respond "#{name} is not an alias!"
     return nil
   end
-  j=find_servant(name,event)
+  if find_servant(name,event,true).length>0
+    j=find_servant(name,event,true)
+    j=["Servant","#{j[1]} [Srv-##{j[0]}]"]
+  elsif find_skill(name,event,true).length>0
+    j=find_skill(name,event,true)
+    j=j[0] if j[0].is_a?(Array)
+    j=["Skill","#{j[0]}"]
+  elsif find_ce(name,event,true).length>0
+    j=find_ce(name,event,true)
+    j=["Craft Essance","#{j[1]} [CE-##{j[0]}]"]
+  elsif find_mat(name,event,true).length>0
+    j=find_mat(name,event,true)
+    j=["Material","#{j}"]
+  elsif find_clothes(name,event,true).length>0
+    j=find_clothes(name,event,true)
+    j=["Clothes","#{j[0]}"]
+  elsif find_code(name,event,true).length>0
+    j=find_code(name,event,true)
+    j=["Command","#{j[1]} [Cmd-#{j[0]}]"]
+  elsif find_servant(name,event).length>0
+    j=find_servant(name,event)
+    j=["Servant","#{j[1]} [Srv-##{j[0]}]"]
+  elsif find_skill(name,event).length>0
+    j=find_skill(name,event)
+    j=j[0] if j[0].is_a?(Array)
+    j=["Skill","#{j[0]}"]
+  elsif find_ce(name,event).length>0
+    j=find_ce(name,event)
+    j=["Craft Essance","#{j[1]} [CE-##{j[0]}]"]
+  elsif find_mat(name,event).length>0
+    j=find_mat(name,event)
+    j=["Material","#{j}"]
+  elsif find_clothes(name,event).length>0
+    j=find_clothes(name,event)
+    j=["Clothes","#{j[0]}"]
+  elsif find_code(name,event).length>0
+    j=find_code(name,event)
+    j=["Command","#{j[1]} [Cmd-#{j[0]}]"]
+  end
   k=0
   k=event.server.id unless event.server.nil?
   for izzz in 0...@aliases.length
@@ -2940,13 +3182,13 @@ bot.command([:deletealias,:removealias]) do |event, name|
   srv=event.server.id unless event.server.nil?
   srvname='PM with dev'
   srvname=bot.server(srv).name unless event.server.nil? && srv.zero?
-  bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n~~**Alias:** #{name} for #{j[1]} [##{j[0]}]~~ **DELETED**.")
+  bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n~~**#{j[0]} Alias:** #{name} for #{j[1]}~~ **DELETED**.")
   open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
     for i in 0...@aliases.length
       f.puts "#{@aliases[i].to_s}#{"\n" if i<@aliases.length-1}"
     end
   }
-  event.respond "#{name} has been removed from #{j[1]} [#{j[0]}]'s aliases."
+  event.respond "#{name} has been removed from #{j[1]}'s aliases."
   nicknames_load()
   nzz=nicknames_load(2)
   nzzz=@aliases.map{|a| a}
@@ -3476,11 +3718,30 @@ bot.command(:snagstats) do |event, f, f2|
     k=srv_spec.map{|q| q[2].length}.inject(0){|sum,x| sum + x }
     str2="#{str2}\nCounting each alias/server combo as a unique alias, there are #{longFormattedNumber(k)} server-specific aliases"
     str=extend_message(str,str2,event,2)
+    glbl=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0]) || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    srv_spec=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0]) || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    str2="**There are #{longFormattedNumber(glbl.length)} global skill aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific skill aliases.**"
+    if event.server.nil? && @shardizard==4
+    elsif event.server.nil?
+      str2="#{str2} - Servers you and I share account for #{@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0]) || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those"
+    else
+      str2="#{str2} - This server accounts for #{@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0]) || q[3].nil? || !q[3].include?(event.server.id)}.length} of those."
+    end
+    str=extend_message(str,str2,event,2)
+    glbl=@aliases.reject{|q| q[0]!='Craft' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    srv_spec=@aliases.reject{|q| q[0]!='Craft' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    str2="**There are #{longFormattedNumber(glbl.length)} global Craft Essance aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific Craft Essance aliases.**"
+    if event.server.nil? && @shardizard==4
+    elsif event.server.nil?
+      str2="#{str2} - Servers you and I share account for #{@aliases.reject{|q| q[0]!='Craft' || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those"
+    else
+      str2="#{str2} - This server accounts for #{@aliases.reject{|q| q[0]!='Craft' || q[3].nil? || !q[3].include?(event.server.id)}.length} of those."
+    end
+    str=extend_message(str,str2,event,2)
     glbl=@aliases.reject{|q| q[0]!='Material' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
     srv_spec=@aliases.reject{|q| q[0]!='Material' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
     str2="**There are #{longFormattedNumber(glbl.length+77)} global material aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific material aliases.**"
     if event.server.nil? && @shardizard==4
-      str2="#{str2} (Due to being the debug version, I cannot show more information.)"
     elsif event.server.nil?
       str2="#{str2} - Servers you and I share account for #{@aliases.reject{|q| q[0]!='Material' || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those"
     else
