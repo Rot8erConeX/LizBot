@@ -20,7 +20,11 @@ require_relative 'rot8er_functs'       # functions I use commonly in bots
          'fate?','fatE?','faTe?','faTE?','fAte?','fAtE?','fATe?','fATE?','Fate?','FatE?','FaTe?','FaTE?','FAte?','FAtE?','FATe?','FATE?']
 
 # The bot's token is basically their password, so is censored for obvious reasons
-bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: @prefix
+if @shardizard==4
+  bot = Discordrb::Commands::CommandBot.new token: '>Debug Token<', client_id: 431895561193390090, prefix: @prefix
+else
+  bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: @prefix
+end
 bot.gateway.check_heartbeat_acks = false
 
 @servants=[]
@@ -320,6 +324,10 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}** __toggle__","Responds with whether or not the channel the command is invoked in is one in which I can send extremely long replies.\n\nIf the channel does not fill one of the many molds for acceptable channels, server mods can toggle the ability with the words \"on\", \"semi\", and \"off\".",0xED619A)
   elsif ['status'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*message__","Sets my status to `message`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+  elsif ['daily','today','todayinfgo','today_in_fgo'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}**","Shows the day's in-game daily events.\nIf in PM, will also show tomorrow's.",0xED619A)
+  elsif ['next','schedule'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __type__","Shows the next time in-game daily events of the type `type` will happen.\nIf in PM and `type` is unspecified, shows the entire schedule.\n\n__*Accepted Inputs*__\nTraining / Ground(s)\nEmber(s) / Gather(ing)\nMat(s) / Material(s) ~~this one only works fully in PM.~~",0xED619A)
   elsif ['tools','tool','links','link','resources','resource'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**",'Responds with a list of links useful to players of *Fate/Grand Order*.',0xED619A)
   elsif ['mat','material'].include?(command.downcase)
@@ -429,7 +437,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`tools` - for a list of tools aside from me that may aid you\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n`today` - to see today's events\n`next` - to see when cyclical events happen next\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`tools` - for a list of tools aside from me that may aid you\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -448,7 +456,8 @@ def all_commands(include_nil=false,permissions=-1)
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
-     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next']
+     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
+     'dailies','today_in_fgo','todayinfgo','schedule']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -573,6 +582,16 @@ def find_code(name,event,fullname=false)
     if name2.to_i.to_s==name2 && name2.to_i<=@codes[-1][0] && name2.to_i>0
       return @codes[@codes.find_index{|q| q[0]==name2.to_i}]
     end
+  elsif name[0,4].downcase=='cmd-'
+    name2=name[4,name.length-4]
+    if name2.to_i.to_s==name2 && name2.to_i<=@codes[-1][0] && name2.to_i>0
+      return @codes[@codes.find_index{|q| q[0]==name2.to_i}]
+    end
+  elsif name[0,3].downcase=='cmd'
+    name2=name[3,name.length-3]
+    if name2.to_i.to_s==name2 && name2.to_i<=@codes[-1][0] && name2.to_i>0
+      return @codes[@codes.find_index{|q| q[0]==name2.to_i}]
+    end
   end
   name=name.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')
   return [] if name.length<2
@@ -641,9 +660,17 @@ def find_clothes(name,event,fullname=false)
   return [] if name.length<2
   k=@clothes.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return @clothes[k] unless k.nil?
+  nicknames_load()
+  alz=@aliases.reject{|q| q[0]!='Clothes'}.map{|q| [q[1],q[2],q[3]]}
+  g=0
+  g=event.server.id unless event.server.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
+  return @clothes[@clothes.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   return [] if fullname
   k=@clothes.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @clothes[k] unless k.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && (q[2].nil? || q[2].include?(g))}
+  return @clothes[@clothes.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   return []
 end
 
@@ -2092,7 +2119,9 @@ def disp_aliases(bot,event,args=nil,mode=0)
     elsif find_data_ex(:find_skill,args.join(''),event).length>0
     elsif find_data_ex(:find_ce,args.join(''),event).length>0
     elsif find_data_ex(:find_mat,args.join(''),event).length>0
-    elsif has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars','skill','skills','skil','skils','ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances','mat','mats','materials','material'])
+    elsif find_data_ex(:find_clothes,args.join(''),event).length>0
+    elsif find_data_ex(:find_code,args.join(''),event).length>0
+    elsif has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars','skill','skills','skil','skils','ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances','mat','mats','materials','material','mysticcode','mystic_code','mystic-code','mysticode','mystic','mysticcodes','mystic_codes','mystic-codes','mysticodes','mystics','clothes','clothing','commandcode','command_code','command-code','command','commandcodes','command_codes','command-codes','commands'])
     else
       event.respond "#{args.join(' ')} is not a servant/skill/CE/material name or an alias."
       return nil
@@ -2106,11 +2135,14 @@ def disp_aliases(bot,event,args=nil,mode=0)
   ce=nil if ce.length<=0 || args.length.zero?
   mat=find_data_ex(:find_mat,args.join(''),event)
   mat=nil if mat.length<=0 || args.length.zero?
-  puts mat.to_s
+  cloth=find_data_ex(:find_clothes,args.join(''),event)
+  cloth=nil if cloth.length<=0 || args.length.zero?
+  ccode=find_data_ex(:find_code,args.join(''),event)
+  ccode=nil if ccode.length<=0 || args.length.zero?
   f=[]
   n=@aliases.reject{|q| q[0]!='Servant'}.map{|q| [q[1],q[2],q[3]]}
   h=''
-  if unit.nil? && skl.nil? && ce.nil? && mat.nil?
+  if unit.nil? && skl.nil? && ce.nil? && mat.nil? && cloth.nil? && ccode.nil?
     if has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars'])
       n=n.reject{|q| q[2].nil?} if mode==1
       msg='__**Servant Aliases**__'
@@ -2162,6 +2194,25 @@ def disp_aliases(bot,event,args=nil,mode=0)
       end
       event.respond msg
       return nil
+    elsif has_any?(args,['mysticcode','mystic_code','mystic-code','mysticode','mystic','mysticcodes','mystic_codes','mystic-codes','mysticodes','mystics','clothes','clothing'])
+      msg='__**Mystic Code** (Clothing) **Aliases**__'
+      n=@aliases.reject{|q| !['Clothes'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+      n=n.reject{|q| q[2].nil?} if mode==1
+      for i in 0...n.length
+        msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+      end
+      event.respond msg
+      return nil
+    elsif has_any?(args,['commandcode','command_code','command-code','command','commandcodes','command_codes','command-codes','commands'])
+      msg='__**Command Code Aliases**__'
+      n=@aliases.reject{|q| q[0]!='Command'}.map{|q| [q[1],q[2],q[3]]}
+      n=n.reject{|q| q[2].nil?} if mode==1
+      for i in 0...n.length
+        untnme=@codes[@codes.find_index{|q| q[0]==n[i][1]}][1]
+        msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Cmd-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+      end
+      event.respond msg
+      return nil
     elsif safe_to_spam?(event) || mode==1
       n=n.reject{|q| q[2].nil?} if mode==1
       unless event.server.nil?
@@ -2209,6 +2260,19 @@ def disp_aliases(bot,event,args=nil,mode=0)
         for i in 0...n.length
           msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
         end
+        msg=extend_message(msg,'__**Mystic Code** (Clothing) **Aliases**__',event,2)
+        n=@aliases.reject{|q| !['Clothes'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+        n=n.reject{|q| q[2].nil?} if mode==1
+        for i in 0...n.length
+          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+        end
+        msg=extend_message(msg,'__**Command Code Aliases**__',event,2)
+        n=@aliases.reject{|q| q[0]!='Command'}.map{|q| [q[1],q[2],q[3]]}
+        n=n.reject{|q| q[2].nil?} if mode==1
+        for i in 0...n.length
+          untnme=@codes[@codes.find_index{|q| q[0]==n[i][1]}][1]
+          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Cmd-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+        end
         event.respond msg
         return nil
       end
@@ -2230,7 +2294,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
         end
       end
-      f.push("\n__**Skill Aliases*__")
+      f.push("\n__**Skill Aliases**__")
       n=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
       for i in 0...n.length
         if n[i][2].nil?
@@ -2267,7 +2331,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
         end
       end
-      f.push("\n__**Material Aliases*__")
+      f.push("\n__**Material Aliases**__")
       n=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
       for i in 0...mmkk.length
         n.push(["#{mmkk[i]} Gem","Gem of #{mmkk[i]}"])
@@ -2297,6 +2361,43 @@ def disp_aliases(bot,event,args=nil,mode=0)
             end
           end
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        end
+      end
+      f.push("\n__**Mystic Code** (Clothing) **Aliases**__")
+      n=@aliases.reject{|q| !['Clothes'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+      for i in 0...n.length
+        if n[i][2].nil?
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
+        elsif !event.server.nil? && n[i][2].include?(event.server.id)
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        else
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        end
+      end
+      f.push("\n__**Command Code Aliases**__")
+      n=@aliases.reject{|q| q[0]!='Command'}.map{|q| [q[1],q[2],q[3]]}
+      for i in 0...n.length
+        untnme=@codes[@codes.find_index{|q| q[0]==n[i][1]}][1]
+        if n[i][2].nil?
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]")
+        elsif !event.server.nil? && n[i][2].include?(event.server.id)
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        else
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}] (in the following servers: #{list_lift(a,'and')})") if a.length>0
         end
       end
     else
@@ -2393,6 +2494,50 @@ def disp_aliases(bot,event,args=nil,mode=0)
     n=@aliases.reject{|q| q[0]!='Material' || q[2]!=mat}.map{|q| [q[1],q[2],q[3]]}
     for i in 0...n.length
       if n[i][1]==mat
+        if event.server.nil? && !n[i][2].nil?
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\\_')} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        elsif n[i][2].nil?
+          f.push(n[i][0].gsub('_','\\_')) unless mode==1
+        else
+          f.push("#{n[i][0].gsub('_','\\_')}#{" *(in this server only)*" unless mode==1}") if n[i][2].include?(k)
+        end
+      end
+    end
+  elsif !cloth.nil?
+    n=@aliases.reject{|q| !['Clothes'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+    f.push("__**#{cloth[0]}**__#{"'s server-specific aliases" if mode==1}")
+    f.push(cloth[0].gsub(' ','').gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')) if cloth[0].include?('(') || cloth[0].include?(')') || cloth[0].include?(' ') || cloth[0].include?('!') || cloth[0].include?('_') || cloth[0].include?('?') || cloth[0].include?("'") || cloth[0].include?('"')
+    for i in 0...n.length
+      if n[i][1]==cloth[0]
+        if event.server.nil? && !n[i][2].nil?
+          a=[]
+          for j in 0...n[i][2].length
+            srv=(bot.server(n[i][2][j]) rescue nil)
+            unless srv.nil? || bot.user(bot.profile.id).on(srv.id).nil?
+              a.push("*#{bot.server(n[i][2][j]).name}*") unless event.user.on(n[i][2][j]).nil?
+            end
+          end
+          f.push("#{n[i][0].gsub('_','\\_')} (in the following servers: #{list_lift(a,'and')})") if a.length>0
+        elsif n[i][2].nil?
+          f.push(n[i][0].gsub('_','\\_')) unless mode==1
+        else
+          f.push("#{n[i][0].gsub('_','\\_')}#{" *(in this server only)*" unless mode==1}") if n[i][2].include?(k)
+        end
+      end
+    end
+  elsif !ccode.nil?
+    n=@aliases.reject{|q| q[0]!='Craft' || q[2]!=ccode[0]}.map{|q| [q[1],q[2],q[3]]}
+    f.push("__**#{ccode[1]}**__ [Cmd-##{ccode[0]}]#{"'s server-specific aliases" if mode==1}")
+    f.push(ccode[1].gsub(' ','').gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')) if ccode[1].include?('(') || ccode[1].include?(')') || ccode[1].include?(' ') || ccode[1].include?('!') || ccode[1].include?('_') || ccode[1].include?('?') || ccode[1].include?("'") || ccode[1].include?('"')
+    for i in 0...n.length
+      if n[i][1]==ccode[0]
         if event.server.nil? && !n[i][2].nil?
           a=[]
           for j in 0...n[i][2].length
@@ -3748,6 +3893,26 @@ bot.command(:snagstats) do |event, f, f2|
       str2="#{str2} - This server accounts for #{@aliases.reject{|q| q[0]!='Material' || q[3].nil? || !q[3].include?(event.server.id)}.length} of those."
     end
     str=extend_message(str,str2,event,2)
+    glbl=@aliases.reject{|q| q[0]!='Clothes' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    srv_spec=@aliases.reject{|q| q[0]!='Clothes' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    str2="**There are #{longFormattedNumber(glbl.length)} global Mystic Code (clothing) aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific Mystic Code (clothing) aliases.**"
+    if event.server.nil? && @shardizard==4
+    elsif event.server.nil?
+      str2="#{str2} - Servers you and I share account for #{@aliases.reject{|q| q[0]!='Clothes' || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those"
+    else
+      str2="#{str2} - This server accounts for #{@aliases.reject{|q| q[0]!='Clothes' || q[3].nil? || !q[3].include?(event.server.id)}.length} of those."
+    end
+    str=extend_message(str,str2,event,2)
+    glbl=@aliases.reject{|q| q[0]!='Command' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    srv_spec=@aliases.reject{|q| q[0]!='Command' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
+    str2="**There are #{longFormattedNumber(glbl.length)} global Command Code aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific Command Code aliases.**"
+    if event.server.nil? && @shardizard==4
+    elsif event.server.nil?
+      str2="#{str2} - Servers you and I share account for #{@aliases.reject{|q| q[0]!='Command' || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those"
+    else
+      str2="#{str2} - This server accounts for #{@aliases.reject{|q| q[0]!='Command' || q[3].nil? || !q[3].include?(event.server.id)}.length} of those."
+    end
+    str=extend_message(str,str2,event,2)
     event.respond str
     return nil
   elsif event.user.id==167657750971547648 && !f.nil? && f.to_i.to_s==f
@@ -3797,7 +3962,7 @@ def disp_date(t,mode=0)
   return "#{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year} (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]})"
 end
 
-bot.command(:today) do |event|
+bot.command([:today,:dalies,:daily,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event|
   msg=event.message.text.downcase.split(' ')
   jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
   mat_block=''
@@ -3916,7 +4081,7 @@ bot.command(:today) do |event|
   event.respond str
 end
 
-bot.command(:next) do |event|
+bot.command([:next,:schedule]) do |event|
   msg=event.message.text.downcase.split(' ')
   jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
   mat_block=''
@@ -4523,7 +4688,30 @@ bot.message do |event|
     puts event.message.text
     s=s[5,s.length-5]
   end
-  if m && !all_commands().include?(s.split(' ')[0])
+  str="#{s}"
+  if @shardizard==4 && (['fea!','fef!'].include?(str[0,4]) || ['fe13!','fe14!'].include?(str[0,5]) || ['fe!'].include?(str[0,3]))
+    str=str[4,str.length-4] if ['fea!','fef!'].include?(str[0,4])
+    str=str[5,str.length-5] if ['fe13!','fe14!'].include?(str[0,5])
+    str=str[3,str.length-3] if ['fe!'].include?(str[0,3])
+    a=str.split(' ')
+    if a[0].downcase=='reboot'
+      event.respond 'Becoming Robin.  Please wait approximately ten seconds...'
+      exec 'cd C:/Users/Mini-Matt/Desktop/devkit && feindex.rb 4'
+    else
+      event.respond 'I am not Robin right now.  Please use `FE!reboot` to turn me into Robin.'
+    end
+  elsif (['feh!','feh?'].include?(str[0,4]) || ['f?','e?','h?'].include?(str[0,2])) && @shardizard==4
+    s=event.message.text.downcase
+    s=s[2,s.length-2] if ['f?','e?','h?'].include?(event.message.text.downcase[0,2])
+    s=s[4,s.length-4] if ['feh!','feh?'].include?(event.message.text.downcase[0,4])
+    a=s.split(' ')
+    if a[0].downcase=='reboot'
+      event.respond "Becoming Elise.  Please wait approximately ten seconds..."
+      exec "cd C:/Users/Mini-Matt/Desktop/devkit && PriscillaBot.rb 4"
+    else
+      event.respond "I am not Elise right now.  Please use `FEH!reboot` to turn me into Elise."
+    end
+  elsif m && !all_commands().include?(s.split(' ')[0])
     if find_data_ex(:find_ce,s,event,true).length>0
       disp_ce_card(bot,event,s.split(' '))
     elsif find_data_ex(:find_servant,s,event,true).length>0
@@ -4585,6 +4773,7 @@ bot.ready do |event|
   system("color d#{"41260"[@shardizard,1]}")
   system("title #{['Man','Sky','Earth','Star','Beast'][@shardizard]} LizBot")
   bot.game='Fate/Grand Order'
+  bot.user(bot.profile.id).on(285663217261477889).nickname='LizBot (Debug)' if @shardizard==4
 end
 
 bot.run
