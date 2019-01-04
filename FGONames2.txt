@@ -1919,3 +1919,7 @@
 ["Servant", "SantaQuetz", 233]
 ["Servant", "SantaQuetzalcoatl", 233]
 ["Servant", "\u30B1\u30C4\u30A1\u30EB\uFF65\u30B3\u30A2\u30C8\u30EB\u3014\u30B5\u30F3\u30D0\uFF0F\u30B5\u30F3\u30BF\u3015", 233]
+["Servant", "Beni", 234]
+["Servant", "Enma", 234]
+["Servant", "Fae", 234, [330850148261298176]]
+["Servant", "GordonRamsay", 234, [330850148261298176]]
