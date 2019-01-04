@@ -313,7 +313,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
   elsif ['bugreport','suggestion','feedback'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __*message__",'PMs my developer with your username, the server, and the contents of the message `message`',0xED619A)
   elsif command.downcase=='addalias'
-    create_embed(event,'**addalias** __new alias__ __servant__',"Adds `new alias` to `servant`'s aliases.\nIf the arguments are listed in the opposite order, the command will auto-switch them.\n\nInforms you if the alias already belongs to someone.\nAlso informs you if the servant you wish to give the alias to does not exist.\n\n**This command is only able to be used by server mods**.",0xC31C19)
+    create_embed(event,'**addalias** __new alias__ __name__',"Adds `new alias` to `name`'s aliases.\nIf the arguments are listed in the opposite order, the command will auto-switch them.\n\nAliases can be added to:\n- Servants\n- Skills (Active, Passive, or Clothing skills)\n- Craft Essances\n- Ascension/Skill Enhancement Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nInforms you if the alias already belongs to someone/something.\nAlso informs you if the servant you wish to give the alias to does not exist.\n\n**This command is only able to be used by server mods**.",0xC31C19)
   elsif ['deletealias','removealias'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __alias__","Removes `alias` from the list of aliases, regardless of who it was for.\n\n**This command is only able to be used by server mods**.",0xC31C19)
   elsif ['backupaliases'].include?(command.downcase)
@@ -415,7 +415,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
   elsif ['sort','list'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
   elsif ['aliases','checkaliases','seealiases'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __servant__","Responds with a list of all `servant`'s aliases.\nIf no servant is listed, responds with a list of all aliases and who they are for.\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+    create_embed(event,"**#{command.downcase}** __name__","Responds with a list of all `name`'s aliases.\nIf no name is listed, responds with a list of all aliases and who/what they are for.\n\nAliases can be added to:\n- Servants\n- Skills (Active, Passive, or Clothing skills)\n- Craft Essances\n- Ascension/Skill Enhancement Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif command.downcase=='snagstats'
     subcommand='' if subcommand.nil?
     if ['server','servers','member','members','shard','shards','users','user'].include?(subcommand.downcase)
@@ -3278,13 +3278,13 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
         @aliases[i][3]=nil
         @aliases[i][4]=nil
         @aliases[i].compact!
-        bot.channel(chn).send_message("The alias #{newname} for #{dispstr[1]} exists in a server already.  Making it global now.")
+        bot.channel(chn).send_message("The alias **#{newname}** for the #{dispstr[2].downcase} *#{dispstr[1]}* exists in a server already.  Making it global now.")
         event.respond "The alias #{newname} for #{dispstr[1]} exists in a server already.  Making it global now.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
         bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]} - gone global.")
         double=true
       else
         @aliases[i][3].push(srv)
-        bot.channel(chn).send_message("The alias #{newname} for #{dispstr[1]} exists in another server already.  Adding this server to those that can use it.")
+        bot.channel(chn).send_message("The alias **#{newname}** for the #{dispstr[2].downcase} *#{dispstr[1]}* exists in another server already.  Adding this server to those that can use it.")
         event.respond "The alias #{newname} for #{dispstr[1]} exists in another server already.  Adding this server to those that can use it.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
         metadata_load()
         bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the #{type[1]} **#{dispstr[1]}** is used in quite a few servers.  It might be time to make this global") if @aliases[i][2].length >= @server_data[0].inject(0){|sum,x| sum + x } / 20 && @aliases[i][2].length>=5 && @aliases[i][3].nil?
@@ -3296,7 +3296,7 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
   unless double
     @aliases.push([dispstr[0],newname,dispstr[3],m].compact)
     @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
-    bot.channel(chn).send_message("#{newname} has been added to #{dispstr[1]}'s aliases#{" globally" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?}.\nPlease test to be sure that the alias stuck.")
+    bot.channel(chn).send_message("**#{newname}** has been#{" globally" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?} added to the aliases for the #{dispstr[2].downcase} *#{dispstr[1]}*.\nPlease test to be sure that the alias stuck.")
     event.respond "#{newname} has been added to #{dispstr[1]}'s aliases#{" globally" if event.user.id==167657750971547648 && !modifier.nil?}." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
     bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]}#{" - global alias" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?}")
   end
@@ -3405,6 +3405,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
   @aliases.uniq!
   @aliases.compact!
   logchn=502288368777035777
+  logchn=431862993194582036 if @shardizard==4
   srv=0
   srv=event.server.id unless event.server.nil?
   srvname='PM with dev'
@@ -4779,7 +4780,7 @@ bot.message do |event|
     if a[0].downcase=='reboot'
       event.respond 'Becoming Robin.  Please wait approximately ten seconds...'
       exec 'cd C:/Users/Mini-Matt/Desktop/devkit && feindex.rb 4'
-    else
+    elsif event.server.nil? || event.server.id==285663217261477889
       event.respond 'I am not Robin right now.  Please use `FE!reboot` to turn me into Robin.'
     end
   elsif (['feh!','feh?'].include?(str[0,4]) || ['f?','e?','h?'].include?(str[0,2])) && @shardizard==4
@@ -4790,7 +4791,7 @@ bot.message do |event|
     if a[0].downcase=='reboot'
       event.respond "Becoming Elise.  Please wait approximately ten seconds..."
       exec "cd C:/Users/Mini-Matt/Desktop/devkit && PriscillaBot.rb 4"
-    else
+    elsif event.server.nil? || event.server.id==285663217261477889
       event.respond "I am not Elise right now.  Please use `FEH!reboot` to turn me into Elise."
     end
   elsif m && !all_commands().include?(s.split(' ')[0])
