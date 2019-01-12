@@ -922,6 +922,7 @@ end
 
 def servant_icon(k,event)
   return "https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Alice.png" if k[0]==74 && event.user.id==167657750971547648
+  return "https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Alice.png" if k[0]==74 && rand(100)<5
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
