@@ -35,7 +35,6 @@ bot.gateway.check_heartbeat_acks = false
 @clothes=[]
 @enemies=[]
 @aliases=[]
-@embedless=[]
 @spam_channels=[[],[]]
 @server_data=[]
 @ignored=[]
@@ -43,7 +42,7 @@ bot.gateway.check_heartbeat_acks = false
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
-  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985].include?(event.server.id) # it is safe to spam in the emoji servers
+  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
   return true if ['bots','bot'].include?(chn.name.downcase) # channels named "bots" are safe to spam in
   return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
@@ -282,12 +281,14 @@ def nicknames_load(mode=1)
 end
 
 bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
+  return nil if overlap_prevent(event)
   return nil unless event.user.id==167657750971547648 # only work when used by the developer
   puts 'FGO!reboot'
   exec "cd C:/Users/Mini-Matt/Desktop/devkit && LizBot.rb #{@shardizard}"
 end
 
 bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, command, subcommand|
+  return nil if overlap_prevent(event)
   command='' if command.nil?
   subcommand='' if subcommand.nil?
   k=0
@@ -446,6 +447,17 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     event.user.pm("If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name") if x==1
     event.respond "A PM has been sent to you.\nIf you would like to show the help list in this channel, please use the command `FGO!help here`." if x==1
   end
+end
+
+def overlap_prevent(event) # used to prevent servers with both Elise and her debug form from receiving two replies
+  if event.server.nil? # failsafe code catching PMs as not a server
+    return false
+  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id)
+    return @shardizard != 4 # the debug bot can be forced to be used in the emoji servers by including the word "debug" in your message
+  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) # emoji servers will use default Elise otherwise
+    return @shardizard == 4
+  end
+  return false
 end
 
 def all_commands(include_nil=false,permissions=-1)
@@ -3127,6 +3139,7 @@ def sort_servants(bot,event,args=nil)
 end
 
 bot.command([:skill,:skil]) do |event, *args|
+  return nil if overlap_prevent(event)
   if ['find','search'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args)
@@ -3136,10 +3149,12 @@ bot.command([:skill,:skil]) do |event, *args|
 end
 
 bot.command([:sort,:list]) do |event, *args|
+  return nil if overlap_prevent(event)
   sort_servants(bot,event,args)
 end
 
 bot.command([:find,:search]) do |event, *args|
+  return nil if overlap_prevent(event)
   if ['skill','skills','skil','skils'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args)
@@ -3153,6 +3168,7 @@ bot.command([:find,:search]) do |event, *args|
 end
 
 bot.command([:embeds,:embed]) do |event|
+  return nil if overlap_prevent(event)
   metadata_load()
   if @embedless.include?(event.user.id)
     for i in 0...@embedless.length
@@ -3169,6 +3185,7 @@ bot.command([:embeds,:embed]) do |event|
 end
 
 bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
+  return nil if overlap_prevent(event)
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
     event << '**Useful tools for players of** ***Fate/Grand Order***'
     event << '__Download the game__'
@@ -3208,6 +3225,7 @@ bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
 end
 
 bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
+  return nil if overlap_prevent(event)
   data_load()
   nicknames_load()
   if newname.nil? || unit.nil?
@@ -3366,7 +3384,7 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
   double=false
   for i in 0...@aliases.length
     if @aliases[i][3].nil?
-    elsif @aliases[i][1].downcase==newname.downcase && @aliases[i][2]==unit
+    elsif @aliases[i][1].downcase==newname.downcase && @aliases[i][2]==dispstr[3]
       if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?
         @aliases[i][3]=nil
         @aliases[i][4]=nil
@@ -3380,7 +3398,7 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
         bot.channel(chn).send_message("The alias **#{newname}** for the #{dispstr[2].downcase} *#{dispstr[1]}* exists in another server already.  Adding this server to those that can use it.")
         event.respond "The alias #{newname} for #{dispstr[1]} exists in another server already.  Adding this server to those that can use it.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
         metadata_load()
-        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the #{type[1]} **#{dispstr[1]}** is used in quite a few servers.  It might be time to make this global") if @aliases[i][2].length >= @server_data[0].inject(0){|sum,x| sum + x } / 20 && @aliases[i][2].length>=5 && @aliases[i][3].nil?
+        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the #{type[1]} **#{dispstr[1]}** is used in quite a few servers.  It might be time to make this global") if @aliases[i][3].length >= @server_data[0].inject(0){|sum,x| sum + x } / 20 && @aliases[i][3].length>=5 && @aliases[i][4].nil?
         bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]} - gained a new server that supports it.")
         double=true
       end
@@ -3416,14 +3434,17 @@ bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
 end
 
 bot.command([:checkaliases,:aliases,:seealiases]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_aliases(bot,event,args)
 end
 
 bot.command([:serveraliases,:saliases]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_aliases(bot,event,args,1)
 end
 
 bot.command([:deletealias,:removealias]) do |event, name|
+  return nil if overlap_prevent(event)
   nicknames_load()
   if name.nil?
     event.respond "I can't delete nothing!" if name.nil?
@@ -3526,6 +3547,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
 end
 
 bot.command([:servant,:data,:unit]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_servant_stats(bot,event,args)
   disp_servant_skills(bot,event,args,true)
   if safe_to_spam?(event)
@@ -3538,11 +3560,13 @@ bot.command([:servant,:data,:unit]) do |event, *args|
 end
 
 bot.command([:stats,:stat]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_servant_stats(bot,event,args)
   return nil
 end
 
 bot.command([:traits,:trait]) do |event, *args|
+  return nil if overlap_prevent(event)
   name=args.join(' ')
   if find_data_ex(:find_servant,name,event,true).length>0
     disp_servant_traits(bot,event,args)
@@ -3558,6 +3582,7 @@ bot.command([:traits,:trait]) do |event, *args|
 end
 
 bot.command([:art,:artist]) do |event, *args|
+  return nil if overlap_prevent(event)
   event.channel.send_temporary_message('Calculating data, please wait...',1)
   name=args.join(' ')
   if find_data_ex(:find_servant,name,event,true).length>0
@@ -3575,16 +3600,19 @@ bot.command([:art,:artist]) do |event, *args|
 end
 
 bot.command([:riyo,:Riyo]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_servant_art(bot,event,args,true)
   return nil
 end
 
 bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_servant_np(bot,event,args)
   return nil
 end
 
-bot.command([:ce,:CE,:craft,:essance,:craftessance]) do |event, *args|
+bot.command([:ce,:CE,:cE,:Ce,:craft,:essance,:craftessance]) do |event, *args|
+  return nil if overlap_prevent(event)
   if ['find','search'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args,true)
@@ -3605,6 +3633,7 @@ bot.command([:ce,:CE,:craft,:essance,:craftessance]) do |event, *args|
 end
 
 bot.command([:valentines,:valentine,:valentinesce,:cevalentines,:valentinece,:cevalentine,:chocolate]) do |event, *args|
+  return nil if overlap_prevent(event)
   name=args.join(' ')
   if find_data_ex(:find_servant,name,event,true).length>0
     disp_servant_ce2(bot,event,args)
@@ -3616,10 +3645,12 @@ bot.command([:valentines,:valentine,:valentinesce,:cevalentines,:valentinece,:ce
 end
 
 bot.command([:command,:commandcode]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_code_data(bot,event,args)
 end
 
 bot.command([:code]) do |event, *args|
+  return nil if overlap_prevent(event)
   name=args.join(' ')
   if find_data_ex(:find_clothes,name,event,true).length>0
     disp_clothing_data(bot,event,args)
@@ -3635,25 +3666,30 @@ bot.command([:code]) do |event, *args|
 end
 
 bot.command([:mysticcode,:mysticode,:mystic,:clothes,:clothing]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_clothing_data(bot,event,args)
 end
 
 bot.command([:bond,:bondce,:bondCE]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_servant_ce(bot,event,args,false,true)
   return nil
 end
 
 bot.command([:mats,:ascension,:enhancement,:enhance,:materials]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_servant_mats(bot,event,args)
   return nil
 end
 
 bot.command([:mat,:material]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_mat_data(bot,event,args)
   return nil
 end
 
 bot.command([:skills,:skils]) do |event, *args|
+  return nil if overlap_prevent(event)
   if ['find','search'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args)
@@ -3664,16 +3700,18 @@ bot.command([:skills,:skils]) do |event, *args|
 end
 
 bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args|
+  return nil if overlap_prevent(event)
   disp_tiny_stats(bot,event,args)
   return nil
 end
 
 bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, f|
+  return nil if overlap_prevent(event)
   f='' if f.nil?
   metadata_load()
   if event.server.nil?
     event.respond 'It is safe for me to send long replies here because this is my PMs with you.'
-  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985].include?(event.server.id)
+  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id)
     event.respond 'It is safe for me to send long replies here because this is one of my emoji servers.'
   elsif @shardizard==4
     event.respond 'It is safe for me to send long replies here because this is my debug mode.'
@@ -3748,6 +3786,7 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
 end
 
 bot.command([:channellist,:chanelist,:spamchannels,:spamlist]) do |event|
+  return nil if overlap_prevent(event)
   if event.server.nil?
     event.respond "Yes, it is safe to spam here."
     return nil
@@ -3772,14 +3811,17 @@ bot.command([:channellist,:chanelist,:spamchannels,:spamlist]) do |event|
 end
 
 bot.command([:bugreport, :suggestion, :feedback]) do |event, *args|
+  return nil if overlap_prevent(event)
   bug_report(bot,event,args,4,['Man','Sky','Earth','Star','Beast'],'Attribute',@prefix,502288368777035777)
 end
 
 bot.command([:donation, :donate]) do |event, uid|
+  return nil if overlap_prevent(event)
   donor_embed(bot,event,"I also do not currently play FGO myself, but would consider it if I had an account with ~~Alice~~ Nursery Rhyme.  She is adorable and I love her.")
 end
 
 bot.command(:invite) do |event, user|
+  return nil if overlap_prevent(event)
   usr=event.user
   txt="**You can invite me to your server with this link: <https://goo.gl/ox9CxB>**\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/MarketingLiz.png"
   user_to_name="you"
@@ -3799,6 +3841,7 @@ bot.command(:invite) do |event, user|
 end
 
 bot.command([:shard,:attribute]) do |event, i|
+  return nil if overlap_prevent(event)
   if i.to_i.to_s==i && i.to_i.is_a?(Integer) && @shardizard != 4
     srv=(bot.server(i.to_i) rescue nil)
     if srv.nil? || bot.user(502288364838322176).on(srv.id).nil?
@@ -3814,6 +3857,7 @@ bot.command([:shard,:attribute]) do |event, i|
 end
 
 bot.command(:sortaliases, from: 167657750971547648) do |event, *args|
+  return nil if overlap_prevent(event)
   return nil unless event.user.id==167657750971547648
   data_load()
   nicknames_load()
@@ -3828,12 +3872,14 @@ bot.command(:sortaliases, from: 167657750971547648) do |event, *args|
 end
 
 bot.command(:status, from: 167657750971547648) do |event, *args|
+  return nil if overlap_prevent(event)
   return nil unless event.user.id==167657750971547648
   bot.game=args.join(' ')
   event.respond 'Status set.'
 end
 
 bot.command(:backupaliases, from: 167657750971547648) do |event|
+  return nil if overlap_prevent(event)
   return nil unless event.user.id==167657750971547648 || event.channel.id==386658080257212417
   nicknames_load()
   nzz=nicknames_load(2)
@@ -3855,6 +3901,7 @@ bot.command(:backupaliases, from: 167657750971547648) do |event|
 end
 
 bot.command(:restorealiases, from: 167657750971547648) do |event|
+  return nil if overlap_prevent(event)
   return nil unless [167657750971547648,bot.profile.id].include?(event.user.id) || event.channel.id==502288368777035777
   bot.gateway.check_heartbeat_acks = false
   if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
@@ -3889,22 +3936,27 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
 end
 
 bot.command(:sendmessage, from: 167657750971547648) do |event, channel_id, *args| # sends a message to a specific channel
+  return nil if overlap_prevent(event)
   dev_message(bot,event,channel_id)
 end
 
 bot.command(:sendpm, from: 167657750971547648) do |event, user_id, *args| # sends a PM to a specific user
+  return nil if overlap_prevent(event)
   dev_pm(bot,event,user_id)
 end
 
 bot.command(:ignoreuser, from: 167657750971547648) do |event, user_id| # causes Liz to ignore the specified user
+  return nil if overlap_prevent(event)
   bliss_mode(bot,event,user_id)
 end
 
 bot.command(:leaveserver, from: 167657750971547648) do |event, server_id| # forces Liz to leave a server
+  return nil if overlap_prevent(event)
   walk_away(bot,event,server_id)
 end
 
 bot.command(:cleanupaliases, from: 167657750971547648) do |event|
+  return nil if overlap_prevent(event)
   event.channel.send_temporary_message('Please wait...',10)
   return nil unless event.user.id==167657750971547648 # only work when used by the developer
   nicknames_load()
@@ -3940,6 +3992,7 @@ bot.command(:cleanupaliases, from: 167657750971547648) do |event|
 end
 
 bot.command(:snagstats) do |event, f, f2|
+  return nil if overlap_prevent(event)
   nicknames_load()
   data_load()
   metadata_load()
@@ -4139,6 +4192,7 @@ def disp_date(t,mode=0)
 end
 
 bot.command([:today,:dalies,:daily,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event|
+  return nil if overlap_prevent(event)
   msg=event.message.text.downcase.split(' ')
   jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
   mat_block=''
@@ -4258,6 +4312,7 @@ bot.command([:today,:dalies,:daily,:todayinfgo,:todayinFGO,:todayInFGO,:today_in
 end
 
 bot.command([:next,:schedule]) do |event|
+  return nil if overlap_prevent(event)
   msg=event.message.text.downcase.split(' ')
   jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
   mat_block=''
@@ -4643,8 +4698,8 @@ bot.server_create do |event|
     end
     chn=chnn[0] if chnn.length>0
   end
-  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985].include?(event.server.id) && @shardizard==4
-    (chn.send_message("I am Mathoo's personal debug bot.  As such, I do not belong here.  You may be looking for one of my two facets, so I'll drop both their invite links here.\n\n**EliseBot** allows you to look up stats and skill data for characters in *Fire Emblem: Heroes*\nHere's her invite link: <https://goo.gl/HEuQK2>\n\n**FEIndex**, also known as **RobinBot**, is for *Fire Emblem: Awakening* and *Fire Emblem Fates*.\nHere's her invite link: <https://goo.gl/v3ADBG>") rescue nil)
+  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) && @shardizard==4
+    (chn.send_message(get_debug_leave_message()) rescue nil)
     event.server.leave
   else
     bot.user(167657750971547648).pm("Joined server **#{event.server.name}** (#{event.server.id})\nOwner: #{event.server.owner.distinct} (#{event.server.owner.id})\nAssigned the #{['Man','Sky','Earth','Star'][(event.server.id >> 22) % 4]} attribute")
@@ -4887,6 +4942,17 @@ bot.message do |event|
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond "I am not Elise right now.  Please use `FEH!reboot` to turn me into Elise."
     end
+  elsif ['dl!','dl?'].include?(str[0,3]) && @shardizard==4
+    s=event.message.text.downcase
+    s=s[3,s.length-3]
+    a=s.split(' ')
+    if a[0].downcase=='reboot'
+      event.respond "Becoming Botan.  Please wait approximately ten seconds..."
+      exec "cd C:/Users/Mini-Matt/Desktop/devkit && BotanBot.rb 4"
+    elsif event.server.nil? || event.server.id==285663217261477889
+      event.respond "I am not Botan right now.  Please use `DL!reboot` to turn me into Botan."
+    end
+  elsif overlap_prevent(event)
   elsif m && !all_commands().include?(s.split(' ')[0])
     if find_data_ex(:find_ce,s,event,true).length>0
       disp_ce_card(bot,event,s.split(' '))
@@ -4935,6 +5001,14 @@ bot.message do |event|
 end
 
 bot.ready do |event|
+  if @shardizard==4
+    for i in 0...bot.servers.values.length
+      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(bot.servers.values[i].id)
+        bot.servers.values[i].general_channel.send_message(get_debug_leave_message()) rescue nil
+        bot.servers.values[i].leave
+      end
+    end
+  end
   system("color 4#{"CBAE7"[@shardizard,1]}")
   bot.game='loading, please wait...'
   metadata_load()
