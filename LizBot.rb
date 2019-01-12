@@ -449,7 +449,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
   end
 end
 
-def overlap_prevent(event) # used to prevent servers with both Elise and her debug form from receiving two replies
+def overlap_prevent(event) # used to prevent servers with both Liz and her debug form from receiving two replies
   if event.server.nil? # failsafe code catching PMs as not a server
     return false
   elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id)
@@ -920,6 +920,14 @@ def servant_moji(bot,event,k,mode=0)
   return "#{clsmoji}#{deckmoji}#{k[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')}"
 end
 
+def servant_icon(k,event)
+  return "https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Alice.png" if k[0]==74 && event.user.id==167657750971547648
+  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
+  dispnum="0012" if k[0]<2
+  dispnum="0016" if k[0]==1.2
+  return "http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+end
+
 def disp_servant_stats(bot,event,args=nil)
   dispstr=event.message.text.downcase.split(' ')
   if dispstr.include?('tiny') || dispstr.include?('small') || dispstr.include?('smol') || dispstr.include?('micro') || dispstr.include?('little') || !safe_to_spam?(event)
@@ -952,10 +960,7 @@ def disp_servant_stats(bot,event,args=nil)
   flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*Atk* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*Atk* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*Atk* - #{longFormattedNumber(k[7][2])}  "]]
   flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
   flds.push(["Attack Parameters","__**Hit Counts**__\n<:Quick_y:526556106986618880>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{k[9][2]}\n<:Blank:509232907555045386><:Extra_y:526556105388720130>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
-  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
-  dispnum="0012" if k[0]<2
-  dispnum="0016" if k[0]==1.2
-  xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+  xpic=servant_icon(k,event)
   ftr=nil
   ftr='You can include the word "Fou" to show the values with Fou modifiers' unless dispfou
   ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
@@ -1000,10 +1005,7 @@ def disp_tiny_stats(bot,event,args=nil)
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
   text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n#{servant_superclass(bot,event,k)}\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}<:holy_grail:523842742992764940>\n**Atk:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}<:holy_grail:523842742992764940>\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0<:Quick_y:526556106986618880>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{k[9][2]}  \u00B7  <:Extra_y:526556105388720130>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
-  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
-  dispnum="0012" if k[0]<2
-  dispnum="0016" if k[0]==1.2
-  xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+  xpic=servant_icon(k,event)
   ftr=nil
   ftr='You can include the word "Fou" to show the values with Fou modifiers' unless dispfou>0
   ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
@@ -1029,10 +1031,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
   text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
   text="#{text}\n~~**Gender:** *Effeminate*~~" if [10,94,143].include?(k[0])
-  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
-  dispnum="0012" if k[0]<2
-  dispnum="0016" if k[0]==1.2
-  xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+  xpic=servant_icon(k,event)
   ftr=nil
   unless chain
     ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
@@ -1137,10 +1136,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       passklz.push(str)
     end
   end
-  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
-  dispnum="0012" if k[0]<2
-  dispnum="0016" if k[0]==1.2
-  xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+  xpic=servant_icon(k,event)
   ftr=nil
   unless chain
     ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
@@ -1393,10 +1389,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   text='' if chain
-  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
-  dispnum="0012" if k[0]<2
-  dispnum="0016" if k[0]==1.2
-  xpic="http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+  xpic=servant_icon(k,event)
   if k[18][4].nil? && !k[18][5].nil?
     k[18][4]=k[18][5].map{|q| q}
     k[18][5]=nil
