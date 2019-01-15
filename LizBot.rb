@@ -415,7 +415,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     end
   elsif ['sort','list'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
-  elsif ['aliases','checkaliases','seealiases'].include?(command.downcase)
+  elsif ['aliases','checkaliases','seealiases','alias'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Responds with a list of all `name`'s aliases.\nIf no name is listed, responds with a list of all aliases and who/what they are for.\n\nAliases can be added to:\n- Servants\n- Skills (Active, Passive, or Clothing skills)\n- Craft Essances\n- Ascension/Skill Enhancement Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif ['saliases','serveraliases'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Responds with a list of all `name`'s server-specific aliases.\nIf no name is listed, responds with a list of all server-specific aliases and who/what they are for.\n\nAliases can be added to:\n- Servants\n- Skills (Active, Passive, or Clothing skills)\n- Craft Essances\n- Ascension/Skill Enhancement Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
@@ -2667,6 +2667,230 @@ def disp_aliases(bot,event,args=nil,mode=0)
   return nil
 end
 
+def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode=0)
+  data_load()
+  nicknames_load()
+  err=false
+  str=''
+  if newname.nil? || unit.nil?
+    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nYou must specify both:\n- one of the above\n- an alias you wish to give that item"
+    err=true
+  elsif event.user.id != 167657750971547648 && event.server.nil?
+    str='Only my developer is allowed to use this command in PM.'
+    err=true
+  elsif (!is_mod?(event.user,event.server,event.channel) && ![368976843883151362,195303206933233665].include?(event.user.id)) && event.channel.id != 502288368777035777
+    str='You are not a mod.'
+    err=true
+  elsif newname.include?('"') || newname.include?("\n")
+    str='Full stop.  " is not allowed in an alias.'
+    err=true
+  elsif !event.server.nil? && event.server.id==363917126978764801
+    err="You guys revoked your permission to add aliases when you refused to listen to me regarding the Erk alias for Serra.  Even if that was an alias for FEH instead of FGO."
+    str=true
+  end
+  if err
+    event.respond str if str.length>0 && mode==0
+    args=event.message.text.downcase.split(' ')
+    args.shift
+    disp_aliases(bot,event,args) if mode==1
+    return nil
+  end
+  type=['Alias','Alias']
+  if find_servant(newname,event,true).length>0
+    type[0]='Servant'
+  elsif find_skill(newname,event,true).length>0
+    type[0]='Skill'
+  elsif find_ce(newname,event,true).length>0
+    type[0]='CE'
+  elsif find_mat(newname,event,true).length>0
+    type[0]='Material'
+  elsif find_clothes(newname,event,true).length>0
+    type[0]='Clothes'
+  elsif find_code(newname,event,true).length>0
+    type[0]='Command'
+  elsif find_servant(newname,event).length>0
+    type[0]='Servant*'
+  elsif find_skill(newname,event).length>0
+    type[0]='Skill*'
+  elsif find_ce(newname,event).length>0
+    type[0]='CE*'
+  elsif find_mat(newname,event).length>0
+    type[0]='Material*'
+  elsif find_clothes(newname,event).length>0
+    type[0]='Clothes*'
+  elsif find_code(newname,event).length>0
+    type[0]='Command*'
+  end
+  if find_servant(unit,event,true).length>0
+    type[1]='Servant'
+  elsif find_skill(unit,event,true).length>0
+    type[1]='Skill'
+  elsif find_ce(unit,event,true).length>0
+    type[1]='CE'
+  elsif find_mat(unit,event,true).length>0
+    type[1]='Material'
+  elsif find_clothes(unit,event,true).length>0
+    type[1]='Clothes'
+  elsif find_code(unit,event,true).length>0
+    type[1]='Command'
+  elsif find_servant(unit,event).length>0
+    type[1]='Servant*'
+  elsif find_skill(unit,event).length>0
+    type[1]='Skill*'
+  elsif find_ce(unit,event).length>0
+    type[1]='CE*'
+  elsif find_mat(unit,event).length>0
+    type[1]='Material*'
+  elsif find_clothes(unit,event).length>0
+    type[1]='Clothes*'
+  elsif find_code(unit,event).length>0
+    type[1]='Command*'
+  end
+  checkstr=normalize(newname)
+  if type.reject{|q| q != 'Alias'}.length<=0
+    type[0]='Alias' if type[0].include?('*')
+    type[1]='Alias' if type[1].include?('*') && type[0]!='Alias'
+  end
+  if type.reject{|q| q == 'Alias'}.length<=0
+    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nNeither #{newname} nor #{unit} fall into any of these categories."
+    err=true
+  elsif type.reject{|q| q != 'Alias'}.length<=0
+    event.respond "#{newname} is a #{type[0].downcase}\n#{unit} is a #{type[1].downcase}"
+    err=true
+  end
+  if err
+    str=["#{str}\nPlease try again.","#{str}\nTrying to list aliases instead."][mode]
+    event.respond str if str.length>0
+    args=event.message.text.downcase.split(' ')
+    args.shift
+    list_unit_aliases(event,args,bot) if mode==1
+    return nil
+  end
+  if type[1]=='Alias' && type[0]!='Alias'
+    f="#{newname}"
+    newname="#{unit}"
+    unit="#{f}"
+    type=type.reverse.map{|q| q.gsub('*','')}
+  end
+  if type[1]=='Servant'
+    unit=find_servant(unit,event)
+    dispstr=['Servant',"#{unit[1]} [Srv-##{unit[0]}]",'Servant',unit[0]]
+  elsif type[1]=='Skill'
+    unit=find_skill(unit,event)
+    if unit[0].is_a?(Array) && unit.length<=1
+      dispstr=[unit[0][2],"#{unit[0][0]} #{unit[0][1]}",'Skill',"#{unit[0][0]} #{unit[0][1]}"]
+    elsif unit[0].is_a?(Array)
+      dispstr=[unit[0][2],"#{unit[0][0]}",'Skill',"#{unit[0][0]}"]
+    else
+      dispstr=[unit[2],"#{unit[0]} #{unit[1]}",'Skill',"#{unit[0]} #{unit[1]}"]
+    end
+    dispstr[2]='Active Skill' if dispstr[0]=='Skill'
+    dispstr[2]='Passive Skill' if dispstr[0]=='Passive'
+    dispstr[2]='Clothing Skill' if dispstr[0]=='Clothes'
+    dispstr[0]='Active' if dispstr[0]=='Skill'
+    dispstr[0]='ClothingSkill' if dispstr[0]=='Clothes'
+  elsif type[1]=='CE'
+    unit=find_ce(unit,event)
+    dispstr=['Craft',"#{unit[1]} [CE-##{unit[0]}]",'Craft Essance',unit[0]]
+  elsif type[1]=='Material'
+    unit=find_mat(unit,event)
+    dispstr=['Material',"#{unit}",'Material',unit]
+  elsif type[1]=='Clothes'
+    unit=find_clothes(unit,event)
+    dispstr=['Clothes',"#{unit[0]}",'Mytic Code',"#{unit[0]}"]
+  elsif type[1]=='Command'
+    unit=find_code(unit,event,true)
+    dispstr=['Command',"#{unit[1]} [Cmd-##{unit[0]}]",'Command Code',unit[0]]
+  end
+  logchn=502288368777035777
+  logchn=431862993194582036 if @shardizard==4
+  newname=newname.gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')
+  srv=0
+  srv=event.server.id unless event.server.nil?
+  srv=modifier.to_i if event.user.id==167657750971547648 && modifier.to_i.to_s==modifier
+  srvname='PM with dev'
+  srvname=bot.server(srv).name unless event.server.nil? && srv.zero?
+  checkstr=normalize(newname)
+  k=event.message.emoji
+  for i in 0...k.length
+    checkstr=checkstr.gsub("<:#{k[i].name}:#{k[i].id}>",k[i].name)
+  end
+  if checkstr.downcase =~ /(7|t)+?h+?(o|0)+?(7|t)+?/
+    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases.#{"\nhttps://cdn.discordapp.com/attachments/344355510281043969/514973942218227722/Storylineatroriaisagirlposing_c4361e8dc51f0451389bd016c9796bab.jpg" if unt[0]==99}"
+    bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]}~~\n**Reason for rejection:** Begone, alias.")
+    return nil
+  elsif checkstr.downcase =~ /n+?((i|1)+?|(e|3)+?)(b|g|8)+?(a|4|(e|3)+?r+?)+?/
+    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases."
+    bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** >Censored< for #{dispstr[1]}~~\n**Reason for rejection:** Begone, alias.")
+    return nil
+  end
+  newname=normalize(newname)
+  m=nil
+  m=[event.server.id] unless event.server.nil?
+  srv=0
+  srv=event.server.id unless event.server.nil?
+  srv=modifier.to_i if event.user.id==167657750971547648 && modifier.to_i.to_s==modifier
+  srvname='PM with dev'
+  srvname=bot.server(srv).name unless event.server.nil? && srv.zero?
+  if event.user.id==167657750971547648 && modifier.to_i.to_s==modifier
+    m=[modifier.to_i]
+    modifier=nil
+  end
+  chn=event.channel.id
+  chn=modifier2.to_i if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
+  m=nil if [167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) && !modifier.nil?
+  m=nil if event.channel.id==502288368777035777 && !modifier.nil?
+  double=false
+  for i in 0...@aliases.length
+    if @aliases[i][3].nil?
+    elsif @aliases[i][1].downcase==newname.downcase && @aliases[i][2]==dispstr[3]
+      if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?
+        @aliases[i][3]=nil
+        @aliases[i][4]=nil
+        @aliases[i].compact!
+        bot.channel(chn).send_message("The alias **#{newname}** for the #{dispstr[2].downcase} *#{dispstr[1]}* exists in a server already.  Making it global now.")
+        event.respond "The alias #{newname} for #{dispstr[1]} exists in a server already.  Making it global now.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
+        bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]} - gone global.")
+        double=true
+      else
+        @aliases[i][3].push(srv)
+        bot.channel(chn).send_message("The alias **#{newname}** for the #{dispstr[2].downcase} *#{dispstr[1]}* exists in another server already.  Adding this server to those that can use it.")
+        event.respond "The alias #{newname} for #{dispstr[1]} exists in another server already.  Adding this server to those that can use it.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
+        metadata_load()
+        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the #{type[1]} **#{dispstr[1]}** is used in quite a few servers.  It might be time to make this global") if @aliases[i][3].length >= @server_data[0].inject(0){|sum,x| sum + x } / 20 && @aliases[i][3].length>=5 && @aliases[i][4].nil?
+        bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]} - gained a new server that supports it.")
+        double=true
+      end
+    end
+  end
+  unless double
+    @aliases.push([dispstr[0],newname,dispstr[3],m].compact)
+    @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
+    bot.channel(chn).send_message("**#{newname}** has been#{" globally" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?} added to the aliases for the #{dispstr[2].downcase} *#{dispstr[1]}*.\nPlease test to be sure that the alias stuck.")
+    event.respond "#{newname} has been added to #{dispstr[1]}'s aliases#{" globally" if event.user.id==167657750971547648 && !modifier.nil?}." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
+    bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]}#{" - global alias" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?}")
+  end
+  @aliases.uniq!
+  nzzz=@aliases.map{|a| a}
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+    for i in 0...nzzz.length
+      f.puts "#{nzzz[i].to_s}#{"\n" if i<nzzz.length-1}"
+    end
+  }
+  nicknames_load()
+  nzz=nicknames_load(2)
+  nzzz=@aliases.map{|a| a}
+  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][2]>=nzz[nzz.length-1][2]
+    bot.channel(logchn).send_message('Alias list saved.')
+    open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
+      for i in 0...nzzz.length
+        f.puts "#{nzzz[i].to_s}#{"\n" if i<nzzz.length-1}"
+      end
+    }
+    bot.channel(logchn).send_message('Alias list has been backed up.')
+  end
+end
+
 def find_in_servants(bot,event,args=nil,mode=0)
   data_load()
   args=normalize(event.message.text.downcase).split(' ') if args.nil?
@@ -3220,210 +3444,13 @@ end
 
 bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
   return nil if overlap_prevent(event)
-  data_load()
-  nicknames_load()
-  if newname.nil? || unit.nil?
-    event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nYou must specify both:\n- one of the above\n- an alias you wish to give that item"
-    return nil
-  elsif event.user.id != 167657750971547648 && event.server.nil?
-    event.respond 'Only my developer is allowed to use this command in PM.'
-    return nil
-  elsif (!is_mod?(event.user,event.server,event.channel) && ![368976843883151362,195303206933233665].include?(event.user.id)) && event.channel.id != 502288368777035777
-    event.respond 'You are not a mod.'
-    return nil
-  elsif newname.include?('"') || newname.include?("\n")
-    event.respond 'Full stop.  " is not allowed in an alias.'
-    return nil
-  elsif !event.server.nil? && event.server.id==363917126978764801
-    event.respond "You guys revoked your permission to add aliases when you refused to listen to me regarding the Erk alias for Serra.  Even if that was an alias for FEH instead of FGO."
-    return nil
-  end
-  type=['Alias','Alias']
-  if find_servant(newname,event,true).length>0
-    type[0]='Servant'
-  elsif find_skill(newname,event,true).length>0
-    type[0]='Skill'
-  elsif find_ce(newname,event,true).length>0
-    type[0]='CE'
-  elsif find_mat(newname,event,true).length>0
-    type[0]='Material'
-  elsif find_clothes(newname,event,true).length>0
-    type[0]='Clothes'
-  elsif find_code(newname,event,true).length>0
-    type[0]='Command'
-  elsif find_servant(newname,event).length>0
-    type[0]='Servant*'
-  elsif find_skill(newname,event).length>0
-    type[0]='Skill*'
-  elsif find_ce(newname,event).length>0
-    type[0]='CE*'
-  elsif find_mat(newname,event).length>0
-    type[0]='Material*'
-  elsif find_clothes(newname,event).length>0
-    type[0]='Clothes*'
-  elsif find_code(newname,event).length>0
-    type[0]='Command*'
-  end
-  if find_servant(unit,event,true).length>0
-    type[1]='Servant'
-  elsif find_skill(unit,event,true).length>0
-    type[1]='Skill'
-  elsif find_ce(unit,event,true).length>0
-    type[1]='CE'
-  elsif find_mat(unit,event,true).length>0
-    type[1]='Material'
-  elsif find_clothes(unit,event,true).length>0
-    type[1]='Clothes'
-  elsif find_code(unit,event,true).length>0
-    type[1]='Command'
-  elsif find_servant(unit,event).length>0
-    type[1]='Servant*'
-  elsif find_skill(unit,event).length>0
-    type[1]='Skill*'
-  elsif find_ce(unit,event).length>0
-    type[1]='CE*'
-  elsif find_mat(unit,event).length>0
-    type[1]='Material*'
-  elsif find_clothes(unit,event).length>0
-    type[1]='Clothes*'
-  elsif find_code(unit,event).length>0
-    type[1]='Command*'
-  end
-  checkstr=normalize(newname)
-  if type.reject{|q| q != 'Alias'}.length<=0
-    type[0]='Alias' if type[0].include?('*')
-    type[1]='Alias' if type[1].include?('*') && type[0]!='Alias'
-  end
-  if type.reject{|q| q == 'Alias'}.length<=0
-    event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nNeither #{newname} nor #{unit} fall into any of these categories.  Please try again."
-    return nil
-  elsif type.reject{|q| q != 'Alias'}.length<=0
-    event.respond "#{newname} is a #{type[0].downcase}\n#{unit} is a #{type[1].downcase}\nPlease try again."
-    return nil
-  end
-  if type[1]=='Alias' && type[0]!='Alias'
-    f="#{newname}"
-    newname="#{unit}"
-    unit="#{f}"
-    type=type.reverse.map{|q| q.gsub('*','')}
-  end
-  if type[1]=='Servant'
-    unit=find_servant(unit,event)
-    dispstr=['Servant',"#{unit[1]} [Srv-##{unit[0]}]",'Servant',unit[0]]
-  elsif type[1]=='Skill'
-    unit=find_skill(unit,event)
-    if unit[0].is_a?(Array) && unit.length<=1
-      dispstr=[unit[0][2],"#{unit[0][0]} #{unit[0][1]}",'Skill',"#{unit[0][0]} #{unit[0][1]}"]
-    elsif unit[0].is_a?(Array)
-      dispstr=[unit[0][2],"#{unit[0][0]}",'Skill',"#{unit[0][0]}"]
-    else
-      dispstr=[unit[2],"#{unit[0]} #{unit[1]}",'Skill',"#{unit[0]} #{unit[1]}"]
-    end
-    dispstr[2]='Active Skill' if dispstr[0]=='Skill'
-    dispstr[2]='Passive Skill' if dispstr[0]=='Passive'
-    dispstr[2]='Clothing Skill' if dispstr[0]=='Clothes'
-    dispstr[0]='Active' if dispstr[0]=='Skill'
-    dispstr[0]='ClothingSkill' if dispstr[0]=='Clothes'
-  elsif type[1]=='CE'
-    unit=find_ce(unit,event)
-    dispstr=['Craft',"#{unit[1]} [CE-##{unit[0]}]",'Craft Essance',unit[0]]
-  elsif type[1]=='Material'
-    unit=find_mat(unit,event)
-    dispstr=['Material',"#{unit}",'Material',unit]
-  elsif type[1]=='Clothes'
-    unit=find_clothes(unit,event)
-    dispstr=['Clothes',"#{unit[0]}",'Mytic Code',"#{unit[0]}"]
-  elsif type[1]=='Command'
-    unit=find_code(unit,event,true)
-    dispstr=['Command',"#{unit[1]} [Cmd-##{unit[0]}]",'Command Code',unit[0]]
-  end
-  logchn=502288368777035777
-  logchn=431862993194582036 if @shardizard==4
-  newname=newname.gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')
-  srv=0
-  srv=event.server.id unless event.server.nil?
-  srv=modifier.to_i if event.user.id==167657750971547648 && modifier.to_i.to_s==modifier
-  srvname='PM with dev'
-  srvname=bot.server(srv).name unless event.server.nil? && srv.zero?
-  checkstr=normalize(newname)
-  k=event.message.emoji
-  for i in 0...k.length
-    checkstr=checkstr.gsub("<:#{k[i].name}:#{k[i].id}>",k[i].name)
-  end
-  if checkstr.downcase =~ /(7|t)+?h+?(o|0)+?(7|t)+?/
-    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases.#{"\nhttps://cdn.discordapp.com/attachments/344355510281043969/514973942218227722/Storylineatroriaisagirlposing_c4361e8dc51f0451389bd016c9796bab.jpg" if unt[0]==99}"
-    bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]}~~\n**Reason for rejection:** Begone, alias.")
-    return nil
-  elsif checkstr.downcase =~ /n+?((i|1)+?|(e|3)+?)(b|g|8)+?(a|4|(e|3)+?r+?)+?/
-    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases."
-    bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** >Censored< for #{dispstr[1]}~~\n**Reason for rejection:** Begone, alias.")
-    return nil
-  end
-  newname=normalize(newname)
-  m=nil
-  m=[event.server.id] unless event.server.nil?
-  srv=0
-  srv=event.server.id unless event.server.nil?
-  srv=modifier.to_i if event.user.id==167657750971547648 && modifier.to_i.to_s==modifier
-  srvname='PM with dev'
-  srvname=bot.server(srv).name unless event.server.nil? && srv.zero?
-  if event.user.id==167657750971547648 && modifier.to_i.to_s==modifier
-    m=[modifier.to_i]
-    modifier=nil
-  end
-  chn=event.channel.id
-  chn=modifier2.to_i if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
-  m=nil if [167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) && !modifier.nil?
-  m=nil if event.channel.id==502288368777035777 && !modifier.nil?
-  double=false
-  for i in 0...@aliases.length
-    if @aliases[i][3].nil?
-    elsif @aliases[i][1].downcase==newname.downcase && @aliases[i][2]==dispstr[3]
-      if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?
-        @aliases[i][3]=nil
-        @aliases[i][4]=nil
-        @aliases[i].compact!
-        bot.channel(chn).send_message("The alias **#{newname}** for the #{dispstr[2].downcase} *#{dispstr[1]}* exists in a server already.  Making it global now.")
-        event.respond "The alias #{newname} for #{dispstr[1]} exists in a server already.  Making it global now.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
-        bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]} - gone global.")
-        double=true
-      else
-        @aliases[i][3].push(srv)
-        bot.channel(chn).send_message("The alias **#{newname}** for the #{dispstr[2].downcase} *#{dispstr[1]}* exists in another server already.  Adding this server to those that can use it.")
-        event.respond "The alias #{newname} for #{dispstr[1]} exists in another server already.  Adding this server to those that can use it.\nPlease test to be sure that the alias stuck." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
-        metadata_load()
-        bot.user(167657750971547648).pm("The alias **#{@aliases[i][0]}** for the #{type[1]} **#{dispstr[1]}** is used in quite a few servers.  It might be time to make this global") if @aliases[i][3].length >= @server_data[0].inject(0){|sum,x| sum + x } / 20 && @aliases[i][3].length>=5 && @aliases[i][4].nil?
-        bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]} - gained a new server that supports it.")
-        double=true
-      end
-    end
-  end
-  unless double
-    @aliases.push([dispstr[0],newname,dispstr[3],m].compact)
-    @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
-    bot.channel(chn).send_message("**#{newname}** has been#{" globally" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?} added to the aliases for the #{dispstr[2].downcase} *#{dispstr[1]}*.\nPlease test to be sure that the alias stuck.")
-    event.respond "#{newname} has been added to #{dispstr[1]}'s aliases#{" globally" if event.user.id==167657750971547648 && !modifier.nil?}." if event.user.id==167657750971547648 && !modifier2.nil? && modifier2.to_i.to_s==modifier2
-    bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]}#{" - global alias" if ([167657750971547648,368976843883151362,195303206933233665].include?(event.user.id) || event.channel.id==502288368777035777) && !modifier.nil?}")
-  end
-  @aliases.uniq!
-  nzzz=@aliases.map{|a| a}
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
-    for i in 0...nzzz.length
-      f.puts "#{nzzz[i].to_s}#{"\n" if i<nzzz.length-1}"
-    end
-  }
-  nicknames_load()
-  nzz=nicknames_load(2)
-  nzzz=@aliases.map{|a| a}
-  if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][2]>=nzz[nzz.length-1][2]
-    bot.channel(logchn).send_message('Alias list saved.')
-    open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
-      for i in 0...nzzz.length
-        f.puts "#{nzzz[i].to_s}#{"\n" if i<nzzz.length-1}"
-      end
-    }
-    bot.channel(logchn).send_message('Alias list has been backed up.')
-  end
+  add_new_alias(bot,event,newname,unit,modifier,modifier2)
+  return nil
+end
+
+bot.command(:alias) do |event, newname, unit, modifier, modifier2|
+  return nil if overlap_prevent(event)
+  add_new_alias(bot,event,newname,unit,modifier,modifier2,1)
   return nil
 end
 
@@ -4990,6 +5017,14 @@ bot.message do |event|
       disp_mat_data(bot,event,s.split(' '))
     elsif find_data_ex(:find_enemy,s,event).length>0
       disp_enemy_traits(bot,event,s.split(' '))
+    end
+  elsif event.message.text.include?('0x4') && !event.user.bot_account? && @shardizard==4
+    s=event.message.text
+    s=remove_format(s,'```')              # remove large code blocks
+    s=remove_format(s,'`')                # remove small code blocks
+    s=remove_format(s,'~~')               # remove crossed-out text
+    if s=='0x4' || s[0,4]=='0x4 ' || s[s.length-4,4]==' 0x4' || s.include?(' 0x4 ')
+      event.respond "#{"#{event.user.mention} " unless event.server.nil?}I am not Elise right now, but I have responded in case you're checking my response time."
     end
   end
 end
