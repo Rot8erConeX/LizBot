@@ -25,3 +25,4 @@
 25\Demonic Beast of the Forest Region\3\Inflict Curse (500 damage, 3 turns)\New Year 2019(JP)/2021(NA)
 26\Mirror of Eight Leaves\4\Apply Nullify Stun (1 time, 2 turns)\Activity Log of the Sparrow's Inn
 27\Good Wife Smart Fox\5\Increase HP Recovery Amount by 50% (1 time, 2 turns)\Activity Log of the Sparrow's Inn
+28\Command Spells of the Pink Image\3\Remove 1 ATK Buff from the Enemy, Restore own HP by 100
