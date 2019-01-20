@@ -2131,7 +2131,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
     elsif find_data_ex(:find_code,args.join(''),event).length>0
     elsif has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars','skill','skills','skil','skils','ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances','mat','mats','materials','material','mysticcode','mystic_code','mystic-code','mysticode','mystic','mysticcodes','mystic_codes','mystic-codes','mysticodes','mystics','clothes','clothing','commandcode','command_code','command-code','command','commandcodes','command_codes','command-codes','commands'])
     else
-      event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\n#{args.join(' ')} does not fall into any of these categories."
+      event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\n#{args.join(' ')} does not fall into any of these categories."
       return nil
     end
   end
@@ -2482,7 +2482,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
         end
       end
     else
-      event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nPlease either specify a member of one of these categories or use this command in PM."
+      event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nPlease either specify a member of one of these categories or use this command in PM."
       return nil
     end
   elsif !unit.nil?
@@ -2673,7 +2673,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
   err=false
   str=''
   if newname.nil? || unit.nil?
-    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nYou must specify both:\n- one of the above\n- an alias you wish to give that item"
+    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nYou must specify both:\n- one of the above\n- an alias you wish to give that item"
     err=true
   elsif event.user.id != 167657750971547648 && event.server.nil?
     str='Only my developer is allowed to use this command in PM.'
@@ -2752,7 +2752,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     type[1]='Alias' if type[1].include?('*') && type[0]!='Alias'
   end
   if type.reject{|q| q == 'Alias'}.length<=0
-    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Command Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nNeither #{newname} nor #{unit} fall into any of these categories."
+    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nNeither #{newname} nor #{unit} fall into any of these categories."
     err=true
   elsif type.reject{|q| q != 'Alias'}.length<=0
     event.respond "#{newname} is a #{type[0].downcase}\n#{unit} is a #{type[1].downcase}"
@@ -3479,7 +3479,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
   elsif !is_mod?(event.user,event.server,event.channel)
     event.respond 'You are not a mod.'
     return nil
-  elsif find_servant(name,event).length<=0 && find_skill(name,event).length<=0 && find_ce(name,event).length<=0 && find_mat(name,event).length<=0
+  elsif find_servant(name,event).length<=0 && find_skill(name,event).length<=0 && find_ce(name,event).length<=0 && find_mat(name,event).length<=0 && find_clothes(name,event).length<=0 && find_code(name,event).length<=0
     event.respond "#{name} is not an alias!"
     return nil
   end
