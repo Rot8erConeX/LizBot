@@ -121,7 +121,7 @@ def data_load()
     if b[i][2]=='Skill'
       b[i][3]=b[i][3].to_i
       b[i][5]=b[i][5].split(', ') unless b[i][5].nil?
-      for i2 in 6...12
+      for i2 in 6...13
         b[i][i2]=b[i][i2].split(';; ')
       end
     elsif b[i][2]=='Passive'
@@ -5056,6 +5056,7 @@ bot.ready do |event|
   system("title #{['Man','Sky','Earth','Star','Beast'][@shardizard]} LizBot")
   bot.game='Fate/Grand Order'
   bot.user(bot.profile.id).on(285663217261477889).nickname='LizBot (Debug)' if @shardizard==4
+  bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/DebugLiz.png','r')) if @shardizard==4
 end
 
 bot.run
