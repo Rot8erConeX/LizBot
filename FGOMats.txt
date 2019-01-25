@@ -65,6 +65,7 @@ Magic Gem of Lancer
 Magic Gem of Rider
 Magic Gem of Saber
 Meteor Horseshoe
+Octuplet Crystal
 Octuplet Crystals
 Phoenix Feather
 Primordial Lanugo
@@ -90,6 +91,7 @@ Secret Gem of Saber
 Seed of Yggdrasil
 Serpent Jewel
 Shell of Reminiscence
+Shell of Reminiscense
 Spirit Root
 Story Unlock: 1st
 Story Unlock: 2nd Singularity:

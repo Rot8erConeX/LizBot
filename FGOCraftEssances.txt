@@ -939,3 +939,5 @@
 939\Encounter on a Dark Night\4\9\100, 100\100, 100\Increase Master EXP received from clearing quest by 50\\-\Katou Miho (ufotable)\
 940\Pure Total Destruction\4\9\100, 100\100, 100\Increase Master EXP received from clearing quest by 50\\-\Ookubo Yoshiyuki (ufotable)\
 941\Proof of the Fastest\4\9\100, 100\100, 100\Increase Master EXP received from clearing quest by 50\\-\Endo Kaori (ufotable)\
+942\Paradox Ace Killer\4\9\0, 400\0, 1500\Increase Quick Card effectiveness by 10%, Increase NP Strength by 8%\Increase Quick Card effectiveness by 15%, Increase NP Strength by 10%\-\Shirai Eiri\
+943\Memories of Mother\4\9\100, 100\100, 100\When equipped to Miyu Edelfelt (Caster) only, Increase NP Gain of all allies while she is on the field \\-\Higashiyama Yuusei\
