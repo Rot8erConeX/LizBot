@@ -325,8 +325,12 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}** __toggle__","Responds with whether or not the channel the command is invoked in is one in which I can send extremely long replies.\n\nIf the channel does not fill one of the many molds for acceptable channels, server mods can toggle the ability with the words \"on\", \"semi\", and \"off\".",0xED619A)
   elsif ['status'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*message__","Sets my status to `message`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
-  elsif ['daily','today','todayinfgo','today_in_fgo'].include?(command.downcase)
+  elsif ['today','todayinfgo','today_in_fgo','now'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**","Shows the day's in-game daily events.\nIf in PM, will also show tomorrow's.",0xED619A)
+  elsif ['tomorrow','tommorrow','tommorow','tomorow'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}**","Shows the next day's in-game daily events.",0xED619A)
+  elsif ['daily','dailies'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}**","Shows the day's in-game daily events.\nIf in PM, will also show tomorrow's.\n\nYou can also show include the word \"tomorrow\" to force the next day's data.\nYou can also include a day of the week and force that to show instead.",0xED619A)
   elsif ['next','schedule'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __type__","Shows the next time in-game daily events of the type `type` will happen.\nIf in PM and `type` is unspecified, shows the entire schedule.\n\n__*Accepted Inputs*__\nTraining / Ground(s)\nEmber(s) / Gather(ing)\nMat(s) / Material(s) ~~this one only works fully in PM.~~",0xED619A)
   elsif ['tools','tool','links','link','resources','resource'].include?(command.downcase)
@@ -440,7 +444,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n`today` - to see today's events\n`next` - to see when cyclical events happen next\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`tools` - for a list of tools aside from me that may aid you\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n`shard` (*also `attribute`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n`today` - to see today's events (*also `daily` or `todayInFGO`*)\n`next` - to see when cyclical events happen next\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`tools` - for a list of tools aside from me that may aid you\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n`shard` (*also `attribute`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
     create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
     create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
@@ -471,7 +475,7 @@ def all_commands(include_nil=false,permissions=-1)
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
-     'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies']
+     'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -2891,6 +2895,196 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
   end
 end
 
+def show_next(bot,event,args=nil,ignoreinputs=false)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  args=args.map{|q| q.downcase}
+  msg=event.message.text.downcase.split(' ')
+  jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
+  mat_block=''
+  mat_block=', ' if msg.include?('colorblind') || msg.include?('textmats')
+  t=Time.now
+  timeshift=-5
+  timeshift-=1 unless t.dst?
+  t_na=t-60*60*timeshift
+  timeshift=-14
+  timeshift-=1 unless t.dst?
+  t_jp=t-60*60*timeshift
+  sftday=-2
+  for i in 0...args.length
+    stfday=-3 if ['today','now'].include?(args[i]) && sftday==-2
+    sftday=-1 if ['tomorrow','tommorrow','tomorow','tommorow','next'].include?(args[i]) && sftday==-2
+    sftday=0 if ['sunday','sundae','sun','su','sonday','sondae','son','u'].include?(args[i]) && sftday==-2
+    sftday=1 if ['mo','monday','mondae','mon','m'].include?(args[i]) && sftday==-2
+    sftday=2 if ['tu','tuesday','tuesdae','tues','tue','t'].include?(args[i]) && sftday==-2
+    sftday=3 if ['we','wednesday','wednesdae','wednes','wed','w'].include?(args[i]) && sftday==-2
+    sftday=4 if ['th','thursday','thursdae','thurs','thu','thur','h','r'].include?(args[i]) && sftday==-2
+    sftday=5 if ['fr','friday','fridae','fri','fryday','frydae','fry','f'].include?(args[i]) && sftday==-2
+    sftday=6 if ['sa','saturday','saturdae','sat','saturnday','saturndae','saturn','satur'].include?(args[i]) && sftday==-2
+  end
+  sftday=ignoreinputs*1 if ignoreinputs.is_a?(Numeric)
+  training=['<:class_saber_gold:523838273479507989>Saber',
+            '<:class_archer_gold:523838461195714576>Archer',
+            '<:class_lancer_gold:523838511485419522>Lancer',
+            '<:class_berserker_gold:523838648370724897>Berserker',
+            '<:class_rider_gold:523838542577664012>Rider',
+            '<:class_caster_gold:523838570893672473>Caster',
+            '<:class_assassin_gold:523838617693716480>Assassin']
+  ember=['<:class_unknown_gold:523838979825467392>Random',
+         '<:class_lancer_gold:523838511485419522>Lancer + <:class_assassin_gold:523838617693716480>Assassin',
+         '<:class_saber_gold:523838273479507989>Saber + <:class_rider_gold:523838542577664012>Rider',
+         '<:class_archer_gold:523838461195714576>Archer + <:class_caster_gold:523838570893672473>Caster',
+         '<:class_lancer_gold:523838511485419522>Lancer + <:class_assassin_gold:523838617693716480>Assassin',
+         '<:class_saber_gold:523838273479507989>Saber + <:class_rider_gold:523838542577664012>Rider',
+         '<:class_archer_gold:523838461195714576>Archer + <:class_caster_gold:523838570893672473>Caster']
+  matz=["Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Eternal Gear, Shell of Reminiscence, Spirit Root, Saber Piece, Saber Monument, Gem of Saber, Magic Gem of Saber, Secret Gem of Saber",
+        "Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Meteor Horseshoe, Tearstone of Blood, Archer Piece, Archer Monument, Gem of Archer, Magic Gem of Archer, Secret Gem of Archer",
+        "Proof of Hero, Evil Bone, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Homunculus Baby, Warhorse's Young Horn, Lancer Piece, Lancer Monument, Gem of Lancer, Magic Gem of Lancer, Secret Gem of Lancer",
+        "Proof of Hero, Void's Dust, Octuplet Crystals, Claw of Chaos, Berserker Piece, Berserker Monument, Gem of Berserker, Magic Gem of Berserker, Secret Gem of Berserker",
+        "Dragon Fang, Void's Dust, Meteor Horseshoe, Dragon's Reverse Scale, Rider Piece, Rider Monument, Gem of Rider, Magic Gem of Rider, Secret Gem of Rider",
+        "Serpent Jewel, Void's Dust, Forbidden Page, Heart of the Foreign God, Caster Piece, Caster Monument, Gem of Caster, Magic Gem of Caster, Secret Gem of Caster",
+        "Dragon Fang, Void's Dust, Seed of Yggdrasil, Ghost Lantern, Eternal Gear, Black Beast Grease, Assassin Piece, Assassin Monument, Gem of Assassin, Magic Gem of Assassin, Secret Gem of Assassin"]
+  if sftday>-2 && (!ignoreinputs || ignoreinputs.is_a?(Numeric))
+    if sftday<0
+      t=t_na+24*60*60
+      t=t_jp+24*60*60 if jp
+      t2=Time.new(2017,6,25)-6*60*60
+      t2=Time.new(2015,7,29)-9*60*60 if jp
+      t2=t-t2
+      date=(((t2.to_i/60)/60)/24)
+      str2='Tomorrow'
+      str3=" (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]})"
+      str5="~~This is displaying North America's *tomorrow*.  To show Japan's, include the word \"JP\" alongside the word \"tomorrow\".~~" unless jp || disp_date(t_na)==disp_date(t_jp)
+    else
+      t=t_na
+      tmw=(sftday==t.wday+1)
+      tmw=true if sftday==0 && t.wday==6
+      t+=7*24*60*60 if sftday<t.wday
+      t+=(sftday-t.wday)*24*60*60
+      t2=Time.new(2017,6,25)-6*60*60
+      t2=Time.new(2015,7,29)-9*60*60 if jp
+      t2=t-t2
+      date=(((t2.to_i/60)/60)/24)
+      str2="Next #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]}"
+      str3="#{' (Tomorrow)' if tmw}"
+    end
+    t2=Time.new(2017,6,25)-6*60*60
+    t3=t-t2
+    t2=Time.new(2015,7,29)-9*60*60
+    t4=t-t2
+    datex=[(((t3.to_i/60)/60)/24),(((t4.to_i/60)/60)/24)]
+    str4="#{str2[0,1].downcase}#{str2[1,str2.length-1]}"
+    str="__**North America**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2017,6,25)-6*60*60
+    t2=t_na-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n~~*Date assuming mat reset is at midnight:* #{disp_date(t_na)}~~" unless disp_date(t_na)==disp_date(t_jp)
+    str="#{str}\n~~*Days since game release*: #{longFormattedNumber(date)}~~"
+    str="#{str}\n*Days since game release, come #{str4}:* #{longFormattedNumber(datex[0])}"
+    str="#{str}\n\n__**Japan**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2015,7,29)-9*60*60
+    t2=t_jp-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n~~*Date assuming mat reset is at midnight:* #{disp_date(t_jp)}~~" unless disp_date(t_na)==disp_date(t_jp)
+    str="#{str}\n~~*Days since game release:* #{longFormattedNumber(date)}~~"
+    str="#{str}\n*Days since game release, come #{str4}:* #{longFormattedNumber(datex[1])}"
+    str="#{str}\n\n__**Both**__"
+    str="#{str}\n~~*Date assuming mat reset is at midnight:* #{disp_date(t_na)}~~" if disp_date(t_na)==disp_date(t_jp)
+    str="#{str}\n*#{str2}'s date:* #{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year}#{str3}"
+    str="#{str}\n*#{str2}'s Training Ground:* #{training[t.wday]}"
+    str="#{str}\n*Mats available #{str4}:* #{matz[t.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str="#{str}\n*#{str2}'s Ember Gathering:* #{ember[t.wday]}"
+    str="#{str}\n\n#{str5}" unless str5.nil?
+  elsif disp_date(t_na)==disp_date(t_jp) && safe_to_spam?(event,nil,1)
+    str="__**North America**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2017,6,25)-6*60*60
+    t2=t_na-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Days since game release*: #{longFormattedNumber(date)}"
+    str="#{str}\n\n__**Japan**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2015,7,29)-9*60*60
+    t2=t_jp-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str="#{str}\n\n__**Both**__"
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
+    str="#{str}\n*Training Ground:* #{training[t_na.wday]}"
+    str="#{str}\n*Available Mats:* #{matz[t_na.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str="#{str}\n*Ember Gathering:* #{ember[t_na.wday]}"
+    str2="__(tomorrow)__"
+    m=(t_na.wday+1)%7
+    str2="#{str2}\n*Training Ground:* #{training[m]}"
+    str2="#{str2}\n*Available Mats:* #{matz[m].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str2="#{str2}\n*Ember Gathering:* #{ember[m]}"
+    str=extend_message(str,str2,event,2)
+  elsif safe_to_spam?(event)
+    str="__**North America** (today)__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2017,6,25)-6*60*60
+    t2=t_na-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str="#{str}\n*Training Ground:* #{training[t_na.wday]}"
+    str="#{str}\n*Available Mats:* #{matz[t_na.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str="#{str}\n*Ember Gathering:* #{ember[t_na.wday]}"
+    str2="__**Japan**__"
+    str2="#{str2}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
+    str2="#{str2}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2015,7,29)-9*60*60
+    t2=t_jp-t2
+    date=(((t2.to_i/60)/60)/24)
+    str2="#{str2}\n*Date assuming mat reset is at midnight:* #{disp_date(t_jp)}"
+    str2="#{str2}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str2="#{str2}\n*Training Ground:* #{training[t_jp.wday]}"
+    str2="#{str2}\n*Available Mats:* #{matz[t_jp.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str2="#{str2}\n*Ember Gathering:* #{ember[t_jp.wday]}"
+    str2="#{str2}\n~~the above data also counts as tomorrow's data in NA~~"
+    str=extend_message(str,str2,event,2)
+    str2="__**Japan** (tomorrow)__"
+    m=(t_jp.wday+1)%7
+    str2="#{str2}\n*Training Ground:* #{training[m]}"
+    str2="#{str2}\n*Available Mats:* #{matz[m].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str2="#{str2}\n*Ember Gathering:* #{ember[m]}"
+    str=extend_message(str,str2,event,2)
+  elsif jp
+    str="__**Japan**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2015,7,29)-9*60*60
+    t2=t_jp-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_jp)}"
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str="#{str}\n\n*Training Ground:* #{training[t_jp.wday]}"
+    str="#{str}\n*Available Mats:* #{matz[t_jp.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str="#{str}\n*Ember Gathering:* #{ember[t_jp.wday]}"
+  else
+    str="__**North America**__"
+    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
+    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
+    t2=Time.new(2017,6,25)-6*60*60
+    t2=t_na-t2
+    date=(((t2.to_i/60)/60)/24)
+    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
+    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
+    str="#{str}\n\n*Training Ground:* #{training[t_na.wday]}"
+    str="#{str}\n*Available Mats:* #{matz[t_na.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
+    str="#{str}\n*Ember Gathering:* #{ember[t_na.wday]}"
+    str="#{str}\n\n~~You can include the word \"JP\" in your message to show JP data.~~"
+  end
+  event.respond str
+end
+
 def find_in_servants(bot,event,args=nil,mode=0)
   data_load()
   args=normalize(event.message.text.downcase).split(' ') if args.nil?
@@ -4215,124 +4409,19 @@ def disp_date(t,mode=0)
   return "#{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year} (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]})"
 end
 
-bot.command([:today,:dalies,:daily,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event|
+bot.command([:today,:now,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event, *args|
   return nil if overlap_prevent(event)
-  msg=event.message.text.downcase.split(' ')
-  jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
-  mat_block=''
-  mat_block=', ' if msg.include?('colorblind') || msg.include?('textmats')
-  t=Time.now
-  timeshift=-5
-  timeshift-=1 unless t.dst?
-  t_na=t-60*60*timeshift
-  timeshift=-14
-  timeshift-=1 unless t.dst?
-  t_jp=t-60*60*timeshift
-  training=['<:class_saber_gold:523838273479507989>Saber',
-            '<:class_archer_gold:523838461195714576>Archer',
-            '<:class_lancer_gold:523838511485419522>Lancer',
-            '<:class_berserker_gold:523838648370724897>Berserker',
-            '<:class_rider_gold:523838542577664012>Rider',
-            '<:class_caster_gold:523838570893672473>Caster',
-            '<:class_assassin_gold:523838617693716480>Assassin']
-  ember=['<:class_unknown_gold:523838979825467392>Random',
-         '<:class_lancer_gold:523838511485419522>Lancer + <:class_assassin_gold:523838617693716480>Assassin',
-         '<:class_saber_gold:523838273479507989>Saber + <:class_rider_gold:523838542577664012>Rider',
-         '<:class_archer_gold:523838461195714576>Archer + <:class_caster_gold:523838570893672473>Caster',
-         '<:class_lancer_gold:523838511485419522>Lancer + <:class_assassin_gold:523838617693716480>Assassin',
-         '<:class_saber_gold:523838273479507989>Saber + <:class_rider_gold:523838542577664012>Rider',
-         '<:class_archer_gold:523838461195714576>Archer + <:class_caster_gold:523838570893672473>Caster']
-  matz=["Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Eternal Gear, Shell of Reminiscence, Spirit Root, Saber Piece, Saber Monument, Gem of Saber, Magic Gem of Saber, Secret Gem of Saber",
-        "Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Meteor Horseshoe, Tearstone of Blood, Archer Piece, Archer Monument, Gem of Archer, Magic Gem of Archer, Secret Gem of Archer",
-        "Proof of Hero, Evil Bone, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Homunculus Baby, Warhorse's Young Horn, Lancer Piece, Lancer Monument, Gem of Lancer, Magic Gem of Lancer, Secret Gem of Lancer",
-        "Proof of Hero, Void's Dust, Octuplet Crystals, Claw of Chaos, Berserker Piece, Berserker Monument, Gem of Berserker, Magic Gem of Berserker, Secret Gem of Berserker",
-        "Dragon Fang, Void's Dust, Meteor Horseshoe, Dragon's Reverse Scale, Rider Piece, Rider Monument, Gem of Rider, Magic Gem of Rider, Secret Gem of Rider",
-        "Serpent Jewel, Void's Dust, Forbidden Page, Heart of the Foreign God, Caster Piece, Caster Monument, Gem of Caster, Magic Gem of Caster, Secret Gem of Caster",
-        "Dragon Fang, Void's Dust, Seed of Yggdrasil, Ghost Lantern, Eternal Gear, Black Beast Grease, Assassin Piece, Assassin Monument, Gem of Assassin, Magic Gem of Assassin, Secret Gem of Assassin"]
-  if disp_date(t_na)==disp_date(t_jp) && safe_to_spam?(event,nil,1)
-    str="__**North America**__"
-    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
-    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
-    t2=Time.new(2017,6,25)-6*60*60
-    t2=t_na-t2
-    date=(((t2.to_i/60)/60)/24)
-    str="#{str}\n*Days since game release*: #{longFormattedNumber(date)}"
-    str="#{str}\n\n__**Japan**__"
-    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
-    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
-    t2=Time.new(2015,7,29)-9*60*60
-    t2=t_jp-t2
-    date=(((t2.to_i/60)/60)/24)
-    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
-    str="#{str}\n\n__**Both**__"
-    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
-    str="#{str}\n*Training Ground:* #{training[t_na.wday]}"
-    str="#{str}\n*Available Mats:* #{matz[t_na.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
-    str="#{str}\n*Ember Gathering:* #{ember[t_na.wday]}"
-    str2="__(tomorrow)__"
-    m=(t_na.wday+1)%7
-    str2="#{str2}\n*Training Ground:* #{training[m]}"
-    str2="#{str2}\n*Available Mats:* #{matz[m].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
-    str2="#{str2}\n*Ember Gathering:* #{ember[m]}"
-    str=extend_message(str,str2,event,2)
-  elsif safe_to_spam?(event)
-    str="__**North America** (today)__"
-    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
-    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
-    t2=Time.new(2017,6,25)-6*60*60
-    t2=t_na-t2
-    date=(((t2.to_i/60)/60)/24)
-    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
-    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
-    str="#{str}\n*Training Ground:* #{training[t_na.wday]}"
-    str="#{str}\n*Available Mats:* #{matz[t_na.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
-    str="#{str}\n*Ember Gathering:* #{ember[t_na.wday]}"
-    str2="__**Japan**__"
-    str2="#{str2}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
-    str2="#{str2}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
-    t2=Time.new(2015,7,29)-9*60*60
-    t2=t_jp-t2
-    date=(((t2.to_i/60)/60)/24)
-    str2="#{str2}\n*Date assuming mat reset is at midnight:* #{disp_date(t_jp)}"
-    str2="#{str2}\n*Days since game release:* #{longFormattedNumber(date)}"
-    str2="#{str2}\n*Training Ground:* #{training[t_jp.wday]}"
-    str2="#{str2}\n*Available Mats:* #{matz[t_jp.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
-    str2="#{str2}\n*Ember Gathering:* #{ember[t_jp.wday]}"
-    str2="#{str2}\n~~the above data also counts as tomorrow's data in NA~~"
-    str=extend_message(str,str2,event,2)
-    str2="__**Japan** (tomorrow)__"
-    m=(t_jp.wday+1)%7
-    str2="#{str2}\n*Training Ground:* #{training[m]}"
-    str2="#{str2}\n*Available Mats:* #{matz[m].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
-    str2="#{str2}\n*Ember Gathering:* #{ember[m]}"
-    str=extend_message(str,str2,event,2)
-  elsif jp
-    str="__**Japan**__"
-    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_jp.hour} hours, " if t_jp.hour>0}#{"#{'0' if t_jp.min<10}#{t_jp.min} minutes, " if t_jp.hour>0 || t_jp.min>0}#{'0' if t_jp.sec<10}#{t.sec} seconds"
-    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_jp.hour} hours, " if 23-t_jp.hour>0}#{"#{'0' if 59-t_jp.min<10}#{59-t_jp.min} minutes, " if 23-t_jp.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
-    t2=Time.new(2015,7,29)-9*60*60
-    t2=t_jp-t2
-    date=(((t2.to_i/60)/60)/24)
-    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_jp)}"
-    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
-    str="#{str}\n\n*Training Ground:* #{training[t_jp.wday]}"
-    str="#{str}\n*Available Mats:* #{matz[t_jp.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
-    str="#{str}\n*Ember Gathering:* #{ember[t_jp.wday]}"
-  else
-    str="__**North America**__"
-    str="#{str}\n*Time elapsed since today's mat reset:* #{"#{t_na.hour} hours, " if t_na.hour>0}#{"#{'0' if t_na.min<10}#{t.min} minutes, " if t_na.hour>0 || t_na.min>0}#{'0' if t_na.sec<10}#{t_na.sec} seconds"
-    str="#{str}\n*Time until tomorrow's mat reset:* #{"#{23-t_na.hour} hours, " if 23-t_na.hour>0}#{"#{'0' if 59-t_na.min<10}#{59-t.min} minutes, " if 23-t_na.hour>0 || 59-t.min>0}#{'0' if 60-t.sec<10}#{60-t.sec} seconds"
-    t2=Time.new(2017,6,25)-6*60*60
-    t2=t_na-t2
-    date=(((t2.to_i/60)/60)/24)
-    str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
-    str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
-    str="#{str}\n\n*Training Ground:* #{training[t_na.wday]}"
-    str="#{str}\n*Available Mats:* #{matz[t_na.wday].split(', ').map{|q| find_emote(bot,event,q,2)}.join(mat_block)}"
-    str="#{str}\n*Ember Gathering:* #{ember[t_na.wday]}"
-    str="#{str}\n\n~~You can include the word \"JP\" in your message to show JP data.~~"
-  end
-  event.respond str
+  show_next(bot,event,args)
+end
+
+bot.command([:tomorrow,:tommorrow,:tomorow,:tommorrow]) do |event, *args|
+  return nil if overlap_prevent(event)
+  show_next(bot,event,args,-1)
+end
+
+bot.command([:dailies,:daily]) do |event, *args|
+  return nil if overlap_prevent(event)
+  show_next(bot,event,args,true)
 end
 
 bot.command([:next,:schedule]) do |event|
@@ -4882,6 +4971,13 @@ bot.mention do |event|
     else
       event.respond "No matches found."
     end
+    m=false
+  elsif ['daily','dailies'].include?(args[0].downcase)
+    args.shift
+    show_next(bot,event,args)
+    m=false
+  elsif ['today','now','tomorrow','tommorrow','tomorow','tommorow','sunday','sundae','sun','su','sonday','sondae','son','u','mo','monday','mondae','mon','m','mo','monday','mondae','mon','m','tu','tuesday','tuesdae','tues','tue','t','we','wednesday','wednesdae','wednes','wed','w','th','thursday','thursdae','thurs','thu','thur','h','r','fr','friday','fridae','fri','fryday','frydae','fry','f','sa','saturday','saturdae','sat','saturnday','saturndae','saturn','satur'].include?(args[0].downcase)
+    show_next(bot,event,args)
     m=false
   end
   if m
