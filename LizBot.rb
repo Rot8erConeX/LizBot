@@ -4411,7 +4411,7 @@ end
 
 bot.command([:today,:now,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event, *args|
   return nil if overlap_prevent(event)
-  show_next(bot,event,args)
+  show_next(bot,event,args,true)
 end
 
 bot.command([:tomorrow,:tommorrow,:tomorow,:tommorrow]) do |event, *args|
@@ -4421,7 +4421,7 @@ end
 
 bot.command([:dailies,:daily]) do |event, *args|
   return nil if overlap_prevent(event)
-  show_next(bot,event,args,true)
+  show_next(bot,event,args)
 end
 
 bot.command([:next,:schedule]) do |event|
