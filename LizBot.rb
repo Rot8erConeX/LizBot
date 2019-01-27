@@ -11,6 +11,10 @@ require 'rufus-scheduler'              # Download link: https://github.com/jmett
 require 'active_support/core_ext/time' # Download link: https://rubygems.org/gems/activesupport/versions/5.0.0
 require_relative 'rot8er_functs'       # functions I use commonly in bots
 
+# this is required to get her to post messages in a certain server when specific criteria are met
+ENV['TZ'] = 'America/Chicago'
+@scheduler = Rufus::Scheduler.new
+
 @prefix=['liz!','liZ!','lIz!','lIZ!','Liz!','LiZ!','LIz!','LIZ!',
          'liz?','liZ?','lIz?','lIZ?','Liz?','LiZ?','LIz?','LIZ?',
          'Iiz!','IiZ!','IIz!','IIZ!','Iiz?','IiZ?','IIz?','IIZ?',
