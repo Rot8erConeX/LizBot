@@ -1180,11 +1180,16 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   text="#{text}\n\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
   npl=1
   npl=0 if ['Event','Welfare'].include?(k[20])
-  npl=1 if event.message.text.downcase.split(' ').include?('np2')
+  npl=1 if event.message.text.downcase.split(' ').include?('np1')
   npl=2 if event.message.text.downcase.split(' ').include?('np2')
   npl=3 if event.message.text.downcase.split(' ').include?('np3')
   npl=4 if event.message.text.downcase.split(' ').include?('np4')
   npl=5 if event.message.text.downcase.split(' ').include?('np5')
+  npl=1 if event.message.text.downcase.split(' ').include?('kh1') && k[0]==154
+  npl=2 if event.message.text.downcase.split(' ').include?('kh2') && k[0]==154
+  npl=3 if event.message.text.downcase.split(' ').include?('kh3') && k[0]==154
+  npl=4 if event.message.text.downcase.split(' ').include?('kh4') && k[0]==154
+  npl=5 if event.message.text.downcase.split(' ').include?('kh5') && k[0]==154
   unless nophan.nil?
     l=[nophan[5],nophan[6]]
     text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105> Quick').gsub('A','<:arts:523854803013730316> Arts').gsub('B','<:buster:523854810286391296> Buster')}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
@@ -2152,7 +2157,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
   ccode=find_data_ex(:find_code,args.join(''),event)
   ccode=nil if ccode.length<=0 || args.length.zero?
   f=[]
-  n=@aliases.reject{|q| q[0]!='Servant'}.map{|q| [q[1],q[2],q[3]]}
+  n=@aliases.reject{|q| q[0]!='Servant' || (q[2]==154 && q[1][0,2]=='KH' && q[1][2,1].to_i>0 && q[1][2,1].to_i<6)}.map{|q| [q[1],q[2],q[3]]}
   h=''
   if unit.nil? && skl.nil? && ce.nil? && mat.nil? && cloth.nil? && ccode.nil?
     if has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars'])
