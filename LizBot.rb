@@ -11,7 +11,7 @@ require 'rufus-scheduler'              # Download link: https://github.com/jmett
 require 'active_support/core_ext/time' # Download link: https://rubygems.org/gems/activesupport/versions/5.0.0
 require_relative 'rot8er_functs'       # functions I use commonly in bots
 
-# this is required to get her to post messages in a certain server when specific criteria are met
+# this is required to get her to change her avatar on certain holidays
 ENV['TZ'] = 'America/Chicago'
 @scheduler = Rufus::Scheduler.new
 
@@ -43,6 +43,7 @@ bot.gateway.check_heartbeat_acks = false
 @server_data=[]
 @ignored=[]
 @embedless=[]
+@avvie_info=['Liz','*Fate/Grand Order*','N/A']
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
@@ -2097,23 +2098,6 @@ def disp_mat_data(bot,event,args=nil)
   end
   str=extend_message(str,"#{fff.length} total servants use this material\n#{fff2} total uses for this material\n#{longFormattedNumber(fff3)} total copies of this material are required to max everyone",event,2)
   event.respond str
-end
-
-def get_donor_list()
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHDonorList.txt')
-    b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHDonorList.txt').each_line do |line|
-      b.push(line.gsub("\n",'').split('\\'[0]))
-    end
-    for i in 0...b.length
-      b[i][0]=b[i][0].to_i
-      b[i][2]=b[i][2].to_i
-      b[i][3]=b[i][3].split('/').map{|q| q.to_i} unless b[i][3].nil?
-    end
-  else
-    b=[]
-  end
-  return b
 end
 
 def is_mod?(user,server,channel,mode=0) # used by certain commands to determine if a user can use them
@@ -5137,6 +5121,145 @@ bot.message do |event|
   end
 end
 
+def next_holiday(bot,mode=0)
+  t=Time.now
+  t-=60*60*6
+  holidays=[]
+  d=get_donor_list()
+  d=d.reject{|q| q[2]<2}
+  for i in 0...d.length
+    if d[i][4][1]!='-'
+      holidays.push([0,d[i][3][0],d[i][3][1],d[i][4][1],"in recognition of #{bot.user(d[i][0]).distinct}","Donator's birthday"])
+      holidays[-1][5]="Donator's Day" if d[i][0]==189235935563481088
+    end
+  end
+  for i in 0...holidays.length
+    if t.month>holidays[i][1] || (t.month==holidays[i][1] && t.day>holidays[i][2])
+      holidays[i][0]=t.year+1
+    else
+      holidays[i][0]=t.year
+    end
+  end
+  e=calc_easter()
+ # holidays.push([e[0],e[1],e[2],'','','Easter'])
+  t=Time.now
+  t-=60*60*6
+  y8=t.year
+  j8=Time.new(y8,6,8)
+  fsij=8-j8.wday
+  fsij-=7 if j8.sunday?
+  fd=fsij+14
+  if (t.month==6 && t.day>fd) || t.month>6
+    y8+=1
+    j8=Time.new(y8,6,8)
+    fsij=8-j8.wday
+    fsij-=7 if j8.sunday?
+    fd=fsij+14
+  end
+ # holidays.push([y8,6,fd,'','',"Father's Day"])
+  t=Time.now
+  t-=60*60*6
+  y8=t.year
+  m8=Time.new(y8,5,8)
+  fsim=8-m8.wday
+  fsim-=7 if m8.sunday?
+  md=fsim+7
+  if (t.month==5 && t.day>md) || t.month>5
+    y8+=1
+    m8=Time.new(y8,5,8)
+    fsim=8-m8.wday
+    fsim-=7 if m8.sunday?
+    md=fsim+14
+  end
+ # holidays.push([y8,5,md,'','',"Mother's Day"])
+  holidays.sort! {|a,b| supersort(a,b,0) == 0 ? (supersort(a,b,1) == 0 ? (supersort(a,b,2) == 0 ? (supersort(a,b,6) == 0 ? supersort(a,b,4) : supersort(a,b,6)) : supersort(a,b,2)) : supersort(a,b,1)) : supersort(a,b,0)}
+  k=[]
+  for i in 0...holidays.length
+    k.push(holidays[i]) if holidays[i][0]==holidays[0][0] && holidays[i][1]==holidays[0][1] && holidays[i][2]==holidays[0][2]
+  end
+  div=[[],
+       [[0,0]],
+       [[0,0],[12,0]],
+       [[0,0],[8,0],[16,0]],
+       [[0,0],[6,0],[12,0],[18,0]],
+       [[0,0],[4,48],[9,36],[14,24],[19,12]],
+       [[0,0],[4,0],[8,0],[12,0],[16,0],[20,0]],
+       [[0,0],[3,26],[6,52],[10,17],[13,43],[17,8],[18,34]],
+       [[0,0],[3,0],[6,0],[9,0],[12,0],[15,0],[18,0],[21,0]]]
+  t=Time.now
+  t-=60*60*6
+  if k.length<=0
+    t=Time.now
+    t-=60*60*6
+    bot.game='Fate/Grand Order'
+    bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.png','r')) rescue nil if @shardizard.zero?
+    @avvie_info=['Liz','*Fate/Grand Order*','']
+    t+=24*60*60
+    @scheduler.at "#{t.year}/#{t.month}/#{t.day} 0000" do
+      next_holiday(bot,1)
+    end
+  elsif t.year==k[0][0] && t.month==k[0][1] && t.day==k[0][2]
+    if k.length==1
+      # Only one holiday is today.  Display new avatar, and set another check for midnight
+      bot.game=k[0][4]
+      if @shardizard.zero?
+        bot.profile.avatar=(File.open("C:/Users/Mini-Matt/Desktop/devkit/EliseImages/#{k[0][3]}.png",'r')) rescue nil
+      end
+      @avvie_info=[k[0][3],k[0][4],k[0][5]]
+      t2= Time.now + 18*60*60
+      t=Time.now
+      @scheduler.at "#{t2.year}/#{t2.month}/#{t2.day} 0000" do
+        next_holiday(bot,1)
+      end
+    else
+      # multiple holidays are today.  Change avatar based on time of day, using div as a reference
+      fcod=div[k.length][k.length-1]
+      if t.hour>fcod[0] || (t.hour==fcod[0] && t.min>=fcod[1])
+        # in last area of day.  Set avatar to the last one for the day, then set a check for tomorrow at midnight
+        bot.game=k[k.length-1][4]
+        if @shardizard.zero?
+          bot.profile.avatar=(File.open("C:/Users/Mini-Matt/Desktop/devkit/LizImages/#{k[k.length-1][3]}.png",'r')) rescue nil
+        end
+        @avvie_info=[k[k.length-1][3],k[k.length-1][4],k[k.length-1][5]]
+        t2= Time.now + 18*60*60
+        t=Time.now
+        @scheduler.at "#{t2.year}/#{t2.month}/#{t2.day} 0000" do
+          next_holiday(bot,1)
+        end
+      else
+        # find when in the day it is and...
+        j=0
+        t=Time.now
+        t-=60*60*6
+        for i in 0...div[k.length].length-1
+          j=i if t.hour<div[k.length][i+1][0] || (t.hour==div[k.length][i+1][0] && t.min<div[k.length][i+1][1])
+        end
+        # ...set avatar properly and set check for the beginning of the next chunk of the day
+        bot.game=k[j][4]
+        if @shardizard.zero?
+          bot.profile.avatar=(File.open("C:/Users/Mini-Matt/Desktop/devkit/LizImages/#{k[j][3]}.png",'r')) rescue nil
+        end
+        @avvie_info=[k[j][3],k[j][4],k[j][5]]
+        t=Time.now
+        t-=60*60*6
+        @scheduler.at "#{t.year}/#{t.month}/#{t.day} #{div[k.length][j+1][0].to_s.rjust(2, '0')}#{div[k.length][j+1][1].to_s.rjust(2, '0')}" do
+          next_holiday(bot,1)
+        end
+      end
+    end
+  else
+    t=Time.now
+    t-=60*60*6
+    bot.game='Fate/Grand Order'
+    bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.png','r')) rescue nil if @shardizard.zero?
+    @avvie_info=['Liz','*Fate/Grand Order*','']
+    t+=24*60*60
+    @scheduler.at "#{t.year}/#{t.month}/#{t.day} 0000" do
+      next_holiday(bot,1)
+    end
+  end
+end
+
 bot.ready do |event|
   if @shardizard==4
     for i in 0...bot.servers.values.length
@@ -5160,8 +5283,13 @@ bot.ready do |event|
   system("color d#{"41260"[@shardizard,1]}")
   system("title #{['Man','Sky','Earth','Star','Beast'][@shardizard]} LizBot")
   bot.game='Fate/Grand Order'
-  bot.user(bot.profile.id).on(285663217261477889).nickname='LizBot (Debug)' if @shardizard==4
-  bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/DebugLiz.png','r')) if @shardizard==4
+  if @shardizard==4
+    next_holiday(bot)
+    bot.user(bot.profile.id).on(285663217261477889).nickname='LizBot (Debug)'
+    bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/DebugLiz.png','r'))
+  else
+    next_holiday(bot)
+  end
 end
 
 bot.run
