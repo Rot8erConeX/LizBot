@@ -449,9 +449,63 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
       command=''
     end
     event.respond "#{command.downcase} is not a command" if command!='' && command.downcase != 'devcommands'
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__","__**Servant data**__\n`servant` __name__ - displays all info about a servant (*also `data`*)\n`stats` __name__ - displays a servant's stats\n`skills` __name__ - displays a servant's skills\n`traits` __name__ - displays a servant's traits\n`np` __name__ - displays a servant's Noble Phantasm\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)\n`aliases` __name__ - displays a servant's aliases\n`art` __name__ - displays a servant's art\n\n__**Other data**__\n`ce` __name__ - displays data for a Craft Essence\n`commandcode` __name__ - displays data for a Command Code\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)\n`skill` __name__ - displays a skill's effects\n`mat` __name__ - displays a material (*also `material`*)\n`find` __\*filters__ - search for servants (*also `search`*)\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)\n`today` - to see today's events (*also `daily` or `todayInFGO`*)\n`next` - to see when cyclical events happen next\n\n__**Meta Data**__\n`invite` - for a link to invite me to your server\n`tools` - for a list of tools aside from me that may aid you\n`snagstats` __type__ - to receive relevant bot stats\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)\n`shard` (*also `attribute`*)\n\n__**Developer Information**__\n`bugreport` __\\*message__ - to send my developer a bug report\n`suggestion` __\\*message__ - to send my developer a feature suggestion\n`feedback` __\\*message__ - to send my developer other kinds of feedback\n~~the above three commands are actually identical, merely given unique entries to help people find them~~",0xED619A)
-    create_embed([event,x],"__**Server Admin Commands**__","__**Unit Aliases**__\n`addalias` __new alias__ __unit__ - Adds a new server-specific alias\n~~`aliases` __unit__ (*also `checkaliases` or `seealiases`*)~~\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias",0xC31C19) if is_mod?(event.user,event.server,event.channel)
-    create_embed([event,x],"__**Bot Developer Commands**__","__**Mjolnr, the Hammer**__\n`ignoreuser` __user id number__ - makes me ignore a user\n`leaveserver` __server id number__ - makes me leave a server\n\n__**Communication**__\n`status` __\\*message__ - sets my status\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user\n\n__**Server Info**__\n`snagstats` - snags relevant bot stats\n\n__**Shards**__\n`reboot` - reboots this shard\n\n__**Meta Data Storage**__\n`backupaliases` - backs up the alias list\n`restorealiases` - restores the alias list from last backup\n`sortaliases` - sorts the alias list by servant",0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
+    str="__**Servant data**__"
+    str="#{str}\n`servant` __name__ - displays all info about a servant (*also `data`*)"
+    str="#{str}\n`stats` __name__ - displays a servant's stats"
+    str="#{str}\n`skills` __name__ - displays a servant's skills"
+    str="#{str}\n`traits` __name__ - displays a servant's traits"
+    str="#{str}\n`np` __name__ - displays a servant's Noble Phantasm"
+    str="#{str}\n`bondCE` __name__ - displays a servant's Bond CE (*also `ce`*)"
+    str="#{str}\n`mats` __name__ - displays a servant's materials (*also `ascension` or `enhancement`*)"
+    str="#{str}\n\n`aliases` __name__ - displays a servant's aliases"
+    str="#{str}\n`serveraliases` __name__ - displays a servant's server-specific aliases"
+    str="#{str}\n`art` __name__ - displays a servant's art"
+    str="#{str}\n\n__**Other data**__"
+    str="#{str}\n`ce` __name__ - displays data for a Craft Essence"
+    str="#{str}\n`commandcode` __name__ - displays data for a Command Code"
+    str="#{str}\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)"
+    str="#{str}\n`skill` __name__ - displays a skill's effects"
+    str="#{str}\n`mat` __name__ - displays a material (*also `material`*)"
+    str="#{str}\n`find` __\*filters__ - search for servants (*also `search`*)"
+    str="#{str}\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)"
+    str="#{str}\n`today` - to see today's events (*also `daily` or `todayInFGO`*)"
+    str="#{str}\n`next` - to see when cyclical events happen next"
+    str="#{str}\n\n__**Meta Data**__"
+    str="#{str}\n`invite` - for a link to invite me to your server"
+    str="#{str}\n`tools` - for a list of tools aside from me that may aid you"
+    str="#{str}\n`snagstats` __type__ - to receive relevant bot stats"
+    str="#{str}\n`spam` - to determine if the current location is safe for me to send long replies to (*also `safetospam` or `safe2spam`*)"
+    str="#{str}\n`shard` (*also `attribute`*)"
+    str="#{str}\n\n__**Developer Information**__"
+    str="#{str}\n`bugreport` __\\*message__ - to send my developer a bug report"
+    str="#{str}\n`suggestion` __\\*message__ - to send my developer a feature suggestion"
+    str="#{str}\n`feedback` __\\*message__ - to send my developer other kinds of feedback"
+    str="#{str}\n~~the above three commands are actually identical, merely given unique entries to help people find them~~"
+    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__",str,0xED619A)
+    str="__**Aliases**__"
+    str="#{str}\n`addalias` __new alias__ __target__ - Adds a new server-specific alias"
+    str="#{str}\n~~`aliases` __target__ (*also `checkaliases` or `seealiases`*)~~"
+    str="#{str}\n~~`serveraliases` __target__ (*also `saliases`*)~~"
+    str="#{str}\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias"
+    str="#{str}\n\n__**Channels**__"
+    str="#{str}\n`spam` __toggle__ - to allow the current channel to be safe to send long replies to (*also `safetospam` or `safe2spam`*)"
+    create_embed([event,x],"__**Server Admin Commands**__",str,0xC31C19) if is_mod?(event.user,event.server,event.channel)
+    str="__**Mjolnr, the Hammer**__"
+    str="#{str}\n`ignoreuser` __user id number__ - makes me ignore a user"
+    str="#{str}\n`leaveserver` __server id number__ - makes me leave a server"
+    str="#{str}\n\n__**Communication**__"
+    str="#{str}\n`status` __\\*message__ - sets my status"
+    str="#{str}\n`sendmessage` __channel id__ __\\*message__ - sends a message to a specific channel"
+    str="#{str}\n`sendpm` __user id number__ __\\*message__ - sends a PM to a user"
+    str="#{str}\n\n__**Server Info**__"
+    str="#{str}\n`snagstats` - snags relevant bot stats"
+    str="#{str}\n\n__**Shards**__"
+    str="#{str}\n`reboot` - reboots this shard"
+    str="#{str}\n\n__**Meta Data Storage**__"
+    str="#{str}\n`backupaliases` - backs up the alias list"
+    str="#{str}\n`restorealiases` - restores the alias list from last backup"
+    str="#{str}\n`sortaliases` - sorts the alias list by type of alias"
+    create_embed([event,x],"__**Bot Developer Commands**__",str,0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
     event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
     event.user.pm("If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name") if x==1
     event.respond "A PM has been sent to you.\nIf you would like to show the help list in this channel, please use the command `FGO!help here`." if x==1
@@ -4249,8 +4303,8 @@ bot.command(:snagstats) do |event, f, f2|
     event << ''
     event << "**There are #{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command('}.length)} commands, invoked with #{longFormattedNumber(all_commands().length)} different phrases.**"
     event << 'This includes:'
-    event << "#{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command(' || q.include?('from: 167657750971547648')}.length-b[0].reject{|q| q.gsub('  ','')!="event.respond 'You are not a mod.'"}.length)} global commands, invoked with #{longFormattedNumber(all_commands(false,0).length)} different phrases."
-    event << "#{longFormattedNumber(b[0].reject{|q| q.gsub('  ','')!="event.respond 'You are not a mod.'"}.length)} mod-only commands, invoked with #{longFormattedNumber(all_commands(false,1).length)} different phrases."
+    event << "#{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command(' || q.include?('from: 167657750971547648')}.length-b[0].reject{|q| q.gsub('  ','')!="event.respond 'You are not a mod.'" && q.gsub('  ','')!="str='You are not a mod.'"}.length)} global commands, invoked with #{longFormattedNumber(all_commands(false,0).length)} different phrases."
+    event << "#{longFormattedNumber(b[0].reject{|q| q.gsub('  ','')!="event.respond 'You are not a mod.'" && q.gsub('  ','')!="str='You are not a mod.'"}.length)} mod-only commands, invoked with #{longFormattedNumber(all_commands(false,1).length)} different phrases."
     event << "#{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command(' || !q.include?('from: 167657750971547648')}.length)} dev-only commands, invoked with #{longFormattedNumber(all_commands(false,2).length)} different phrases."
     event << ''
     event << "**There are #{longFormattedNumber(@prefix.map{|q| q.downcase}.reject{|q| q.include?('0') || q.include?('ii')}.uniq.length)} command prefixes**, but because I am faking case-insensitivity it's actually #{longFormattedNumber(@prefix.length)} prefixes."
