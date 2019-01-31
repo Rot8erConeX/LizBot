@@ -1032,7 +1032,7 @@ def disp_servant_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k,1)}",text,xcolor,ftr,xpic,flds,2)
+  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,1)}",text,xcolor,ftr,xpic,flds,2)
 end
 
 def disp_tiny_stats(bot,event,args=nil)
@@ -1077,7 +1077,7 @@ def disp_tiny_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k,1)}",text,xcolor,ftr,xpic)
+  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,1)}",text,xcolor,ftr,xpic)
 end
 
 def disp_servant_traits(bot,event,args=nil,chain=false)
@@ -1104,7 +1104,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
 end
 
 def disp_enemy_traits(bot,event,args=nil,chain=false)
@@ -1214,7 +1214,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}",xcolor,nil,xpic)
     create_embed(event,'__*Passive Skills*__',passklz.join("\n"),xcolor,ftr)
   else
-    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
+    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
   end
 end
 
@@ -1321,7 +1321,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   return nil if chain && text.length<=0
-  create_embed(event,"#{"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
@@ -1369,7 +1369,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
     text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
   end
-  create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+  create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
 
 def disp_servant_ce2(bot,event,args=nil)
@@ -1440,7 +1440,7 @@ def disp_servant_ce2(bot,event,args=nil)
       text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
       text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
     end
-    create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+    create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
   end
 end
 
@@ -1475,7 +1475,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)","*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
   flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
   flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
-  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
+  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}\n~~the second costume is listed in this bot as Servant #1.2~~" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
   flds.push(["Skill Enhancement materials (#{numabr(3*(qp[4,9].inject(0){|sum,x| sum + x }))}#{qpd} total)","*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
@@ -1487,7 +1487,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
-  hdr="#{"__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}"
+  hdr="#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}"
   if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
     create_embed(event,hdr,str,xcolor,nil,xpic,nil,1)
     str="__**#{flds[-1][0]}**__"
@@ -1526,13 +1526,15 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   artist=k[24] unless k[24].nil? || k[24].length<=0
   t=Time.now
   riyodefault= !riyodefault if t.month==4 && t.day==1
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}2.png" if disptext.split(' ').include?('first') || disptext.split(' ').include?('firstascension') || disptext.split(' ').include?('first_ascension') || " #{disptext} ".include?(" first ascension ") || disptext.split(' ').include?('1st') || disptext.split(' ').include?('1stascension') || disptext.split(' ').include?('1st_ascension') || " #{disptext} ".include?(" 1st ascension ") || disptext.split(' ').include?('second') || disptext.split(' ').include?('secondascension') || disptext.split(' ').include?('second_ascension') || " #{disptext} ".include?(" second ascension ") || disptext.split(' ').include?('2nd') || disptext.split(' ').include?('2ndascension') || disptext.split(' ').include?('2nd_ascension') || " #{disptext} ".include?(" 2nd ascension ")
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}3.png" if disptext.split(' ').include?('third') || disptext.split(' ').include?('thirdascension') || disptext.split(' ').include?('third_ascension') || " #{disptext} ".include?(" third ascension ") || disptext.split(' ').include?('3rd') || disptext.split(' ').include?('3rdascension') || disptext.split(' ').include?('3rd_ascension') || " #{disptext} ".include?(" 3rd ascension ")
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}4.png" if disptext.split(' ').include?('fourth') || disptext.split(' ').include?('fourthascension') || disptext.split(' ').include?('fourth_ascension') || " #{disptext} ".include?(" fourth ascension ") || disptext.split(' ').include?('4th') || disptext.split(' ').include?('4thascension') || disptext.split(' ').include?('4th_ascension') || " #{disptext} ".include?(" 4th ascension ") || disptext.split(' ').include?('final') || disptext.split(' ').include?('finalascension') || disptext.split(' ').include?('final_ascension') || " #{disptext} ".include?(" final ascension ")
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}5.png" if disptext.split(' ').include?('costume') || disptext.split(' ').include?('firstcostume') || disptext.split(' ').include?('first_costume') || " #{disptext} ".include?(" first costume ") || disptext.split(' ').include?('1stcostume') || disptext.split(' ').include?('1st_costume') || " #{disptext} ".include?(" 1st costume ") || disptext.split(' ').include?('costume1') || " #{disptext} ".include?(" costume 1 ")
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}6.png" if disptext.split(' ').include?('secondcostume') || disptext.split(' ').include?('second_costume') || " #{disptext} ".include?(" second costume ") || disptext.split(' ').include?('2ndcostume') || disptext.split(' ').include?('2nd_costume') || " #{disptext} ".include?(" 2nd costume ") || disptext.split(' ').include?('costume2') || " #{disptext} ".include?(" costume 2 ")
+  asc=1
+  asc=2 if disptext.split(' ').include?('first') || disptext.split(' ').include?('firstascension') || disptext.split(' ').include?('first_ascension') || " #{disptext} ".include?(" first ascension ") || disptext.split(' ').include?('1st') || disptext.split(' ').include?('1stascension') || disptext.split(' ').include?('1st_ascension') || " #{disptext} ".include?(" 1st ascension ") || disptext.split(' ').include?('second') || disptext.split(' ').include?('secondascension') || disptext.split(' ').include?('second_ascension') || " #{disptext} ".include?(" second ascension ") || disptext.split(' ').include?('2nd') || disptext.split(' ').include?('2ndascension') || disptext.split(' ').include?('2nd_ascension') || " #{disptext} ".include?(" 2nd ascension ")
+  asc=3 if disptext.split(' ').include?('third') || disptext.split(' ').include?('thirdascension') || disptext.split(' ').include?('third_ascension') || " #{disptext} ".include?(" third ascension ") || disptext.split(' ').include?('3rd') || disptext.split(' ').include?('3rdascension') || disptext.split(' ').include?('3rd_ascension') || " #{disptext} ".include?(" 3rd ascension ")
+  asc=4 if disptext.split(' ').include?('fourth') || disptext.split(' ').include?('fourthascension') || disptext.split(' ').include?('fourth_ascension') || " #{disptext} ".include?(" fourth ascension ") || disptext.split(' ').include?('4th') || disptext.split(' ').include?('4thascension') || disptext.split(' ').include?('4th_ascension') || " #{disptext} ".include?(" 4th ascension ") || disptext.split(' ').include?('final') || disptext.split(' ').include?('finalascension') || disptext.split(' ').include?('final_ascension') || " #{disptext} ".include?(" final ascension ")
+  asc=5 if disptext.split(' ').include?('costume') || disptext.split(' ').include?('firstcostume') || disptext.split(' ').include?('first_costume') || " #{disptext} ".include?(" first costume ") || disptext.split(' ').include?('1stcostume') || disptext.split(' ').include?('1st_costume') || " #{disptext} ".include?(" 1st costume ") || disptext.split(' ').include?('costume1') || " #{disptext} ".include?(" costume 1 ")
+  asc=6 if disptext.split(' ').include?('secondcostume') || disptext.split(' ').include?('second_costume') || " #{disptext} ".include?(" second costume ") || disptext.split(' ').include?('2ndcostume') || disptext.split(' ').include?('2nd_costume') || " #{disptext} ".include?(" 2nd costume ") || disptext.split(' ').include?('costume2') || " #{disptext} ".include?(" costume 2 ")
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}#{asc}.png"
   if riyodefault || disptext.split(' ').include?('riyo') || disptext.split(' ').include?('aprilfools') || disptext.split(' ').include?("aprilfool's") || disptext.split(' ').include?("april_fool's") || disptext.split(' ').include?("april_fools") || " #{disptext} ".include?(" april fool's ") || " #{disptext} ".include?(" april fools ")
+    asc=0
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png"
     artist='Riyo'
   end
@@ -1552,10 +1554,19 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   text="**0-star**" if k[3]==0
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+  toptext=''
+  midtext=''
   if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+    midtext="~~#{["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][asc]}~~\n"
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
     artist=k[24] unless k[24].nil? || k[24].length<=0
-    text='Requested art not found.  Default art shown.'
+    asc=1
+    text="#{text}\n\nRequested art not found.  Default art shown."
+  elsif k[0]<1.2 && asc==6
+    toptext="~~__**#{k[1]}**__ [Srv-##{k[0]}]\nSecond Costume~~\n\n"
+    asc=1
+    k=@servants[@servants.find_index{|q| q[0]==1.2}].map{|q| q}
+    text="#{"<:fgo_icon_rarity:523858991571533825>"*k[3]}\n\nThis costume is considered Servant #1.2 by this bot."
   end
   f=[[],[],[]]
   f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
@@ -1599,6 +1610,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   end
   f.compact!
   f=nil if f.length<=0
+  asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][asc]
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
     str=''
     for i in 0...f.length
@@ -1641,7 +1653,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
           end
         end
       end
-      event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}]") do |embed|
+      event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}") do |embed|
         embed.description=text
         embed.color=xcolor
         embed.footer={"text"=>ftr} unless ftr.nil?
@@ -1657,7 +1669,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
       end
     end
-    event.channel.send_embed("__**#{k[1]}**__ [##{k[0]}] #{servant_moji(bot,event,k)}") do |embed|
+    event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}\n#{midtext}#{asc}") do |embed|
       embed.description=text
       embed.color=xcolor
       embed.footer={"text"=>ftr} unless ftr.nil?
@@ -1710,7 +1722,7 @@ def disp_ce_card(bot,event,args=nil)
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
-  create_embed(event,"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]",text,xcolor,ftr,xpic)
+  create_embed(event,"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]",text,xcolor,ftr,xpic)
 end
 
 def disp_ce_art(bot,event,args=nil)
@@ -1800,7 +1812,7 @@ def disp_ce_art(bot,event,args=nil)
       f=nil
     end
     text="#{text}\n\n__**Same Artist**__\n#{f.join("\n")}" unless f.nil? || f.length<=0
-    event.channel.send_embed("__**#{ce[1]}**__ [CE ##{ce[0]}]") do |embed|
+    event.channel.send_embed("__**#{ce[1]}**__ [CE-##{ce[0]}]") do |embed|
       embed.description=text
       embed.color=xcolor
       embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
@@ -1823,7 +1835,7 @@ def disp_code_data(bot,event,args=nil)
   text="#{text}\n\n**Effect:** #{ce[3]}"
   text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-  create_embed(event,"**#{ce[1]}** [Command Code ##{ce[0]}]",text,xcolor,nil,xpic)
+  create_embed(event,"**#{ce[1]}** [Cmd-##{ce[0]}]",text,xcolor,nil,xpic)
 end
 
 def disp_skill_data(bot,event,args=nil)
