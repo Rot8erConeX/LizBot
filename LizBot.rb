@@ -2065,40 +2065,44 @@ def disp_mat_data(bot,event,args=nil)
   fff3=0
   srvs=@servants.map{|q| q}
   for i in 0...srvs.length
-    mts=[]
-    mts2=[]
-    rnk=['First','Second','Third','Final']
-    x=srvs[i][18]
-    srvtot=[0,0,0]
-    for i2 in 0...x.length
-      for i3 in 0...x[i2].length
-        m=x[i2][i3].split(' ')
-        f=m.pop
-        mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4
-        mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
-        fff3+=f.gsub('x','').to_i if m.join(' ')==k
-        srvtot[0]+=f.gsub('x','').to_i if m.join(' ')==k && i2<4
-        srvtot[1]+=f.gsub('x','').to_i if m.join(' ')==k && i2>3
+    if srvs[i][0].to_i==srvs[i][0] || srvs[i][0]==1.2
+      mts=[]
+      mts2=[]
+      rnk=['First','Second','Third','Final']
+      x=srvs[i][18]
+      srvtot=[0,0,0]
+      for i2 in 0...x.length
+        for i3 in 0...x[i2].length
+          m=x[i2][i3].split(' ')
+          f=m.pop
+          mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4
+          mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
+          fff3+=f.gsub('x','').to_i if m.join(' ')==k
+          srvtot[0]+=f.gsub('x','').to_i if m.join(' ')==k && i2<4
+          srvtot[1]+=f.gsub('x','').to_i if m.join(' ')==k && i2>3
+        end
       end
+      lst[0].push("*#{srvs[i][0]}#{'.' if srvs[i][0]>=2}#{'-1.1' if srvs[i][0]==1})* #{srvs[i][1]}  -  #{mts.join(', ')}#{"  -  __#{srvtot[0]}__ total" if mts.length>1}") if mts.length>0
+      lst[1].push("*#{srvs[i][0]}#{'.' if srvs[i][0]>=2}#{'-1.1' if srvs[i][0]==1})* #{srvs[i][1]}  -  #{mts2.join(', ')}#{"  -  __#{srvtot[1]}__ total" if mts2.length>1}") if mts2.length>0
+      fff.push(srvs[i][0]) if mts.length>0 || mts2.length>0
+      fff2+=mts.length+mts2.length
     end
-    lst[0].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}#{"  -  __#{srvtot[0]}__ total" if mts.length>1}") if mts.length>0
-    lst[1].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts2.join(', ')}#{"  -  __#{srvtot[1]}__ total" if mts2.length>1}") if mts2.length>0
-    fff.push(srvs[i][0]) if mts.length>0 || mts2.length>0
-    fff2+=mts.length+mts2.length
-    x=srvs[i][19]
-    mts=[]
-    for i2 in 0...x.length
-      for i3 in 0...x[i2].length
-        m=x[i2][i3].split(' ')
-        f=m.pop
-        mts.push("**#{f.gsub('x','')}** to reach L#{i2+2}") if m.join(' ')==k
-        fff3+=3*f.gsub('x','').to_i if m.join(' ')==k
-        srvtot[2]+=3*f.gsub('x','').to_i if m.join(' ')==k
+    if srvs[i][0].to_i==srvs[i][0]
+      x=srvs[i][19]
+      mts=[]
+      for i2 in 0...x.length
+        for i3 in 0...x[i2].length
+          m=x[i2][i3].split(' ')
+          f=m.pop
+          mts.push("**#{f.gsub('x','')}** to reach L#{i2+2}") if m.join(' ')==k
+          fff3+=3*f.gsub('x','').to_i if m.join(' ')==k
+          srvtot[2]+=3*f.gsub('x','').to_i if m.join(' ')==k
+        end
       end
+      lst[2].push("*#{srvs[i][0].to_i}.)* #{srvs[i][1]} #{'~~(All forms)~~' if srvs[i][0]==1}  -  #{mts.join(', ')}  -  __#{srvtot[2]}__ total for all skills") if mts.length>0
+      fff.push(srvs[i][0]) if mts.length>0 && !fff.include?(srvs[i][0])
+      fff2+=mts.length
     end
-    lst[2].push("*#{srvs[i][0]}#{'.' unless srvs[i][0]<2})* #{srvs[i][1]}  -  #{mts.join(', ')}  -  __#{srvtot[2]}__ total for all skills") if mts.length>0
-    fff.push(srvs[i][0]) if mts.length>0 && !fff.include?(srvs[i][0])
-    fff2+=mts.length
   end
   text=''
   unless safe_to_spam?(event)
