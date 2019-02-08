@@ -2838,6 +2838,8 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     newname="#{unit}"
     unit="#{f}"
     type=type.reverse.map{|q| q.gsub('*','')}
+  else
+    type=type.map{|q| q.gsub('*','')}
   end
   if type[1]=='Servant'
     unit=find_servant(unit,event)
