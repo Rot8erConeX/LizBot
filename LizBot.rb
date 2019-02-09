@@ -338,6 +338,8 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}**","Shows the day's in-game daily events.\nIf in PM, will also show tomorrow's.\n\nYou can also show include the word \"tomorrow\" to force the next day's data.\nYou can also include a day of the week and force that to show instead.",0xED619A)
   elsif ['next','schedule'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __type__","Shows the next time in-game daily events of the type `type` will happen.\nIf in PM and `type` is unspecified, shows the entire schedule.\n\n__*Accepted Inputs*__\nTraining / Ground(s)\nEmber(s) / Gather(ing)\nMat(s) / Material(s) ~~this one only works fully in PM.~~",0xED619A)
+  elsif command.downcase=='invite'
+    create_embed(event,'**invite**','PMs the invoker with a link to invite me to their server.',0xED619A)
   elsif ['tools','tool','links','link','resources','resource'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**",'Responds with a list of links useful to players of *Fate/Grand Order*.',0xED619A)
   elsif ['mat','material'].include?(command.downcase)
@@ -534,7 +536,7 @@ def all_commands(include_nil=false,permissions=-1)
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
-     'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow','lookup']
+     'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow','lookup','invite']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
