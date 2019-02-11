@@ -338,6 +338,14 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     create_embed(event,"**#{command.downcase}**","Shows the day's in-game daily events.\nIf in PM, will also show tomorrow's.\n\nYou can also show include the word \"tomorrow\" to force the next day's data.\nYou can also include a day of the week and force that to show instead.",0xED619A)
   elsif ['next','schedule'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __type__","Shows the next time in-game daily events of the type `type` will happen.\nIf in PM and `type` is unspecified, shows the entire schedule.\n\n__*Accepted Inputs*__\nTraining / Ground(s)\nEmber(s) / Gather(ing)\nMat(s) / Material(s) ~~this one only works fully in PM.~~",0xED619A)
+  elsif ['exp','level','xp'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __start__ __end__","Shows how much EXP to get from level `start` to level `end`.\nIf the levels are in the wrong order, will auto-switch them.\n\nIf only one level is listed, will show *both* EXP to get from level 1 to specified level, and EXP to get from specified level to max level.\nIf no level is listed, will show EXP required to get from level 1 to max level.\n\nIn PM, shows everything unless you specify a particular type of EXP.\nOtherwise, only works if you specify a particular type of EXP:\n- Player\n- Servant\n- Craft Essence",0xED619A)
+  elsif ['plxp','plexp','pllevel','plevel','pxp','pexp'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __start__ __end__","Shows how much EXP to get a player from level `start` to level `end`.\nIf the levels are in the wrong order, will auto-switch them.\n\nIf only one level is listed, will show *both* EXP to get from level 1 to specified level, and EXP to get from specified level to max level.\nIf no level is listed, will show EXP required to get from level 1 to max level.",0xED619A)
+  elsif ['sxp','sexp','slevel'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __start__ __end__","Shows how much EXP to get a servant from level `start` to level `end`.\nIf the levels are in the wrong order, will auto-switch them.\n\nIf only one level is listed, will show *both* EXP to get from level 1 to specified level, and EXP to get from specified level to max level.\nIf no level is listed, will show EXP required to get from level 1 to max level.",0xED619A)
+  elsif ['cxp','cexp','ceexp','clevel','celevel'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __start__ __end__","Shows how much EXP to get a Craft Essence from level `start` to level `end`.\nIf the levels are in the wrong order, will auto-switch them.\n\nIf only one level is listed, will show *both* EXP to get from level 1 to specified level, and EXP to get from specified level to max level.\nIf no level is listed, will show EXP required to get from level 1 to max level.",0xED619A)
   elsif command.downcase=='invite'
     create_embed(event,'**invite**','PMs the invoker with a link to invite me to their server.',0xED619A)
   elsif ['tools','tool','links','link','resources','resource'].include?(command.downcase)
@@ -536,7 +544,9 @@ def all_commands(include_nil=false,permissions=-1)
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
-     'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow','lookup','invite']
+     'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
+     'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
+     'cexp','ceexp','clevel','celevel']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -1024,7 +1034,7 @@ def disp_servant_stats(bot,event,args=nil)
   fou=1000 if dispstr.include?('jpfou') || dispstr.include?('jp_fou') || dispstr.include?('foujp') || dispstr.include?('fou_jp')
   fou=1000 if dispstr.include?('fou-jp') || dispstr.include?('jp-fou')
   flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*Atk* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*Atk* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*Atk* - #{longFormattedNumber(k[7][2])}  "]]
-  flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - <:Fou:503453296242196500>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:503453296242196500>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:503453297068212224>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
+  flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:544138629694619648>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[6][0]+2000)}  \n*Atk* - <:Fou:544138629694619648>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:544138629694619648>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[6][1]+2000)}  \n*Atk* - <:Fou:544138629694619648>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - <:Fou:544138629694619648>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[6][2]+2000)}  \n*Atk* - <:Fou:544138629694619648>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
   flds.push(["Attack Parameters","__**Hit Counts**__\n<:Quick_y:526556106986618880>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{k[9][2]}\n<:Blank:509232907555045386><:Extra_y:526556105388720130>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   xpic=servant_icon(k,event)
   ftr=nil
@@ -1062,9 +1072,9 @@ def disp_tiny_stats(bot,event,args=nil)
   text="<:fgo_icon_rarity:523858991571533825>"*k[3]
   text="**0-star**" if k[3]==0
   if dispfou==2000
-    text="#{text}\u00A0\u00B7\u00A0<:GoldenFou:503453297068212224>"
+    text="#{text}\u00A0\u00B7\u00A0<:GoldenFou:544138629832769536>"
   elsif dispfou>0
-    text="#{text}\u00A0\u00B7\u00A0<:Fou:503453296242196500>"
+    text="#{text}\u00A0\u00B7\u00A0<:Fou:544138629694619648>"
   end
   kx=@crafts.find_index{|q| q[0]==k[23]}
   bond=">No Bond CE<"
@@ -3560,6 +3570,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
     clzz.push('Saber') if ['saber','sabers','seiba','seibas'].include?(args[i])
     clzz.push('Shielder') if ['shielder','shielders','shield','shields','sheilder','sheilders','sheild','sheilds','extra','extras'].include?(args[i])
     rarity.push(args[i].to_i) if args[i].to_i.to_s==args[i] && args[i].to_i>=0 && args[i].to_i<6
+    rarity.push(args[i][0,1].to_i) if args[i]=="#{args[i][0,1]}*" && args[i][0,1].to_i.to_s==args[i][0,1] && args[i][0,1].to_i>0 && args[i][0,1].to_i<6
     rarity.push(5) if ['ssr','supersuperrare','supersuperare','super-super-rare','super-super_rare','super_super-rare','super_super_rare','super-superare','super_superare'].include?(args[i])
     rarity.push(4) if ['sr','superrare','super-rare','super_rare','superare'].include?(args[i])
     rarity.push(3) if ['r','rare'].include?(args[i])
@@ -3994,6 +4005,296 @@ def sort_servants(bot,event,args=nil)
     str=extend_message(str,disp[i],event)
   end
   event.respond str
+end
+
+def exp_shift(m,mode=0)
+  if m==0
+    return '-'
+  elsif m%97200==0 && mode==1
+    return "#{longFormattedNumber(m/97200)} <:FGO_rarity_5:544583774965596171> Hellfire#{'s' unless m/97200==1}"
+  elsif m>97200 && mode==1
+    return "#{longFormattedNumber(m/97200)} <:FGO_rarity_5:544583774965596171> Hellfire#{'s' unless m/97200==1}, #{exp_shift(m-(m/97200)*97200,2)}"
+  elsif m%32400==0
+    return "#{longFormattedNumber(m/32400)} <:FGO_rarity_4:544583774923653140> RFlame#{'s' unless m/32400==1}"
+  elsif m>32400
+    return "#{longFormattedNumber(m/32400)} <:FGO_rarity_4:544583774923653140> RFlame#{'s' unless m/32400==1}, #{exp_shift(m-(m/32400)*32400,2)}"
+  elsif m%10800==0
+    return "#{longFormattedNumber(m/10800)} <:FGO_rarity_3:544583774944624670> Blaze#{'s' unless m/10800==1}"
+  elsif m>10800
+    return "#{longFormattedNumber(m/10800)} <:FGO_rarity_3:544583774944624670> Blaze#{'s' unless m/10800==1}, #{exp_shift(m-(m/10800)*10800,2)}"
+  elsif m%3600==0
+    return "#{longFormattedNumber(m/3600)} <:FGO_rarity_2:544583776148258827> Torch#{'s' unless m/3600==1}"
+  elsif m>3600
+    return "#{longFormattedNumber(m/3600)} <:FGO_rarity_2:544583776148258827> Torch#{'s' unless m/3600==1}, #{exp_shift(m-(m/3600)*3600,2)}"
+  elsif m%1200==0
+    return "#{longFormattedNumber(m/1200)} <:FGO_rarity_1:544583775330369566> Ember#{'s' unless m/1200==1}"
+  elsif m>1200
+    return "#{longFormattedNumber(m/1200)} <:FGO_rarity_1:544583775330369566> Ember#{'s' unless m/1200==1}, #{exp_shift(m-(m/1200)*1200,2)}"
+  elsif m%1000==0
+    return "#{longFormattedNumber(m/1000)} <:FGO_rarity_off:544583775208603688> off-class Ember#{'s' unless m/1000==1}"
+  else
+    return "#{longFormattedNumber(m/1000+1)} <:FGO_rarity_off:544583775208603688> off-class Ember#{'s' unless m/1000==0}"
+  end
+end
+
+def level(event,bot,args=nil,mode=0)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  args=args.map{|q| q.downcase}
+  nums=[]
+  g=0
+  for i in 0...args.length
+    nums.push(args[i].to_i) if args[i].to_i.to_s==args[i] && args[i].to_i>0
+    mode=1 if mode==0 && ['player','pxp','pexp','plxp','plexp','plevel','pllevel'].include?(args[i])
+    mode=2 if mode==0 && ['servant','servants','unit','units','sexp','sxp','slevel','servantexp','servantxp','servantlevel','unitexp','unitxp','unitlevel'].include?(args[i])
+    mode=3 if mode==0 && ['craft','crafts','essence','essences','ceexp','cexp','cxp','celevel','clevel','craftexp','craftxp','craftlevel','essenceexp','essencexp','essencelevel','craftessence','craftessences','craft-essence','craft-essences','craft_essences','craft_essence'].include?(args[i])
+    g=1 if ['ssr','gold','hellfire'].include?(args[i])
+  end
+  if mode==0 && !safe_to_spam?(event)
+    event.respond "Please either specify an EXP type or use this command in PM.\n\nAvailable EXP types include:\n- Player\n- Servant\n- Craft Essance"
+    return nil
+  end
+  nums.uniq!
+  str=''
+  if [1,0].include?(mode)
+    pxp=[[31,20,10,25],[32,21,11,26],[59,22,12,27],[87,23,13,28],[287,24,14,31],[419,25,15,32],[629,26,16,33],[829,27,17,34],[1234,28,18,35],[1634,31,19,38],
+         [2129,32,20,39],[2569,33,21,40],[3254,34,22,41],[3884,35,23,42],[4742,38,24,45],[5266,39,25,46],[5869,40,26,47],[6679,41,27,48],[7534,42,28,49],
+         [8434,45,29,52],[9379,46,29,53],[10369,47,30,53],[11404,48,30,54],[12484,49,31,54],[13609,50,31,55],[14779,51,32,55],[15994,52,32,56],
+         [17254,53,33,56],[18559,54,33,56],[19909,55,34,59],[21304,56,34,60],[22744,57,35,60],[24249,58,35,61],[25759,59,36,61],[27334,60,36,62],
+         [28954,61,37,62],[30619,62,37,63],[32329,63,38,63],[34084,64,38,63],[35884,65,39,66],[37729,66,39,67],[39619,67,40,67],[41554,68,40,68],
+         [43534,69,41,68],[45559,70,41,69],[47629,71,42,69],[49744,72,42,70],[51904,73,43,70],[54109,74,43,70],[56359,75,44,73],[58654,76,44,74],
+         [60994,77,45,74],[63379,78,45,75],[65809,79,46,75],[68284,80,46,76],[70804,81,47,76],[73369,82,47,77],[75979,83,48,77],[78634,84,48,78],
+         [81334,85,49,78],[84079,86,49,79],[86869,87,50,79],[89704,88,50,80],[92584,89,50,80],[95509,90,50,81],[98479,91,50,81],[101494,92,50,82],
+         [104554,93,50,82],[107659,94,50,83],[110809,95,50,83],[114004,96,50,84],[113244,97,50,84],[120529,98,50,85],[123859,99,50,85],[127234,100,50,86],
+         [130654,101,50,86],[134119,102,50,87],[137629,103,50,87],[141184,104,50,88],[144784,105,50,88],[148429,106,50,89],[152119,107,50,89],
+         [155854,108,50,90],[159634,109,50,90],[163459,110,50,91],[167329,111,50,91],[171244,112,50,92],[175204,113,50,92],[179209,114,50,93],
+         [183259,115,50,93],[187354,116,50,94],[191494,117,50,94],[195679,118,50,95],[199909,119,50,95],[204184,120,50,96],[208504,121,50,96],
+         [212869,122,50,97],[217279,123,50,97],[221734,124,50,98],[226234,125,50,98],[428234,126,51,99],[560834,126,52,100],[694734,127,53,100],
+         [798734,127,54,101],[903734,128,55,101],[1009734,128,56,102],[1138134,129,57,102],[1267734,129,58,103],[1398534,130,59,103],[1563534,130,60,104],
+         [1674534,131,60,104],[1786534,131,60,105],[1899534,132,60,105],[2013534,132,60,106],[2140034,133,60,106],[2267634,133,60,107],[2396334,134,60,107],
+         [2490734,134,60,108],[2609734,135,60,108],[2741734,135,60,109],[3001884,136,61,109],[3197084,136,62,109],[3400034,136,63,110],[3620134,136,64,110],
+         [3842009,137,65,110],[4034159,137,66,110],[4259584,137,67,111],[4464384,137,68,111],[4677234,138,69,111],[4919315,138,70,111],[5705315,138,71,111],
+         [6761315,138,72,111],[8224315,139,73,111],[9430315,139,74,111],[10915315,139,75,111],[12207315,139,76,111],[13919815,140,77,111],
+         [15368815,140,78,111],[16897815,140,79,111],[18857815,140,80,112],[18870505,140,81,112],[18883285,140,82,112],[18896155,141,83,112],
+         [18909115,141,84,112],[18922165,141,85,112],[18935305,141,86,112],[18948535,142,87,112],[18961855,142,88,112],[18975265,142,89,112],
+         [18988765,142,90,113]]
+    na_max=130
+    str2="__**Player EXP**__"
+    if nums.length<=0
+      str2="#{str2}\n\n*To get from level 1 to level #{na_max}:*  \u200B  \u200B  #{longFormattedNumber(pxp[0,na_max-1].map{|q| q[0]*10}.inject(0){|sum,x| sum + x })} EXP required"
+      str2="#{str2}\n*Resulting AP increase:*  \u200B  \u200B  #{pxp[na_max-1][1]-pxp[0][1]} points of increase ~~(from #{pxp[0][1]} to #{pxp[na_max-1][1]})~~"
+      str2="#{str2}\n*Resulting friends list increase:*  \u200B  \u200B  #{pxp[na_max-1][2]-pxp[0][2]} more friends ~~(from #{pxp[0][2]} to #{pxp[na_max-1][2]})~~"
+      str2="#{str2}\n*Resulting party cost increase:*  \u200B  \u200B  #{pxp[na_max-1][3]-pxp[0][3]} points of increase ~~(from #{pxp[0][3]} to #{pxp[na_max-1][3]})~~"
+      str2="#{str2}\n\n*To get from level 1 to level #{pxp.length}:*  \u200B  \u200B  #{longFormattedNumber(pxp.map{|q| q[0]*10}.inject(0){|sum,x| sum + x })} EXP required"
+      str2="#{str2}\n*Resulting AP increase:*  \u200B  \u200B  #{pxp[pxp.length-1][1]-pxp[0][1]} points of increase ~~(from #{pxp[0][1]} to #{pxp[pxp.length-1][1]})~~"
+      str2="#{str2}\n*Resulting friends list increase:*  \u200B  \u200B  #{pxp[pxp.length-1][2]-pxp[0][2]} more friends ~~(from #{pxp[0][2]} to #{pxp[pxp.length-1][2]})~~"
+      str2="#{str2}\n*Resulting party cost increase:*  \u200B  \u200B  #{pxp[pxp.length-1][3]-pxp[0][3]} points of increase ~~(from #{pxp[0][3]} to #{pxp[pxp.length-1][3]})~~"
+    elsif nums.length==1
+      n=[nums[0],pxp.length].min
+      unless n==1
+        str2="#{str2}\n\n*To get from level 1 to level #{n}:*  \u200B  \u200B  #{longFormattedNumber(pxp[0,n-1].map{|q| q[0]*10}.inject(0){|sum,x| sum + x })} EXP required"
+        str2="#{str2}\n*Resulting AP increase:*  \u200B  \u200B  #{pxp[n-1][1]-pxp[0][1]} points of increase ~~(from #{pxp[0][1]} to #{pxp[n-1][1]})~~"
+        str2="#{str2}\n*Resulting friends list increase:*  \u200B  \u200B  #{pxp[n-1][2]-pxp[0][2]} more friends ~~(from #{pxp[0][2]} to #{pxp[n-1][2]})~~"
+        str2="#{str2}\n*Resulting party cost increase:*  \u200B  \u200B  #{pxp[n-1][3]-pxp[0][3]} points of increase ~~(from #{pxp[0][3]} to #{pxp[n-1][3]})~~"
+      end
+      unless n==na_max
+        str2="#{str2}\n\n*To get from level #{n} to level #{na_max}:*  \u200B  \u200B  #{longFormattedNumber(pxp[n-1,na_max-n].map{|q| q[0]*10}.inject(0){|sum,x| sum + x })} EXP required"
+        str2="#{str2}\n*Resulting AP increase:*  \u200B  \u200B  #{pxp[na_max-1][1]-pxp[n-1][1]} points of increase ~~(from #{pxp[n-1][1]} to #{pxp[na_max-1][1]})~~"
+        str2="#{str2}\n*Resulting friends list increase:*  \u200B  \u200B  #{pxp[na_max-1][2]-pxp[n-1][2]} more friends ~~(from #{pxp[n-1][2]} to #{pxp[na_max-1][2]})~~"
+        str2="#{str2}\n*Resulting party cost increase:*  \u200B  \u200B  #{pxp[na_max-1][3]-pxp[n-1][3]} points of increase ~~(from #{pxp[n-1][3]} to #{pxp[na_max-1][3]})~~"
+      end
+      unless n==pxp.length
+        str2="#{str2}\n\n*To get from level #{n} to level #{pxp.length}:*  \u200B  \u200B  #{longFormattedNumber(pxp[n-1,pxp.length-n].map{|q| q[0]*10}.inject(0){|sum,x| sum + x })} EXP required"
+        str2="#{str2}\n*Resulting AP increase:*  \u200B  \u200B  #{pxp[pxp.length-1][1]-pxp[n-1][1]} points of increase ~~(from #{pxp[n-1][1]} to #{pxp[pxp.length-1][1]})~~"
+        str2="#{str2}\n*Resulting friends list increase:*  \u200B  \u200B  #{pxp[pxp.length-1][2]-pxp[n-1][2]} more friends ~~(from #{pxp[n-1][2]} to #{pxp[pxp.length-1][2]})~~"
+        str2="#{str2}\n*Resulting party cost increase:*  \u200B  \u200B  #{pxp[pxp.length-1][3]-pxp[n-1][3]} points of increase ~~(from #{pxp[n-1][3]} to #{pxp[pxp.length-1][3]})~~"
+      end
+    else
+      n=[nums[0,2].min,1].max
+      m=[nums[0,2].max,pxp.length].min
+      str2="#{str2}\n*To get from level #{n} to level #{m}:*  \u200B  \u200B  #{longFormattedNumber(pxp[n-1,m-n].map{|q| q[0]*10}.inject(0){|sum,x| sum + x })} EXP required"
+      str2="#{str2}\n*Resulting AP increase:*  \u200B  \u200B  #{pxp[m-1][1]-pxp[n-1][1]} points of increase ~~(from #{pxp[n-1][1]} to #{pxp[m-1][1]})~~"
+      str2="#{str2}\n*Resulting friends list increase:*  \u200B  \u200B  #{pxp[m-1][2]-pxp[n-1][2]} more friends ~~(from #{pxp[n-1][2]} to #{pxp[m-1][2]})~~"
+      str2="#{str2}\n*Resulting party cost increase:*  \u200B  \u200B  #{pxp[m-1][3]-pxp[n-1][3]} points of increase ~~(from #{pxp[n-1][3]} to #{pxp[m-1][3]})~~"
+    end
+    str=extend_message(str,str2,event,2)
+  end
+  if [2,0].include?(mode)
+    axp=[1,3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,231,253,276,300,325,351,378,406,435,465,496,528,561,595,630,666,703,741,780,820,861,
+         903,946,990,1035,1081,1128,1176,1225,1275,1326,1378,1431,1485,1540,1596,1653,1711,1770,1830,1891,1953,2016,2080,2145,2211,2278,2346,2415,2485,2556,
+         2628,2701,2775,2850,2926,3300,3081,3160,3240,3321,3403,3486,3570,3655,3741,3828,3916,4005,4185,4549,5101,5845,6785,7925,9269,10821,12585,14565,0]
+    str=extend_message(str,"__**Servant EXP**__",event,2)
+    if nums.length<=0
+      m=axp[0,60].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"<:class_unknown_bronze:523948997430214666> *To get from level 1 to level 60:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      m=axp[0,65].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"<:class_unknown_bronze:523948997430214666> *To get from level 1 to level 65:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      m=axp[0,70].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"<:class_unknown_silver:523838967058006027> *To get from level 1 to level 70:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      m=axp[0,80].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"<:class_unknown_gold:523838979825467392> *To get from level 1 to level 80:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      m=axp[0,90].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"<:class_unknown_gold:523838979825467392> *To get from level 1 to level 90:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      m=axp[0,100].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"<:holy_grail:523842742992764940> *To get from level 1 to level 100:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+    elsif nums.length==1
+      n=[nums[0],axp.length].min
+      m=axp[0,n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"<:class_unknown_blue:523948997229019136> *To get from level 1 to level #{n}:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      if n<60
+        m=axp[n-1,60-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"<:class_unknown_bronze:523948997430214666> *To get from level #{n} to level 60:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      end
+      if n<65
+        m=axp[n-1,65-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"<:class_unknown_bronze:523948997430214666> *To get from level #{n} to level 65:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      end
+      if n<70
+        m=axp[n-1,70-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"<:class_unknown_silver:523838967058006027> *To get from level #{n} to level 70:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      end
+      if n<80
+        m=axp[n-1,80-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"<:class_unknown_gold:523838979825467392> *To get from level #{n} to level 80:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      end
+      if n<90
+        m=axp[n-1,90-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"<:class_unknown_gold:523838979825467392> *To get from level #{n} to level 90:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      end
+      if n<100
+        m=axp[n-1,100-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"<:holy_grail:523842742992764940> *To get from level #{n} to level 100:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}",event)
+      end
+    else
+      n=[nums[0,2].min,1].max
+      n2=[nums[0,2].max,axp.length].min
+      m=axp[n-1,n2-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str="#{str}\n*To get from level #{n} to level #{n2}:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP  \u200B  \u200B  #{exp_shift(m,g)}"
+    end
+    str=extend_message(str,"This only includes up to <:FGO_rarity_4:544583774923653140> Embers in its calculations.\nIf you wish to include <:FGO_rarity_5:544583774965596171> Embers as well, include the word \"SSR\" in your message.",event,2) unless g==1
+  end
+  if [3,0].include?(mode)
+    dxp=[1,3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,231,253,276,300,325,351,378,406,435,465,496,528,561,595,630,666,703,741,780,820,861,
+         903,946,990,1035,1081,1128,1176,1225,1275,1326,1378,1431,1485,1540,1596,1653,1711,1770,1830,1891,1953,2016,2080,2145,2211,2278,2346,2415,2485,2556,
+         2628,2701,2775,2850,2926,3003,3081,3160,3240,3321,3403,3486,3570,3655,3741,3828,3916,4005,4095,4186,4278,4371,4465,4560,4656,4753,4851,4950,5050,0]
+    str=extend_message(str,"__**Craft Essence EXP**__",event,2)
+    if nums.length<=0
+      m=dxp[0,10].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 10:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_1:544583775330369566>D" if safe_to_spam?(event)}",event)
+      m=dxp[0,15].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 15:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>D" if safe_to_spam?(event)}",event)
+      m=dxp[0,20].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 20:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_3:544583774944624670>D, <:FGO_rarity_4:544583774923653140>D, <:FGO_rarity_5:544583774965596171>D, <:FGO_rarity_1:544583775330369566>LB1" if safe_to_spam?(event)}",event)
+      m=dxp[0,25].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 25:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>LB1" if safe_to_spam?(event)}",event)
+      m=dxp[0,30].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 30:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_3:544583774944624670>LB1, <:FGO_rarity_1:544583775330369566>LB2" if safe_to_spam?(event)}",event)
+      m=dxp[0,35].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 35:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_4:544583774923653140>LB1, <:FGO_rarity_2:544583776148258827>LB2" if safe_to_spam?(event)}",event)
+      m=dxp[0,40].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 40:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>LB1, <:FGO_rarity_3:544583774944624670>LB2, <:FGO_rarity_1:544583775330369566>LB3" if safe_to_spam?(event)}",event)
+      m=dxp[0,45].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 45:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>LB3" if safe_to_spam?(event)}",event)
+      m=dxp[0,50].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 50:*  <:FGO_rarity_1:544583775330369566>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_4:544583774923653140>LB2, <:FGO_rarity_3:544583774944624670>LB3, <:FGO_rarity_1:544583775330369566>max" if safe_to_spam?(event)}",event)
+      m=dxp[0,55].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 55:*  <:FGO_rarity_2:544583776148258827>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>MLB" if safe_to_spam?(event)}",event)
+      m=dxp[0,60].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 60:*  <:FGO_rarity_3:544583774944624670>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>LB2, <:FGO_rarity_3:544583774944624670>MLB" if safe_to_spam?(event)}",event)
+      m=dxp[0,65].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 65:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_4:544583774923653140>LB3" if safe_to_spam?(event)}",event)
+      m=dxp[0,80].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 80:*  <:FGO_rarity_4:544583774923653140>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>LB3, <:FGO_rarity_4:544583774923653140>MLB" if safe_to_spam?(event)}",event)
+      m=dxp[0,100].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level 100:*  <:FGO_rarity_5:544583774965596171>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>MLB" if safe_to_spam?(event)}",event)
+    elsif nums.length==1
+      n=[nums[0],dxp.length].min
+      m=dxp[0,n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level 1 to level #{n}:*  <:FGO_rarity_off:544583775208603688>  #{longFormattedNumber(m)} EXP",event)
+      if n<10
+        m=dxp[n-1,10-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 10:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_1:544583775330369566>D" if safe_to_spam?(event)}",event)
+      end
+      if n<15
+        m=dxp[n-1,15-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 15:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>D" if safe_to_spam?(event)}",event)
+      end
+      if n<20
+        m=dxp[n-1,20-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 20:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_3:544583774944624670>D, <:FGO_rarity_4:544583774923653140>D, <:FGO_rarity_5:544583774965596171>D, <:FGO_rarity_1:544583775330369566>LB1" if safe_to_spam?(event)}",event)
+      end
+      if n<25
+        m=dxp[n-1,25-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 25:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>LB1" if safe_to_spam?(event)}",event)
+      end
+      if n<30
+        m=dxp[n-1,30-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 30:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_3:544583774944624670>LB1, <:FGO_rarity_1:544583775330369566>LB2" if safe_to_spam?(event)}",event)
+      end
+      if n<35
+        m=dxp[n-1,35-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 35:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_4:544583774923653140>LB1, <:FGO_rarity_2:544583776148258827>LB2" if safe_to_spam?(event)}",event)
+      end
+      if n<40
+        m=dxp[n-1,40-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 40:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>LB1, <:FGO_rarity_3:544583774944624670>LB2, <:FGO_rarity_1:544583775330369566>LB3" if safe_to_spam?(event)}",event)
+      end
+      if n<45
+        m=dxp[n-1,45-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 45:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>LB3" if safe_to_spam?(event)}",event)
+      end
+      if n<50
+        m=dxp[n-1,50-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 50:*  <:FGO_rarity_1:544583775330369566>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_4:544583774923653140>LB2, <:FGO_rarity_3:544583774944624670>LB3, <:FGO_rarity_1:544583775330369566>max" if safe_to_spam?(event)}",event)
+      end
+      if n<55
+        m=dxp[n-1,55-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 55:*  <:FGO_rarity_2:544583776148258827>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_2:544583776148258827>MLB" if safe_to_spam?(event)}",event)
+      end
+      if n<60
+        m=dxp[n-1,60-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 60:*  <:FGO_rarity_3:544583774944624670>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>LB2, <:FGO_rarity_3:544583774944624670>MLB" if safe_to_spam?(event)}",event)
+      end
+      if n<65
+        m=dxp[n-1,65-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 65:*  \u200B  \u200B  \u200B  \u200B  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_4:544583774923653140>LB3" if safe_to_spam?(event)}",event)
+      end
+      if n<80
+        m=dxp[n-1,80-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 80:*  <:FGO_rarity_4:544583774923653140>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>LB3, <:FGO_rarity_4:544583774923653140>MLB" if safe_to_spam?(event)}",event)
+      end
+      if n<100
+        m=dxp[n-1,100-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+        str=extend_message(str,"*To get from level #{n} to level 100:*  <:FGO_rarity_5:544583774965596171>  #{longFormattedNumber(m)} EXP#{"  \u200B  \u200B  <:FGO_rarity_5:544583774965596171>MLB" if safe_to_spam?(event)}",event)
+      end
+    else
+      n=[nums[0,2].min,1].max
+      n2=[nums[0,2].max,dxp.length].min
+      m=dxp[n-1,n2-n].map{|q| q*100}.inject(0){|sum,x| sum + x }
+      str=extend_message(str,"*To get from level #{n} to level #{n2}:*  \u200B  \u200B  #{longFormattedNumber(m)} EXP",event)
+    end
+  end
+  event.respond str
+end
+
+bot.command([:xp,:exp,:level]) do |event, *args|
+  return nil if overlap_prevent(event)
+  level(event,bot,args)
+end
+
+bot.command([:plxp,:plexp,:pllevel,:plevel,:pxp,:pexp]) do |event, *args|
+  return nil if overlap_prevent(event)
+  level(event,bot,args,1)
+end
+
+bot.command([:sxp,:sexp,:slevel]) do |event, *args|
+  return nil if overlap_prevent(event)
+  level(event,bot,args,2)
+end
+
+bot.command([:cxp,:cexp,:ceexp,:clevel,:celevel]) do |event, *args|
+  return nil if overlap_prevent(event)
+  level(event,bot,args,3)
 end
 
 bot.command([:skill,:skil]) do |event, *args|
@@ -4924,6 +5225,13 @@ bot.mention do |event|
   elsif ['sort','list'].include?(args[0].downcase)
     args.shift
     sort_servants(bot,event,args)
+    m=false
+  elsif ['xp','exp','level'].include?(args[0].downcase)
+    args.shift
+    level(event,bot,args)
+    m=false
+  elsif ['pxp','pexp','plxp','plexp','plevel','pllevel','sxp','sexp','slevel','cxp','cexp','ceexp','clevel','celevel'].include?(args[0].downcase)
+    level(event,bot,args)
     m=false
   elsif ['servant','data','unit'].include?(args[0].downcase)
     args.shift
