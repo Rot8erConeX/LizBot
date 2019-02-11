@@ -26,3 +26,6 @@
 26\Mirror of Eight Leaves\4\Apply Nullify Stun (1 time, 2 turns)\Activity Log of the Sparrow's Inn
 27\Good Wife Smart Fox\5\Increase HP Recovery Amount by 50% (1 time, 2 turns)\Activity Log of the Sparrow's Inn
 28\Command Spells of the Pink Image\3\Remove 1 ATK Buff from the Enemy, Restore own HP by 100
+29\Pigeon Report\3\Remove Critical Strength Buffs from an enemy, If removal succeeds, decrease their Critical Rate by 10% (3 turns)        \Valentines 2019
+30\Evil Holy Sword of Star Extermination\4\Increase Critical Strength against [Saber] class by 25%        \Valentines 2019
+31\Bride of the White Rose\5\Recover HP of all allies by 200\Valentines 2019

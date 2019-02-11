@@ -261,7 +261,7 @@
 261\Golden Sumo: Boulder Tournament\5\12\0, 500\0, 2000\Increase ATK by 10%; Increase NP Gauge by 30% at the start of battle; Increase ATK Strength by 100%\Increase ATK by 15%; Increase NP Gauge by 50% at the start of battle; Increase ATK Strength by 200%\-\Shinjirou\\The Great Tale of Demons: Onigashima
 262\Hot Spring Under the Moon\5\12\0, 500\0, 2000\Increase Critical Strength by 20%; Gain 3 Critical Stars per turn; Increase ATK Strength of all allies (including sub members) by 50%\Increase Critical Strength by 25%; Gain 4 Critical Stars per turn; Increase ATK Strength of all allies (including sub members) by 100%\-\Ikesin\\The Great Tale of Demons: Onigashima
 263\Origin Bullet\5\12\0, 500\0, 2000\Apply Ignore Invincible; Apply Special Attack [Caster] 35%\Apply Ignore Invincible; Apply Special Attack [Caster] 40%\-\pako\
-264\Covering Fire\4\9\320, 200\1200, 750\Apply Damage Plus 400; Increase Critical Strength by 15%\Apply Damage Plus 600; Increase Critical Strength by 20%\-\Takahashi Keitarou>\
+264\Covering Fire\4\9\320, 200\1200, 750\Apply Damage Plus 400; Increase Critical Strength by 15%\Apply Damage Plus 600; Increase Critical Strength by 20%\-\Takahashi Keitarou\
 265\Battle of Camlann\3\5\300, 0\1500, 0\Increase NP Gauge of all allies by 10% when defeated\Increase NP Gauge of all allies by 15% when defeated\-\\
 266\Who Am I?\4\9\100, 100\100, 100\When equipped to Mordred (Saber) only. Increase NP Strength of all allies by 20% while she's on the field\\-\\
 267\A Misty Night in London\4\9\100, 100\100, 100\When equipped to Jack the Ripper (Assassin) only. Increase Critical Strength of all allies by 25% while she's on the field\\-\\
@@ -858,7 +858,7 @@
 858\Tales of Love and Hope\5\12\400, 250\1600, 1000\Increase Critical Star Gather Rate by 100%; Increase Critical Strength by 10%; Increase NP Gauge by 50% at the start of battle\Increase Critical Star Gather Rate by 200%; Increase Critical Strength by 15%; Increase NP Gauge by 60% at the start of battle\-\fuzichoco\\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 859\Greatest Journey\4\9\320, 200\1200, 750\Increase Quick Card effectiveness by 10%; Increase NP Gain by 5%\Increase Quick Card effectiveness by 15%; Increase NP Gain by 10%\-\STAR Shadow Magician\\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 860\TEAM Phoenix\3\5\0, 200\0, 1000\Gain 1 Critical Star per turn; Increase Critical Strength by 5%\Gain 2 Critical Stars per turn; Increase Critical Strength by 10%\-\Azusa\\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
-861\Elegance\5\12\750, 0\3000, 0\Increase Mystic Code EXP by 1%; (Increased to 3% when Support)\Increase Mystic Code EXP by 10%; (Increased to 15% when Support)\-\BLACK\\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
+861\Elegance\5\12\750, 0\3000, 0\Increase Mystic Code EXP by 1%; (Increased to 3% when Support)\Increase Mystic Code EXP by 5%; (Increased to 15% when Support)\-\BLACK\\Fate/Grand Order Fes. 2018 ~3rd Anniversary~
 862\Love Bequeathed by the Gods\4\9\100, 100\100, 100\When equipped to Scathach=Skadi (Caster) only. Increase Quick Card effectiveness of all allies by 10% and Critical Strength by 15% while she's on the field\\-\Kamikokuryou Haruka\
 863\Fate/Grand Order Arcade\4\9\100, 100\100, 100\Increase Master EXP from clearing quests by 50\\-\Takeuchi Takashi & Simosi & Azusa & pako & Bsuke & Honjou Raita & Morii Shizuki & Rin Kususaga\\Fate/Grand Order Arcade Operation Commemoration Quest
 864\Singularity F\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Kazama Raita\\Fate/Grand Order Arcade Location Campaign
@@ -918,7 +918,7 @@
 918\Wood of the Ash Tree\4\9\100, 100\100, 100\When equiped to Qin Liangyu (Lancer) only, Increase Quick and Arts effectiveness of all allies by 10% while she's on the field. \\-\-\
 919\Epang Palace Model\4\9\100, 100\100, 100\When equipped to Shi Huang Di (Ruler) only, Apply Guts (1 time, 50% HP)\\-\-\
 920\Reading Books\4\9\100, 100\100, 100\When equipped to Yu Meiren (Assassin) only, Increase Arts and Quick Card effectiveness of all allies by 10% while she's on the field\\-\-\
-921\Wonderful Manger\4\9\100, 100\100, 100\When equipped to Chituma (Rider) only, Increase Quick Card effectiveness of all allies by 20% and Critical Strength by 15% but decrease their DEF by 10% [Demerit] while he's on the field        \\-\-\
+921\Wonderful Manger\4\9\100, 100\100, 100\When equipped to Chituma (Rider) only, Increase Quick Card effectiveness of all allies by 20% and Critical Strength by 15% but decrease their DEF by 10% [Demerit] while he's on the field.\\-\-\
 922\Traveling Big Circus!\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\-\
 923\Shvibzik Snow\5\12\400, 250\1600, 1000\Increase Quick Card effectiveness by 10%, Increase Arts Card effectiveness by 10%, Increase NP Gauge by 40% at the start of battle\Increase Quick Card effectiveness by 12%, Increase Arts Card effectiveness by 12%, Increase NP Gauge by 50%\-\Ponkan8\
 924\Ring the Bell\4\9\320, 200\1200, 750\Increase NP Gain by 15%, Increase NP Strength by 10%, Increase Critical Strength by 10%\Increase NP Gain by 20%, Increase NP Strength by 15%, Increase Critical Strength by 15%\-\Shirabi\
@@ -941,3 +941,47 @@
 941\Proof of the Fastest\4\9\100, 100\100, 100\Increase Master EXP received from clearing quest by 50\\-\Endo Kaori (ufotable)\
 942\Paradox Ace Killer\4\9\0, 400\0, 1500\Increase Quick Card effectiveness by 10%, Increase NP Strength by 8%\Increase Quick Card effectiveness by 15%, Increase NP Strength by 10%\-\Shirai Eiri\
 943\Memories of Mother\4\9\100, 100\100, 100\When equipped to Miyu Edelfelt (Caster) only, Increase NP Gain of all allies while she is on the field \\-\Higashiyama Yuusei\
+944\Bitter Sweet\5\12\0, 500\0, 2000\Apply Invincible (2 times), Increase NP Damage by 25%\Apply Invincible (2 times), Increase NP Damage by 30%\-\Kohzuki Kei\
+945\Walkure Style\4\9\320, 200\1200, 750\Increase NP Gauge by 3% per turn; Increase NP Strength by 15%\Increase NP Gauge by 4% per turn, Increase NP Strength by 20%\-\Iida Pochi\
+946\Memory of Qualia\3\5\300, 0\1500, 0\Gain 1 Crit Star per turn, Increase NP Gain by 3%, Increase Critical Strength by 3%\Gain 2 Crit Stars, Increase NP Gain by 5%, Increase Critical Strength by 5%\-\Mochizuki Kei\
+947\Beautiful Dreamer \5\12\0, 500\0, 2000\Increase Buster Card effectiveness by 8%, Increase NP Gain by 8%, Increase NP Gauge by 30% at the start of battle\Increase Buster Card effectiveness by 10%, Increase NP Gain by 10%, Increase NP Gauge by 50% at the start of battle\-\Yoneyama Mai\
+948\New Tale of Genji Picture Scroll\4\9\100, 100\100, 100\When equipped to Murasaki Shikibu (Caster) only, Apply Special Attack [Demonic] 20% to all allies while she's on the field\\-\\
+949\Rainy Bridge\4\3\0, 0\0, 0\No Effect\\-\\
+950\Vy (Stand-Alone)\4\3\0, 0\0, 0\No Effect\\-\\
+951\Rush Recklessly Choco\4\3\0, 0\0, 0\No Effect\\-\\
+952\Choco-Type Mini Golem\4\3\0, 0\0, 0\No Effect\\-\\
+953\Under the Lovable Child, Reading Books\4\3\0, 0\0, 0\No Effect\\-\\
+954\Jet Black Conductor's Baton\4\3\0, 0\0, 0\No Effect\\-\\
+955\Xanthos\4\3\0, 0\0, 0\No Effect\\-\\
+956\First-Rank Award\4\3\0, 0\0, 0\No Effect\\-\\
+957\Bedside Evil Dragon\4\3\0, 0\0, 0\No Effect\\-\\
+958\Oden Choco\4\3\0, 0\0, 0\No Effect\\-\\
+959\Cotton Muffler\4\3\0, 0\0, 0\No Effect\\-\\
+960\Pocket Watch & Frog Choco\4\3\0, 0\0, 0\No Effect\\-\\
+961\Military Ration (Canned)\4\3\0, 0\0, 0\No Effect\\-\\
+962\Glasses\4\3\0, 0\0, 0\No Effect\\-\\
+963\Amethyst Confectionaries\4\3\0, 0\0, 0\No Effect\\-\\
+964\Ice Candy\4\3\0, 0\0, 0\No Effect\\-\\
+965\White Dolphin Team\4\3\0, 0\0, 0\No Effect\\-\\
+966\Cotton Candy\4\3\0, 0\0, 0\No Effect\\-\\
+967\Mt. Kurama Special Paperplant Manju\4\3\0, 0\0, 0\No Effect\\-\\
+968\Not-Heart Chocolate\4\3\0, 0\0, 0\No Effect\\-\\
+969\Master in the Chocolate\4\3\0, 0\0, 0\No Effect\\-\\
+970\Medb-chan Brand Thick Cacao Choco\4\3\0, 0\0, 0\No Effect\\-\\
+971\Nebula Sweet\4\3\0, 0\0, 0\No Effect\\-\\
+972\Fruit of the Underworld\4\3\0, 0\0, 0\No Effect\\-\\
+973\Snow Viewing White Choco\4\3\0, 0\0, 0\No Effect\\-\\
+974\Dharmapala Girl Choco\4\3\0, 0\0, 0\No Effect\\-\\
+975\Sword of Xiang Yu\4\3\0, 0\0, 0\No Effect\\-\\
+976\Beauty Concealing Mask\4\3\0, 0\0, 0\No Effect\\-\\
+977\Panda\4\3\0, 0\0, 0\No Effect\\-\\
+978\Elixir of Immortality\4\3\0, 0\0, 0\No Effect\\-\\
+979\Chalcedony Choco\4\3\0, 0\0, 0\No Effect\\-\\
+980\Modern Exchange Gift Sweets\4\3\0, 0\0, 0\No Effect\\-\\
+981\Finest Carrots\4\3\0, 0\0, 0\No Effect\\-\\
+982\Hippo-chan\4\3\0, 0\0, 0\No Effect\\-\\
+983\Signal to the Beginning and the End of Battle Chocolate\4\3\0, 0\0, 0\No Effect\\-\\
+984\Wasanbon of the Tongue-Sweet Sparrow\4\3\0, 0\0, 0\No Effect\\-\\
+985\Wooden Sword\4\3\0, 0\0, 0\No Effect\\-\\
+986\Girl's Cacao Three-Point Serving\4\3\0, 0\0, 0\No Effect\\-\\
+987\Picture Scroll Chocolate\4\3\0, 0\0, 0\No Effect\\-\\
