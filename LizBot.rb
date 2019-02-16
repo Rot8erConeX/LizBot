@@ -442,8 +442,12 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     subcommand='' if subcommand.nil?
     if ['server','servers','member','members','shard','shards','users','user'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}**",'Returns the number of servers and unique members each shard reaches.',0xED619A)
-    elsif ['unit','char','character','units','chars','charas','chara','servant','servants'].include?(subcommand.downcase)
-      create_embed(event,"**#{command.downcase} #{subcommand.downcase}**",">Currently unavailable<",0xED619A)
+    elsif ['servant','servants','unit','units','character','characters','chara','charas','char','chars'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}**","Returns the number of servants, sorted in each of the following ways:\n- Class\n- Rarity\n- Attribute\n- Growth Curve (in PM)\n- Deck contents (in PM)\n- Noble Phantasm card type (in PM)",0xED619A)
+    elsif ['ce','craft','essance','craftessance','ces','crafts','essances','craftessances'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}**","Returns the number of Craft Essences, sorted in each of the following ways:\n- Rarity\n- Grouping",0xED619A)
+    elsif ['command','commandcode','commands','commandcodes'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}**","Returns the number of Command Codes, sorted by rarity",0xED619A)
     elsif ['alias','aliases','name','names','nickname','nicknames'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}**","Returns the number of aliases in each of the two categories - global single-servant, and server-specific single-servant.\nAlso returns specifics about the most frequent instances of each category",0xED619A)
     elsif ['code','lines','line','sloc'].include?(subcommand.downcase)
@@ -4973,6 +4977,86 @@ bot.command(:snagstats) do |event, f, f2|
     event << "#{longFormattedNumber(@server_data[0][2])} server#{"s are" if @server_data[0][0]!=1}#{" is" unless @server_data[0][0]!=1} assigned the Earth attribute, reaching #{longFormattedNumber(@server_data[1][2])} unique members."
     event << "#{longFormattedNumber(@server_data[0][3])} server#{"s are" if @server_data[0][0]!=1}#{" is" unless @server_data[0][0]!=1} assigned the Star attribute, reaching #{longFormattedNumber(@server_data[1][3])} unique members."
     return nil
+  elsif ['servant','servants','unit','units','character','characters','chara','charas','char','chars'].include?(f.downcase)
+    srv=@servants.reject{|q| q[0]!=q[0].to_i}
+    str="**There are #{srv.length} servants, including:**"
+    str2="<:class_shielder_gold:523838231913955348> #{srv.reject{|q| q[2]!='Shielder'}.length} Shielder#{'s' if srv.reject{|q| q[2]!='Shielder'}.length>1}"
+    str2="#{str2}\n<:class_saber_gold:523838273479507989> #{srv.reject{|q| q[2]!='Saber'}.length} Sabers"
+    str2="#{str2}\n<:class_archer_gold:523838461195714576> #{srv.reject{|q| q[2]!='Archer'}.length} Archers"
+    str2="#{str2}\n<:class_lancer_gold:523838511485419522> #{srv.reject{|q| q[2]!='Lancer'}.length} Lancers"
+    str2="#{str2}\n<:class_rider_gold:523838542577664012> #{srv.reject{|q| q[2]!='Rider'}.length} Riders"
+    str2="#{str2}\n<:class_caster_gold:523838570893672473> #{srv.reject{|q| q[2]!='Caster'}.length} Casters"
+    str2="#{str2}\n<:class_assassin_gold:523838617693716480> #{srv.reject{|q| q[2]!='Assassin'}.length} Assassins"
+    str2="#{str2}\n<:class_berserker_gold:523838648370724897> #{srv.reject{|q| q[2]!='Berserker'}.length} Berserkers"
+    str2="#{str2}\n<:class_unknown_gold:523838979825467392> #{srv.reject{|q| ['Saber','Shielder','Archer','Lancer','Rider','Caster','Assassin','Berserker'].include?(q[2])}.length} extra class servants"
+    str=extend_message(str,str2,event,2)
+    str2="<:FGO_rarity_off:544583775208603688> #{srv.reject{|q| q[3]!=0}.length} no-star servant#{'s' if srv.reject{|q| q[3]!=0}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_1:544583775330369566> #{srv.reject{|q| q[3]!=1}.length} one-star servant#{'s' if srv.reject{|q| q[3]!=1}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_2:544583776148258827> #{srv.reject{|q| q[3]!=2}.length} two-star servant#{'s' if srv.reject{|q| q[3]!=2}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{srv.reject{|q| q[3]!=3}.length-1}.5 three-star servant#{'s' if srv.reject{|q| q[3]!=3}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{srv.reject{|q| q[3]!=4}.length}.5 four-star servant#{'s' if srv.reject{|q| q[3]!=4}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_5:544583774965596171> #{srv.reject{|q| q[3]!=5}.length} five-star servant#{'s' if srv.reject{|q| q[3]!=5}.length>1}"
+    str=extend_message(str,str2,event,2)
+    str2="#{srv.reject{|q| q[12]!='Man'}.length} servants with the Man attribute"
+    str2="#{str2}\n#{srv.reject{|q| q[12]!='Sky'}.length} servants with the Sky attribute"
+    str2="#{str2}\n#{srv.reject{|q| q[12]!='Earth'}.length} servants with the Earth attribute"
+    str2="#{str2}\n#{srv.reject{|q| q[12]!='Star'}.length} servants with the Star attribute"
+    str2="#{str2}\n#{srv.reject{|q| q[12]!='Beast'}.length} servants with the Beast attribute"
+    str=extend_message(str,str2,event,2)
+    if safe_to_spam?(event)
+      str2="#{srv.reject{|q| q[4]!='Linear'}.length} servants with Linear growth curves"
+      str2="#{str2}\n#{srv.reject{|q| q[4]!='S'}.length} servants with S growth curves"
+      str2="#{str2}\n#{srv.reject{|q| q[4]!='Reverse S'}.length} servants with Reverse S growth curves"
+      str2="#{str2}\n#{srv.reject{|q| q[4]!='Semi S'}.length} servants with Semi S growth curves"
+      str2="#{str2}\n#{srv.reject{|q| q[4]!='Semi Reverse S'}.length} servants with Semi Reverse S growth curves"
+      m=srv.reject{|q| ['Linear','S','Reverse S','Semi S','Semi Reverse S'].include?(q[4])}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with unknown growth curves" unless m.length<=0
+      str=extend_message(str,str2,event,2)
+      str2="#{srv.reject{|q| q[17][0,5]!='QQQAB'}.length} servants with triple-Quick decks."
+      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QQAAB'}.length} servants with double-Quick/double-Arts decks."
+      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QQABB'}.length} servants with double-Quick/double-Buster decks."
+      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QAAAB'}.length} servants with triple-Arts decks."
+      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QAABB'}.length} servants with double-Arts/double-Buster decks."
+      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QABBB'}.length} servants with triple-Buster decks."
+      str=extend_message(str,str2,event,2)
+      str2="#{srv.reject{|q| q[17][6,1]!='Q'}.length} servants with Quick Noble Phantasms."
+      str2="#{str2}\n#{srv.reject{|q| q[17][6,1]!='A'}.length} servants with Arts Noble Phantasms."
+      str2="#{str2}\n#{srv.reject{|q| q[17][6,1]!='B'}.length} servants with Buster Noble Phantasms."
+      m=srv.reject{|q| ['Q','A','B'].include?(q[17][6,1])}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with no Noble Phantasm." unless m.length<=0
+      str=extend_message(str,str2,event,2)
+    end
+    event.respond str
+    return nil
+  elsif ['ce','craft','essance','craftessance','ces','crafts','essances','craftessances'].include?(f.downcase)
+    crf=@crafts.map{|q| q}
+    srv=@servants.map{|q| q}
+    str="**There are #{crf.length} Craft Essences, including:**"
+    str2="<:FGO_rarity_1:544583775330369566> #{crf.reject{|q| q[2]!=1}.length} one-star CE#{'s' if crf.reject{|q| q[2]!=1}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_2:544583776148258827> #{crf.reject{|q| q[2]!=2}.length} two-star CE#{'s' if crf.reject{|q| q[2]!=2}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{crf.reject{|q| q[2]!=3}.length} three-star CE#{'s' if crf.reject{|q| q[2]!=3}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{crf.reject{|q| q[2]!=4}.length} four-star CE#{'s' if crf.reject{|q| q[2]!=4}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_5:544583774965596171> #{crf.reject{|q| q[2]!=5}.length} five-star CE#{'s' if crf.reject{|q| q[2]!=5}.length>1}"
+    str=extend_message(str,str2,event,2)
+    c=crf.map{|q| q[0].to_i}
+    m=srv.map{|q| q[23]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
+    str2="<:Bond:523903660913197056> #{m.length} Bond CE#{'s' if m.length>1}"
+    m=srv.map{|q| q[26]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
+    str2="#{str2}\n<:Valentines:523903633453219852> #{m.length} Valentine's CE#{'s' if m.length>1}"
+    str=extend_message(str,str2,event,2)
+    event.respond str
+    return nil
+  elsif ['command','commandcode','commands','commandcodes'].include?(f.downcase)
+    crf=@codes.map{|q| q}
+    str="**There are #{crf.length} Command Codes, including:**"
+    str2="<:FGO_rarity_1:544583775330369566> #{crf.reject{|q| q[2]!=1}.length} one-star Command Code#{'s' if crf.reject{|q| q[2]!=1}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_2:544583776148258827> #{crf.reject{|q| q[2]!=2}.length} two-star Command Code#{'s' if crf.reject{|q| q[2]!=2}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{crf.reject{|q| q[2]!=3}.length} three-star Command Code#{'s' if crf.reject{|q| q[2]!=3}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{crf.reject{|q| q[2]!=4}.length} four-star Command Code#{'s' if crf.reject{|q| q[2]!=4}.length>1}"
+    str2="#{str2}\n<:FGO_rarity_5:544583774965596171> #{crf.reject{|q| q[2]!=5}.length} five-star Command Code#{'s' if crf.reject{|q| q[2]!=5}.length>1}"
+    str=extend_message(str,str2,event,2)
+    event.respond str
+    return nil
   elsif ['code','lines','line','sloc'].include?(f.downcase)
     event.channel.send_temporary_message('Calculating data, please wait...',3)
     b=[[],[],[],[],[]]
@@ -5126,7 +5210,7 @@ bot.command(:snagstats) do |event, f, f2|
   event << "**I am in #{longFormattedNumber(@server_data[0].inject(0){|sum,x| sum + x })} *servers*, reaching #{longFormattedNumber(@server_data[1].inject(0){|sum,x| sum + x })} unique members.**"
   event << "This shard is in #{longFormattedNumber(@server_data[0][@shardizard])} server#{"s" unless @server_data[0][@shardizard]==1}, reaching #{longFormattedNumber(bot.users.size)} unique members."
   event << ''
-  event << "**There are #{longFormattedNumber(@servants.length)} servants.**"
+  event << "**There are #{longFormattedNumber(@servants.length)} *servants*.**"
   event << "There are also #{longFormattedNumber(@enemies.length)} non-servant enemy types."
   event << ''
   event << "**There are #{longFormattedNumber(@skills.length)} skills.**"
@@ -5135,10 +5219,10 @@ bot.command(:snagstats) do |event, f, f2|
   event << "There are #{longFormattedNumber(@skills.reject{|q| q[2]!='Clothes'}.length)} clothing skills."
   event << "There are #{longFormattedNumber(@skills.reject{|q| q[2]!='Noble'}.length)} Noble Phantasms."
   event << ''
-  event << "**There are #{longFormattedNumber(@crafts.length)} Craft Essences.**"
+  event << "**There are #{longFormattedNumber(@crafts.length)} *Craft Essences*.**"
   event << ''
   event << "There are #{longFormattedNumber(@clothes.length)} Mystic Codes."
-  event << "There are #{longFormattedNumber(@codes.length)} Command Codes."
+  event << "There are #{longFormattedNumber(@codes.length)} *Command Codes*."
   event << ''
   event << "**There are #{longFormattedNumber(glbl.length)} global and #{longFormattedNumber(srv_spec.length)} server-specific *aliases*.**"
   event << ''
