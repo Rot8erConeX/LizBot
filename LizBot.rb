@@ -5537,6 +5537,13 @@ bot.message do |event|
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond "I am not Botan right now.  Please use `DL!reboot` to turn me into Botan."
     end
+  elsif (['!weak '].include?(str[0,6]) || ['!weakness '].include?(str[0,10]))
+    if event.server.nil? || event.server.id==264445053596991498
+    elsif !bot.user(304652483299377182).on(event.server.id).nil? # Robin
+    elsif !bot.user(543373018303299585).on(event.server.id).nil? # Botan
+    elsif !bot.user(206147275775279104).on(event.server.id).nil? || @shardizard==4 || event.server.id==330850148261298176 # Pokedex
+      triple_weakness(bot,event)
+    end
   elsif overlap_prevent(event)
   elsif m && !all_commands().include?(s.split(' ')[0])
     if find_data_ex(:find_ce,s,event,true).length>0
