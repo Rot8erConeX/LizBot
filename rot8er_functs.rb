@@ -679,7 +679,7 @@ def bug_report(bot,event,args,shrd_num,shrd_names,shrd_type,pref,echo=nil)
       s="**Server:** #{event.server.name} (#{event.server.id}) - #{shrd_names[(event.server.id >> 22) % shrd_num]} #{shrd_type}\n**Channel:** #{event.channel.name} (#{event.channel.id})"
     end
     bot.user(167657750971547648).pm("#{s}\n#{event.user.distinct} (#{event.user.id}) just tried to use the #{s3.downcase} command but gave no arguments.")
-    bot.channel(echo).send_message("#{s}\n#{event.user.distinct} (#{event.user.id}) just tried to use the #{s3.downcase} command but gave no arguments.") unless echo.nil?
+    bot.channel(echo).send_message("#{s}\n#{event.user.distinct} (#{event.user.id}) just tried to use the #{s3.downcase} command but gave no arguments.") unless echo.nil? || bot.channel(echo).nil?
     return nil
   elsif event.server.nil?
     s="**#{s3} sent by PM**"
@@ -689,7 +689,7 @@ def bug_report(bot,event,args,shrd_num,shrd_names,shrd_type,pref,echo=nil)
   f=event.message.text.split(' ')
   f="#{f[0]} "
   bot.user(167657750971547648).pm("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}")
-  bot.channel(echo).send_message("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}") unless echo.nil?
+  bot.channel(echo).send_message("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}") unless echo.nil? || bot.channel(echo).nil?
   s3='Bug' if s3=='Bug Report'
   t=Time.now
   event << "Your #{s3.downcase} has been logged."
@@ -735,10 +735,10 @@ def calc_easter()
 end
 
 def get_debug_leave_message()
-  str="I am Mathoo's personal debug bot.  As such, I do not belong here.  You may be looking for one of my facets, so I'll drop both invite links here."
+  str="I am Mathoo's personal debug bot.  As such, I do not belong here.  You may be looking for one of my facets, so I'll drop all the invite links here."
   str="#{str}\n\n**EliseBot** allows you to look up stats and skill data for characters in *Fire Emblem: Heroes*"
   str="#{str}\nHere's her invite link: <https://goo.gl/Hf9RNj>"
-  str="#{str}\n\n**FEIndex**, also known as **RobinBot**, is for *Fire Emblem: Awakening* and *Fire Emblem Fates*."
+  str="#{str}\n\n**RobinBot**, also known as **FEIndex**, is for *Fire Emblem: Awakening* and *Fire Emblem Fates*."
   str="#{str}\nHere's her invite link: <https://goo.gl/f1wSGd>"
   str="#{str}\n\n**LizBot** allows you to look up stats, mats, and skill data in *Fate/Grand Order*"
   str="#{str}\nHere's her invite link: <https://goo.gl/ox9CxB>"
