@@ -597,12 +597,16 @@ def find_servant(name,event,fullname=false)
   g=event.server.id unless event.server.nil?
   k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
   return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
+  return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   return [] if fullname
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @servants[k] unless k.nil?
   nicknames_load()
   for i in name.length...alz.map{|q| q[0].length}.max
     k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
+    return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
+    k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
     return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   end
   return []
@@ -4082,7 +4086,7 @@ def level(event,bot,args=nil,mode=0)
          [15368815,140,78,111],[16897815,140,79,111],[18857815,140,80,112],[18870505,140,81,112],[18883285,140,82,112],[18896155,141,83,112],
          [18909115,141,84,112],[18922165,141,85,112],[18935305,141,86,112],[18948535,142,87,112],[18961855,142,88,112],[18975265,142,89,112],
          [18988765,142,90,113]]
-    na_max=130
+    na_max=140
     str2="__**Player EXP**__"
     if nums.length<=0
       str2="#{str2}\n\n*To get from level 1 to level #{na_max}:*  \u200B  \u200B  #{longFormattedNumber(pxp[0,na_max-1].map{|q| q[0]*10}.inject(0){|sum,x| sum + x })} EXP required"
@@ -4313,6 +4317,20 @@ end
 
 bot.command([:sort,:list]) do |event, *args|
   return nil if overlap_prevent(event)
+  if args.nil? || args.length<=0
+  elsif ['aliases','alias'].include?(args[0].downcase) && event.user.id==167657750971547648
+    data_load()
+    nicknames_load()
+    @aliases.uniq!
+    @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
+    open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+      for i in 0...@aliases.length
+        f.puts "#{@aliases[i].to_s}#{"\n" if i<@aliases.length-1}"
+      end
+    }
+    event.respond 'The alias list has been sorted alphabetically'
+    return nil
+  end
   sort_servants(bot,event,args)
 end
 
