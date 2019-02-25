@@ -55,7 +55,6 @@ Kukulcan Mask
 Lamp of Evil-Sealing
 Lancer Monument
 Lancer Piece
-Magic Cerebrospinal Fluid
 Magic Gem of Archer
 Magic Gem of Assassin
 Magic Gem of Berserker
@@ -64,6 +63,7 @@ Magic Gem of Lancer
 Magic Gem of Rider
 Magic Gem of Saber
 Meteor Horseshoe
+Mystic Spinal Fluid
 Octuplet Crystals
 Phoenix Feather
 Primordial Lanugo
