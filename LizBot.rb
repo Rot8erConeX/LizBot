@@ -2865,7 +2865,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
   elsif find_code(unit,event).length>0
     type[1]='Command*'
   end
-  checkstr=normalize(newname)
+  checkstr=normalize(newname,true)
   if type.reject{|q| q != 'Alias'}.length<=0
     type[0]='Alias' if type[0].include?('*')
     type[1]='Alias' if type[1].include?('*') && type[0]!='Alias'
@@ -2931,7 +2931,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
   srv=modifier.to_i if event.user.id==167657750971547648 && modifier.to_i.to_s==modifier
   srvname='PM with dev'
   srvname=bot.server(srv).name unless event.server.nil? && srv.zero?
-  checkstr=normalize(newname)
+  checkstr=normalize(newname,true)
   k=event.message.emoji
   for i in 0...k.length
     checkstr=checkstr.gsub("<:#{k[i].name}:#{k[i].id}>",k[i].name)
@@ -2945,7 +2945,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** >Censored< for #{dispstr[1]}~~\n**Reason for rejection:** Begone, alias.")
     return nil
   end
-  newname=normalize(newname)
+  newname=normalize(newname,true)
   m=nil
   m=[event.server.id] unless event.server.nil?
   srv=0
