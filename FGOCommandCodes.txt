@@ -29,3 +29,4 @@
 29\Pigeon Report\3\Remove Critical Strength Buffs from an enemy, If removal succeeds, decrease their Critical Rate by 10% (3 turns)        \Valentines 2019
 30\Evil Holy Sword of Star Extermination\4\Increase Critical Strength against [Saber] class by 25%        \Valentines 2019
 31\Bride of the White Rose\5\Recover HP of all allies by 200\Valentines 2019
+32\BB Slots\4\Randomly apply one of the following effects: Gain 5 Critical Stars, Restore 500 HP, Increase Debuff Resist by 10% (1 turn)\Revival: Deep Sea Cyber Paradise SE.RA.PH -Second Ballet-
