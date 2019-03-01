@@ -1578,6 +1578,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   artist=k[24] unless k[24].nil? || k[24].length<=0
   t=Time.now
   riyodefault= !riyodefault if t.month==4 && t.day==1
+  censor=true
+  censor=false if disptext.split(' ').include?('jp') || disptext.split(' ').include?('nsfw') #|| event.channel.nsfw?
+ # censor=true if event.channel.nsfw? && (disptext.split(' ').include?('na') || disptext.split(' ').include?('america'))
   asc=1
   asc=2 if disptext.split(' ').include?('first') || disptext.split(' ').include?('firstascension') || disptext.split(' ').include?('first_ascension') || " #{disptext} ".include?(" first ascension ") || disptext.split(' ').include?('1st') || disptext.split(' ').include?('1stascension') || disptext.split(' ').include?('1st_ascension') || " #{disptext} ".include?(" 1st ascension ") || disptext.split(' ').include?('second') || disptext.split(' ').include?('secondascension') || disptext.split(' ').include?('second_ascension') || " #{disptext} ".include?(" second ascension ") || disptext.split(' ').include?('2nd') || disptext.split(' ').include?('2ndascension') || disptext.split(' ').include?('2nd_ascension') || " #{disptext} ".include?(" 2nd ascension ")
   asc=3 if disptext.split(' ').include?('third') || disptext.split(' ').include?('thirdascension') || disptext.split(' ').include?('third_ascension') || " #{disptext} ".include?(" third ascension ") || disptext.split(' ').include?('3rd') || disptext.split(' ').include?('3rdascension') || disptext.split(' ').include?('3rd_ascension') || " #{disptext} ".include?(" 3rd ascension ")
@@ -1589,6 +1592,22 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     asc=0
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png"
     artist='Riyo'
+  end
+  if censor
+    m=false
+    IO.copy_stream(open(xpic.gsub('.png','c.png')), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+    if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+      censor=false
+    else
+      censor='Censored NA version'
+      xpic=xpic.gsub('.png','c.png')
+    end
+  else
+    m=false
+    IO.copy_stream(open(xpic.gsub('.png','c.png')), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+    unless File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+      censor='Default JP version'
+    end
   end
   ftr=nil
   ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
@@ -1705,7 +1724,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
           end
         end
       end
-      event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}") do |embed|
+      event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}") do |embed|
         embed.description=text
         embed.color=xcolor
         embed.footer={"text"=>ftr} unless ftr.nil?
@@ -1721,7 +1740,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
       end
     end
-    event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}\n#{midtext}#{asc}") do |embed|
+    event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}") do |embed|
       embed.description=text
       embed.color=xcolor
       embed.footer={"text"=>ftr} unless ftr.nil?
