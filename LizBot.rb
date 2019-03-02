@@ -1574,21 +1574,37 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   xcolor=servant_color(k)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_s.gsub('.','p')}"
   disptext=event.message.text.downcase
+  if has_any?(disptext.split(' '),['bondce','bond','bond_ce','bonds','bond-ce'])
+    ce=@crafts.find_index{|q| q[0]==k[23]}
+    unless ce.nil?
+      disp_ce_art(bot,event,["CE#{k[23]}"])
+      return nil
+    end
+  elsif has_any?(disptext.split(' '),["valentine's",'valentines','valentine','chocolate',"valentine'sce",'valentinesce','valentinece',"valentine's-ce",'valentines-ce','valentine-ce'])
+    unless k[26].nil? || k[26].length<=0
+      ce=@crafts.find_index{|q| q[0]==k[26][0]}
+      unless ce.nil?
+        for i in 0...k[26].length
+          disp_ce_art(bot,event,["CE#{k[26][i]}"])
+        end
+        return nil
+      end
+    end
+  end
   artist=nil
   artist=k[24] unless k[24].nil? || k[24].length<=0
   t=Time.now
   riyodefault= !riyodefault if t.month==4 && t.day==1
   censor=true
-  censor=false if disptext.split(' ').include?('jp') || disptext.split(' ').include?('nsfw') #|| event.channel.nsfw?
- # censor=true if event.channel.nsfw? && (disptext.split(' ').include?('na') || disptext.split(' ').include?('america'))
+  censor=false if disptext.split(' ').include?('jp') || disptext.split(' ').include?('nsfw')
   asc=1
-  asc=2 if disptext.split(' ').include?('first') || disptext.split(' ').include?('firstascension') || disptext.split(' ').include?('first_ascension') || " #{disptext} ".include?(" first ascension ") || disptext.split(' ').include?('1st') || disptext.split(' ').include?('1stascension') || disptext.split(' ').include?('1st_ascension') || " #{disptext} ".include?(" 1st ascension ") || disptext.split(' ').include?('second') || disptext.split(' ').include?('secondascension') || disptext.split(' ').include?('second_ascension') || " #{disptext} ".include?(" second ascension ") || disptext.split(' ').include?('2nd') || disptext.split(' ').include?('2ndascension') || disptext.split(' ').include?('2nd_ascension') || " #{disptext} ".include?(" 2nd ascension ")
-  asc=3 if disptext.split(' ').include?('third') || disptext.split(' ').include?('thirdascension') || disptext.split(' ').include?('third_ascension') || " #{disptext} ".include?(" third ascension ") || disptext.split(' ').include?('3rd') || disptext.split(' ').include?('3rdascension') || disptext.split(' ').include?('3rd_ascension') || " #{disptext} ".include?(" 3rd ascension ")
-  asc=4 if disptext.split(' ').include?('fourth') || disptext.split(' ').include?('fourthascension') || disptext.split(' ').include?('fourth_ascension') || " #{disptext} ".include?(" fourth ascension ") || disptext.split(' ').include?('4th') || disptext.split(' ').include?('4thascension') || disptext.split(' ').include?('4th_ascension') || " #{disptext} ".include?(" 4th ascension ") || disptext.split(' ').include?('final') || disptext.split(' ').include?('finalascension') || disptext.split(' ').include?('final_ascension') || " #{disptext} ".include?(" final ascension ")
-  asc=5 if disptext.split(' ').include?('costume') || disptext.split(' ').include?('firstcostume') || disptext.split(' ').include?('first_costume') || " #{disptext} ".include?(" first costume ") || disptext.split(' ').include?('1stcostume') || disptext.split(' ').include?('1st_costume') || " #{disptext} ".include?(" 1st costume ") || disptext.split(' ').include?('costume1') || " #{disptext} ".include?(" costume 1 ")
-  asc=6 if disptext.split(' ').include?('secondcostume') || disptext.split(' ').include?('second_costume') || " #{disptext} ".include?(" second costume ") || disptext.split(' ').include?('2ndcostume') || disptext.split(' ').include?('2nd_costume') || " #{disptext} ".include?(" 2nd costume ") || disptext.split(' ').include?('costume2') || " #{disptext} ".include?(" costume 2 ")
+  asc=2 if has_any?(disptext.split(' '),['first','firstascension','first_ascension','1st','1stascension','1st_ascension','second','secondascension','2nd','second_ascension','2ndascension','2nd_ascension']) || " #{disptext} ".include?(" first ascension ") || " #{disptext} ".include?(" 1st ascension ") || " #{disptext} ".include?(" second ascension ") || " #{disptext} ".include?(" 2nd ascension ")
+  asc=3 if has_any?(disptext.split(' '),['third','thirdascension','third_ascension','3rd','3rdascension','3rd_ascension']) || " #{disptext} ".include?(" third ascension ") || " #{disptext} ".include?(" 3rd ascension ")
+  asc=4 if has_any?(disptext.split(' '),['fourth','fourthascension','fourth_ascension','4th','4thascension','4th_ascension','final','finalascension','final_ascension']) || " #{disptext} ".include?(" fourth ascension ") || " #{disptext} ".include?(" 4th ascension ") || " #{disptext} ".include?(" final ascension ")
+  asc=5 if has_any?(disptext.split(' '),['costume','firstcostume','first_costume','1stcostume','1st_costume','costume1']) || " #{disptext} ".include?(" first costume ") || " #{disptext} ".include?(" 1st costume ") || " #{disptext} ".include?(" costume 1 ")
+  asc=6 if has_any?(disptext.split(' '),['secondcostume','second_costume','2ndcostume','2nd_costume','costume2']) || " #{disptext} ".include?(" second costume ") || " #{disptext} ".include?(" 2nd costume ") || " #{disptext} ".include?(" costume 2 ")
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}#{asc}.png"
-  if riyodefault || disptext.split(' ').include?('riyo') || disptext.split(' ').include?('aprilfools') || disptext.split(' ').include?("aprilfool's") || disptext.split(' ').include?("april_fool's") || disptext.split(' ').include?("april_fools") || " #{disptext} ".include?(" april fool's ") || " #{disptext} ".include?(" april fools ")
+  if riyodefault || has_any?(disptext.split(' '),['riyo','aprilfools']) || disptext.split(' ').include?("aprilfool's") || disptext.split(' ').include?("april_fool's") || disptext.split(' ').include?("april_fools") || " #{disptext} ".include?(" april fool's ") || " #{disptext} ".include?(" april fools ")
     asc=0
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png"
     artist='Riyo'
