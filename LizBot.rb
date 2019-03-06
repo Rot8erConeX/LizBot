@@ -4054,7 +4054,7 @@ def sort_servants(bot,event,args=nil)
     char[i][7]=char[i][7][lvl]
   end
   char.sort!{|b,a| (supersort(a,b,srt[0])==0 ? (supersort(a,b,srt[1])==0 ? supersort(a,b,srt[2]) : supersort(a,b,srt[1])) : supersort(a,b,srt[0]))}
-  d=['ID','Name','Servant ID','Rarity','Growth','Level','HP','Atk']
+  d=['ID','Name','Servant ID','Rarity','ID','Level','HP','Atk']
   disp=[]
   for i in 0...char.length
     m=[]
@@ -4444,7 +4444,6 @@ bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
     event << ''
     event << '__Wikis and databases__'
     event << 'Cirnopedia: <https://fate-go.cirnopedia.org>'
-    event << 'Wikia: <https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia>'
     event << ''
     event << '__Important lists and spreadsheets__'
     event << 'Interlude info: <https://goo.gl/SCsKJn>'
@@ -4453,7 +4452,7 @@ bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
     event << 'Rate-up History (NA): <http://fate-go.cirnopedia.org/summon_us.php>'
     event << 'Rate-up History (JP): <http://fate-go.cirnopedia.org/summon.php>'
     event << 'Order of Interludes and Strengthening Quests: <https://kazemai.github.io/fgo-vz/relate_quest.html>'
-    event << 'Palingenesis data: <https://fategrandorder.fandom.com/wiki/Palingenesis>'
+    event << 'Palingenesis data: <https://fate-go.cirnopedia.org/servant_palingenesis.php>'
     event << 'Current Master Missions: <http://fate-go.cirnopedia.org/master_mission.php>'
     event << ''
     event << '__Calculators and Planners__'
@@ -4462,11 +4461,42 @@ bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
     event << 'Material planner: <http://fgosimulator.webcrow.jp/Material/>'
     event << 'Servant planner: <https://grandorder.gamepress.gg/servant-planner>'
     event << 'Daily mats: <https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Mats.png>'
+    event << ''
+    event << '__Cirno direct links__'
+    event << 'Servants: <https://fate-go.cirnopedia.org/servant_all.php>'
+    event << 'Craft Essences: <https://fate-go.cirnopedia.org/craft_essence.php>'
+    event << 'Command Codes: <https://fate-go.cirnopedia.org/command_code.php>'
   else
     xpic='https://lh3.googleusercontent.com/gXUStNHv8sT8NjdXBOJmzqK_JIYlPP_6jKBjEOIyP-28CSsnPempO86swUYhVhVgvH4f=s180-rw'
     t=Time.now
     xpic='https://vignette.wikia.nocookie.net/fategrandorder/images/a/ac/FGO_GO_App_Icon.png' if t.month==4 && t.day==1
-    create_embed(event,'**Useful tools for players of** ***Fate/Grand Order***',"__Download the game__\n[Google Play (NA)](https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US)  \u00B7  [Google Play (JP)](https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US)\n[Apple App Store (NA)](https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8)  \u00B7  [Apple App Store (JP)](https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8)\n\n__Wikis and databases__\n[Cirnopedia](https://fate-go.cirnopedia.org)\n[Wikia](https://fategrandorder.fandom.com/wiki/Fate/Grand_Order_Wikia)\n\n__Important lists and spreadsheets__\n[Interlude info](https://goo.gl/SCsKJn)\n[Material location guide](https://goo.gl/ijqefs)\n[List of Singularity maps with drops](https://imgur.com/a/6nXq9#f8dRAp5)\n[Rate-up History (NA)](http://fate-go.cirnopedia.org/summon_us.php)  \u00B7  [Rate-up History (JP)](http://fate-go.cirnopedia.org/summon.php)\n[Order of Interludes and Strengthening Quests](https://kazemai.github.io/fgo-vz/relate_quest.html)\n[Palingenesis data](https://fategrandorder.fandom.com/wiki/Palingenesis)\n[Current Master Missions](http://fate-go.cirnopedia.org/master_mission.php)\n\n__Calculators and Planners__\n[Damage Calculator](https://tinyurl.com/yc2tuzn9)\n[EXP calculator](https://grandorder.gamepress.gg/exp-calculator)\n[Material planner](http://fgosimulator.webcrow.jp/Material/)\n[Servant planner](https://grandorder.gamepress.gg/servant-planner)\n[Daily mats](https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Mats.png)",0xED619A,nil,xpic)
+    str="__Download the game__"
+    str="#{str}\n[Google Play (NA)](https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US)"
+    str="#{str}  \u00B7  [Google Play (JP)](https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US)"
+    str="#{str}\n[Apple App Store (NA)](https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8)"
+    str="#{str}  \u00B7  [Apple App Store (JP)](https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8)"
+    str="#{str}\n\n__Wikis and databases__"
+    str="#{str}\n[Cirnopedia](https://fate-go.cirnopedia.org)"
+    str="#{str}\n\n__Important lists and spreadsheets__"
+    str="#{str}\n[Interlude info](https://goo.gl/SCsKJn)"
+    str="#{str}\n[Material location guide](https://goo.gl/ijqefs)"
+    str="#{str}\n[List of Singularity maps with drops](https://imgur.com/a/6nXq9#f8dRAp5)"
+    str="#{str}\n[Rate-up History (NA)](http://fate-go.cirnopedia.org/summon_us.php)"
+    str="#{str}  \u00B7  [Rate-up History (JP)](http://fate-go.cirnopedia.org/summon.php)"
+    str="#{str}\n[Order of Interludes and Strengthening Quests](https://kazemai.github.io/fgo-vz/relate_quest.html)"
+    str="#{str}\n[Palingenesis data](https://fate-go.cirnopedia.org/servant_palingenesis.php)"
+    str="#{str}\n[Current Master Missions](http://fate-go.cirnopedia.org/master_mission.php)"
+    str="#{str}\n\n__Calculators and Planners__"
+    str="#{str}\n[Damage Calculator](https://tinyurl.com/yc2tuzn9)"
+    str="#{str}\n[EXP calculator](https://grandorder.gamepress.gg/exp-calculator)"
+    str="#{str}\n[Material planner](http://fgosimulator.webcrow.jp/Material/)"
+    str="#{str}\n[Servant planner](https://grandorder.gamepress.gg/servant-planner)"
+    str="#{str}\n[Daily mats](https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Mats.png)"
+    str="#{str}\n\n__Cirno direct links__"
+    str="#{str}\n[Servants](https://fate-go.cirnopedia.org/servant_all.php)"
+    str="#{str}\n[Craft Essences](https://fate-go.cirnopedia.org/craft_essence.php)"
+    str="#{str}\n[Command Codes](https://fate-go.cirnopedia.org/command_code.php)"
+    create_embed(event,'**Useful tools for players of** ***Fate/Grand Order***',str,0xED619A,nil,xpic)
     event.respond 'If you are on a mobile device and cannot click the links in the embed above, type `FGO!tools mobile` to receive this message as plaintext.'
   end
   event << ''
