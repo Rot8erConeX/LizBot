@@ -576,7 +576,7 @@ def all_commands(include_nil=false,permissions=-1)
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
      'cexp','ceexp','clevel','celevel','prefix']
-  k=['addalias','deletealias','removealias'] if permissions==1
+  k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
   return k
@@ -4538,7 +4538,7 @@ bot.command(:prefix) do |event, prefix|
   elsif !is_mod?(event.user,event.server,event.channel)
     event.respond 'You are not a mod.'
     return nil
-  elsif ['feh!','feh?','f?','e?','h?','fgo!','fgo?','fg0!','fg0?','liz!','liz?','iiz!','iiz?','fate!','fate?','dl!','dl?','fe!','fe14!','fef!','fe13!','fea!'].include?(prefix.downcase)
+  elsif ['feh!','feh?','f?','e?','h?','fgo!','fgo?','fg0!','fg0?','liz!','liz?','iiz!','iiz?','fate!','fate?','dl!','dl?','fe!','fe14!','fef!','fe13!','fea!','fe?','fe14?','fef?','fe13?','fea?'].include?(prefix.downcase)
     event.respond "That is a prefix that would conflict with either myself or another one of my developer's bots."
     return nil
   end
@@ -5672,10 +5672,10 @@ bot.message do |event|
     end
   end
   str="#{s}"
-  if @shardizard==4 && (['fea!','fef!'].include?(str[0,4]) || ['fe13!','fe14!'].include?(str[0,5]) || ['fe!'].include?(str[0,3]))
-    str=str[4,str.length-4] if ['fea!','fef!'].include?(str[0,4])
-    str=str[5,str.length-5] if ['fe13!','fe14!'].include?(str[0,5])
-    str=str[3,str.length-3] if ['fe!'].include?(str[0,3])
+  if @shardizard==4 && (['fea!','fef!','fea?','fef?'].include?(str[0,4]) || ['fe13!','fe14!','fe13?','fe14?'].include?(str[0,5]) || ['fe!','fe?'].include?(str[0,3]))
+    str=str[4,str.length-4] if ['fea!','fef!','fea?','fef?'].include?(str[0,4])
+    str=str[5,str.length-5] if ['fe13!','fe14!','fe13?','fe14?'].include?(str[0,5])
+    str=str[3,str.length-3] if ['fe!','fe?'].include?(str[0,3])
     a=str.split(' ')
     if a[0].downcase=='reboot'
       event.respond 'Becoming Robin.  Please wait approximately ten seconds...'
