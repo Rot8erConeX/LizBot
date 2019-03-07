@@ -15,19 +15,33 @@ require_relative 'rot8er_functs'       # functions I use commonly in bots
 ENV['TZ'] = 'America/Chicago'
 @scheduler = Rufus::Scheduler.new
 
-@prefix=['liz!','liZ!','lIz!','lIZ!','Liz!','LiZ!','LIz!','LIZ!',
-         'liz?','liZ?','lIz?','lIZ?','Liz?','LiZ?','LIz?','LIZ?',
-         'Iiz!','IiZ!','IIz!','IIZ!','Iiz?','IiZ?','IIz?','IIZ?',
-         'fgo!','fgO!','fg0!','fGo!','fGO!','fG0!','Fgo!','FgO!','Fg0!','FGo!','FGO!','FG0!',
-         'fgo?','fgO?','fg0?','fGo?','fGO?','fG0?','Fgo?','FgO?','Fg0?','FGo?','FGO?','FG0?',
-         'fate!','fatE!','faTe!','faTE!','fAte!','fAtE!','fATe!','fATE!','Fate!','FatE!','FaTe!','FaTE!','FAte!','FAtE!','FATe!','FATE!',
-         'fate?','fatE?','faTe?','faTE?','fAte?','fAtE?','fATe?','fATE?','Fate?','FatE?','FaTe?','FaTE?','FAte?','FAtE?','FATe?','FATE?']
+# All the possible command prefixes
+@prefixes={}
+load 'C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb'
+
+prefix_proc = proc do |message|
+  load 'C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb'
+  next message.content[4..-1] if message.text.downcase.start_with?('liz!')
+  next message.content[4..-1] if message.text.downcase.start_with?('liz?')
+  next message.content[4..-1] if message.text.downcase.start_with?('iiz!')
+  next message.content[4..-1] if message.text.downcase.start_with?('iiz?')
+  next message.content[4..-1] if message.text.downcase.start_with?('fgo!')
+  next message.content[4..-1] if message.text.downcase.start_with?('fgo?')
+  next message.content[4..-1] if message.text.downcase.start_with?('fg0!')
+  next message.content[4..-1] if message.text.downcase.start_with?('fg0?')
+  next message.content[5..-1] if message.text.downcase.start_with?('fate!')
+  next message.content[5..-1] if message.text.downcase.start_with?('fate?')
+  next if message.channel.server.nil? || @prefixes[message.channel.server.id].nil? || @prefixes[message.channel.server.id].length<=0
+  prefix = @prefixes[message.channel.server.id]
+  # We use [prefix.size..-1] so we can handle prefixes of any length
+  next message.content[prefix.size..-1] if message.text.downcase.start_with?(prefix.downcase)
+end
 
 # The bot's token is basically their password, so is censored for obvious reasons
 if @shardizard==4
-  bot = Discordrb::Commands::CommandBot.new token: '>Debug Token<', client_id: 431895561193390090, prefix: @prefix
+  bot = Discordrb::Commands::CommandBot.new token: '>Debug Token<', client_id: 431895561193390090, prefix: prefix_proc
 else
-  bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: @prefix
+  bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: prefix_proc
 end
 bot.gateway.check_heartbeat_acks = false
 
@@ -227,6 +241,13 @@ def data_load()
   @mats=b.map{|q| q}
 end
 
+def prefixes_save()
+  x=@prefixes
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb', 'w') { |f|
+    f.puts x.to_s.gsub('=>',' => ').gsub(', ',",\n  ").gsub('{',"@prefixes = {\n  ").gsub('}',"\n}")
+  }
+end
+
 def metadata_load()
   if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSave.txt')
     b=[]
@@ -304,6 +325,8 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
   end
   if command.downcase=='reboot'
     create_embed(event,'**reboot**',"Reboots this shard of the bot, installing any updates.\n\n**This command is only able to be used by Rot8er_ConeX**",0x008b8b)
+  elsif command.downcase=='prefix'
+    create_embed(event,'**prefix** __new prefix__',"Sets the server's custom prefix to `prefix`.\n\n**This command can only be used by server mods.**",0xC31C19)
   elsif ['donation','donate'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**",'Responds with information regarding potential donations to my developer.',0xED619A)
   elsif command.downcase=='sendmessage'
@@ -495,7 +518,7 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     str="#{str}\n`suggestion` __\\*message__ - to send my developer a feature suggestion"
     str="#{str}\n`feedback` __\\*message__ - to send my developer other kinds of feedback"
     str="#{str}\n~~the above three commands are actually identical, merely given unique entries to help people find them~~"
-    create_embed([event,x],"Command Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__",str,0xED619A)
+    create_embed([event,x],"Global Command Prefixes: `FGO!` `FGO?` `Liz!` `Liz?` `Fate!` `Fate?`#{"\nServer Command Prefix: `#{@prefixes[event.server.id]}`" if !event.server.nil? && !@prefixes[event.server.id].nil? && @prefixes[event.server.id].length>0}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n__**Liz Bot help**__",str,0xED619A)
     str="__**Aliases**__"
     str="#{str}\n`addalias` __new alias__ __target__ - Adds a new server-specific alias"
     str="#{str}\n~~`aliases` __target__ (*also `checkaliases` or `seealiases`*)~~"
@@ -503,6 +526,8 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     str="#{str}\n`deletealias` __alias__ (*also `removealias`*) - deletes a server-specific alias"
     str="#{str}\n\n__**Channels**__"
     str="#{str}\n`spam` __toggle__ - to allow the current channel to be safe to send long replies to (*also `safetospam` or `safe2spam`*)"
+    str="#{str}\n\n__**Customization**__"
+    str="#{str}\n`prefix` __chars__ - to create or edit the server's custom command prefix"
     create_embed([event,x],"__**Server Admin Commands**__",str,0xC31C19) if is_mod?(event.user,event.server,event.channel)
     str="__**Mjolnr, the Hammer**__"
     str="#{str}\n`ignoreuser` __user id number__ - makes me ignore a user"
@@ -520,8 +545,8 @@ bot.command([:help,:commands,:command_list,:commandlist,:Help]) do |event, comma
     str="#{str}\n`restorealiases` - restores the alias list from last backup"
     str="#{str}\n`sortaliases` - sorts the alias list by type of alias"
     create_embed([event,x],"__**Bot Developer Commands**__",str,0x008b8b) if (event.server.nil? || event.channel.id==283821884800499714 || @shardizard==4 || command.downcase=='devcommands') && event.user.id==167657750971547648
-    event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0') || q.include?('II')}.map {|s| "`#{s.gsub('FATE','Fate').gsub('LIZ','Liz')}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
-    event.user.pm("If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nCommand Prefixes: #{@prefix.map{|q| q.upcase}.uniq.reject{|q| q.include?('0')}.map {|s| "`#{s}`"}.join(', ')}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name") if x==1
+    event.respond "If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nGlobal Command Prefixes: `FGO!` `FGO?` `Liz!` `Liz?` `Fate!` `Fate?`#{"\nServer Command Prefix: `#{@prefixes[event.server.id]}`" if !event.server.nil? && !@prefixes[event.server.id].nil? && @prefixes[event.server.id].length>0}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name" unless x==1
+    event.user.pm("If the you see the above message as only three lines long, please use the command `FGO!embeds` to see my messages as plaintext instead of embeds.\n\nGlobal Command Prefixes: `FGO!` `FGO?` `Liz!` `Liz?` `Fate!` `Fate?`#{"\nServer Command Prefix: `#{@prefixes[event.server.id]}`" if !event.server.nil? && !@prefixes[event.server.id].nil? && @prefixes[event.server.id].length>0}\nYou can also use `FGO!help CommandName` to learn more on a particular command.\n\nWhen looking up a character, you also have the option of @ mentioning me in a message that includes that character's name") if x==1
     event.respond "A PM has been sent to you.\nIf you would like to show the help list in this channel, please use the command `FGO!help here`." if x==1
   end
 end
@@ -550,7 +575,7 @@ def all_commands(include_nil=false,permissions=-1)
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
-     'cexp','ceexp','clevel','celevel']
+     'cexp','ceexp','clevel','celevel','prefix']
   k=['addalias','deletealias','removealias'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -3615,7 +3640,7 @@ end
 
 def find_in_servants(bot,event,args=nil,mode=0)
   data_load()
-  args=normalize(event.message.text.downcase).split(' ') if args.nil?
+  args=normalize(event.message.text.downcase).gsub(',','').split(' ') if args.nil?
   args=args.map{|q| normalize(q.downcase)}
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
   clzz=[]
@@ -3865,7 +3890,7 @@ end
 
 def find_skills(bot,event,args=nil,ces_only=false)
   data_load()
-  args=normalize(event.message.text.downcase).split(' ') if args.nil?
+  args=normalize(event.message.text.downcase).gsub(',','').split(' ') if args.nil?
   args=args.map{|q| normalize(q.downcase).gsub('-','').gsub('_','')}
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
   types=[]
@@ -4500,6 +4525,26 @@ bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
     event.respond 'If you are on a mobile device and cannot click the links in the embed above, type `FGO!tools mobile` to receive this message as plaintext.'
   end
   event << ''
+end
+
+bot.command(:prefix) do |event, prefix|
+  return nil if overlap_prevent(event)
+  if prefix.nil?
+    event.respond 'No prefix was defined.  Try again'
+    return nil
+  elsif event.server.nil?
+    event.respond 'This command is not available in PM.'
+    return nil
+  elsif !is_mod?(event.user,event.server,event.channel)
+    event.respond 'You are not a mod.'
+    return nil
+  elsif ['feh!','feh?','f?','e?','h?','fgo!','fgo?','fg0!','fg0?','liz!','liz?','iiz!','iiz?','fate!','fate?','dl!','dl?','fe!','fe14!','fef!','fe13!','fea!'].include?(prefix.downcase)
+    event.respond "That is a prefix that would conflict with either myself or another one of my developer's bots."
+    return nil
+  end
+  @prefixes[event.server.id]=prefix
+  prefixes_save()
+  event.respond "This server's prefix has been saved as **#{prefix}**"
 end
 
 bot.command(:addalias) do |event, newname, unit, modifier, modifier2|
@@ -5618,6 +5663,13 @@ bot.message do |event|
     m=true
     puts event.message.text
     s=s[5,s.length-5]
+  elsif !event.server.nil? && !@prefixes[event.server.id].nil? && @prefixes[event.server.id].length>0
+    prf=@prefixes[event.server.id]
+    if prf.downcase==s[0,prf.length]
+      m=true
+      puts event.message.text
+      s=s[prf.length,s.length-prf.length]
+    end
   end
   str="#{s}"
   if @shardizard==4 && (['fea!','fef!'].include?(str[0,4]) || ['fe13!','fe14!'].include?(str[0,5]) || ['fe!'].include?(str[0,3]))
@@ -5786,7 +5838,7 @@ def next_holiday(bot,mode=0)
   if k.length<=0
     t=Time.now
     t-=60*60*6
-    bot.game='Fate/Grand Order'
+    bot.game='Fate/Grand Order (FGO!help for info)'
     bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.png','r')) rescue nil if @shardizard.zero?
     @avvie_info=['Liz','*Fate/Grand Order*','']
     t+=24*60*60
@@ -5845,7 +5897,7 @@ def next_holiday(bot,mode=0)
   else
     t=Time.now
     t-=60*60*6
-    bot.game='Fate/Grand Order'
+    bot.game='Fate/Grand Order (FGO!help for info)'
     bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.png','r')) rescue nil if @shardizard.zero?
     @avvie_info=['Liz','*Fate/Grand Order*','']
     t+=24*60*60
@@ -5877,7 +5929,7 @@ bot.ready do |event|
   data_load()
   system("color d#{"41260"[@shardizard,1]}")
   system("title #{['Man','Sky','Earth','Star','Beast'][@shardizard]} LizBot")
-  bot.game='Fate/Grand Order'
+  bot.game='Fate/Grand Order (FGO!help for info)'
   if @shardizard==4
     next_holiday(bot)
     bot.user(bot.profile.id).on(285663217261477889).nickname='LizBot (Debug)'
