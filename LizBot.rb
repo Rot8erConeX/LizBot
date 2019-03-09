@@ -1680,48 +1680,82 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     k=@servants[@servants.find_index{|q| q[0]==1.2}].map{|q| q}
     text="#{"<:fgo_icon_rarity:523858991571533825>"*k[3]}\n\nThis costume is considered Servant #1.2 by this bot."
   end
-  f=[[],[],[]]
-  f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
-  f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
-  f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
-  f[0].push("~~Every servant's April Fool's Day art~~") if artist=='Riyo'
-  crf=@crafts.map{|q| q}
-  for i in 0...crf.length
-    f[0].push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist
-  end
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
-    b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
-      b.push(line)
-    end
+  if args.include?('just') || args.include?('justart') || args.include?('blank') || args.include?('noinfo')
+    f=nil
   else
-    b=[]
-  end
-  for i in 0...b.length
-    b[i]=b[i].gsub("\n",'').split('\\'[0])
-    if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
-      f[2].push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
+    f=[[],[],[]]
+    f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
+    f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
+    f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+    f[0].push("~~Every servant's April Fool's Day art~~") if artist=='Riyo'
+    crf=@crafts.map{|q| q}
+    for i in 0...crf.length
+      f[0].push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist
     end
-    if !b[i][6].nil? && b[i][6].length>0
-      f[0].push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
+    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
+      b=[]
+      File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
+        b.push(line)
+      end
+    else
+      b=[]
     end
-    if !b[i][8].nil? && b[i][8].length>0
-      f[1].push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
+    for i in 0...b.length
+      b[i]=b[i].gsub("\n",'').split('\\'[0])
+      if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
+        f[2].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
+      end
+      if !b[i][6].nil? && b[i][6].length>0
+        f[0].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
+      end
+      if !b[i][8].nil? && b[i][8].length>0
+        f[1].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
+      end
     end
-  end
-  f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
-  if k[25].include?(' & ')
-    m=k[25].split(' & ')
-    for i in 0...m.length
-      f[1][1].push(@servants.reject{|q| q[25]!=m[i]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]} *[voice #{i+1}]*"}.join("\n"))
+    if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
+      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLAdventurers.txt')
+        b=[]
+        File.open('C:/Users/Mini-Matt/Desktop/devkit/DLAdventurers.txt').each_line do |line|
+          b.push(line)
+        end
+      else
+        b=[]
+      end
+      for i in 0...b.length
+        b[i]=b[i].gsub("\n",'').split('\\'[0])
+        unless b[i][10].nil? || b[i][10].length<=0
+          f[1].push("*[DL-Adv]* #{b[i][0]} *[Japanese]*") if b[i][10].split(' as ')[0]==k[25]
+        end
+      end
+      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLDragons.txt')
+        b=[]
+        File.open('C:/Users/Mini-Matt/Desktop/devkit/DLDragons.txt').each_line do |line|
+          b.push(line)
+        end
+      else
+        b=[]
+      end
+      for i in 0...b.length
+        b[i]=b[i].gsub("\n",'').split('\\'[0])
+        unless b[i][13].nil? || b[i][13].length<=0
+          f[1].push("*[DL-Drg]* #{b[i][0]} *[Japanese]*") if b[i][13].split(' as ')[0]==k[25]
+        end
+      end
     end
+    f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
+    if k[25].include?(' & ')
+      m=k[25].split(' & ')
+      for i in 0...m.length
+        f[1][1].push(@servants.reject{|q| q[25]!=m[i]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]} *[voice #{i+1}]*"}.join("\n"))
+      end
+    end
+    for i in 0...f.length
+      f[i][1]=f[i][1].join("\n")
+      f[i]=nil if f[i][1].length<=0
+    end
+    f.compact!
+    f=nil if f.length<=0
   end
-  for i in 0...f.length
-    f[i][1]=f[i][1].join("\n")
-    f[i]=nil if f[i][1].length<=0
-  end
-  f.compact!
-  f=nil if f.length<=0
   asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][asc]
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
     str=''
