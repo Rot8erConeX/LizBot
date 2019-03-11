@@ -103,7 +103,7 @@ def shard_data(mode=0,ignoredebug=false,s=nil)
     if s>full.length-1
       k2=part.map{|q| q}
       i=2
-      while k.length<s
+      while k.length<s+1
         k3=k2.map{|q| "#{q} #{i}"}
         for j in 0...k3.length
           k.push(k3[j])
@@ -121,7 +121,7 @@ def shard_data(mode=0,ignoredebug=false,s=nil)
     if s>full.length-1
       k2=part.map{|q| q.split(' ')[0]}
       i=2
-      while k.length<s
+      while k.length<s+1
         k3=k2.map{|q| "#{q}#{i}"}
         for j in 0...k3.length
           k.push(k3[j])
@@ -139,7 +139,7 @@ def shard_data(mode=0,ignoredebug=false,s=nil)
     if s>full.length-1
       k2=part.map{|q| q.split(' ')[1,q.split(' ').length-1].join(' ')}
       i=2
-      while k.length<s
+      while k.length<s+1
         k3=k2.map{|q| "#{q} #{i}"}
         for j in 0...k3.length
           k.push(k3[j])
@@ -5399,51 +5399,120 @@ bot.command(:snagstats) do |event, f, f2|
     return nil
   elsif ['servant','servants','unit','units','character','characters','chara','charas','char','chars'].include?(f.downcase)
     srv=@servants.reject{|q| q[0]!=q[0].to_i}
+    point_five=true
+    unless f2.nil? || f2.length<=0
+      srv=find_in_servants(bot,event,[f2],1)[2]
+      if !srv.find_index{|q| q[0]==1.0}.nil? && !srv.find_index{|q| q[0]!=q[0].to_i}.nil?
+        srv=srv.reject{|q| q[0]!=q[0].to_i}
+      elsif !srv.find_index{|q| q[0]==1.2}.nil? && !srv.find_index{|q| q[0]==1.1}.nil?
+        srv=srv.reject{|q| q[0]==1.2}
+        point_five=false
+      else
+        point_five=false
+      end
+    end
     str="**There are #{srv.length} servants, including:**"
-    str2="<:class_shielder_gold:523838231913955348> #{srv.reject{|q| q[2]!='Shielder'}.length} Shielder#{'s' if srv.reject{|q| q[2]!='Shielder'}.length>1}"
-    str2="#{str2}\n<:class_saber_gold:523838273479507989> #{srv.reject{|q| q[2]!='Saber'}.length} Sabers"
-    str2="#{str2}\n<:class_archer_gold:523838461195714576> #{srv.reject{|q| q[2]!='Archer'}.length} Archers"
-    str2="#{str2}\n<:class_lancer_gold:523838511485419522> #{srv.reject{|q| q[2]!='Lancer'}.length} Lancers"
-    str2="#{str2}\n<:class_rider_gold:523838542577664012> #{srv.reject{|q| q[2]!='Rider'}.length} Riders"
-    str2="#{str2}\n<:class_caster_gold:523838570893672473> #{srv.reject{|q| q[2]!='Caster'}.length} Casters"
-    str2="#{str2}\n<:class_assassin_gold:523838617693716480> #{srv.reject{|q| q[2]!='Assassin'}.length} Assassins"
-    str2="#{str2}\n<:class_berserker_gold:523838648370724897> #{srv.reject{|q| q[2]!='Berserker'}.length} Berserkers"
-    str2="#{str2}\n<:class_unknown_gold:523838979825467392> #{srv.reject{|q| ['Saber','Shielder','Archer','Lancer','Rider','Caster','Assassin','Berserker'].include?(q[2])}.length} extra class servants"
+    str2=''
+    m=srv.reject{|q| q[2]!='Shielder'}
+    str2="<:class_shielder_gold:523838231913955348> #{m.length} Shielder#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[2]!='Saber'}
+    str2="#{str2}\n<:class_saber_gold:523838273479507989> #{m.length} Saber#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[2]!='Archer'}
+    str2="#{str2}\n<:class_archer_gold:523838461195714576> #{m.length} Archer#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[2]!='Lancer'}
+    str2="#{str2}\n<:class_lancer_gold:523838511485419522> #{m.length} Lancer#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[2]!='Rider'}
+    str2="#{str2}\n<:class_rider_gold:523838542577664012> #{m.length} Rider#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[2]!='Caster'}
+    str2="#{str2}\n<:class_caster_gold:523838570893672473> #{m.length} Caster#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[2]!='Assassin'}
+    str2="#{str2}\n<:class_assassin_gold:523838617693716480> #{m.length} Assassin#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[2]!='Berserker'}
+    str2="#{str2}\n<:class_berserker_gold:523838648370724897> #{m.length} Berserker#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| ['Saber','Shielder','Archer','Lancer','Rider','Caster','Assassin','Berserker'].include?(q[2])}
+    str2="#{str2}\n<:class_unknown_gold:523838979825467392> #{m.length} extra class servant#{'s' unless m.length==1}" if m.length>0
+    str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+    str2=str2[2,str2.length-2] if str2[0,2]=="\n"
     str=extend_message(str,str2,event,2)
-    str2="<:FGO_rarity_off:544583775208603688> #{srv.reject{|q| q[3]!=0}.length} no-star servant#{'s' if srv.reject{|q| q[3]!=0}.length>1}"
-    str2="#{str2}\n<:FGO_rarity_1:544583775330369566> #{srv.reject{|q| q[3]!=1}.length} one-star servant#{'s' if srv.reject{|q| q[3]!=1}.length>1}"
-    str2="#{str2}\n<:FGO_rarity_2:544583776148258827> #{srv.reject{|q| q[3]!=2}.length} two-star servant#{'s' if srv.reject{|q| q[3]!=2}.length>1}"
-    str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{srv.reject{|q| q[3]!=3}.length-1}.5 three-star servant#{'s' if srv.reject{|q| q[3]!=3}.length>1}"
-    str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{srv.reject{|q| q[3]!=4}.length}.5 four-star servant#{'s' if srv.reject{|q| q[3]!=4}.length>1}"
-    str2="#{str2}\n<:FGO_rarity_5:544583774965596171> #{srv.reject{|q| q[3]!=5}.length} five-star servant#{'s' if srv.reject{|q| q[3]!=5}.length>1}"
+    str2=''
+    m=srv.reject{|q| q[3]!=0}
+    str2="<:FGO_rarity_off:544583775208603688> #{m.length} no-star servant#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[3]!=1}
+    str2="#{str2}\n<:FGO_rarity_1:544583775330369566> #{m.length} one-star servant#{'s' unless m.length==1}" if m.length>0
+    m=srv.reject{|q| q[3]!=2}
+    str2="#{str2}\n<:FGO_rarity_2:544583776148258827> #{m.length} two-star servant#{'s' unless m.length==1}" if m.length>0
+    if point_five
+      str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{srv.reject{|q| q[3]!=3}.length-1}.5 three-star servants"
+      str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{srv.reject{|q| q[3]!=4}.length}.5 four-star servants"
+    else
+      m=srv.reject{|q| q[3]!=3}
+      str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{m.length} three-star servant#{'s' unless m.length==1}" if m.length>0
+      m=srv.reject{|q| q[3]!=4}
+      str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{m.length} four-star servant#{'s' unless m.length==1}" if m.length>0
+    end
+    m=srv.reject{|q| q[3]!=5}
+    str2="#{str2}\n<:FGO_rarity_5:544583774965596171> #{m.length} five-star servant#{'s' unless m.length==1}" if m.length>0
+    str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+    str2=str2[2,str2.length-2] if str2[0,2]=="\n"
     str=extend_message(str,str2,event,2)
-    str2="#{srv.reject{|q| q[12]!='Man'}.length} servants with the Man attribute"
-    str2="#{str2}\n#{srv.reject{|q| q[12]!='Sky'}.length} servants with the Sky attribute"
-    str2="#{str2}\n#{srv.reject{|q| q[12]!='Earth'}.length} servants with the Earth attribute"
-    str2="#{str2}\n#{srv.reject{|q| q[12]!='Star'}.length} servants with the Star attribute"
-    str2="#{str2}\n#{srv.reject{|q| q[12]!='Beast'}.length} servants with the Beast attribute"
+    str2=''
+    m=srv.reject{|q| q[12]!='Man'}
+    str2="#{m.length} servant#{'s' unless m.length==1} with the Man attribute" if m.length>0
+    m=srv.reject{|q| q[12]!='Sky'}
+    str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with the Sky attribute" if m.length>0
+    m=srv.reject{|q| q[12]!='Earth'}
+    str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with the Earth attribute" if m.length>0
+    m=srv.reject{|q| q[12]!='Star'}
+    str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with the Star attribute" if m.length>0
+    m=srv.reject{|q| q[12]!='Beast'}
+    str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with the Beast attribute" if m.length>0
+    str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+    str2=str2[2,str2.length-2] if str2[0,2]=="\n"
     str=extend_message(str,str2,event,2)
     if safe_to_spam?(event)
-      str2="#{srv.reject{|q| q[4]!='Linear'}.length} servants with Linear growth curves"
-      str2="#{str2}\n#{srv.reject{|q| q[4]!='S'}.length} servants with S growth curves"
-      str2="#{str2}\n#{srv.reject{|q| q[4]!='Reverse S'}.length} servants with Reverse S growth curves"
-      str2="#{str2}\n#{srv.reject{|q| q[4]!='Semi S'}.length} servants with Semi S growth curves"
-      str2="#{str2}\n#{srv.reject{|q| q[4]!='Semi Reverse S'}.length} servants with Semi Reverse S growth curves"
+      str2=''
+      m=srv.reject{|q| q[4]!='Linear'}
+      str2="#{m.length} servant#{'s' unless m.length==1} with Linear growth curves" if m.length>0
+      m=srv.reject{|q| q[4]!='S'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with S growth curves" if m.length>0
+      m=srv.reject{|q| q[4]!='Reverse S'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with Reverse S growth curves" if m.length>0
+      m=srv.reject{|q| q[4]!='Semi S'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with Semi S growth curves" if m.length>0
+      m=srv.reject{|q| q[4]!='Semi Reverse S'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with Semi Reverse S growth curves" if m.length>0
       m=srv.reject{|q| ['Linear','S','Reverse S','Semi S','Semi Reverse S'].include?(q[4])}
       str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with unknown growth curves" unless m.length<=0
+      str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+      str2=str2[2,str2.length-2] if str2[0,2]=="\n"
       str=extend_message(str,str2,event,2)
-      str2="#{srv.reject{|q| q[17][0,5]!='QQQAB'}.length} servants with triple-Quick decks."
-      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QQAAB'}.length} servants with double-Quick/double-Arts decks."
-      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QQABB'}.length} servants with double-Quick/double-Buster decks."
-      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QAAAB'}.length} servants with triple-Arts decks."
-      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QAABB'}.length} servants with double-Arts/double-Buster decks."
-      str2="#{str2}\n#{srv.reject{|q| q[17][0,5]!='QABBB'}.length} servants with triple-Buster decks."
+      str2=''
+      m=srv.reject{|q| q[17][0,5]!='QQQAB'}
+      str2="#{m.length} servant#{'s' unless m.length==1} with triple-Quick decks." if m.length>0
+      m=srv.reject{|q| q[17][0,5]!='QQAAB'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with double-Quick/double-Arts decks." if m.length>0
+      m=srv.reject{|q| q[17][0,5]!='QQABB'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with double-Quick/double-Buster decks." if m.length>0
+      m=srv.reject{|q| q[17][0,5]!='QAAAB'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with triple-Arts decks." if m.length>0
+      m=srv.reject{|q| q[17][0,5]!='QAABB'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with double-Arts/double-Buster decks." if m.length>0
+      m=srv.reject{|q| q[17][0,5]!='QABBB'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with triple-Buster decks." if m.length>0
+      str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+      str2=str2[2,str2.length-2] if str2[0,2]=="\n"
       str=extend_message(str,str2,event,2)
-      str2="#{srv.reject{|q| q[17][6,1]!='Q'}.length} servants with Quick Noble Phantasms."
-      str2="#{str2}\n#{srv.reject{|q| q[17][6,1]!='A'}.length} servants with Arts Noble Phantasms."
-      str2="#{str2}\n#{srv.reject{|q| q[17][6,1]!='B'}.length} servants with Buster Noble Phantasms."
+      str2=''
+      m=srv.reject{|q| q[17][6,1]!='Q'}
+      str2="#{m.length} servant#{'s' unless m.length==1} with Quick Noble Phantasms." if m.length>0
+      m=srv.reject{|q| q[17][6,1]!='A'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with Arts Noble Phantasms." if m.length>0
+      m=srv.reject{|q| q[17][6,1]!='B'}
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with Buster Noble Phantasms." if m.length>0
       m=srv.reject{|q| ['Q','A','B'].include?(q[17][6,1])}
       str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with no Noble Phantasm." unless m.length<=0
+      str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+      str2=str2[2,str2.length-2] if str2[0,2]=="\n"
       str=extend_message(str,str2,event,2)
     end
     event.respond str
@@ -5452,28 +5521,40 @@ bot.command(:snagstats) do |event, f, f2|
     crf=@crafts.map{|q| q}
     srv=@servants.map{|q| q}
     str="**There are #{crf.length} Craft Essences, including:**"
+    str2=''
     str2="<:FGO_rarity_1:544583775330369566> #{crf.reject{|q| q[2]!=1}.length} one-star CE#{'s' if crf.reject{|q| q[2]!=1}.length>1}"
     str2="#{str2}\n<:FGO_rarity_2:544583776148258827> #{crf.reject{|q| q[2]!=2}.length} two-star CE#{'s' if crf.reject{|q| q[2]!=2}.length>1}"
     str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{crf.reject{|q| q[2]!=3}.length} three-star CE#{'s' if crf.reject{|q| q[2]!=3}.length>1}"
     str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{crf.reject{|q| q[2]!=4}.length} four-star CE#{'s' if crf.reject{|q| q[2]!=4}.length>1}"
     str2="#{str2}\n<:FGO_rarity_5:544583774965596171> #{crf.reject{|q| q[2]!=5}.length} five-star CE#{'s' if crf.reject{|q| q[2]!=5}.length>1}"
+    str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+    str2=str2[2,str2.length-2] if str2[0,2]=="\n"
     str=extend_message(str,str2,event,2)
+    str2=''
     c=crf.map{|q| q[0].to_i}
     m=srv.map{|q| q[23]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
     str2="<:Bond:523903660913197056> #{m.length} Bond CE#{'s' if m.length>1}"
     m=srv.map{|q| q[26]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
     str2="#{str2}\n<:Valentines:523903633453219852> #{m.length} Valentine's CE#{'s' if m.length>1}"
+    str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+    str2=str2[2,str2.length-2] if str2[0,2]=="\n"
     str=extend_message(str,str2,event,2)
     event.respond str
     return nil
   elsif ['command','commandcode','commands','commandcodes'].include?(f.downcase)
     crf=@codes.map{|q| q}
     str="**There are #{crf.length} Command Codes, including:**"
+    str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+    str2=str2[2,str2.length-2] if str2[0,2]=="\n"
+    str=extend_message(str,str2,event,2)
+    str2=''
     str2="<:FGO_rarity_1:544583775330369566> #{crf.reject{|q| q[2]!=1}.length} one-star Command Code#{'s' if crf.reject{|q| q[2]!=1}.length>1}"
     str2="#{str2}\n<:FGO_rarity_2:544583776148258827> #{crf.reject{|q| q[2]!=2}.length} two-star Command Code#{'s' if crf.reject{|q| q[2]!=2}.length>1}"
     str2="#{str2}\n<:FGO_rarity_3:544583774944624670> #{crf.reject{|q| q[2]!=3}.length} three-star Command Code#{'s' if crf.reject{|q| q[2]!=3}.length>1}"
     str2="#{str2}\n<:FGO_rarity_4:544583774923653140> #{crf.reject{|q| q[2]!=4}.length} four-star Command Code#{'s' if crf.reject{|q| q[2]!=4}.length>1}"
     str2="#{str2}\n<:FGO_rarity_5:544583774965596171> #{crf.reject{|q| q[2]!=5}.length} five-star Command Code#{'s' if crf.reject{|q| q[2]!=5}.length>1}"
+    str2=str2[1,str2.length-1] if str2[0,1]=="\n"
+    str2=str2[2,str2.length-2] if str2[0,2]=="\n"
     str=extend_message(str,str2,event,2)
     event.respond str
     return nil
@@ -5507,8 +5588,6 @@ bot.command(:snagstats) do |event, f, f2|
     event << "#{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command(' || q.include?('from: 167657750971547648')}.length-b[0].reject{|q| q.gsub('  ','')!="event.respond 'You are not a mod.'" && q.gsub('  ','')!="str='You are not a mod.'"}.length)} global commands, invoked with #{longFormattedNumber(all_commands(false,0).length)} different phrases."
     event << "#{longFormattedNumber(b[0].reject{|q| q.gsub('  ','')!="event.respond 'You are not a mod.'" && q.gsub('  ','')!="str='You are not a mod.'"}.length)} mod-only commands, invoked with #{longFormattedNumber(all_commands(false,1).length)} different phrases."
     event << "#{longFormattedNumber(b[0].reject{|q| q[0,12]!='bot.command(' || !q.include?('from: 167657750971547648')}.length)} dev-only commands, invoked with #{longFormattedNumber(all_commands(false,2).length)} different phrases."
-    event << ''
-    event << "**There are #{longFormattedNumber(@prefix.map{|q| q.downcase}.reject{|q| q.include?('0') || q.include?('ii')}.uniq.length)} command prefixes**, but because I am faking case-insensitivity it's actually #{longFormattedNumber(@prefix.length)} prefixes."
     event << ''
     event << "**There are #{longFormattedNumber(b[0].reject{|q| q[0,4]!='def '}.length)} functions the commands use.**"
     if safe_to_spam?(event) || " #{event.message.text.downcase} ".include?(" all ")
