@@ -5397,20 +5397,6 @@ bot.command(:snagstats) do |event, f, f2|
     str=extend_message(str,"The #{shard_data(0)[4]} Shard is in #{longFormattedNumber(@server_data[0][4])} server#{"s" if @server_data[0][4]!=1}, reaching #{longFormattedNumber(@server_data[1][4])} unique members.",event,2) if event.user.id==167657750971547648
     event.respond str
     return nil
-  elsif f.downcase=='fake' && event.user.id==167657750971547648
-    str="**I am in #{longFormattedNumber(@server_data[0].inject(0){|sum,x| sum + x })} servers, reaching #{longFormattedNumber(@server_data[1].inject(0){|sum,x| sum + x })} unique members.**"
-    f2=@shards*1 unless f2.to_i.to_s==f2
-    for i in 0...f2.to_i
-      m=i
-      m=i+1 if i>3
-      x=@server_data.map{|q| q[m]}
-      x=[0,0] if x.nil? || x[0].nil?
-      str=extend_message(str,"The #{shard_data(0,true,f2.to_i)[i]} Shard is in #{longFormattedNumber(x[0])} server#{"s" if x[0]!=1}, reaching #{longFormattedNumber(x[1])} unique members.",event)
-    end
-    str=extend_message(str,"The #{shard_data(0,false,f2.to_i)[4]} Shard is in #{longFormattedNumber(@server_data[0][4])} server#{"s" if @server_data[0][4]!=1}, reaching #{longFormattedNumber(@server_data[1][4])} unique members.",event,2) if event.user.id==167657750971547648
-    event.respond str
-    return nil
-    return nil
   elsif ['servant','servants','unit','units','character','characters','chara','charas','char','chars'].include?(f.downcase)
     srv=@servants.reject{|q| q[0]!=q[0].to_i}
     str="**There are #{srv.length} servants, including:**"
