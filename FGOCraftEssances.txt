@@ -544,11 +544,11 @@
 544\Bandana of the Devil\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\
 545\Freelancer\3\5\0, 0\200, 1000\Increase Quick Card Critical Strength by 25%\Increase Quick Card Critical Strength by 30%\-\torino\
 546\The Dynamics of an Asteroid\4\9\100, 100\100, 100\When equipped to James Moriarty (Archer) only. Increase NP Strength of all allies with [Evil] trait by 25% while he's on the field\\-\\
-547\Kanshou & Bakuya (Handguns)\4\9\100, 100\100, 100\When equipped to Emiya [Alter] (Archer) only. Increase Quick, Arts, and Buster Card effectiveness of all allies by 8% while he's on the field\\-\\
-548\Beyond the Wilderness\4\9\100, 100\100, 100\When equipped to Hessian Lobo (Avenger) only. Increase Quick Card effectiveness and NP Gain of all allies by 10% while he's on the field\\-\\
-549\108 Stars of Destiny\4\9\100, 100\100, 100\When equipped to Yan Qing (Assassin) only. Increase Quick Card effectiveness of all allies by 10% & Critical Strength by 15% while he's on the field\\-\\
-550\Talk on the Heated Sands\5\12\0, 500\0, 2000\Increase Critical Star Gather Rate by 400%; Increase Critical Strength by 20%\Increase Critical Star Gather Rate by 600%; Increase Critical Strength by 25%\-\Takarai Rihito\\Chaldea Boys Collection 2017
-551\Detective Edmond ~Springtime Journey Chapter~\5\12\400, 250\1600, 1000\Apply Ignore Invincible; Increase Arts Card effectiveness by 8%\Apply Ignore Invincible; Increase Arts Card effectiveness by 10%\-\Kazuki Yone\\Chaldea Boys Collection 2017
+547\Kanshou & Bakuya (Pistols)\4\9\100, 100\100, 100\When equipped to Emiya [Alter] (Archer) only. Increase Quick, Arts, and Buster Card effectiveness of all allies by 8% while he's on the field\\-\\
+548\Far-Away Wilds\4\9\100, 100\100, 100\When equipped to Hessian Lobo (Avenger) only. Increase Quick Card effectiveness and NP Gain of all allies by 10% while he's on the field\\-\\
+549\108 Evil Stars\4\9\100, 100\100, 100\When equipped to Yan Qing (Assassin) only. Increase Quick Card effectiveness of all allies by 10% & Critical Strength by 15% while he's on the field\\-\\
+550\Conversation on the Hot Sands\5\12\0, 500\0, 2000\Increase Critical Star Gather Rate by 400%; Increase Critical Strength by 20%\Increase Critical Star Gather Rate by 600%; Increase Critical Strength by 25%\-\Takarai Rihito\\Chaldea Boys Collection 2017
+551\The Dantes Files: The Case of the Spring Jaunt\5\12\400, 250\1600, 1000\Apply Ignore Invincible; Increase Arts Card effectiveness by 8%\Apply Ignore Invincible; Increase Arts Card effectiveness by 10%\-\Kazuki Yone\\Chaldea Boys Collection 2017
 552\As You Wish\5\12\750, 0\3000, 0\Apply Invincible (1 turn); Increase NP Gain by 25%\Apply Invincible (1 turn); Increase NP Gain by 30%\-\\\Chaldea Boys Collection 2017
 553\Cafe Camelot\4\9\600, 0\2250, 0\Increase HP Recovery Amount by 8%; Increase Debuff Resist by 8%; Increase DEF by 8%\Increase HP Recovery Amount by 10%; Increase Debuff Resist by 10%; Increase DEF by 10%\-\Yukihiro Utako\\Chaldea Boys Collection 2017
 554\Outrage\4\9\0, 400\0, 1500\Apply Target Focus (1 turn); Increase NP Gain by 15%\Apply Target Focus (1 turn); Increase NP Gain by 20%\-\Sara Chiyomi\\Chaldea Boys Collection 2017
@@ -986,3 +986,4 @@
 986\Girl's Cacao Three-Point Serving\4\3\0, 0\0, 0\No Effect\\-\\
 987\Picture Scroll Chocolate\4\3\0, 0\0, 0\No Effect\\-\\
 988\Bella Lisa\5\12\400, 250\1600, 1000\Increase QP from enemy drops by 1% (Increased to 5% when used as Support)\Increase QP from enemy drops by 3% (Increased to 15% when used as Support)\-\Simosi\
+989\Those, Which Fills Both Hands\4\9\100, 100\100, 100\When equiped to Kingprotea (Alter Ego) only, Increase own Buster Card effectiveness by 20%, Increase own Buster Card effectiveness by 20% if [Growth] is active, decrease Quick Card effectiveness of all allies by 10% while she's on the field [Demerit]\\-\Sakuma Mitsuro\\Kingprotea Bond Lv. 10

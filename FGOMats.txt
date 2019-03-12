@@ -74,6 +74,7 @@ Reactive Gunpowder
 Ribbon of Memories
 Rider Monument
 Rider Piece
+Ring of Giant
 Ring of Giants
 Saber Monument
 Saber Piece
@@ -84,6 +85,7 @@ Secret Gem of Assassin
 Secret Gem of Berserker
 Secret Gem of Caster
 Secret Gem of Lancer
+Secret Gem of RIder
 Secret Gem of Rider
 Secret Gem of Saber
 Seed of Yggdrasil
