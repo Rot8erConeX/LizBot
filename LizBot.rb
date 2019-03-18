@@ -45,6 +45,423 @@ else
 end
 bot.gateway.check_heartbeat_acks = false
 
+def shard_data(mode=0,ignoredebug=false,s=nil)
+  s=@shards*1 if s.nil?
+  full=['<:class_lancer_gold:523838511485419522> Gold Lancer','<:class_saber_gold:523838273479507989> Gold Saber',
+        '<:class_archer_gold:523838461195714576> Gold Archer','<:class_rider_gold:523838542577664012> Gold Rider','<:Extra_y:526556105388720130> Debug',
+        '<:class_caster_gold:523838570893672473> Gold Caster','<:class_assassin_gold:523838617693716480> Gold Assassin',
+        '<:class_berserker_gold:523838648370724897> Gold Berserker','<:class_shielder_gold:523838231913955348> Gold Shielder',
+        '<:class_avenger_gold:523838724753063956> Gold Avenger','<:class_foreigner_gold:523838834316935172> Gold Foreigner',
+        '<:class_ruler_gold:523838688648495114> Gold Ruler','<:class_mooncancer_gold:523838798019166209> Gold Moon Cancer',
+        '<:class_alterego_gold:523838749180821515> Gold Alter Ego','<:class_extra_gold:523838907591294977> Gold Extra',
+        '<:class_unknown_gold:523838979825467392> Gold Unknown','<:class_saber_silver:523838265002950668> Silver Saber',
+        '<:class_archer_silver:523838373698207760> Silver Archer','<:class_lancer_silver:523838477566083072> Silver Lancer',
+        '<:class_rider_silver:523838533589532693> Silver Rider','<:class_caster_silver:523838556226060298> Silver Caster',
+        '<:class_assassin_silver:523838605937082368> Silver Assassin','<:class_berserker_silver:523838636740050955> Silver Berserker',
+        '<:class_shielder_silver:523838223202385940> Silver Shielder','<:class_avenger_silver:523838717799170058> Silver Avenger',
+        '<:class_foreigner_silver:523838823747158018> Silver Foreigner','<:class_ruler_silver:523838680603820042> Silver Ruler',
+        '<:class_mooncancer_silver:523838771964149770> Silver Moon Cancer','<:class_alterego_silver:523838741090140170> Silver Alter Ego',
+        '<:class_extra_silver:523838899487768577> Silver Extra','<:class_unknown_silver:523838967058006027> Silver Unknown',
+        '<:class_saber_bronze:523838251035787285> Bronze Saber','<:class_archer_bronze:523838364408086558> Bronze Archer',
+        '<:class_lancer_bronze:523838470888882199> Bronze Lancer','<:class_rider_bronze:523838525423091713> Bronze Rider',
+        '<:class_caster_bronze:523838549645197316> Bronze Caster','<:class_assassin_bronze:523838597632229386> Bronze Assassin',
+        '<:class_berserker_bronze:523838628095590400> Bronze Berserker','<:class_shielder_bronze:523948997182750720> Bronze Shielder',
+        '<:class_avenger_bronze:523948998088720405> Bronze Avenger','<:class_foreigner_bronze:523948997228888067> Bronze Foreigner',
+        '<:class_ruler_bronze:523948997245927434> Bronze Ruler','<:class_mooncancer_bronze:523838763135270922> Bronze Moon Cancer',
+        '<:class_alterego_bronze:523948997174493185> Bronze Alter Ego','<:class_extra_bronze:523838879854493709> Bronze Extra',
+        '<:class_unknown_bronze:523948997430214666> Bronze Unknown']
+  part=['<:class_saber_gold:523838273479507989> Gold Saber','<:class_archer_gold:523838461195714576> Gold Archer',
+        '<:class_lancer_gold:523838511485419522> Gold Lancer','<:class_rider_gold:523838542577664012> Gold Rider',
+        '<:class_caster_gold:523838570893672473> Gold Caster','<:class_assassin_gold:523838617693716480> Gold Assassin',
+        '<:class_berserker_gold:523838648370724897> Gold Berserker','<:class_shielder_gold:523838231913955348> Gold Shielder',
+        '<:class_avenger_gold:523838724753063956> Gold Avenger','<:class_foreigner_gold:523838834316935172> Gold Foreigner',
+        '<:class_ruler_gold:523838688648495114> Gold Ruler','<:class_mooncancer_gold:523838798019166209> Gold Moon Cancer',
+        '<:class_alterego_gold:523838749180821515> Gold Alter Ego','<:class_extra_gold:523838907591294977> Gold Extra',
+        '<:class_unknown_gold:523838979825467392> Gold Unknown','<:class_saber_silver:523838265002950668> Silver Saber',
+        '<:class_archer_silver:523838373698207760> Silver Archer','<:class_lancer_silver:523838477566083072> Silver Lancer',
+        '<:class_rider_silver:523838533589532693> Silver Rider','<:class_caster_silver:523838556226060298> Silver Caster',
+        '<:class_assassin_silver:523838605937082368> Silver Assassin','<:class_berserker_silver:523838636740050955> Silver Berserker',
+        '<:class_shielder_silver:523838223202385940> Silver Shielder','<:class_avenger_silver:523838717799170058> Silver Avenger',
+        '<:class_foreigner_silver:523838823747158018> Silver Foreigner','<:class_ruler_silver:523838680603820042> Silver Ruler',
+        '<:class_mooncancer_silver:523838771964149770> Silver Moon Cancer','<:class_alterego_silver:523838741090140170> Silver Alter Ego',
+        '<:class_extra_silver:523838899487768577> Silver Extra','<:class_unknown_silver:523838967058006027> Silver Unknown',
+        '<:class_saber_bronze:523838251035787285> Bronze Saber','<:class_archer_bronze:523838364408086558> Bronze Archer',
+        '<:class_lancer_bronze:523838470888882199> Bronze Lancer','<:class_rider_bronze:523838525423091713> Bronze Rider',
+        '<:class_caster_bronze:523838549645197316> Bronze Caster','<:class_assassin_bronze:523838597632229386> Bronze Assassin',
+        '<:class_berserker_bronze:523838628095590400> Bronze Berserker','<:class_shielder_bronze:523948997182750720> Bronze Shielder',
+        '<:class_avenger_bronze:523948998088720405> Bronze Avenger','<:class_foreigner_bronze:523948997228888067> Bronze Foreigner',
+        '<:class_ruler_bronze:523948997245927434> Bronze Ruler','<:class_mooncancer_bronze:523838763135270922> Bronze Moon Cancer',
+        '<:class_alterego_bronze:523948997174493185> Bronze Alter Ego','<:class_extra_bronze:523838879854493709> Bronze Extra',
+        '<:class_unknown_bronze:523948997430214666> Bronze Unknown']
+  if mode==0 # shard icons + names
+    k=['<:Buster_y:526556105422274580> Buster','<:Quick_y:526556106986618880> Quick','<:Arts_y:526556105489252352> Arts','','<:Extra_y:526556105388720130> Extra'] if s<=3
+    k=['Man','Sky','Earth','Star','Beast'] if s==4
+    k=['Man','Sky','Earth','Star','<:Extra_y:526556105388720130> Extra','Beast'] if s==5
+    k=['<:class_lancer_gold:523838511485419522> Lancer','<:class_saber_gold:523838273479507989> Saber','<:class_archer_gold:523838461195714576> Archer','<:class_rider_gold:523838542577664012> Rider','<:class_unknown_gold:523838979825467392> Unknown','<:class_caster_gold:523838570893672473> Caster','<:class_assassin_gold:523838617693716480> Assassin','<:class_berserker_gold:523838648370724897> Berserker','<:class_shielder_gold:523838231913955348> Shielder','<:class_avenger_gold:523838724753063956> Avenger','<:class_foreigner_gold:523838834316935172> Foreigner','<:class_ruler_gold:523838688648495114> Ruler','<:class_mooncancer_gold:523838798019166209> Moon Cancer','<:class_alterego_gold:523838749180821515> Alter Ego','<:class_extra_gold:523838907591294977> Extra'][0,s+1] if s>5 && s<15
+    k=['<:class_lancer_gold:523838511485419522> Lancer','<:class_saber_gold:523838273479507989> Saber','<:class_archer_gold:523838461195714576> Archer','<:class_rider_gold:523838542577664012> Rider','<:Extra_y:526556105388720130> Debug','<:class_caster_gold:523838570893672473> Caster','<:class_assassin_gold:523838617693716480> Assassin','<:class_berserker_gold:523838648370724897> Berserker','<:class_shielder_gold:523838231913955348> Shielder','<:class_avenger_gold:523838724753063956> Avenger','<:class_foreigner_gold:523838834316935172> Foreigner','<:class_ruler_gold:523838688648495114> Ruler','<:class_mooncancer_gold:523838798019166209> Moon Cancer','<:class_alterego_gold:523838749180821515> Alter Ego','<:class_extra_gold:523838907591294977> Extra','<:class_unknown_gold:523838979825467392> Unknown'][0,s+1] if s==15
+    k=full.map{|q| q} if s>15
+    if s>full.length-1
+      k2=part.map{|q| q}
+      i=2
+      while k.length<s+1
+        k3=k2.map{|q| "#{q} #{i}"}
+        for j in 0...k3.length
+          k.push(k3[j])
+        end
+        i+=1
+      end
+    end
+  elsif mode==1 # shard icons without names
+    k=['<:Buster_y:526556105422274580>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','','<:Extra_y:526556105388720130>'] if s<=3
+    k=['Man','Sky','Earth','Star','Beast'] if s==4
+    k=['Man','Sky','Earth','Star','<:Extra_y:526556105388720130>','Beast'] if s==5
+    k=['<:class_lancer_gold:523838511485419522>','<:class_saber_gold:523838273479507989>','<:class_archer_gold:523838461195714576>','<:class_rider_gold:523838542577664012>','<:class_unknown_gold:523838979825467392>','<:class_caster_gold:523838570893672473>','<:class_assassin_gold:523838617693716480>','<:class_berserker_gold:523838648370724897>','<:class_shielder_gold:523838231913955348>','<:class_avenger_gold:523838724753063956>','<:class_foreigner_gold:523838834316935172>','<:class_ruler_gold:523838688648495114>','<:class_mooncancer_gold:523838798019166209>','<:class_alterego_gold:523838749180821515>','<:class_extra_gold:523838907591294977>'][0,s+1] if s>5 && s<15
+    k=['<:class_lancer_gold:523838511485419522>','<:class_saber_gold:523838273479507989>','<:class_archer_gold:523838461195714576>','<:class_rider_gold:523838542577664012>','<:Extra_y:526556105388720130>','<:class_caster_gold:523838570893672473>','<:class_assassin_gold:523838617693716480>','<:class_berserker_gold:523838648370724897>','<:class_shielder_gold:523838231913955348>','<:class_avenger_gold:523838724753063956>','<:class_foreigner_gold:523838834316935172>','<:class_ruler_gold:523838688648495114>','<:class_mooncancer_gold:523838798019166209>','<:class_alterego_gold:523838749180821515>','<:class_extra_gold:523838907591294977>','<:class_unknown_gold:523838979825467392>'][0,s+1] if s==15
+    k=full.map{|q| q.split(' ')[0]} if s>15
+    if s>full.length-1
+      k2=part.map{|q| q.split(' ')[0]}
+      i=2
+      while k.length<s+1
+        k3=k2.map{|q| "#{q}#{i}"}
+        for j in 0...k3.length
+          k.push(k3[j])
+        end
+        i+=1
+      end
+    end
+  elsif mode==2 # shard names without icons
+    k=['Buster','Quick','Arts','','Extra'] if s<=3
+    k=['Man','Sky','Earth','Star','Beast'] if s==4
+    k=['Man','Sky','Earth','Star','Extra','Beast'] if s==5
+    k=['Lancer','Saber','Archer','Rider','Unknown','Caster','Assassin','Berserker','Shielder','Avenger','Foreigner','Ruler','Moon Cancer','Alter Ego','Extra'][0,s+1] if s>5 && s<15
+    k=['Lancer','Saber','Archer','Rider','Debug','Caster','Assassin','Berserker','Shielder','Avenger','Foreigner','Ruler','Moon Cancer','Alter Ego','Extra','Unknown'][0,s+1] if s==15
+    k=full.map{|q| q.split(' ')[1,q.split(' ').length-1].join(' ')} if s>15
+    if s>full.length-1
+      k2=part.map{|q| q.split(' ')[1,q.split(' ').length-1].join(' ')}
+      i=2
+      while k.length<s+1
+        k3=k2.map{|q| "#{q} #{i}"}
+        for j in 0...k3.length
+          k.push(k3[j])
+        end
+        i+=1
+      end
+    end
+  elsif mode==3 # bright command prompt text color
+    k=['C','A','9','_','F'] if s<=3
+    k=['C','B','A','E','7'] if s==4
+    k=['C','B','A','E','F','7'] if s==5
+    return 'F'*(s+1) if s>5
+  elsif mode==4 # dark command prompt text color
+    k=['4','2','1','_','0'] if s<=3
+    k=['4','1','2','6','0'] if s==4
+    k=['4','1','2','6','0','0'] if s==5
+    return '0'*(s+1) if s>5
+  end
+  if ignoredebug
+    k[4]=nil
+    k.compact!
+  end
+  return k.join('') if mode>2
+  return k
+end
+
+system("color 0#{shard_data(3)[@shardizard,1]}")
+system("title loading #{shard_data(2)[@shardizard]} LizBot")
+
+@servants=[]
+@skills=[]
+@crafts=[]
+@codes=[]
+@mats=[]
+@clothes=[]
+@enemies=[]
+@aliases=[]
+@spam_channels=[[],[]]
+@server_data=[]
+@ignored=[]
+@embedless=[]
+@avvie_info=['Liz','*Fate/Grand Order*','N/A']
+
+def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
+  return true if event.server.nil? # it is safe to spam in PM
+  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) # it is safe to spam in the emoji servers
+  chn=event.channel if chn.nil?
+  return true if ['bots','bot'].include?(chn.name.downcase) # channels named "bots" are safe to spam in
+  return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
+  return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('command') # it is safe to spam in any bot spam channel
+  return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('channel') # it is safe to spam in any bot spam channel
+  return true if chn.name.downcase.include?('lizbot')  # it is safe to spam in channels designed specifically for LizBot
+  return true if chn.name.downcase.include?('liz-bot')
+  return true if chn.name.downcase.include?('liz_bot')
+  return true if @spam_channels[0].include?(chn.id)
+  return false if mode==0
+  return true if chn.name.downcase.include?('fate') && chn.name.downcase.include?('grand') && chn.name.downcase.include?('order')
+  return true if chn.name.downcase.include?('fate') && chn.name.downcase.include?('go')
+  return true if chn.name.downcase.include?('fgo')
+  return true if @spam_channels[1].include?(chn.id)
+  return false
+end
+
+def data_load()
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOServants.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOServants.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    b[i][0]=b[i][0].to_f
+    b[i][0]=b[i][0].to_i if b[i][0]>1.9
+    b[i][3]=b[i][3].to_i
+    b[i][5]=b[i][5].to_i
+    b[i][6]=b[i][6].split(', ').map{|q| q.to_i}
+    b[i][7]=b[i][7].split(', ').map{|q| q.to_i}
+    for j in 0...3
+      b[i][6][j]=0 if b[i][6][j].nil?
+      b[i][7][j]=0 if b[i][7][j].nil?
+    end
+    b[i][8]=b[i][8].split(', ')
+    b[i][8][0]=b[i][8][0].to_f
+    b[i][8][1]=b[i][8][1].to_i
+    b[i][8][2]=b[i][8][2].to_f unless b[i][8][2].nil?
+    b[i][8][3]='NP' if b[i][8][3].nil? && !b[i][8][2].nil?
+    b[i][9]=b[i][9].split(', ').map{|q| q.to_i}
+    for j in 0...5
+      b[i][9][j]=0 if b[i][9][j].nil?
+    end
+    b[i][10]=b[i][10].split(', ')
+    b[i][10][0]=b[i][10][0].to_i
+    b[i][10][1]=b[i][10][1].to_f
+    for j in 0...2
+      b[i][8][j]=0 if b[i][8][j].nil?
+      b[i][10][j]=0 if b[i][10][j].nil?
+    end
+    b[i][11]=b[i][11].to_f
+    b[i][13]=b[i][13].split(', ')
+    b[i][14]=b[i][14].split('; ').map{|q| q.split(', ')}
+    b[i][15]=b[i][15].split(', ')
+    b[i][18]=b[i][18].split('; ').map{|q| q.split(', ')}
+    b[i][19]=b[i][19].split('; ').map{|q| q.split(', ')}
+    b[i][21]=b[i][21].to_i
+    b[i][23]=b[i][23].to_i
+    b[i][26]=b[i][26].split(', ').map{|q| q.to_i} unless b[i][26].nil?
+  end
+  @servants=b.map{|q| q}
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkills.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkills.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    if b[i][2]=='Skill'
+      b[i][3]=b[i][3].to_i
+      b[i][5]=b[i][5].split(', ') unless b[i][5].nil?
+      for i2 in 6...13
+        b[i][i2]=b[i][i2].split(';; ')
+      end
+    elsif b[i][2]=='Passive'
+      b[i][4]=b[i][4].split(', ') unless b[i][4].nil?
+    elsif b[i][2]=='Noble'
+      b[i][7]=b[i][7].split(', ') unless b[i][7].nil?
+      for i2 in 8...18
+        b[i][i2]=b[i][i2].split(';; ')
+      end
+    elsif b[i][2]=='Clothes'
+      b[i][1]=b[i][1].to_i
+      b[i][3]=b[i][3].split(', ') unless b[i][3].nil?
+      for i2 in 4...7
+        b[i][i2]=b[i][i2].split(';; ')
+      end
+    end
+  end
+  @skills=b.map{|q| q}
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOCraftEssances.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOCraftEssances.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    b[i][0]=b[i][0].to_i
+    b[i][2]=b[i][2].to_i
+    b[i][3]=b[i][3].to_i
+    b[i][4]=b[i][4].split(', ').map{|q| q.to_i}
+    b[i][5]=b[i][5].split(', ').map{|q| q.to_i}
+    b[i][10]='' if b[i][10].nil?
+    b[i][10]=b[i][10].split(', ')
+  end
+  @crafts=b.map{|q| q}
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    b[i][0]=b[i][0].to_i
+    b[i][2]=b[i][2].to_i
+  end
+  @codes=b.map{|q| q}
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOEnemies.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOEnemies.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    b[i][2]=b[i][2].split(', ')
+  end
+  @enemies=b.map{|q| q}
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOClothes.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOClothes.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'').split('\\'[0])
+    b[i][5]=b[i][5].split(', ').map{|q| q.to_i}
+  end
+  @clothes=b.map{|q| q}
+  k=@servants.map{|q| "#{q[18].join("\n")}\n#{q[19].join("\n")}"}.join("\n").split("\n").map{|q| q.split(' ')}
+  for i in 0...k.length
+    k[i].pop
+  end
+  k=k.reject{|q| q.length<=0}.map{|q| q.join(' ')}.uniq.sort
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt', 'w') { |f|
+    f.puts k.join("\n")
+    f.puts "\n"
+  }
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt').each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].gsub("\n",'')
+  end
+  @mats=b.map{|q| q}
+end
+
+def prefixes_save()
+  x=@prefixes
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb', 'w') { |f|
+    f.puts x.to_s.gsub('=>',' => ').gsub(', ',",\n  ").gsub('{',"@prefixes = {\n  ").gsub('}',"\n}")
+  }
+end
+
+def metadata_load()
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSave.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSave.txt').each_line do |line|
+      b.push(eval line)
+    end
+  else
+    b=[[168592191189417984, 256379815601373184],[],[[0,0,0,0,0],[0,0,0,0,0]],[]]
+  end
+  @embedless=b[0]
+  @embedless=[168592191189417984, 256379815601373184] if @embedless.nil?
+  @ignored=b[1]
+  @ignored=[] if @ignored.nil?
+  @server_data=b[2]
+  @server_data=[[0,0,0,0,0],[0,0,0,0,0]] if @server_data.nil?
+  if @server_data[0].length<@shards+1
+    for i in 0...@shards+1
+      @server_data[0][i]=0 if @server_data[0][i].nil?
+    end
+  end
+  if @server_data[1].length<@shards+1
+    for i in 0...@shards+1
+      @server_data[1][i]=0 if @server_data[1][i].nil?
+    end
+  end
+  @spam_channels=b[3]
+  @spam_channels=[[],[]] if @spam_channels.nil?
+end
+
+def metadata_save()
+  if @server_data[0].length<@shards+1
+    for i in 0...@shards+1
+      @server_data[0][i]=0 if @server_data[0][i].nil?
+    end
+  end
+  if @server_data[1].length<@shards+1
+    for i in 0...@shards+1
+      @server_data[1][i]=0 if @server_data[1][i].nil?
+    end
+  end
+  x=[@embedless.map{|q| q}, @ignored.map{|q| q}, @server_data.map{|q| q}, @spam_channels.map{|q| q}]
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGOSave.txt', 'w') { |f|
+    f.puts x[0].to_s
+    f.puts x[1].to_s
+    f.puts x[2].to_s
+    f.puts x[3].to_s
+    f.puts "\n"
+  }
+  data_load()
+  k=@servants.map{|q| "#{q[18].join("\n")}\n#{q[19].join("\n")}"}.join("\n").split("\n").map{|q| q.split(' ')}
+  for i in 0...k.length
+    k[i].pop
+  end
+  k=k.map{|q| q.join(' ')}.uniq.sort
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt', 'w') { |f|
+    f.puts k.join("\n")
+    f.puts "\n"
+  }
+end
+
+def nicknames_load(mode=1)
+  if mode==2 && File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt').each_line do |line|
+      b.push(eval line)
+    end
+    return b
+  elsif File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt').each_line do |line|
+      b.push(eval line)
+    end
+  else
+    b=[]
+  end
+  @aliases=b.reject{|q| q.nil? || q[1].nil? || q[2].nil?}.uniq
+end
+
+bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
+  return nil if overlap_prevent(event)
+  return nil unless event.user.id==167657750971547648 # only work when used by the developer
+  puts 'FGO!reboot'
+  exec "cd C:/Users/Mini-Matt/Desktop/devkit && LizBot.rb #{@shardizard}"
+end
+
+bot.command([:help,:command_list,:commandlist,:Help]) do |event, command, subcommand|
+  return nil if overlap_prevent(event)
+  help_text(event,bot,command,subcommand)
+end
+
 def help_text(event,bot,command=nil,subcommand=nil)
   command='' if command.nil?
   subcommand='' if subcommand.nil?
@@ -306,7 +723,7 @@ def all_commands(include_nil=false,permissions=-1)
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
-     'cexp','ceexp','clevel','celevel','prefix']
+     'cexp','ceexp','clevel','celevel','prefix','shard']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -2146,7 +2563,9 @@ def disp_aliases(bot,event,args=nil,mode=0)
     elsif find_data_ex(:find_code,args.join(''),event).length>0
     elsif has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars','skill','skills','skil','skils','ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances','mat','mats','materials','material','mysticcode','mystic_code','mystic-code','mysticode','mystic','mysticcodes','mystic_codes','mystic-codes','mysticodes','mystics','clothes','clothing','commandcode','command_code','command-code','command','commandcodes','command_codes','command-codes','commands'])
     else
-      event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\n#{args.join(' ')} does not fall into any of these categories."
+      alz=args.join(' ')
+      alz='>censored mention<' if alz.include?('@')
+      event.respond "The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\n#{alz} does not fall into any of these categories."
       return nil
     end
   end
@@ -2767,10 +3186,18 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     type[1]='Alias' if type[1].include?('*') && type[0]!='Alias'
   end
   if type.reject{|q| q == 'Alias'}.length<=0
-    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nNeither #{newname} nor #{unit} fall into any of these categories."
+    alz1=newname
+    alz2=unit
+    alz1='>Censored mention<' if alz1.include?('@')
+    alz2='>Censored mention<' if alz2.include?('@')
+    str="The alias system can cover:\n- Servants\n- Skills (Active, Passive, and Clothing skills)\n- Craft Essances\n- Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nNeither #{alz1} nor #{alz2} fall into any of these categories."
     err=true
   elsif type.reject{|q| q != 'Alias'}.length<=0
-    event.respond "#{newname} is a #{type[0].downcase}\n#{unit} is a #{type[1].downcase}"
+    alz1=newname
+    alz2=unit
+    alz1='>Censored mention<' if alz1.include?('@')
+    alz2='>Censored mention<' if alz2.include?('@')
+    event.respond "#{alz1} is a #{type[0].downcase}\n#{alz2} is a #{type[1].downcase}"
     err=true
   end
   if err
@@ -4812,7 +5239,7 @@ bot.command(:invite) do |event, user|
   event.respond "A PM was sent to #{user_to_name}." unless event.server.nil? && user_to_name=="you"
 end
 
-bot.command([:shard,:attribute]) do |event, i|
+bot.command([:shard,:attribute]) do |event, i, j|
   return nil if overlap_prevent(event)
   if j.to_i.to_s==j
     j=j.to_i
@@ -4826,11 +5253,20 @@ bot.command([:shard,:attribute]) do |event, i|
   end
   if (i.to_i.to_s==i || i.to_i==i) && i.to_i>256*256
     srv=(bot.server(i.to_i) rescue nil)
-    if @shardizard ==4 && j != @shards
+    if i.to_i==327237968047898624 && [4,5].include?(j)
+      event.respond "In a system of #{j} shards, that server would use #{shard_data(0,true,j)[0]} Shards." if j != @shards
+      event.respond "That server would use #{shard_data(0,true,j)[0]} Shards." if j == @shards
+    elsif i.to_i==327237968047898624 && j<=3
+      event.respond "In a system of #{j} shards, that server would use #{shard_data(0,true,j)[2]} Shards." if j != @shards
+      event.respond "That server would use #{shard_data(0,true,j)[2]} Shards." if j == @shards
+    elsif i.to_i==327237968047898624
+      event.respond "In a system of #{j} shards, that server would use #{shard_data(0,true,j)[4]} Shards." if j != @shards
+      event.respond "That server would use #{shard_data(0,true,j)[4]} Shards." if j == @shards
+    elsif @shardizard ==4 && j != @shards
       event.respond "In a system of #{j} shards, that server would use #{shard_data(0,true,j)[(i.to_i >> 22) % j]} Shards."
     elsif @shardizard ==4
       event.respond "That server uses/would use #{shard_data(0,true,j)[(i.to_i >> 22) % j]} Shards."
-    elsif srv.nil? || bot.user(312451658908958721).on(srv.id).nil?
+    elsif srv.nil? || bot.user(502288364838322176).on(srv.id).nil?
       event.respond "I am not in that server, but it would use #{shard_data(0,true,j)[(i.to_i >> 22) % j]} Shards #{"(in a system of #{j} shards)" if j != @shards}."
     elsif j != @shards
       event.respond "In a system of #{j} shards, *#{srv.name}* would use #{shard_data(0,true,j)[(i.to_i >> 22) % j]} Shards."
@@ -4841,6 +5277,19 @@ bot.command([:shard,:attribute]) do |event, i|
   elsif i.to_i.to_s==i
     j=i.to_i*1
     i=0
+  end
+  if event.server.id==327237968047898624 && [4,5].include?(j)
+    event.respond "In a system of #{j} shards, this server would use #{shard_data(0,true,j)[0]} Shards." if j != @shards
+    event.respond "This server uses #{shard_data(0,true,j)[0]} Shards." if j == @shards
+    return nil
+  elsif event.server.id==327237968047898624 && j<=3
+    event.respond "In a system of #{j} shards, this server would use #{shard_data(0,true,j)[2]} Shards." if j != @shards
+    event.respond "This server uses #{shard_data(0,true,j)[2]} Shards." if j == @shards
+    return nil
+  elsif event.server.id==327237968047898624
+    event.respond "In a system of #{j} shards, this server would use #{shard_data(0,true,j)[4]} Shards." if j != @shards
+    event.respond "This server uses #{shard_data(0,true,j)[4]} Shards." if j == @shards
+    return nil
   end
   event.respond "This is the debug mode, which uses #{shard_data(0,false,j)[4]} Shards." if @shardizard==4
   event.respond "PMs always use #{shard_data(0,true,j)[0]} Shards." if event.server.nil? && @shardizard != 4
@@ -5301,9 +5750,9 @@ bot.command(:snagstats) do |event, f, f2|
   elsif event.user.id==167657750971547648 && !f.nil? && f.to_i.to_s==f
     srv=(bot.server(f.to_i) rescue nil)
     if srv.nil? || bot.user(502288364838322176).on(srv.id).nil?
-      s2="I am not in that server, but it would be assigned a#{[' Man',' Sky','n Earth',' Star'][(f.to_i >> 22) % 4]} attribute."
+      s2="I am not in that server, but it would be assigned to the #{shard_data(0,true)[(f.to_i >> 22) % @shards]} Shard."
     else
-      s2="__**#{srv.name}** (#{srv.id})__\n*Owner:* #{srv.owner.distinct} (#{srv.owner.id})\n*Attribute:* #{['Man','Sky','Earth','Star'][(f.to_i >> 22) % 4]}\n*My nickname:* #{bot.user(502288364838322176).on(srv.id).display_name}"
+      s2="__**#{srv.name}** (#{srv.id})__\n*Owner:* #{srv.owner.distinct} (#{srv.owner.id})\n*Shard:* #{shard_data(0,true)[(f.to_i >> 22) % @shards]}\n*My nickname:* #{bot.user(502288364838322176).on(srv.id).display_name}"
     end
     event.respond s2
     return nil
