@@ -2016,21 +2016,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         end
         event.respond str
       else
-        event.channel.send_embed('') do |embed|
-          embed.color=xcolor
-          unless f.nil?
-            for i in 0...f.length
-              embed.add_field(name: f[i][0], value: f[i][1], inline: true)
-            end
-          end
-        end
+        create_embed(event,'','',xcolor,nil,nil,f)
       end
-      event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}") do |embed|
-        embed.description=text
-        embed.color=xcolor
-        embed.footer={"text"=>ftr} unless ftr.nil?
-        embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
-      end
+      create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
       return nil
     elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1400 || (f.map{|q| q[1].split("\n").length}.max>12 && !safe_to_spam?(event))
       text="#{text}\nThe list of servants and CEs with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
@@ -2041,12 +2029,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
       end
     end
-    event.channel.send_embed("#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}") do |embed|
-      embed.description=text
-      embed.color=xcolor
-      embed.footer={"text"=>ftr} unless ftr.nil?
-      embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
-    end
+    create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
   end
 end
 
@@ -2183,29 +2166,16 @@ def disp_ce_art(bot,event,args=nil)
         end
         event.respond str
       else
-        event.channel.send_embed('') do |embed|
-          embed.color=xcolor
-          unless f.nil?
-            embed.add_field(name: 'Same VA', value: f.join("\n"), inline: true)
-          end
-        end
+        create_embed(event,'','',xcolor,nil,nil,[['Same Artist',f.join("\n")]])
       end
-      event.channel.send_embed("__**#{ce[1]}**__ [CE ##{ce[0]}]") do |embed|
-        embed.description=text
-        embed.color=xcolor
-        embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
-      end
+      create_embed(event,"__**#{ce[1]}**__ [CE ##{ce[0]}]",text,xcolor,nil,[nil,xpic])
       return nil
     elsif f.join("\n").length>=1400 || (f.length>12 && !safe_to_spam?(event))
       text="#{text}\nThe list of servants/CEs with the same artist is so long that I cannot fit it into a single embed. Please use this command in PM."
       f=nil
     end
     text="#{text}\n\n__**Same Artist**__\n#{f.join("\n")}" unless f.nil? || f.length<=0
-    event.channel.send_embed("__**#{ce[1]}**__ [CE-##{ce[0]}]") do |embed|
-      embed.description=text
-      embed.color=xcolor
-      embed.image = Discordrb::Webhooks::EmbedImage.new(url: xpic)
-    end
+    create_embed(event,"__**#{ce[1]}**__ [CE ##{ce[0]}]",text,xcolor,nil,[nil,xpic])
   end
 end
 
