@@ -20,32 +20,21 @@ ENV['TZ'] = 'America/Chicago'
 load 'C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb'
 
 prefix_proc = proc do |message|
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('liz! ')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('liz? ')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('iiz! ')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('iiz? ')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fgo! ')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fgo? ')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fg0! ')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fg0? ')
-  next message.text.downcase[6..-1] if message.text.downcase.start_with?('fate! ')
-  next message.text.downcase[6..-1] if message.text.downcase.start_with?('fate? ')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('liz!')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('liz?')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('iiz!')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('iiz?')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fgo!')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fgo?')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fg0!')
-  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fg0?')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fate!')
-  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fate?')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('liz!')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('liz?')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('iiz!')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('iiz?')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('fgo!')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('fgo?')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('fg0!')
+  next pseudocase(message.text[4..-1]) if message.text.downcase.start_with?('fg0?')
+  next pseudocase(message.text[5..-1]) if message.text.downcase.start_with?('fate!')
+  next pseudocase(message.text[5..-1]) if message.text.downcase.start_with?('fate?')
   load 'C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb'
   next if message.channel.server.nil? || @prefixes[message.channel.server.id].nil? || @prefixes[message.channel.server.id].length<=0
   prefix = @prefixes[message.channel.server.id]
   # We use [prefix.size..-1] so we can handle prefixes of any length
-  next message.text.downcase[prefix.size+1..-1] if message.text.downcase.start_with?("#{prefix.downcase} ")
-  next message.text.downcase[prefix.size..-1] if message.text.downcase.start_with?(prefix.downcase)
+  next pseudocase(message.text[prefix.size..-1]) if message.text.downcase.start_with?(prefix.downcase)
 end
 
 # The bot's token is basically their password, so is censored for obvious reasons
