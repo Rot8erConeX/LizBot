@@ -1,6 +1,6 @@
-@shardizard=ARGV.first.to_i              # taking a single variable from the command prompt to get the shard value
+@shardizard=ARGV.first.to_i # taking a single variable from the command prompt to get the shard value
 system('color 0F')
-@shards = 4
+@shards = 4                 # total number of shards
 
 require 'discordrb'                    # Download link: https://github.com/meew0/discordrb
 require 'open-uri'                     # pre-installed with Ruby in Windows
@@ -20,21 +20,32 @@ ENV['TZ'] = 'America/Chicago'
 load 'C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb'
 
 prefix_proc = proc do |message|
-  next message.content[4..-1] if message.text.downcase.start_with?('liz!')
-  next message.content[4..-1] if message.text.downcase.start_with?('liz?')
-  next message.content[4..-1] if message.text.downcase.start_with?('iiz!')
-  next message.content[4..-1] if message.text.downcase.start_with?('iiz?')
-  next message.content[4..-1] if message.text.downcase.start_with?('fgo!')
-  next message.content[4..-1] if message.text.downcase.start_with?('fgo?')
-  next message.content[4..-1] if message.text.downcase.start_with?('fg0!')
-  next message.content[4..-1] if message.text.downcase.start_with?('fg0?')
-  next message.content[5..-1] if message.text.downcase.start_with?('fate!')
-  next message.content[5..-1] if message.text.downcase.start_with?('fate?')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('liz! ')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('liz? ')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('iiz! ')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('iiz? ')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fgo! ')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fgo? ')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fg0! ')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fg0? ')
+  next message.text.downcase[6..-1] if message.text.downcase.start_with?('fate! ')
+  next message.text.downcase[6..-1] if message.text.downcase.start_with?('fate? ')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('liz!')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('liz?')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('iiz!')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('iiz?')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fgo!')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fgo?')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fg0!')
+  next message.text.downcase[4..-1] if message.text.downcase.start_with?('fg0?')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fate!')
+  next message.text.downcase[5..-1] if message.text.downcase.start_with?('fate?')
   load 'C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb'
   next if message.channel.server.nil? || @prefixes[message.channel.server.id].nil? || @prefixes[message.channel.server.id].length<=0
   prefix = @prefixes[message.channel.server.id]
   # We use [prefix.size..-1] so we can handle prefixes of any length
-  next message.content[prefix.size..-1] if message.text.downcase.start_with?(prefix.downcase)
+  next message.text.downcase[prefix.size+1..-1] if message.text.downcase.start_with?("#{prefix.downcase} ")
+  next message.text.downcase[prefix.size..-1] if message.text.downcase.start_with?(prefix.downcase)
 end
 
 # The bot's token is basically their password, so is censored for obvious reasons
@@ -1502,11 +1513,23 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=4 if event.message.text.downcase.split(' ').include?('kh4') && k[0]==154
   npl=5 if event.message.text.downcase.split(' ').include?('kh5') && k[0]==154
   unless nophan.nil?
-    l=[nophan[5],nophan[6]]
+    l=[nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï',''),nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')]
     text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105> Quick').gsub('A','<:arts:523854803013730316> Arts').gsub('B','<:buster:523854810286391296> Buster')}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
     for i in 8...18
       unless nophan[i][0]=='-'
-        text="#{text}\n*#{nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+        nxx=nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+        if nxx.include?('`')
+          nxx=nxx.split('`')
+          for ix in 0...nxx.length
+            if ix%2==0
+              nxx[ix]="*#{nxx[ix].split(' ').compact.join(' ')}*"
+            else
+              nxx[ix]="`#{nxx[ix].split(' ').compact.join(' ')}`"
+            end
+          end
+          nxx=nxx.join(' ')
+        end
+        text="#{text}\n#{nxx}"
         if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
           text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         elsif nophan[i][0].include?('<OVERCHARGE>')
@@ -1536,7 +1559,19 @@ def disp_servant_np(bot,event,args=nil,chain=false)
       text="#{text}\n__**Effects**__"
       for i in 8...18
         unless nophan[i][0]=='-'
-          text="#{text}\n*#{nophan[i][0]}*"
+          nxx=nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+          if nxx.include?('`')
+            nxx=nxx.split('`')
+            for ix in 0...nxx.length
+              if ix%2==0
+                nxx[ix]="*#{nxx[ix].split(' ').compact.join(' ')}*"
+              else
+                nxx[ix]="`#{nxx[ix].split(' ').compact.join(' ')}`"
+              end
+            end
+            nxx=nxx.join(' ')
+          end
+          text="#{text}\n#{nxx}"
           if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
             text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           elsif nophan[i][0].include?('<OVERCHARGE>')
@@ -4180,6 +4215,7 @@ def find_skills(bot,event,args=nil,ces_only=false)
   tags.uniq!
   str="__**Search**__"
   skz=@skills.map{|q| q}
+  skz2=@skills.map{|q| q}
   if types.length>0
     skz=skz.reject{|q| !types.include?(q[2])}
     for i in 0...types.length
@@ -4202,6 +4238,7 @@ def find_skills(bot,event,args=nil,ces_only=false)
   if types.length<=0 || types.include?('CEs') || types.include?('Craft Essence')
     for i in 0...ces.length
       skz.push(ces[i])
+      skz2.push(ces[i])
     end
   end
   if tags.length>0
@@ -4243,16 +4280,26 @@ def find_skills(bot,event,args=nil,ces_only=false)
     end
   end
   ftr="#{m.map{|q| q[1]}.join("\n").split("\n").reject{|q| q.nil? || q.length<=0}.length} Total (#{m[0][1].length} Active, #{m[1][1].length} Passive, #{m[2][1].length} Noble, #{m[3][1].length} CE, #{m[4][1].length} Clothing)"
-  f=m.map{|q| q[1].length}
-  for i in 0...5
-    if f[i]<=f.max/3 && f[i]>0
-      m[5][1].push("__**#{m[i][0]}**__\n#{m[i][1].join("\n")}\n")
-      m[i][1]=[]
+  mmmx=m.map{|q| q[1]}.join("\n").split("\n").reject{|q| q.nil? || q.length<=0}.length
+  textra='~~none~~'
+  m[0][1]=[] if m[0][1].length>=skz2.reject{|q| q[2]!='Skill'}.map{|q| q[0]}.uniq.length
+  m[1][1]=[] if m[1][1].length>=skz2.reject{|q| q[2]!='Passive'}.map{|q| q[0]}.uniq.length
+  m[2][1]=[] if m[2][1].length>=skz2.reject{|q| q[2]!='Noble'}.map{|q| q[0]}.uniq.length
+  m[3][1]=[] if m[3][1].length>=skz2.reject{|q| q[2]!='CE'}.uniq.length
+  m[4][1]=[] if m[4][1].length>=skz2.reject{|q| q[2]!='Clothes'}.uniq.length
+  unless m.map{|q| q.join("\n")}.join("\n\n").length+str.length+ftr.length>1900 || was_embedless_mentioned?(event)
+    f=m.map{|q| q[1].length}
+    for i in 0...5
+      if f[i]<=f.max/3 && f[i]>0
+        m[5][1].push("__**#{m[i][0]}**__\n#{m[i][1].join("\n")}\n")
+        m[i][1]=[]
+      end
     end
   end
   m=m.reject{|q| q[1].length<=0}
+  textra="No filters defined.  I'm not showing everything." if m.length<=0 && mmmx>0
   if m.length<=0
-    event.respond "#{str}\n~~none~~"
+    event.respond "#{str}\n#{textra}#{"\n\n#{ftr}" unless ftr.nil?}"
     return nil
   elsif m.length==1
     m=triple_finish(m[0][1])
@@ -4272,10 +4319,12 @@ def find_skills(bot,event,args=nil,ces_only=false)
         end
       end
     end
+    str=extend_message(str,ftr,event,2) unless ftr.nil?
     event.respond str
     return nil
   end
-  create_embed(event,str,'',0xED619A,ftr,nil,m)
+  textra='' if textra=='~~none~~'
+  create_embed(event,str,textra,0xED619A,ftr,nil,m)
 end
 
 def find_servants(bot,event,args=nil)
@@ -4288,8 +4337,12 @@ def find_servants(bot,event,args=nil)
   textra=k[1]
   char=k[2]
   char=char.sort{|a,b| a[0]<=>b[0]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.uniq
-  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || char.join("\n").length+search.join("\n").length+textra.length>=1900
-    str="__**Search**__\n#{search.join("\n")}#{"\n\n#{textra}" if textra.length>0}\n\n__**Results**__"
+  if char.length>=@servants.length
+    k="No filters defined.  I'm not showing everyone."
+    k="EVERYONE IS HERE!" if rand(100)==0
+    event.respond "__**Search**__\n#{search.join("\n")}#{"\n\n#{textra}" if textra.length>0}#{"\n" if search.length>0 || textra.length>0}\n__**Results**__\n#{k}\n\n#{char.length} total"
+  elsif @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || char.join("\n").length+search.join("\n").length+textra.length>=1900
+    str="__**Search**__\n#{search.join("\n")}#{"\n\n#{textra}" if textra.length>0}#{"\n" if search.length>0 || textra.length>0}\n__**Results**__"
     for i in 0...char.length
       str=extend_message(str,char[i],event)
     end
@@ -4299,7 +4352,7 @@ def find_servants(bot,event,args=nil)
     flds=nil
     flds=triple_finish(char,true) unless char.length<=0
     textra="#{textra}\n\n**No servants match your search**" if char.length<=0
-    create_embed(event,"__**Search**__\n#{search.join("\n")}\n\n__**Results**__",textra,0xED619A,"#{char.length} total",nil,flds)
+    create_embed(event,"__**Search**__\n#{search.join("\n")}#{"\n" if search.length>0}\n__**Results**__",textra,0xED619A,"#{char.length} total",nil,flds)
   end
 end
 
@@ -4691,7 +4744,8 @@ end
 
 bot.command([:find,:search,:lookup]) do |event, *args|
   return nil if overlap_prevent(event)
-  if ['skill','skills','skil','skils'].include?(args[0].downcase)
+  if args.nil? || args.length<=0
+  elsif ['skill','skills','skil','skils'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args)
     return nil
@@ -6236,17 +6290,7 @@ def next_holiday(bot,mode=0)
        [[0,0],[3,0],[6,0],[9,0],[12,0],[15,0],[18,0],[21,0]]]
   t=Time.now
   t-=60*60*6
-  if k.length<=0
-    t=Time.now
-    t-=60*60*6
-    bot.game='Fate/Grand Order (FGO!help for info)'
-    bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.png','r')) rescue nil if @shardizard.zero?
-    @avvie_info=['Liz','*Fate/Grand Order*','']
-    t+=24*60*60
-    @scheduler.at "#{t.year}/#{t.month}/#{t.day} 0000" do
-      next_holiday(bot,1)
-    end
-  elsif t.year==k[0][0] && t.month==k[0][1] && t.day==k[0][2]
+  if t.year==k[0][0] && t.month==k[0][1] && t.day==k[0][2]
     if k.length==1
       # Only one holiday is today.  Display new avatar, and set another check for midnight
       bot.game=k[0][4]
