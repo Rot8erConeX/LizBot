@@ -1526,6 +1526,13 @@ def disp_servant_np(bot,event,args=nil,chain=false)
         elsif npl==0 && nophan[i][0].include?('<LEVEL>')
           text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         elsif nophan[i].length<=1
+        elsif npl<=0
+          if nophan[i][1]=='-'
+          elsif nophan[i][1,5].uniq.length<=1
+            text="#{text} - Constant #{nophan[i][1]}"
+          else
+            text="#{text} - #{nophan[i][1,5].join(' / ')}"
+          end
         else
           text="#{text} - #{nophan[i][npl].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
         end
@@ -1568,6 +1575,13 @@ def disp_servant_np(bot,event,args=nil,chain=false)
           elsif npl==0 && nophan[i][0].include?('<LEVEL>')
             text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           elsif nophan[i].length<=1
+          elsif npl<=0
+            if nophan[i][1]=='-'
+            elsif nophan[i][1,5].uniq.length<=1
+              text="#{text} - Constant #{nophan[i][1]}"
+            else
+              text="#{text} - #{nophan[i][1,5].join(' / ')}"
+            end
           else
             text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
           end
@@ -6185,7 +6199,8 @@ end
 def next_holiday(bot,mode=0)
   t=Time.now
   t-=60*60*6
-  holidays=[]
+  holidays=[[0,4,1,'RiyoLiz','Fate/Grand Order?',"April Fool's Day"],
+            [0,4,24,'Rhyme','dressup as my last owner.',"Coder's birthday"]]
   d=get_donor_list()
   d=d.reject{|q| q[2]<2}
   for i in 0...d.length
