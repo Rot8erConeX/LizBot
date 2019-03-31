@@ -185,6 +185,7 @@ system("title loading #{shard_data(2)[@shardizard]} LizBot")
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
+  return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
   return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
   return true if ['bots','bot'].include?(chn.name.downcase) # channels named "bots" are safe to spam in
@@ -4379,8 +4380,22 @@ def sort_servants(bot,event,args=nil)
   end
   str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted by:* #{srt.reject{|q| q==4}.uniq.map{|q| d[q]}.join(', ')}\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
   str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
+  tx=0
+  bx=0
+  for i in 0...args.length
+    if args[i].downcase[0,3]=='top' && tx.zero?
+      tx=[args[i][3,args[i].length-3].to_i,disp.length].min
+    elsif args[i].downcase[0,6]=='bottom' && bx.zero?
+      bx=[args[i][6,args[i].length-6].to_i,disp.length].min
+    end
+  end
+  if tx>0
+    disp=disp[0,tx]
+  elsif bx>0
+    disp=disp[disp.length-bx,bx]
+  end
   if str.length+disp.join("\n").length>1900 && !safe_to_spam?(event)
-    textra="#{textra}\n\nToo much data is trying to be displayed.\nShowing top ten results."
+    textra="#{textra}\n\nToo much data is trying to be displayed.\nShowing top ten results.\nYou can also make things easier by making the list shorter with words like `top#{rand(10)+1}` or `bottom#{rand(10)+1}`"
     disp=disp[0,[10,disp.length].min]
   end
   t=textra.split("\n")
@@ -5381,7 +5396,8 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
     b=[]
   end
   nzzzzz=b.uniq
-  if nzzzzz[nzzzzz.length-1][1]<225
+  nz=nzzzzz.reject{|q| q[0]!='Servant'}
+  if nz[nz.length-1][2]<238
     event << 'Last backup of the alias list has been corrupted.  Restoring from manually-created backup.'
     if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames3.txt')
       b=[]
