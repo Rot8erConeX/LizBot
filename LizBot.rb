@@ -606,6 +606,8 @@ def help_text(event,bot,command=nil,subcommand=nil)
     end
   elsif ['sort','list'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
+  elsif ['deck'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __\*list of servants__","Shows all listed servants' decks, and then calculates how likely it is for the combined deck to generate a hand with each type of chain.",0xED619A)
   elsif ['aliases','checkaliases','seealiases','alias'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Responds with a list of all `name`'s aliases.\nIf no name is listed, responds with a list of all aliases and who/what they are for.\n\nAliases can be added to:\n- Servants\n- Skills (Active, Passive, or Clothing skills)\n- Craft Essances\n- Ascension/Skill Enhancement Materials\n- Mystic Codes (clothing)\n- Command Codes\n\nPlease note that if more than 50 aliases are to be listed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
   elsif ['saliases','serveraliases'].include?(command.downcase)
@@ -654,6 +656,7 @@ def help_text(event,bot,command=nil,subcommand=nil)
     str="#{str}\n`mat` __name__ - displays a material (*also `material`*)"
     str="#{str}\n`find` __\*filters__ - search for servants (*also `search`*)"
     str="#{str}\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)"
+    str="#{str}\n`deck` __\*servant list__ - to calculate deck probabilities"
     str="#{str}\n`today` - to see today's events (*also `daily` or `todayInFGO`*)"
     str="#{str}\n`next` - to see when cyclical events happen next"
     str="#{str}\n\n__**Meta Data**__"
@@ -724,7 +727,7 @@ def all_commands(include_nil=false,permissions=-1)
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
-     'cexp','ceexp','clevel','celevel','prefix','shard']
+     'cexp','ceexp','clevel','celevel','prefix','shard','deck']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -1044,6 +1047,61 @@ def find_mat(name,event,fullname=false)
   return []
 end
 
+def find_multi_servant(name,event,fullname=false)
+  data_load()
+  name=normalize(name)
+  if name.to_i.to_s==name && name.to_i<=@servants[-1][0] && name.to_i>0
+    return [name,@servants[@servants.find_index{|q| q[0]==name.to_i}]]
+  elsif name.to_f.to_s==name && name.to_f<2
+    return [name,@servants[@servants.find_index{|q| q[0]==name.to_f}]]
+  end
+  if name[0,1]=='#'
+    name2=name[1,name.length-1]
+    if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
+      return [name,@servants[@servants.find_index{|q| q[0]==name2.to_i}]]
+    elsif name2.to_f.to_s==name2 && name2.to_f<2
+      return [name,@servants[@servants.find_index{|q| q[0]==name2.to_f}]]
+    end
+  elsif name[0,4].downcase=='srv-' || name.downcase[0,4]=='srv_'
+    name2=name[4,name.length-4]
+    if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
+      return [name,@servants[@servants.find_index{|q| q[0]==name2.to_i}]]
+    elsif name2.to_f.to_s==name2 && name2.to_f<2
+      return [name,@servants[@servants.find_index{|q| q[0]==name2.to_f}]]
+    end
+  elsif name[0,3].downcase=='srv'
+    name2=name[3,name.length-3]
+    if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
+      return [name,@servants[@servants.find_index{|q| q[0]==name2.to_i}]]
+    elsif name2.to_f.to_s==name2 && name2.to_f<2
+      return [name,@servants[@servants.find_index{|q| q[0]==name2.to_f}]]
+    end
+  end
+  name=name.downcase.gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')
+  return [] if name.length<2
+  k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name.gsub(' ','')}
+  return [name,@servants[k]] unless k.nil?
+  nicknames_load()
+  alz=@aliases.reject{|q| q[0]!='Servant'}.map{|q| [q[1],q[2],q[3]]}
+  g=0
+  g=event.server.id unless event.server.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name.gsub(' ','') && (q[2].nil? || q[2].include?(g))}
+  return [name,@servants[@servants.find_index{|q| q[0]==alz[k][1]}]] unless k.nil?
+  k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name.gsub(' ','') && (q[2].nil? || q[2].include?(g))}
+  return [name,@servants[@servants.find_index{|q| q[0]==alz[k][1]}]] unless k.nil?
+  return [] if fullname
+  k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.gsub(' ','').length]==name.gsub(' ','')}
+  return [name,@servants[k]] unless k.nil?
+  nicknames_load()
+  for i in name.length...alz.map{|q| q[0].length}.max
+    k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.gsub(' ','').length]==name.gsub(' ','') && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
+    return [name,@servants[@servants.find_index{|q| q[0]==alz[k][1]}]] unless k.nil?
+    k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.gsub(' ','').length]==name.gsub(' ','') && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
+    return [name,@servants[@servants.find_index{|q| q[0]==alz[k][1]}]] unless k.nil?
+  end
+  return []
+end
+
 def find_data_ex(callback,name,event,fullname=false)
   k=method(callback).call(name,event,true)
   return k if k.length>0
@@ -1182,6 +1240,7 @@ def servant_moji(bot,event,k,mode=0)
       clsmoji='<:class_unknown_blue:523948997229019136>'
     end
   end
+  clsmoji='<:class_beast_gold:562413138356731905>' if k[2]=='Beast'
   return clsmoji if mode==1
   deckmoji=''
   m=k[17][0,5]
@@ -1833,6 +1892,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   artist=nil
   artist=k[24] unless k[24].nil? || k[24].length<=0
   t=Time.now
+  t-=6*60*60
   riyodefault= !riyodefault if t.month==4 && t.day==1
   censor=true
   censor=false if disptext.split(' ').include?('jp') || disptext.split(' ').include?('nsfw')
@@ -4360,7 +4420,7 @@ def sort_servants(bot,event,args=nil)
     char=char2.map{|q| q}
   end
   if lvl<0 && srt.reject{|q| q==2}.length>0
-    textra="#{textra}\n\nNo level was included, so I am sorting by default maximum level.\nIf you wish to change that, include the word \"Base\" (for level 1) or \"Grail\" (for level 100)."
+    textra="#{textra}\n\nNo level was included, so I am sorting by default maximum level.\nIf you wish to change that, include the word \"Base\" (for level 1) or \"Grail\" (for level 100)." if srt.reject{|q| q==4}.length>0
     lvl=1
   end
   for i in 0...char.length
@@ -4679,6 +4739,145 @@ def level(event,bot,args=nil,mode=0)
     end
   end
   event.respond str
+end
+
+def dsort(s)
+  return 1 if s=='Q'
+  return 2 if s=='A'
+  return 3 if s=='B'
+  return 4
+end
+
+def generate_deck(event,bot,args=nil)
+  event.channel.send_temporary_message('Calculating data, please wait...',event.message.text.length/30+1)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  args=args.reject{ |a| a.downcase=='smol' } if @shardizard==4
+  args=args.map{|q| q.downcase}
+  args2=args.map{|q| q}
+  srv=[]
+  m=args.length*1
+  for i in 0...m
+    unless args.length<=0
+      k=find_data_ex(:find_multi_servant,args.join(' '),event,false)
+      if k.length>0
+        str=first_sub(args.join(' '),k[0],'-')
+        srv.push(k[1])
+        args=str.split(' ')
+      end
+    end
+  end
+  srv.uniq!
+  x=false
+  if srv.length>3
+    srv=srv[0,3]
+    x=true
+  end
+  deck=[0,0,0]
+  deck2=[]
+  np=[0,0,0]
+  for i in 0...srv.length
+    k=srv[i][17][0,5]
+    if k=='QQQAB'
+      deck[0]+=3
+      deck2.push('Q')
+      deck2.push('Q')
+      deck2.push('Q')
+    elsif k[0,2]=='QQ'
+      deck[0]+=2
+      deck2.push('Q')
+      deck2.push('Q')
+    else
+      deck[0]+=1
+      deck2.push('Q')
+    end
+    if k=='QAAAB'
+      deck[1]+=3
+      deck2.push('A')
+      deck2.push('A')
+      deck2.push('A')
+    elsif k.include?('AA')
+      deck[1]+=2
+      deck2.push('A')
+      deck2.push('A')
+    else
+      deck[1]+=1
+      deck2.push('A')
+    end
+    if k=='QABBB'
+      deck[2]+=3
+      deck2.push('B')
+      deck2.push('B')
+      deck2.push('B')
+    elsif k[3,2]=='BB'
+      deck[2]+=2
+      deck2.push('B')
+      deck2.push('B')
+    else
+      deck[2]+=1
+      deck2.push('B')
+    end
+    np[0]+=1 if srv[i][17][6,1]=='Q'
+    np[1]+=1 if srv[i][17][6,1]=='A'
+    np[2]+=1 if srv[i][17][6,1]=='B'
+  end
+  len='%.2f'
+  len='%.4f' if @shardizard==4 && safe_to_spam?(event)
+  deck2=deck2.combination(5).to_a.map{|q| q.sort{|a,b| dsort(a) <=> dsort(b)}.join('')}
+  str="__**Included servants**__\n#{srv.map{|q| "Srv-#{q[0]}#{'.' unless q[0]<2}) #{q[1]} - #{q[17][0,5].gsub('Q','<:Quick_x:523975575329701902>').gsub('A','<:Arts_x:523975575552000000>').gsub('B','<:Buster_x:523975575359193089>')} - #{q[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')}"}.join("\n")}#{"\n~~Only the first three names were included~~" if x}"
+  str2="__**Chain Probabilities**__"
+  x=deck2.reject{|q| !q.include?('QQQ')}.length*100.0/deck2.length
+  str2="#{str2}#{"\n" if safe_to_spam?(event,nil,1)}\n<:Quick_y:526556106986618880> *Quick chain:* #{(len % x)}%"
+  if safe_to_spam?(event,nil,1)
+    x=deck2.reject{|q| !q.include?('QQ')}.length*100.0/deck2.length
+    str2="#{str2}\n<:Quick_xNP:523979766731243527> #{(len % x)}% with a Quick NP up" if np[0]>0
+    x=deck2.reject{|q| !q.include?('Q')}.length*100.0/deck2.length
+    str2="#{str2}\n<:Quick_xNP:523979766731243527> #{(len % x)}% with two Quick NPs up" if np[0]>1
+    str2="#{str2}\n<:Quick_xNP:523979766731243527> 100.00#{'00' if @shardizard==4}% with three Quick NPs up" if np[0]>2
+  else
+    x=deck2.reject{|q| !q.include?('QQ')}.length*100.0/deck2.length
+    str2="#{str2} - #{('%.0f' % x)}% <:Quick_xNP:523979766731243527>#{micronumber(1)}" if np[0]>0
+    x=deck2.reject{|q| !q.include?('Q')}.length*100.0/deck2.length
+    str2="#{str2}, #{('%.0f' % x)}% <:Quick_xNP:523979766731243527>#{micronumber(2)}" if np[0]>1
+    str2="#{str2}, 100% <:Quick_xNP:523979766731243527>#{micronumber(3)}" if np[0]>2
+  end
+  x=deck2.reject{|q| !q.include?('AAA')}.length*100.0/deck2.length
+  str2="#{str2}#{"\n" if safe_to_spam?(event,nil,1)}\n<:Arts_y:526556105489252352> *Arts chain:* #{(len % x)}%"
+  if safe_to_spam?(event,nil,1)
+    x=deck2.reject{|q| !q.include?('AA')}.length*100.0/deck2.length
+    str2="#{str2}\n<:Arts_xNP:523979767016325121> #{(len % x)}% with an Arts NP up" if np[1]>0
+    x=deck2.reject{|q| !q.include?('A')}.length*100.0/deck2.length
+    str2="#{str2}\n<:Arts_xNP:523979767016325121> #{(len % x)}% with two Arts NPs up" if np[1]>1
+    str2="#{str2}\n<:Arts_xNP:523979767016325121> 100.00#{'00' if @shardizard==4}% with three Arts NPs up" if np[1]>2
+  else
+    x=deck2.reject{|q| !q.include?('AA')}.length*100.0/deck2.length
+    str2="#{str2} - #{('%.0f' % x)}% <:Arts_xNP:523979767016325121>#{micronumber(1)}" if np[1]>0
+    x=deck2.reject{|q| !q.include?('A')}.length*100.0/deck2.length
+    str2="#{str2}, #{('%.0f' % x)}% <:Arts_xNP:523979767016325121>#{micronumber(2)}" if np[1]>1
+    str2="#{str2}, 100% <:Arts_xNP:523979767016325121>#{micronumber(3)}" if np[1]>2
+  end
+  x=deck2.reject{|q| !q.include?('BBB')}.length*100.0/deck2.length
+  str2="#{str2}#{"\n" if safe_to_spam?(event,nil,1)}\n<:Buster_y:526556105422274580> *Buster chain:* #{(len % x)}%"
+  if safe_to_spam?(event,nil,1)
+    x=deck2.reject{|q| !q.include?('BB')}.length*100.0/deck2.length
+    str2="#{str2}\n<:Buster_xNP:523979766911598632> #{(len % x)}% with a Buster NP up" if np[2]>0
+    x=deck2.reject{|q| !q.include?('B')}.length*100.0/deck2.length
+    str2="#{str2}\n<:Buster_xNP:523979766911598632> #{(len % x)}% with two Buster NPs up" if np[2]>1
+    str2="#{str2}\n<:Buster_xNP:523979766911598632> 100.00#{'00' if @shardizard==4}% with three Buster NPs up" if np[2]>2
+  else
+    x=deck2.reject{|q| !q.include?('BB')}.length*100.0/deck2.length
+    str2="#{str2} - #{('%.0f' % x)}% <:Buster_xNP:523979766911598632>#{micronumber(1)}" if np[2]>0
+    x=deck2.reject{|q| !q.include?('B')}.length*100.0/deck2.length
+    str2="#{str2}, #{('%.0f' % x)}% <:Buster_xNP:523979766911598632>#{micronumber(2)}" if np[2]>1
+    str2="#{str2}, 100% <:Buster_xNP:523979766911598632>#{micronumber(3)}" if np[2]>2
+  end
+  str=extend_message(str,str2,event,2)
+  event.respond str
+end
+
+bot.command([:deck]) do |event, *args|
+  return nil if overlap_prevent(event)
+  generate_deck(event,bot,args)
 end
 
 bot.command([:xp,:exp,:level]) do |event, *args|
@@ -5258,7 +5457,7 @@ end
 
 bot.command([:donation, :donate]) do |event, uid|
   return nil if overlap_prevent(event)
-  donor_embed(bot,event,"I also do not currently play FGO myself, but would consider it if I had an account with ~~Alice~~ Nursery Rhyme.  She is adorable and I love her.")
+  donor_embed(bot,event)
 end
 
 bot.command(:invite) do |event, user|
@@ -5589,17 +5788,17 @@ bot.command(:snagstats) do |event, f, f2|
       str=extend_message(str,str2,event,2)
       str2=''
       m=srv.reject{|q| q[17][0,5]!='QQQAB'}
-      str2="#{m.length} servant#{'s' unless m.length==1} with triple-Quick decks." if m.length>0
+      str2="#{m.length} servant#{'s' unless m.length==1} with triple-Quick (Quick Brave) decks." if m.length>0
       m=srv.reject{|q| q[17][0,5]!='QQAAB'}
       str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with double-Quick/double-Arts decks." if m.length>0
       m=srv.reject{|q| q[17][0,5]!='QQABB'}
       str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with double-Quick/double-Buster decks." if m.length>0
       m=srv.reject{|q| q[17][0,5]!='QAAAB'}
-      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with triple-Arts decks." if m.length>0
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with triple-Arts (Arts Brave) decks." if m.length>0
       m=srv.reject{|q| q[17][0,5]!='QAABB'}
       str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with double-Arts/double-Buster decks." if m.length>0
       m=srv.reject{|q| q[17][0,5]!='QABBB'}
-      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with triple-Buster decks." if m.length>0
+      str2="#{str2}\n#{m.length} servant#{'s' unless m.length==1} with triple-Buster (Buster Brave) decks." if m.length>0
       str2=str2[1,str2.length-1] if str2[0,1]=="\n"
       str2=str2[2,str2.length-2] if str2[0,2]=="\n"
       str=extend_message(str,str2,event,2)
@@ -5931,6 +6130,10 @@ bot.mention do |event|
       disp_servant_ce(bot,event,args,true,true)
       disp_servant_mats(bot,event,args,true)
     end
+    m=false
+  elsif ['deck'].include?(args[0])
+    args.shift
+    generate_deck(event,bot,args)
     m=false
   elsif ['stats','stat'].include?(args[0])
     args.shift
