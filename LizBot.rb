@@ -185,9 +185,10 @@ system("title loading #{shard_data(2)[@shardizard]} LizBot")
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
-  return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
   return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
+  return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
+  return false if event.message.text.downcase.split(' ').include?('smol') && chn.id==502288368777035777
   return true if ['bots','bot'].include?(chn.name.downcase) # channels named "bots" are safe to spam in
   return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
   return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('command') # it is safe to spam in any bot spam channel
