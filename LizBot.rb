@@ -2524,15 +2524,15 @@ def disp_mat_data(bot,event,args=nil)
           f=m.pop
           mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4
           mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
-          fff3+=f.gsub('x','').to_i if m.join(' ')==k
+          fff3+=f.gsub('x','').to_i if m.join(' ')==k && srvs[i][20]!='Unavailable'
           srvtot[0]+=f.gsub('x','').to_i if m.join(' ')==k && i2<4
           srvtot[1]+=f.gsub('x','').to_i if m.join(' ')==k && i2>3
         end
       end
-      lst[0].push("*#{srvs[i][0]}#{'.' if srvs[i][0]>=2}#{'-1.1' if srvs[i][0]==1})* #{srvs[i][1]}  -  #{mts.join(', ')}#{"  -  __#{srvtot[0]}__ total" if mts.length>1}") if mts.length>0
-      lst[1].push("*#{srvs[i][0]}#{'.' if srvs[i][0]>=2}#{'-1.1' if srvs[i][0]==1})* #{srvs[i][1]}  -  #{mts2.join(', ')}#{"  -  __#{srvtot[1]}__ total" if mts2.length>1}") if mts2.length>0
+      lst[0].push("#{'~~' if srvs[i][20]=='Unavailable'}*#{srvs[i][0]}#{'.' if srvs[i][0]>=2}#{'-1.1' if srvs[i][0]==1})* #{srvs[i][1]}  -  #{mts.join(', ')}#{"  -  __#{srvtot[0]}__ total#{'~~' if srvs[i][20]=='Unavailable'}" if mts.length>1}") if mts.length>0
+      lst[1].push("#{'~~' if srvs[i][20]=='Unavailable'}*#{srvs[i][0]}#{'.' if srvs[i][0]>=2}#{'-1.1' if srvs[i][0]==1})* #{srvs[i][1]}  -  #{mts2.join(', ')}#{"  -  __#{srvtot[1]}__ total" if mts2.length>1}#{'~~' if srvs[i][20]=='Unavailable'}") if mts2.length>0
       fff.push(srvs[i][0]) if mts.length>0 || mts2.length>0
-      fff2+=mts.length+mts2.length
+      fff2+=mts.length+mts2.length unless srvs[i][20]=='Unavailable'
     end
     if srvs[i][0].to_i==srvs[i][0]
       x=srvs[i][19]
@@ -2546,9 +2546,9 @@ def disp_mat_data(bot,event,args=nil)
           srvtot[2]+=3*f.gsub('x','').to_i if m.join(' ')==k
         end
       end
-      lst[2].push("*#{srvs[i][0].to_i}.)* #{srvs[i][1]} #{'~~(All forms)~~' if srvs[i][0]==1}  -  #{mts.join(', ')}  -  __#{srvtot[2]}__ total for all skills") if mts.length>0
+      lst[2].push("#{'~~' if srvs[i][20]=='Unavailable'}*#{srvs[i][0].to_i}.)* #{srvs[i][1]} #{'~~(All forms)~~' if srvs[i][0]==1}  -  #{mts.join(', ')}  -  __#{srvtot[2]}__ total for all skills#{'~~' if srvs[i][20]=='Unavailable'}") if mts.length>0
       fff.push(srvs[i][0]) if mts.length>0 && !fff.include?(srvs[i][0])
-      fff2+=mts.length
+      fff2+=mts.length unless srvs[i][20]=='Unavailable'
     end
   end
   text=''
@@ -2601,7 +2601,7 @@ def disp_mat_data(bot,event,args=nil)
       str=extend_message(str,lst[1][i],event)
     end
   end
-  str=extend_message(str,"#{fff.length} total servants use this material\n#{fff2} total uses for this material\n#{longFormattedNumber(fff3)} total copies of this material are required to max everyone",event,2)
+  str=extend_message(str,"#{fff.length} total servants use this material\n#{fff2} total uses for this material\n#{longFormattedNumber(fff3)} total copies of this material are required to max everyone#{"\n~~Unavailable servants aren't counted in the totals~~" if str.include?('total~~')}",event,2)
   event.respond str
 end
 
@@ -4003,7 +4003,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
     clzz.push('Saber') if ['saber','sabers','seiba','seibas'].include?(args[i])
     clzz.push('Shielder') if ['shielder','shielders','shield','shields','sheilder','sheilders','sheild','sheilds','extra','extras'].include?(args[i])
     rarity.push(args[i].to_i) if args[i].to_i.to_s==args[i] && args[i].to_i>=0 && args[i].to_i<6
-    rarity.push(args[i][0,1].to_i) if args[i]=="#{args[i][0,1]}*" && args[i][0,1].to_i.to_s==args[i][0,1] && args[i][0,1].to_i>0 && args[i][0,1].to_i<6
+    rarity.push(args[i][0,1].to_i) if args[i]=="#{args[i][0,1]}*" && args[i][0,1].to_i.to_s==args[i][0,1] && args[i][0,1].to_i>=0 && args[i][0,1].to_i<6
     rarity.push(5) if ['ssr','supersuperrare','supersuperare','super-super-rare','super-super_rare','super_super-rare','super_super_rare','super-superare','super_superare'].include?(args[i])
     rarity.push(4) if ['sr','superrare','super-rare','super_rare','superare'].include?(args[i])
     rarity.push(3) if ['r','rare'].include?(args[i])
