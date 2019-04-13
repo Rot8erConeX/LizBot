@@ -18,6 +18,7 @@ def triple_finish(list,forcetwo=false) # used to split a list into three roughly
 end
 
 def pseudocase(str)
+  return '' if str.nil? || str.length<=0
   str=str.split(' ').compact
   str[0]=str[0].downcase
   return str.join(' ')
@@ -171,25 +172,41 @@ def extend_message(msg1,msg2,event,enters=1,sym="\n")
   end
 end
 
-def supersort(a,b,m,n=nil)
+def supersort(a,b,m,n=nil,mode=0)
   unless n.nil?
     return supersort(a,b,0) if n<0
-    if a[m][n].is_a?(String) && b[m][n].is_a?(String)
+    if a[m][n].is_a?(String) && b[m][n].is_a?(String) && mode==1
+      return a[m][n].downcase <=> b[m][n].downcase
+    elsif a[m][n].is_a?(String) && b[m][n].is_a?(String)
       return b[m][n].downcase <=> a[m][n].downcase
     elsif a[m][n].is_a?(String)
       return -1
     elsif b[m][n].is_a?(String)
       return 1
+    elsif a[m][n].is_a?(Array) && b[m][n].is_a?(Array)
+      return a[m][n][0] <=> b[m][n][0]
+    elsif a[m][n].is_a?(Array)
+      return 1
+    elsif b[m][n].is_a?(Array)
+      return -1
     else
       return a[m][n] <=> b[m][n]
     end
   end
-  if a[m].is_a?(String) && b[m].is_a?(String)
+  if a[m].is_a?(String) && b[m].is_a?(String) && mode==1
+    return a[m].downcase <=> b[m].downcase
+  elsif a[m].is_a?(String) && b[m].is_a?(String)
     return b[m].downcase <=> a[m].downcase
   elsif a[m].is_a?(String)
     return -1
   elsif b[m].is_a?(String)
     return 1
+  elsif a[m].is_a?(Array) && b[m].is_a?(Array)
+    return a[m][0] <=> b[m][0]
+  elsif a[m].is_a?(Array)
+    return 1
+  elsif b[m].is_a?(Array)
+    return -1
   else
     return a[m] <=> b[m]
   end
