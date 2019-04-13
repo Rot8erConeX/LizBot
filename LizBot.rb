@@ -2665,6 +2665,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2685,6 +2686,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2706,6 +2708,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2741,6 +2744,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2761,6 +2765,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2781,6 +2786,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2803,20 +2809,20 @@ def disp_aliases(bot,event,args=nil,mode=0)
         msg='__**Servant Aliases**__'
         for i in 0...n.length
           untnme=@servants[@servants.find_index{|q| q[0]==n[i][1]}][1]
-          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Srv-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Srv-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
         msg=extend_message(msg,'__**Skill Aliases**__',event,2)
         n=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
         n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
-          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
         msg=extend_message(msg,'__**Craft Essance Aliases**__',event,2)
         n=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
         n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
           untnme=@crafts[@crafts.find_index{|q| q[0]==n[i][1]}][1]
-          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [CE-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [CE-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
         msg=extend_message(msg,'__**Material Aliases**__',event,2)
         n=@aliases.reject{|q| q[0]!='Material'}.map{|q| [q[1],q[2],q[3]]}
@@ -2837,20 +2843,20 @@ def disp_aliases(bot,event,args=nil,mode=0)
         n.sort! {|a,b| (a[1]<=>b[1]) ? (a[0]<=>b[0]) : (a[1]<=>b[1])}
         n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
-          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
         msg=extend_message(msg,'__**Mystic Code** (Clothing) **Aliases**__',event,2)
         n=@aliases.reject{|q| !['Clothes'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
         n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
-          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+          msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
         msg=extend_message(msg,'__**Command Code Aliases**__',event,2)
         n=@aliases.reject{|q| q[0]!='Command'}.map{|q| [q[1],q[2],q[3]]}
         n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
           untnme=@codes[@codes.find_index{|q| q[0]==n[i][1]}][1]
-          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Cmd-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event)
+          msg=extend_message(msg,"#{n[i][0]} = #{untnme} [Cmd-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
         event.respond msg
         return nil
@@ -2863,6 +2869,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2882,6 +2889,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2902,6 +2910,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2936,6 +2945,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2955,6 +2965,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2974,6 +2985,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
+        elsif mode==1 && !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -4060,25 +4072,25 @@ def find_in_servants(bot,event,args=nil,mode=0)
     align1.push('Neutral') if ['neutral1'].include?(args[i])
     align1.push('Chaotic') if ['chaotic','chaos','chaotics','chaoses'].include?(args[i])
     align2.push('Good') if ['good','light'].include?(args[i])
-    align2.push('Neutral') if ['neutral2'].include?(args[i])
+    align2.push('Neutral') if ['neutral2','balanced','balance'].include?(args[i])
     align2.push('Evil') if ['evil','dark','bad'].include?(args[i])
     align2.push('Bride') if ['bride','bridals','bridal','brides','wedding','weddings','waifu','waifus'].include?(args[i])
     align2.push('Summer') if ['summer','summers','swimsuit','swimsuits','beach','beaches','beachs'].include?(args[i])
     align2.push('Mad') if ['mad','angry','angery','insane','insanity','insanitys','insanities','insanes'].include?(args[i])
     align.push('Lawful Good') if ['lawfulgood','lawgood','lawfullight','lawlight','lawfulight','goodlawful','goodlaw','lightlawful','lightlaw','lawfulgoods','lawgoods','lawfullights','lawlights','lawfulights','goodlawfuls','goodlaws','lightlawfuls','lightlaws'].include?(args[i])
-    align.push('Lawful Neutral') if ['lawfulneutral','lawneutral','neutrallawful','neutrallaw','neutralawful','neutralaw','lawfulneutrals','lawneutrals','neutrallawfuls','neutrallaws','neutralawfuls','neutralaws'].include?(args[i])
+    align.push('Lawful Neutral') if ['lawfulneutral','lawneutral','neutrallawful','neutrallaw','neutralawful','neutralaw','lawfulneutrals','lawneutrals','neutrallawfuls','neutrallaws','neutralawfuls','neutralaws','lawfulbalanced','lawfulbalance','lawbalanced','lawbalance','balancedlawful','balancelawful','balancedlaw','balancelaw'].include?(args[i])
     align.push('Lawful Evil') if ['lawfulevil','lawfuldark','lawfulbad','lawevil','lawdark','lawbad','evillawful','evilawful','evillaw','evilaw','darklawful','darklaw','badlawful','badlaw','lawfulevils','lawfuldarks','lawfulbads','lawevils','lawdarks','lawbads','evillawfuls','evilawfuls','evillaws','evilaws','darklawfuls','darklaws','badlawfuls','badlaws'].include?(args[i])
     align.push('Lawful Bride') if ['lawfulbride','lawfulbridal','lawfulwedding','lawbride','lawbridal','lawwedding','lawedding','bridelawful','bridallawful','bridalawful','weddinglawful','bridelaw','bridallaw','bridalaw','weddinglaw','lawfulbrides','lawfulbridals','lawfulweddings','lawbrides','lawbridals','lawweddings','laweddings','bridelawfuls','bridallawfuls','bridalawfuls','weddinglawfuls','bridelaws','bridallaws','bridalaws','weddinglaws','lawfulwaifu','lawwaifu','lawaifu','waifulawful','waifulaw','lawfulwaifus','lawwaifus','lawaifus','waifulawfuls','waifulaws'].include?(args[i])
     align.push('Lawful Summer') if ['lawfulsummer','lawfulswimsuit','lawfulbeach','lawsummer','lawswimsuit','lawbeach','summerlawful','swimsuitlawful','beachlawful','summerlaw','swimsuitlaw','beachlaw','lawfulsummers','lawfulswimsuits','lawfulbeachs','lawfulbeaches','lawsummers','lawswimsuits','lawbeaches','lawbeachs','summerlawfuls','swimsuitlawfuls','beachlawfuls','summerlaws','swimsuitlaws','beachlaws'].include?(args[i])
     align.push('Lawful Mad') if ['lawfulmad','lawfulangry','lawfulangery','lawmad','lawangry','lawangery','madlawful','angrylawful','angerylawful','madlaw','angrylaw','angerylaw','lawfulmads','lawfulangrys','lawfulangries','lawfulangerys','lawfulangeries','lawmads','lawangrys','lawangries','lawangerys','lawangeries','madlawfuls','angrylawfuls','angerylawfuls','madlaws','angrylaws','angerylaws','lawfulinsane','lawfulinsanity','lawinsane','lawinsanity','lawfulinsanes','lawfulinsanitys','lawfulinsanities','lawinsanes','lawinsanitys','lawinsanities','insanelawful','insanitylawful','insanelaw','insanitylaw','insanelawfuls','insanitylawfuls','insanelaws','insanitylaws'].include?(args[i])
     align.push('Neutral Good') if ['neutralgood','neutrallight','neutralight','goodneutral','lightneutral','neutralgoods','neutrallights','neutralights','goodneutrals','lightneutrals'].include?(args[i])
-    align.push('True Neutral') if ['neutralneutral','neutralsquared','trueneutral','neutraltrue','neutraltruth','neutralneutrals','neutralsquareds','trueneutrals','neutraltrues','neutraltruths'].include?(args[i])
+    align.push('True Neutral') if ['neutralneutral','neutralsquared','trueneutral','neutraltrue','neutraltruth','neutralneutrals','neutralsquareds','trueneutrals','neutraltrues','neutraltruths','neutralbalanced','neutralbalance','balancedneutral','balanceneutral'].include?(args[i])
     align.push('Neutral Evil') if ['nautralevil','neutraldark','neutralbad','evilneutral','darkneutral','badneutral','nautralevils','neutraldarks','neutralbads','evilneutrals','darkneutrals','badneutrals'].include?(args[i])
     align.push('Neutral Bride') if ['neutralbride','neutralbridal','neutralwedding','brideneutral','bridalneutral','weddingneutral','neutralbrides','neutralbridals','neutralweddings','brideneutrals','bridalneutrals','weddingneutrals','neutralwaifu','waifuneutral','neutralwaifus','waifuneutrals'].include?(args[i])
     align.push('Neutral Summer') if ['neutralsummer','neutralswimsuit','neutralbeach','summerneutral','swimsuitneutral','beachneutral','neutralsummers','neutralswimsuits','neutralbeachs','neutralbeaches','summerneutrals','swimsuitneutrals','beachneutrals'].include?(args[i])
     align.push('Neutral Mad') if ['neutralmad','neutralangry','neutralangery','madneutral','angryneutral','angerynautral','neutralmads','neutralangrys','neutralangries','neutralangerys','neutralangeries','madneutrals','angryneutrals','angerynautrals','neutralinsane','neutralinsanity','insaneneutral','insanityneutral','insaneutral','neutralinsanes','neutralinsanitys','neutralinsanities','insaneneutrals','insanityneutrals','insaneutrals'].include?(args[i])
     align.push('Chaotic Good') if ['chaoticgood','chaosgood','chaoticlight','chaoslight','goodchaotic','goodchaos','lightchaotic','lightchaos','chaoticgoods','chaosgoods','chaoticlights','chaoslights','goodchaotics','goodchaoses','lightchaotics','lightchaoses'].include?(args[i])
-    align.push('Chaotic Neutral') if ['chaoticneutral','chaosneutral','neutralchaotic','neutralchaos','chaoticneutrals','chaosneutrals','neutralchaotices','neutralchaoses'].include?(args[i])
+    align.push('Chaotic Neutral') if ['chaoticneutral','chaosneutral','neutralchaotic','neutralchaos','chaoticneutrals','chaosneutrals','neutralchaotices','neutralchaoses','chaoticbalanced','chaosbalanced','chaoticbalance','chaosbalance','balancedchaotic','balancedchaos','balancechaotic','balancechaos'].include?(args[i])
     align.push('Chaotic Evil') if ['chaoticevil','chaoticdark','chaoticbad','chaosevil','chaosdark','chaosbad','evilchaotic','darkchaotic','badchaotic','evilchaos','darkchaos','badchaos','chaoticevils','chaoticdarks','chaoticbads','chaosevils','chaosdarks','chaosbads','evilchaotics','darkchaotics','badchaotics','evilchaoses','darkchaoses','badchaoses'].include?(args[i])
     align.push('Chaotic Bride') if ['chaoticbride','chaoticbridal','chaoticwedding','chaoticwaifu','chaosbride','chaosbridal','chaoswedding','chaoswaifu','bridechaotic','bridalchaotic','weddingchaotic','waifuchaotic','bridechaos','bridalchaos','weddingchaos','waifuchaos','chaoticbrides','chaoticbridals','chaoticweddings','chaoticwaifus','chaosbrides','chaosbridals','chaosweddings','chaoswaifus','bridechaotics','bridalchaotics','weddingchaotics','waifuchaotics','bridechaoses','bridalchaoses','weddingchaoses','waifuchaoses'].include?(args[i])
     align.push('Chaotic Summer') if ['chaoticsummer','chaoticswimsuit','chaoticbeach','chaossummer','chaosummer','chaosbeach','summerchaotic','swimsuitchaotic','beachchaotic','beachaotic','summerchaos','swimsuitchaos','beachchaos','beachaos','chaoticsummers','chaoticswimsuits','chaoticbeachs','chaoticbeaches','chaossummers','chaosummers','chaosbeachs','chaosbeaches','summerchaotics','swimsuitchaotics','beachchaotics','beachaotics','summerchaoses','swimsuitchaoses','beachchaoses','beachaoses'].include?(args[i])
@@ -4098,7 +4110,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
         align.push('Neutral Summer')
         align.push('Neutral Mad')
         align.push('True Neutral')
-        textra="#{textra}\n\nAll neutral alignments were added.  If you would like only the *True Neutral* alignment, please use the term \"TrueNeutral\" instead." if align1.length<=0 && align2.length<=0
+        textra="#{textra}\n\nAll neutral alignments were added.  If you would like only the *True Neutral* alignment (refered to in-game as \"Neutral-Balanced\"), please use the term \"TrueNeutral\" instead." if align1.length<=0 && align2.length<=0
       elsif align1.length<=0
         align1.push('Neutral')
       elsif align2.length<=0
@@ -6320,7 +6332,7 @@ bot.message do |event|
     end
   end
   str="#{s}"
-  if @shardizard==4 && (['fea!','fef!','fea?','fef?'].include?(str[0,4]) || ['fe13!','fe14!','fe13?','fe14?'].include?(str[0,5]) || ['fe!','fe?'].include?(str[0,3]))
+  if @shardizard==4 && (['fea!','fef!','fea?','fef?'].include?(str[0,4]) || ['fe13!','fe14!','fe13?','fe14?'].include?(str[0,5]) || ['fe!','fe?'].include?(str[0,3])) && (event.server.nil? || event.server.id==285663217261477889)
     str=str[4,str.length-4] if ['fea!','fef!','fea?','fef?'].include?(str[0,4])
     str=str[5,str.length-5] if ['fe13!','fe14!','fe13?','fe14?'].include?(str[0,5])
     str=str[3,str.length-3] if ['fe!','fe?'].include?(str[0,3])
@@ -6331,7 +6343,7 @@ bot.message do |event|
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond 'I am not Robin right now.  Please use `FE!reboot` to turn me into Robin.'
     end
-  elsif (['feh!','feh?'].include?(str[0,4]) || ['f?','e?','h?'].include?(str[0,2])) && @shardizard==4
+  elsif (['feh!','feh?'].include?(str[0,4]) || ['f?','e?','h?'].include?(str[0,2])) && @shardizard==4 && (event.server.nil? || event.server.id==285663217261477889)
     s=event.message.text.downcase
     s=s[2,s.length-2] if ['f?','e?','h?'].include?(event.message.text.downcase[0,2])
     s=s[4,s.length-4] if ['feh!','feh?'].include?(event.message.text.downcase[0,4])
@@ -6342,7 +6354,7 @@ bot.message do |event|
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond "I am not Elise right now.  Please use `FEH!reboot` to turn me into Elise."
     end
-  elsif ['dl!','dl?'].include?(str[0,3]) && @shardizard==4
+  elsif ['dl!','dl?'].include?(str[0,3]) && @shardizard==4 && (event.server.nil? || event.server.id==285663217261477889)
     s=event.message.text.downcase
     s=s[3,s.length-3]
     a=s.split(' ')
