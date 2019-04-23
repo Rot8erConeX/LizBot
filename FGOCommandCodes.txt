@@ -31,3 +31,6 @@
 31\Bride of the White Rose\5\Recover HP of all allies by 200\Valentines 2019
 32\BB Slots\4\Randomly apply one of the following effects: Gain 5 Critical Stars, Restore 500 HP, Increase Debuff Resist by 10% (1 turn)\Revival: Deep Sea Cyber Paradise SE.RA.PH -Second Ballet-
 33\Coffin of the Final Loss\4\Remove 1 Nullify Debuff from the enemy, Increase Critical Strength by 20% against [Good] trait\CHALDEA BOYS COLLECTION 2019
+34\Command Spells of the Faint Black Delusion\3\Inflict Poison to one enemy (600 damage, 3 turns), Decrease own HP by 100 (can't go below 1 HP) [Demerit]\Tokugawa Kaiten Labyrinth: Ooku
+35\Spear of Wisdom, Action and Love\4\Gain 2 Critical Stars, Apply Special Attack [Charm] 20%\Tokugawa Kaiten Labyrinth: Ooku
+36\Nun with a Gentle Face and Merciful Eye\5\Apply Special Attack [Lawful] 20%, Apply Special Attack [Ruler] 20%\Tokugawa Kaiten Labyrinth: Ooku

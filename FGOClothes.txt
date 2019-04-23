@@ -6,7 +6,7 @@ Anniversary Blonde\2M Download Event Quest\Mana Burst\Confident in Victory\Knigh
 Royal Brand\Fate Accel Zero Order Event\Reaction Reinforcement\Iron Devotion\Inescapable\53000, 79500, 172500, 304000, 609000, 982000, 1527000, 2236000, 2987000
 Brilliant Summer\FGO 2016 Summer Event\Rumble Party\Finishing Strike: Trident\Seahouse Shower\53000, 79500, 172500, 304000, 609000, 982000, 1527000, 2236000, 2987000
 Memories of the Lunar Sea\Fate/EXTELLA Commemoration Campaign\Spiritron Boost\Stepping Stone to Ultimate Victory\Punishment\53000, 79500, 172500, 304000, 609000, 982000, 1527000, 2236000, 2987000
-Memories of the Far Side of the Moon\Fate/EXTRA CCCxFate/Grand Order Event\Spiritron Boost: All\Survival Strategy\Down Slide\53000, 79500, 172500, 304000, 609000, 982000, 1527000, 2236000, 2987000
+Memories of the Far Side of the Moon\Fate/EXTRA CCCxFate/Grand Order Event\Spiritron Boost (All)\Stepping Stone to Survival\Dial Down\53000, 79500, 172500, 304000, 609000, 982000, 1527000, 2236000, 2987000
 A Fragment of 2004\Fate/Stay Night Heaven's Feel Premiere Event\Code: F\Code: U\Code: H\53000, 79500, 172500, 304000, 609000, 982000, 1527000, 2236000, 2987000
 Polar Chaldea Uniform\Unlocked at Start of Lostbelt 1\Purifying Recovery\Illusory Enhancement\Estimated Evade\3451800, 6903600, 10355400, 13807200, 17259000, 20710800, 24162600, 27614400, 31066200
 Tropical Summer\Servant Summer Festival 2018 Event\Blue Splash\Supply Water\Safety Oil\53000, 79500, 172500, 304000, 609000, 982000, 1527000, 2236000, 2987000
