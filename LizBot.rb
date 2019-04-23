@@ -189,6 +189,7 @@ def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe t
   chn=event.channel if chn.nil?
   return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
   return false if event.message.text.downcase.split(' ').include?('smol') && chn.id==502288368777035777
+  return true if @shardizard==4
   return true if ['bots','bot'].include?(chn.name.downcase) # channels named "bots" are safe to spam in
   return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('spam') # it is safe to spam in any bot spam channel
   return true if chn.name.downcase.include?('bot') && chn.name.downcase.include?('command') # it is safe to spam in any bot spam channel
@@ -1795,7 +1796,7 @@ def disp_servant_ce2(bot,event,args=nil)
   end
 end
 
-def disp_servant_mats(bot,event,args=nil,chain=false)
+def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   k=find_data_ex(:find_servant,args.join(' '),event)
@@ -1814,6 +1815,11 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
     k[18][4]=k[18][5].map{|q| q}
     k[18][5]=nil
   end
+  lists=[false,false,false]
+  lists[0]=true if has_any?(event.message.text.downcase.split(' '),['ascension','ascensions','justascension','justascensions'])
+  lists[1]=true if has_any?(event.message.text.downcase.split(' '),['costume','costumes','justcostume','justcostumes'])
+  lists[2]=true if has_any?(event.message.text.downcase.split(' '),['skill','skills','justskill','justskills']) || skillsonly
+  lists=[true,true,true] if lists.reject{|q| !q}.length<=0
   qp=[10000,30000,90000,300000,10000,20000,60000,80000,200000,250000,500000,600000,1000000]
   qp=[15000,45000,150000,450000,20000,40000,120000,160000,400000,500000,1000000,1200000,2000000] if k[3]==2 || k[3]==0
   qp=[30000,100000,300000,900000,50000,100000,300000,400000,1000000,1250000,2500000,3000000,5000000] if k[3]==3
@@ -1825,9 +1831,10 @@ def disp_servant_mats(bot,event,args=nil,chain=false)
   qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)","*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
   flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
-  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2
-  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}\n~~the second costume is listed in this bot as Servant #1.2~~" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2
-  flds.push(["Skill Enhancement materials (#{numabr(3*(qp[4,9].inject(0){|sum,x| sum + x }))}#{qpd} total)","*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-'
+  flds=[] unless lists[0]
+  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2 || !lists[1]
+  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}\n~~the second costume is listed in this bot as Servant #1.2~~" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2 || !lists[1]
+  flds.push(["Skill Enhancement materials (#{numabr(3*(qp[4,9].inject(0){|sum,x| sum + x }))}#{qpd} total)","*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-' || !lists[2]
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   if chain
@@ -2506,6 +2513,11 @@ def disp_mat_data(bot,event,args=nil)
     return nil
   end
   ftr=nil
+  lists=[false,false,false]
+  lists[0]=true if has_any?(event.message.text.downcase.split(' '),['ascension','ascensions','justascension','justascensions'])
+  lists[1]=true if has_any?(event.message.text.downcase.split(' '),['costume','costumes','justcostume','justcostumes'])
+  lists[2]=true if has_any?(event.message.text.downcase.split(' '),['skill','skills','justskill','justskills'])
+  lists=[true,true,true] if lists.reject{|q| !q}.length<=0
   lst=[[],[],[]]
   fff=[]
   fff2=0
@@ -2522,11 +2534,11 @@ def disp_mat_data(bot,event,args=nil)
         for i3 in 0...x[i2].length
           m=x[i2][i3].split(' ')
           f=m.pop
-          mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4
-          mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3
+          mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4 && lists[0]
+          mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3 && lists[1]
           fff3+=f.gsub('x','').to_i if m.join(' ')==k && srvs[i][20]!='Unavailable'
-          srvtot[0]+=f.gsub('x','').to_i if m.join(' ')==k && i2<4
-          srvtot[1]+=f.gsub('x','').to_i if m.join(' ')==k && i2>3
+          srvtot[0]+=f.gsub('x','').to_i if m.join(' ')==k && i2<4 && lists[0]
+          srvtot[1]+=f.gsub('x','').to_i if m.join(' ')==k && i2>3 && lists[1]
         end
       end
       lst[0].push("#{'~~' if srvs[i][20]=='Unavailable'}*#{srvs[i][0]}#{'.' if srvs[i][0]>=2}#{'-1.1' if srvs[i][0]==1})* #{srvs[i][1]}  -  #{mts.join(', ')}#{"  -  __#{srvtot[0]}__ total#{'~~' if srvs[i][20]=='Unavailable'}" if mts.length>1}") if mts.length>0
@@ -2541,9 +2553,11 @@ def disp_mat_data(bot,event,args=nil)
         for i3 in 0...x[i2].length
           m=x[i2][i3].split(' ')
           f=m.pop
-          mts.push("**#{f.gsub('x','')}** to reach L#{i2+2}") if m.join(' ')==k
-          fff3+=3*f.gsub('x','').to_i if m.join(' ')==k
-          srvtot[2]+=3*f.gsub('x','').to_i if m.join(' ')==k
+          if m.join(' ')==k && lists[2]
+            mts.push("**#{f.gsub('x','')}** to reach L#{i2+2}")
+            fff3+=3*f.gsub('x','').to_i if m.join(' ')==k
+            srvtot[2]+=3*f.gsub('x','').to_i if m.join(' ')==k
+          end
         end
       end
       lst[2].push("#{'~~' if srvs[i][20]=='Unavailable'}*#{srvs[i][0].to_i}.)* #{srvs[i][1]} #{'~~(All forms)~~' if srvs[i][0]==1}  -  #{mts.join(', ')}  -  __#{srvtot[2]}__ total for all skills#{'~~' if srvs[i][20]=='Unavailable'}") if mts.length>0
@@ -2551,9 +2565,12 @@ def disp_mat_data(bot,event,args=nil)
       fff2+=mts.length unless srvs[i][20]=='Unavailable'
     end
   end
+  s2s=false
+  s2s=true if safe_to_spam?(event)
+  s2s=false if has_any?(event.message.text.downcase.split(' '),['just','noinfo','justart','blank'])
   text=''
-  unless safe_to_spam?(event)
-    ftr='For an actual list of servants who need this material, use this command in PM.'
+  unless s2s
+    ftr='For an actual list of servants who need this material, use this command in PM.' unless safe_to_spam?(event)
     text="#{text}\n#{lst[0].length} servants use this material for Ascension"
     text="#{text}\n#{lst[2].length} servants use this material for Skill Enhancement"
     text="#{text}\n#{lst[1].length} servants use this material for Costumes" if lst[1].length>0
@@ -2578,17 +2595,17 @@ def disp_mat_data(bot,event,args=nil)
     mmkk.push("Cookie of #{k.gsub('Secret Gem of ','')}")
   end
   create_embed(event,"__**#{k}**__#{"\n#{mmkk.join("\n")}" if mmkk.length>0}",text,0x162C6E,ftr,find_emote(bot,event,k,1))
-  return nil unless safe_to_spam?(event)
+  return nil unless s2s
   str="__**Ascension uses for #{k}**__ (#{lst[0].length} total)"
   if lst[0].length<=0
-    str="~~**#{k} is not used for Ascension**~~"
+    str="~~**#{k} is not used for Ascension**~~" if lists[0]
   else
     for i in 0...lst[0].length
       str=extend_message(str,lst[0][i],event)
     end
   end
   if lst[2].length<=0
-    str=extend_message(str,"~~**#{k} is not used for Skill Enhancement**~~",event,2)
+    str=extend_message(str,"~~**#{k} is not used for Skill Enhancement**~~",event,2) if lists[1]
   else
     str=extend_message(str,"__**Enhancement uses for #{k}**__ (#{lst[2].length} total)",event,2)
     for i in 0...lst[2].length
@@ -2665,7 +2682,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2686,7 +2703,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2708,7 +2725,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2744,7 +2761,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2765,7 +2782,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2786,7 +2803,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2869,7 +2886,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Srv-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2889,7 +2906,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2910,7 +2927,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2945,7 +2962,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2965,7 +2982,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]}#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -2985,7 +3002,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [Cmd-##{n[i][1]}]#{" *(in this server only)*" unless mode==1}")
-        elsif mode==1 && !event.server.nil?
+        elsif !event.server.nil?
         else
           a=[]
           for j in 0...n[i][2].length
@@ -3030,6 +3047,8 @@ def disp_aliases(bot,event,args=nil,mode=0)
     end
   elsif !skl.nil?
     skl=skl[0] if skl[0].is_a?(Array)
+    k=0
+    k=event.server.id unless event.server.nil?
     n=@aliases.reject{|q| !['Active','Passive','ClothingSkill'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
     n=n.reject{|q| q[2].nil?} if mode==1
     f.push("__**#{skl[0]}**__#{"'s server-specific aliases" if mode==1}")
@@ -3056,6 +3075,8 @@ def disp_aliases(bot,event,args=nil,mode=0)
     end
   elsif !ce.nil?
     n=@aliases.reject{|q| q[0]!='Craft' || q[2]!=ce[0]}.map{|q| [q[1],q[2],q[3]]}
+    k=0
+    k=event.server.id unless event.server.nil?
     n=n.reject{|q| q[2].nil?} if mode==1
     f.push("__**#{ce[1]}**__ [CE-##{ce[0]}]#{"'s server-specific aliases" if mode==1}")
     unless mode==1
@@ -3082,6 +3103,8 @@ def disp_aliases(bot,event,args=nil,mode=0)
     end
   elsif !mat.nil?
     f.push("__**#{mat}**__ #{find_emote(bot,event,mat,2,true)}#{"'s server-specific aliases" if mode==1}")
+    k=0
+    k=event.server.id unless event.server.nil?
     unless mode==1
       if mat[0,7]=='Gem of '
         f.push("#{mat.gsub('Gem of ','')} Gem")
@@ -3121,6 +3144,8 @@ def disp_aliases(bot,event,args=nil,mode=0)
     end
   elsif !cloth.nil?
     n=@aliases.reject{|q| !['Clothes'].include?(q[0])}.map{|q| [q[1],q[2],q[3]]}
+    k=0
+    k=event.server.id unless event.server.nil?
     n=n.reject{|q| q[2].nil?} if mode==1
     f.push("__**#{cloth[0]}**__#{"'s server-specific aliases" if mode==1}")
     unless mode==1
@@ -3146,6 +3171,8 @@ def disp_aliases(bot,event,args=nil,mode=0)
     end
   elsif !ccode.nil?
     n=@aliases.reject{|q| q[0]!='Command' || q[2]!=ccode[0]}.map{|q| [q[1],q[2],q[3]]}
+    k=0
+    k=event.server.id unless event.server.nil?
     n=n.reject{|q| q[2].nil?} if mode==1
     f.push("__**#{ccode[1]}**__ [Cmd-##{ccode[0]}]#{"'s server-specific aliases" if mode==1}")
     unless mode==1
@@ -4915,9 +4942,14 @@ end
 
 bot.command([:skill,:skil]) do |event, *args|
   return nil if overlap_prevent(event)
-  if ['find','search'].include?(args[0].downcase)
+  if args.nil? || args[0].nil?
+  elsif ['find','search'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args)
+    return nil
+  elsif ['mats','ascension','enhancement','enhance','materials','mat','material'].include?(args[0].downcase)
+    args.shift
+    disp_servant_mats(bot,event,args,false,true)
     return nil
   end
   disp_skill_data(bot,event,args)
@@ -5256,7 +5288,8 @@ end
 
 bot.command([:ce,:CE,:cE,:Ce,:craft,:essance,:craftessance]) do |event, *args|
   return nil if overlap_prevent(event)
-  if ['find','search'].include?(args[0].downcase)
+  if args.nil? || args[0].nil?
+  elsif ['find','search'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args,true)
     return nil
@@ -5289,7 +5322,8 @@ end
 
 bot.command([:command]) do |event, *args|
   return nil if overlap_prevent(event)
-  if args[0].downcase=='list'
+  if args.nil? || args[0].nil?
+  elsif args[0].downcase=='list'
     args.shift
     help_text(event,bot,args[0],args[1])
     return nil
@@ -5343,9 +5377,14 @@ end
 
 bot.command([:skills,:skils]) do |event, *args|
   return nil if overlap_prevent(event)
-  if ['find','search'].include?(args[0].downcase)
+  if args.nil? || args[0].nil?
+  elsif ['find','search'].include?(args[0].downcase)
     args.shift
     find_skills(bot,event,args)
+    return nil
+  elsif ['mats','ascension','enhancement','enhance','materials','mat','material'].include?(args[0].downcase)
+    args.shift
+    disp_servant_mats(bot,event,args,false,true)
     return nil
   end
   disp_servant_skills(bot,event,args)
@@ -6157,6 +6196,9 @@ bot.mention do |event|
     if ['find','search'].include?(args[0].downcase)
       args.shift
       find_skills(bot,event,args,true)
+    elsif ['mats','ascension','enhancement','enhance','materials','mat','material'].include?(args[0].downcase)
+      args.shift
+      disp_servant_mats(bot,event,args,false,true)
     else
       disp_servant_skills(bot,event,args)
     end
@@ -6166,6 +6208,9 @@ bot.mention do |event|
     if ['find','search'].include?(args[0].downcase)
       args.shift
       find_skills(bot,event,args,true)
+    elsif ['mats','ascension','enhancement','enhance','materials','mat','material'].include?(args[0].downcase)
+      args.shift
+      disp_servant_mats(bot,event,args,false,true)
     else
       disp_skill_sata(bot,event,args)
     end
