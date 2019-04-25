@@ -216,6 +216,8 @@ def data_load()
     b=[]
   end
   for i in 0...b.length
+    b[i]=b[i][1,b[i].length-1] if b[i][0,1]=='"'
+    b[i]=b[i][0,b[i].length-1] if b[i][-1,1]=='"'
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     b[i][0]=b[i][0].to_f
     b[i][0]=b[i][0].to_i if b[i][0]>1.9
@@ -263,6 +265,8 @@ def data_load()
     b=[]
   end
   for i in 0...b.length
+    b[i]=b[i][1,b[i].length-1] if b[i][0,1]=='"'
+    b[i]=b[i][0,b[i].length-1] if b[i][-1,1]=='"'
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     if b[i][2]=='Skill'
       b[i][3]=b[i][3].to_i
@@ -295,6 +299,8 @@ def data_load()
     b=[]
   end
   for i in 0...b.length
+    b[i]=b[i][1,b[i].length-1] if b[i][0,1]=='"'
+    b[i]=b[i][0,b[i].length-1] if b[i][-1,1]=='"'
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     b[i][0]=b[i][0].to_i
     b[i][2]=b[i][2].to_i
@@ -314,6 +320,8 @@ def data_load()
     b=[]
   end
   for i in 0...b.length
+    b[i]=b[i][1,b[i].length-1] if b[i][0,1]=='"'
+    b[i]=b[i][0,b[i].length-1] if b[i][-1,1]=='"'
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     b[i][0]=b[i][0].to_i
     b[i][2]=b[i][2].to_i
@@ -328,6 +336,8 @@ def data_load()
     b=[]
   end
   for i in 0...b.length
+    b[i]=b[i][1,b[i].length-1] if b[i][0,1]=='"'
+    b[i]=b[i][0,b[i].length-1] if b[i][-1,1]=='"'
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     b[i][2]=b[i][2].split(', ')
   end
@@ -341,6 +351,8 @@ def data_load()
     b=[]
   end
   for i in 0...b.length
+    b[i]=b[i][1,b[i].length-1] if b[i][0,1]=='"'
+    b[i]=b[i][0,b[i].length-1] if b[i][-1,1]=='"'
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     b[i][5]=b[i][5].split(', ').map{|q| q.to_i}
   end
