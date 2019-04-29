@@ -34,3 +34,6 @@
 34\Command Spells of the Faint Black Delusion\3\Inflict Poison to one enemy (600 damage, 3 turns), Decrease own HP by 100 (can't go below 1 HP) [Demerit]\Tokugawa Kaiten Labyrinth: Ooku
 35\Spear of Wisdom, Action and Love\4\Gain 2 Critical Stars, Apply Special Attack [Charm] 20%\Tokugawa Kaiten Labyrinth: Ooku
 36\Nun with a Gentle Face and Merciful Eye\5\Apply Special Attack [Lawful] 20%, Apply Special Attack [Ruler] 20%\Tokugawa Kaiten Labyrinth: Ooku
+37\Command Spells of the Crimson-Heart Retainer\3\Increase Critical Strength by 15% when installed into a Buster Card\Lady Reines Case Files
+38\Box of the Immaterial\4\Apply Special Attack [Undead] 15%\Lady Reines Case Files
+39\Da Vinci-chan\5\Increase NP Strength by 15% (1 turn)\Lady Reines Case Files
