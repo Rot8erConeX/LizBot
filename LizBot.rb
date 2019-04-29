@@ -2008,14 +2008,15 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     end
     for i in 0...b.length
       b[i]=b[i].gsub("\n",'').split('\\'[0])
-      if !b[i][6].nil? && b[i][6].length>0 && !b[i][8].nil? && b[i][8].length>0
-        f[2].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]==k[25]
+      b[i][7]=b[i][7].split(';; ')
+      if !b[i][6].nil? && b[i][6].length>0 && !b[i][7][1].nil? && b[i][7][1].length>0
+        f[2].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][7][1].split(' as ')[0]==k[25]
       end
       if !b[i][6].nil? && b[i][6].length>0
-        f[0].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][8].split(' as ')[0]!=k[25]
+        f[0].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][7][1].split(' as ')[0]!=k[25]
       end
-      if !b[i][8].nil? && b[i][8].length>0
-        f[1].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]!=artist && b[i][8].split(' as ')[0]==k[25]
+      if !b[i][7][1].nil? && b[i][7][1].length>0
+        f[1].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]!=artist && b[i][7][1].split(' as ')[0]==k[25]
       end
     end
     if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
@@ -2045,6 +2046,20 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         unless b[i][13].nil? || b[i][13].length<=0
           f[1].push("*[DL-Drg]* #{b[i][0]} *[Japanese]*") if b[i][13].split(' as ')[0]==k[25]
+        end
+      end
+      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DL_NPCs.txt')
+        b=[]
+        File.open('C:/Users/Mini-Matt/Desktop/devkit/DL_NPCs.txt').each_line do |line|
+          b.push(line)
+        end
+      else
+        b=[]
+      end
+      for i in 0...b.length
+        b[i]=b[i].gsub("\n",'').split('\\'[0])
+        unless b[i][4].nil? || b[i][4].length<=0
+          f[1].push("*[DL-NPC]* #{b[i][0]} *[Japanese]*") if b[i][4].split(' as ')[0]==k[25]
         end
       end
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt')
@@ -4082,7 +4097,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
     traits.push('Humanoid') if ['human','humanoid','humans','humanoids'].include?(args[i])
     traits.push('Male') if ['male','boy','m','males','boys'].include?(args[i])
     traits.push('Mecha') if ['mecha','mech','mechanical','machine','mechas','mechs','mechanicals','machines'].include?(args[i])
-    traits.push('Man of Greek Mythology') if ['manofgreekmythology','menofgreekmythology','greekman','greekmen','greek','greeks','mythology','mythologies','myth','myths','mythological'].include?(args[i])
+    traits.push('Men of Greek Mythology') if ['manofgreekmythology','menofgreekmythology','greekman','greekmen','greek','greeks','mythology','mythologies','myth','myths','mythological'].include?(args[i])
     traits.push('Not Weak to Enuma Elish') if ['notweaktoenumaelish','notweak2enumaelish','safefromenumaelish','notweaktoenuma','notweak2enuma','safefromenuma','notweaktoelish','notweak2elish','safefromelish','notweak'].include?(args[i])
     traits.push('Pseudo-Servant') if ['pseudo-servant','pseudoservant','pseudo','pseudo-servants','pseudoservants','pseudos'].include?(args[i])
     traits.push('Riding') if ['riding','horse','pony','cavalry','cavalier','cav','horses','ponys','ponies','cavalrys','cavalries','cavaliers','cavs'].include?(args[i])
@@ -4092,6 +4107,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
     traits.push('Threat to Humanity') if ['threattohumanity','threat','threatening','threat2humanity','threattohumans','threat2humans'].include?(args[i])
     traits.push('Weak to Enuma Elish') if ['weaktoenumaelish','weak2enumaelish','weaktoenuma','weak2enuma','weaktoelish','weak2elish','weak'].include?(args[i])
     traits.push('Wild Beast') if ['wildbeast','wild','beastattribute'].include?(args[i])
+    traits.push('Massive') if ['massive','supergiant','massif'].include?(args[i])
     nps.push('Quick') if ['quick','q'].include?(args[i])
     nps.push('Arts') if ['arts','a'].include?(args[i])
     nps.push('Buster') if ['buster','b'].include?(args[i])
