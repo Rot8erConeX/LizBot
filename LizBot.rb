@@ -720,9 +720,9 @@ end
 def overlap_prevent(event) # used to prevent servers with both Liz and her debug form from receiving two replies
   if event.server.nil? # failsafe code catching PMs as not a server
     return false
-  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id)
+  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(event.server.id)
     return @shardizard != 4 # the debug bot can be forced to be used in the emoji servers by including the word "debug" in your message
-  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) # emoji servers will use default Elise otherwise
+  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(event.server.id) # emoji servers will use default Elise otherwise
     return @shardizard == 4
   end
   return false
@@ -790,7 +790,7 @@ def find_servant(name,event,fullname=false)
   return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
   return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
-  return [] if fullname
+  return [] if fullname || name.length<=2
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @servants[k] unless k.nil?
   nicknames_load()
@@ -847,7 +847,7 @@ def find_ce(name,event,fullname=false)
   return @crafts[@crafts.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
   return @crafts[@crafts.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
-  return [] if fullname
+  return [] if fullname || name.length<=2
   k=@crafts.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @crafts[k] unless k.nil?
   k=@crafts.find_index{|q| q[1].downcase.gsub('the ','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[1][0,4].downcase=='the '}
@@ -899,7 +899,7 @@ def find_code(name,event,fullname=false)
   return @codes[@codes.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
   return @codes[@codes.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
-  return [] if fullname
+  return [] if fullname || name.length<=2
   k=@codes.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @codes[k] unless k.nil?
   k=@codes.find_index{|q| q[1].gsub('Code: ','').downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
@@ -918,7 +918,7 @@ def find_enemy(name,event,fullname=false)
   return [] if name.length<2
   k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name}
   return @enemies[k] unless k.nil?
-  return [] if fullname
+  return [] if fullname || name.length<=2
   k=@enemies.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @enemies[k] unless k.nil?
   return find_enemy('Roman Soldier',event,fullname) if name=='rory' || name=='rorywilliams' || name=='plasticrory'
@@ -954,7 +954,7 @@ def find_skill(name,event,fullname=false)
     return sklz[m] unless m.nil?
     return sklz.reject{|q| q[0]!=alz[k][1] || q[2]!=alz[k][3].gsub('ClothingSkill','Clothes').gsub('Active','Skill')}
   end
-  return [] if fullname
+  return [] if fullname || name.length<=2
   return sklz.reject{|q| q[0][0,17]!='Primordial Rune ('} if name=='primordialrune'[0,name.length]
   k=sklz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return sklz.reject{|q| q[0]!=sklz[k][0] || q[2]!=sklz[k][2]} unless k.nil?
@@ -980,7 +980,7 @@ def find_clothes(name,event,fullname=false)
   return @clothes[@clothes.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
   k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
   return @clothes[@clothes.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
-  return [] if fullname
+  return [] if fullname || name.length<=2
   k=@clothes.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @clothes[k] unless k.nil?
   k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && (q[2].nil? || q[2].include?(g))}
@@ -1027,7 +1027,7 @@ def find_mat(name,event,fullname=false)
   return alz[k][1] unless k.nil?
   k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name && (q[2].nil? || q[2].include?(g))}
   return alz[k][1] unless k.nil?
-  return [] if fullname
+  return [] if fullname || name.length<=2
   k=@mats.find_index{|q| q.downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @mats[k] unless k.nil?
   k=@mats.find_index{|q| q[0,7]=='Gem of ' && "#{q.gsub('Gem of ','')} Gem".downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
@@ -1103,7 +1103,7 @@ def find_multi_servant(name,event,fullname=false)
   return [name,@servants[@servants.find_index{|q| q[0]==alz[k][1]}]] unless k.nil?
   k=alz.find_index{|q| q[0].downcase.gsub('||','').gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')==name.gsub(' ','') && (q[2].nil? || q[2].include?(g))}
   return [name,@servants[@servants.find_index{|q| q[0]==alz[k][1]}]] unless k.nil?
-  return [] if fullname
+  return [] if fullname || name.length<=2
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.gsub(' ','').length]==name.gsub(' ','')}
   return [name,@servants[k]] unless k.nil?
   nicknames_load()
@@ -1128,7 +1128,7 @@ def find_data_ex(callback,name,event,fullname=false)
       return k if k.length>0 && args[i,args.length-i-i2].length>0
     end
   end
-  return blank if fullname
+  return blank if fullname || name.length<=2
   k=method(callback).call(name,event)
   return k if k.length>0
   args=name.split(' ')
@@ -1219,23 +1219,26 @@ def numabr(n)
   return n
 end
 
-def servant_superclass(bot,event,k)
-  color='gold'
-  color='silver' if k[3]<4
-  color='bronze' if k[3]<3
-  color='black' if k[3]<1
-  moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{k[2].downcase.gsub(' ','')}_#{color}"}
-  if moji.length>0
-    clsmoji=moji[0].mention
-  else
-    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_unknown_#{color}"}
+def servant_superclass(bot,event,k,mode=0)
+  clsmoji=''
+  if mode==1
+    color='gold'
+    color='silver' if k[3]<4
+    color='bronze' if k[3]<3
+    color='black' if k[3]<1
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{k[2].downcase.gsub(' ','')}_#{color}"}
     if moji.length>0
       clsmoji=moji[0].mention
     else
-      clsmoji='<:class_unknown_blue:523948997229019136>'
+      moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_unknown_#{color}"}
+      if moji.length>0
+        clsmoji=moji[0].mention
+      else
+        clsmoji='<:class_unknown_blue:523948997229019136>'
+      end
     end
   end
-  return "**Class:** *#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  return "**Class:** #{clsmoji}*#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
 end
 
 def servant_moji(bot,event,k,mode=0)
@@ -1328,7 +1331,14 @@ def disp_servant_stats(bot,event,args=nil)
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
-  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)\n**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n#{servant_superclass(bot,event,k)}\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}\n\n#{bond}\n\n**Death Rate:** #{k[11]}%"
+  text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)"
+  text="#{text}\n**Team Cost:** #{k[21]}"
+  text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  text="#{text}\n\n#{servant_superclass(bot,event,k)}"
+  text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][0,5]})"
+  text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}"
+  text="#{text}\n\n#{bond}"
+  text="#{text}\n\n**Death Rate:** #{k[11]}%"
   fou=990
   fou=1000 if dispstr.include?('fou') && dispstr.include?('jp')
   fou=1000 if dispstr.include?('jpfou') || dispstr.include?('jp_fou') || dispstr.include?('foujp') || dispstr.include?('fou_jp')
@@ -1536,9 +1546,29 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   ftr='For skill descriptions, use this command in PM or a bot spam channel.' unless safe_to_spam?(event)
-  if actsklz.join("\n\n").length+passklz.join("\n").length+text.length+"#{"__**#{k[1]}**__ [##{k[0]}]" unless chain}".length>=1700
-    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [##{k[0]}]" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}",xcolor,nil,xpic)
-    create_embed(event,'__*Passive Skills*__',passklz.join("\n"),xcolor,ftr)
+  if actsklz.join("\n\n").length+passklz.join("\n").length+text.length+"#{"__**#{k[1]}**__ [Srv-##{k[0]}]" unless chain}".length>=1700
+    np="*"
+    np=":* #{@skills[@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}][3]}" unless @skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}.nil?
+    text="#{text}\n\n#{servant_superclass(bot,event,k,1)}"
+    text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][0,5]})"
+    text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][6,1]})"
+    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Srv-##{k[0]}]" unless chain}",text,xcolor,nil,xpic) unless chain
+    if actsklz.join("\n\n").length>=1700
+      for i in 0...actsklz.length
+        actsklz[i]=actsklz[i].gsub('__*','__**').gsub('__***','__**').gsub('*__','**__').gsub('***__','**__').gsub("Skill #{i+1}: ",'').gsub('**When upgraded: ','When upgraded: **')
+        if actsklz[i].length>=1700
+          actsklz[i]=actsklz[i].split("\n\n")
+          for i2 in 0...actsklz[i].length
+            create_embed(event,"__**Active Skill #{i+1}#{'u' if i2>0}**__",actsklz[i][i2].gsub('When upgraded: ',''),xcolor)
+          end
+        else
+          create_embed(event,"__**Active Skill #{i+1}**__",actsklz[i],xcolor)
+        end
+      end
+    else
+      create_embed(event,'__**Active Skills**__',actsklz.join("\n\n"),xcolor)
+    end
+    create_embed(event,'__**Passive Skills**__',passklz.join("\n"),xcolor,ftr)
   else
     create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
   end
@@ -4326,10 +4356,21 @@ def find_skills(bot,event,args=nil,ces_only=false)
       skz2.push(ces[i])
     end
   end
+  textra=''
   if tags.length>0
-    skz=skz.reject{|q| !has_any?(tags,q[3])}
     str="#{str}\n*Tags:* #{tags.join(', ')}"
+    if args.include?('any')
+      str="#{str}\n(searching for items with any listed skill tag)" if tags.length>1
+      skz=skz.reject{|q| !has_any?(tags,q[3])}
+    else
+      str="#{str}\n(searching for items with all listed skill tags)" if tags.length>1
+      textra="#{textra}\n\nTags searching defaults to searching for items with all listed tags.\nTo search for items with any of the listed tags, perform the search again with the word \"any\" in your message." if tags.length>1
+      for i in 0...tags.length
+        skz=skz.reject{|q| q[3].nil? || !q[3].include?(tags[i])}.uniq
+      end
+    end
   end
+  textra='~~none~~' if textra.length<=0
   str="#{str}\n\n__**Results**__"
   m=[['Active Skills',[]],['Passive Skills',[]],['Noble Phantasms',[]],['Craft Essances',[]],['Clothing Skills',[]],['Other',[]]]
   for i in 0...skz.length
@@ -4366,7 +4407,6 @@ def find_skills(bot,event,args=nil,ces_only=false)
   end
   ftr="#{m.map{|q| q[1]}.join("\n").split("\n").reject{|q| q.nil? || q.length<=0}.length} Total (#{m[0][1].length} Active, #{m[1][1].length} Passive, #{m[2][1].length} Noble, #{m[3][1].length} CE, #{m[4][1].length} Clothing)"
   mmmx=m.map{|q| q[1]}.join("\n").split("\n").reject{|q| q.nil? || q.length<=0}.length
-  textra='~~none~~'
   m[0][1]=[] if m[0][1].length>=skz2.reject{|q| q[2]!='Skill'}.map{|q| q[0]}.uniq.length
   m[1][1]=[] if m[1][1].length>=skz2.reject{|q| q[2]!='Passive'}.map{|q| q[0]}.uniq.length
   m[2][1]=[] if m[2][1].length>=skz2.reject{|q| q[2]!='Noble'}.map{|q| q[0]}.uniq.length
@@ -6128,7 +6168,7 @@ bot.server_create do |event|
     end
     chn=chnn[0] if chnn.length>0
   end
-  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) && @shardizard==4
+  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(event.server.id) && @shardizard==4
     (chn.send_message(get_debug_leave_message()) rescue nil)
     event.server.leave
   else
@@ -6617,7 +6657,7 @@ end
 bot.ready do |event|
   if @shardizard==4
     for i in 0...bot.servers.values.length
-      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(bot.servers.values[i].id)
+      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(bot.servers.values[i].id)
         bot.servers.values[i].general_channel.send_message(get_debug_leave_message()) rescue nil
         bot.servers.values[i].leave
       end
