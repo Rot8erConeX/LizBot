@@ -4858,7 +4858,18 @@ def generate_deck(event,bot,args=nil)
       end
     end
   end
-  srv.uniq!
+  srv2=[]
+  srv3=0
+  for i in 0...srv.length
+    unless srv2.reject{|q| srv[i]!=q}.length+srv3>=2
+      srv2.push(srv[i])
+      if srv2.reject{|q| srv[i]!=q}.length>=2
+        srv3=1
+        srv2[-1][1]="#{srv2[-1][1]} (SUPPORT)"
+      end
+    end
+  end
+  srv=srv2.map{|q| q}
   x=false
   if srv.length>3
     srv=srv[0,3]
