@@ -1141,7 +1141,7 @@ def find_data_ex(callback,name,event,fullname=false)
   return blank
 end
 
-def find_emote(bot,event,item,mode=0,forcemote=false)
+def find_emote(bot,event,item,mode=0,forcemoji=false)
   if mode==1
     moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
@@ -1156,7 +1156,7 @@ def find_emote(bot,event,item,mode=0,forcemote=false)
     return ''
   end
   k=event.message.text.downcase.split(' ')
-  return item if (k.include?('colorblind') || k.include?('textmats')) && !forcemote
+  return item if (k.include?('colorblind') || k.include?('textmats')) && !forcemoji
   k=item.split(' ')[-1]
   if mode==2
     k=''
@@ -1258,6 +1258,36 @@ def servant_moji(bot,event,k,mode=0)
     end
   end
   clsmoji='<:class_beast_gold:562413138356731905>' if k[2]=='Beast'
+  if k[13].include?('FEH Servant')
+    clr='Colorless'
+    clr='Green' if k[17][6,1]=='Q'
+    clr='Blue' if k[17][6,1]=='A'
+    clr='Red' if k[17][6,1]=='B'
+    clr='Red' if k[2]=='Saber'
+    clr='Blue' if k[2]=='Lancer'
+    clr='Green' if k[2]=='Berserker'
+    wpn='Unknown'
+    wpn='Blade' if ['Saber','Lancer','Berserker'].include?(k[2])
+    wpn='Bow' if k[2]=='Archer'
+    wpn='Beast' if k[2]=='Rider'
+    wpn='Staff' if k[2]=='Caster'
+    wpn='Dagger' if k[2]=='Assassin'
+    wpn='Tome' if k[2]=='Alter Ego'
+    wpn='Dragon' if k[2]=='Foreigner'
+    moji=bot.server(443172595580534784).emoji.values.reject{|q| q.name != "#{clr}_#{wpn}"}
+    clsmoji="#{['','<:Icon_Rarity_1:448266417481973781>','<:Icon_Rarity_2:448266417872044032>','<:Icon_Rarity_3:448266417934958592>','<:Icon_Rarity_4:448266418459377684>','<:Icon_Rarity_5:448266417553539104>','<:Icon_Rarity_6:491487784650145812>'][k[3]]}#{moji[0].mention unless moji.length<=0}"
+  elsif k[13].include?('DL Servant')
+    clr='Staff'
+    clr='Sword' if k[2]=='Saber'
+    clr='Lance' if k[2]=='Lancer'
+    clr='Axe' if k[2]=='Berserker'
+    clr='Bow' if k[2]=='Archer'
+    clr='Rider' if k[2]=='Rider'
+    clr='Wand' if k[2]=='Caster'
+    clr='Dagger' if k[2]=='Assassin'
+    moji=bot.server(532083509083373579).emoji.values.reject{|q| q.name != "Weapon_#{clr}"}
+    clsmoji="#{['','<:Rarity_1:532086056594440231>','<:Rarity_2:532086056254963713>','<:Rarity_3:532086056519204864>','<:Rarity_4:532086056301101067>','<:Rarity_5:532086056737177600>'][k[3]]}#{moji[0].mention unless moji.length<=0}"
+  end
   return clsmoji if mode==1
   deckmoji=''
   m=k[17][0,5]
@@ -1282,7 +1312,12 @@ def servant_moji(bot,event,k,mode=0)
   else
     deckmoji="#{deckmoji}<:Buster_x:523975575359193089>"
   end
-  return "#{clsmoji}#{deckmoji}#{k[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')}"
+  semoji=''
+  semoji='<:Great_Badge_Golden:443704781068959744>' if k[13].include?('FEH Servant')
+  semoji='<:Tribe_Dragon:549947361745567754>' if k[13].include?('DL Servant')
+  npmoji=k[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')
+  npmoji='' if k[13].include?('FEH Servant')
+  return "#{clsmoji}#{deckmoji}#{npmoji}#{semoji}"
 end
 
 def servant_icon(k,event)
@@ -1292,6 +1327,34 @@ def servant_icon(k,event)
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
   return "http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
+end
+
+def generate_rarity_row(k,type='servant')
+  str=''
+  if type=='servant'
+    str="<:fgo_icon_rarity:523858991571533825>"*k[3]
+    if k[13].include?('FEH Servant')
+      str=['','<:Icon_Rarity_1:448266417481973781>','<:Icon_Rarity_2:448266417872044032>','<:Icon_Rarity_3:448266417934958592>','<:Icon_Rarity_4:448266418459377684>','<:Icon_Rarity_5:448266417553539104>','<:Icon_Rarity_6:491487784650145812>'][k[3]]*k[3]
+    elsif k[13].include?('DL Servant')
+      str=['','<:Rarity_1:532086056594440231>','<:Rarity_2:532086056254963713>','<:Rarity_3:532086056519204864>','<:Rarity_4:532086056301101067>','<:Rarity_5:532086056737177600>'][k[3]]*k[3]
+    end
+    str="**0-star**" if k[3]==0
+  elsif type=='craft'
+    str="<:FGO_icon_rarity_mono:523903551144198145>"*k[2]
+    if k[10].include?('FEH')
+      str=['','<:Icon_Rarity_1p10:448294377878716417>','<:Icon_Rarity_2p10:448294378205872130>','<:Icon_Rarity_3p10:448294378293952513>','<:Icon_Rarity_4p10:448272714210476033>','<:Icon_Rarity_5p10:448272715099406336>','<:Icon_Rarity_6p10:491487784822112256>'][k[2]]*k[2]
+    elsif k[10].include?('DL')
+      str=['','<:Rarity_1:532086056594440231>','<:Rarity_2:532086056254963713>','<:Rarity_3:532086056519204864>','<:Rarity_4:532086056301101067>','<:Rarity_5:532086056737177600>'][k[2]]*k[2]
+    end
+  elsif type=='code'
+    str="<:FGO_icon_rarity_mono:523903551144198145>"*k[2]
+    if k[4].include?('FEH')
+      str=['','<:Icon_Rarity_1n:570979179781160980>','<:Icon_Rarity_2n:570979178627858432>','<:Icon_Rarity_3n:570979178812407834>','<:Icon_Rarity_4n:570979181077463061>','<:Icon_Rarity_5n:570979178917396490>','<:Icon_Rarity_6n:570979179009409054>'][k[2]]*k[2]
+    elsif k[4].include?('DL')
+      str=['','<:Rarity_1_Blank:555459856476274691>','<:Rarity_2_Blank:555459856400908299>','<:Rarity_3_Blank:555459856568418314>','<:Rarity_4_Blank:555459856497246218>','<:Rarity_5_Blank:555459856190930955>'][k[2]]*k[2]
+    end
+  end
+  return str
 end
 
 def disp_servant_stats(bot,event,args=nil)
@@ -1323,8 +1386,10 @@ def disp_servant_stats(bot,event,args=nil)
     end
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
-  text="**0-star**" if k[3]==0
+  text=generate_rarity_row(k,'servant')
+  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
+  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
+  cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
   np="*"
   np=":* #{@skills[@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}][3]}" unless @skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}.nil?
   kx=@crafts.find_index{|q| q[0]==k[23]}
@@ -1335,17 +1400,17 @@ def disp_servant_stats(bot,event,args=nil)
   text="#{text}\n**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
   text="#{text}\n\n#{servant_superclass(bot,event,k)}"
-  text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][0,5]})"
-  text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}"
+  text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
+  text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}"
   text="#{text}\n\n#{bond}"
   text="#{text}\n\n**Death Rate:** #{k[11]}%"
   fou=990
   fou=1000 if dispstr.include?('fou') && dispstr.include?('jp')
   fou=1000 if dispstr.include?('jpfou') || dispstr.include?('jp_fou') || dispstr.include?('foujp') || dispstr.include?('fou_jp')
   fou=1000 if dispstr.include?('fou-jp') || dispstr.include?('jp-fou')
-  flds=[["Combat stats","__**Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*#{atk}* - #{longFormattedNumber(k[7][0])}  \n\n__**Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*#{atk}* - #{longFormattedNumber(k[7][1])}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*#{atk}* - #{longFormattedNumber(k[7][2])}  "]]
-  flds=[["Combat stats","__**Level 1**__\n*HP* - <:Fou:544138629694619648>#{longFormattedNumber(k[6][0]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - <:Fou:544138629694619648>#{longFormattedNumber(k[7][0]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][0]+2000)}  \n\n__**Level #{k[5]}**__\n*HP* - <:Fou:544138629694619648>#{longFormattedNumber(k[6][1]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - <:Fou:544138629694619648>#{longFormattedNumber(k[7][1]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][1]+2000)}  \n\n__**Level 100<:holy_grail:523842742992764940>**__\n*HP* - <:Fou:544138629694619648>#{longFormattedNumber(k[6][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - <:Fou:544138629694619648>#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
-  flds.push(["Attack Parameters","__**Hit Counts**__\n<:Quick_y:526556106986618880>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{k[9][2]}\n<:Blank:509232907555045386><:Extra_y:526556105388720130>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
+  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*#{atk}* - #{longFormattedNumber(k[7][0])}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*#{atk}* - #{longFormattedNumber(k[7][1])}  \n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*#{atk}* - #{longFormattedNumber(k[7][2])}  "]]
+  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  \n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
+  flds.push(["Attack Parameters","__**Hit Counts**__\n#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\n<:Blank:509232907555045386>#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   xpic=servant_icon(k,event)
   ftr=nil
   ftr='You can include the word "Fou" to show the values with Fou modifiers' unless dispfou
@@ -1392,18 +1457,31 @@ def disp_tiny_stats(bot,event,args=nil)
     end
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
-  text="**0-star**" if k[3]==0
+  text=generate_rarity_row(k,'servant')
+  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
+  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
+  cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
   if dispfou==2000
-    text="#{text}\u00A0\u00B7\u00A0<:GoldenFou:544138629832769536>"
+    text="#{text}\u00A0\u00B7\u00A0#{cemoji[7]}"
   elsif dispfou>0
-    text="#{text}\u00A0\u00B7\u00A0<:Fou:544138629694619648>"
+    text="#{text}\u00A0\u00B7\u00A0#{cemoji[6]}"
   end
   kx=@crafts.find_index{|q| q[0]==k[23]}
   bond=">No Bond CE<"
   bond="**Bond CE:** >Unknown<" if k[0]<2
   bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
-  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n\n#{servant_superclass(bot,event,k)}\n\n**Command Deck:** #{k[17][0,5].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{k[17][0,5]})\n**Noble Phantasm:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n#{bond}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}<:holy_grail:523842742992764940>\n**#{atk}:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}<:holy_grail:523842742992764940>\n**Death Rate:**\u00A0#{k[11]}%\n\n**Hit Counts**:\u00A0\u00A0<:Quick_y:526556106986618880>#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{k[9][2]}  \u00B7  <:Extra_y:526556105388720130>#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>\u00A0#{k[9][4]}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
+  text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}"
+  text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  text="#{text}\n\n#{servant_superclass(bot,event,k)}"
+  text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
+  text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+  text="#{text}\n\n#{bond}"
+  text="#{text}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}#{cemoji[3]}"
+  text="#{text}\n**#{atk}:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}#{cemoji[3]}"
+  text="#{text}\n**Death Rate:**\u00A0#{k[11]}%"
+  text="#{text}\n\n**Hit Counts**:\u00A0\u00A0#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}  \u00B7  #{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}\u00A0#{k[9][4]}"
+  text="#{text}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%"
+  text="#{text}\n**Crit Stars:**\u00A0\u00A0*Weight:*\u00A0#{k[10][0]}\u00A0\u00A0\u00B7\u00A0\u00A0*Drop Rate:*\u00A0#{k[10][1]}%"
   xpic=servant_icon(k,event)
   ftr=nil
   ftr='You can include the word "Fou" to show the values with Fou modifiers' unless dispfou>0
@@ -1424,8 +1502,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
-  text="**0-star**" if k[3]==0
+  text=generate_rarity_row(k,'servant')
   text='' if chain
   text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
   text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
@@ -1466,8 +1543,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
-  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
-  text="**0-star**" if k[3]==0
+  text=generate_rarity_row(k,'servant')
   text='' if chain
   actsklz=[]
   if k[14][0][0]=='-'
@@ -1475,7 +1551,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     for i in 0...k[14].length
       str="#{'__' if safe_to_spam?(event,nil,1)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event,nil,1)}"
-      str="#{str}\n*Obtained in Interlude or Rank-Up Quest*" if [19,21,9,32,42,28,23,29,35,31,15,34,16,53,56,13,25,22,36,48,45,54,46,41,5,103].include?(k[0]) && i==k[14].length-1
+      str="#{str}\n*Obtained in Interlude or Rank-Up Quest*" if [19,21,9,32,42,28,23,29,35,31,15,34,16,53,56,13,25,22,36,48,45,54,46,41,5,103,50,14,30,49,57,26,27].include?(k[0]) && i==k[14].length-1
       if safe_to_spam?(event,nil,1)
         k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}].map{|q| q}
         str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
@@ -1583,8 +1659,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
-  text="**0-star**" if k[3]==0
+  text=generate_rarity_row(k,'servant')
   text='' if chain
   np="*"
   nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
@@ -1605,9 +1680,11 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=3 if event.message.text.downcase.split(' ').include?('kh3') && k[0]==154
   npl=4 if event.message.text.downcase.split(' ').include?('kh4') && k[0]==154
   npl=5 if event.message.text.downcase.split(' ').include?('kh5') && k[0]==154
+  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
+  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant') || @shardizard==4
   unless nophan.nil?
     l=[nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï',''),nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')]
-    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q','<:quick:523854796692783105> Quick').gsub('A','<:arts:523854803013730316> Arts').gsub('B','<:buster:523854810286391296> Buster')}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
+    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q',"#{cemoji[0]} Quick").gsub('A',"#{cemoji[1]} Arts").gsub('B',"#{cemoji[2]} Buster")}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
     for i in 8...18
       unless nophan[i][0]=='-'
         nxx=nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
@@ -1751,16 +1828,18 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     return nil if chain
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+    cemoji=['<:Bond:523903660913197056>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+    cemoji=['<:RRAffinity:565064751780986890>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
+    cemoji=['<:Type_Healing:532107867348533249>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-    text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**<:Bond:523903660913197056> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless chain
+    text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+    text="#{text}\n**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
-      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
-      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n#{cemoji[1]}__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n__#{cemoji[2]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
-    text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
     text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
   end
   create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
@@ -1794,16 +1873,18 @@ def disp_servant_ce2(bot,event,args=nil)
     text=">No CE information known<"
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+    cemoji=['<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+    cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
+    cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-    text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**<:Valentines:523903633453219852> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+    text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+    text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
-      text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
-      text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n#{cemoji[1]}__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n#{cemoji[2]}__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
-    text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
     text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
   end
   create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
@@ -1822,16 +1903,18 @@ def disp_servant_ce2(bot,event,args=nil)
       text=">No CE information known<"
     else
       ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+      cemoji=['<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+      cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
+      cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
       xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-      text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
-      text="#{text}\n**<:Valentines:523903633453219852> Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+      text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+      text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
       if ce[4]==ce[5] && ce[6]==ce[7]
         text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       else
-        text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
-        text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+        text="#{text}\n\n__#{cemoji[1]}**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+        text="#{text}\n\n__#{cemoji[2]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       end
-      text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
       text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
     end
     create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
@@ -1849,8 +1932,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
     return nil
   end
   xcolor=servant_color(k)
-  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
-  text="**0-star**" if k[3]==0
+  text=generate_rarity_row(k,'servant')
   text='' if chain
   xpic=servant_icon(k,event)
   if k[18][4].nil? && !k[18][5].nil?
@@ -1998,8 +2080,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     cex=@crafts[0]
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
-  text="<:fgo_icon_rarity:523858991571533825>"*k[3]
-  text="**0-star**" if k[3]==0
+  text=generate_rarity_row(k,'servant')
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
   toptext=''
@@ -2014,7 +2095,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     toptext="~~__**#{k[1]}**__ [Srv-##{k[0]}]\nSecond Costume~~\n\n"
     asc=1
     k=@servants[@servants.find_index{|q| q[0]==1.2}].map{|q| q}
-    text="#{"<:fgo_icon_rarity:523858991571533825>"*k[3]}\n\nThis costume is considered Servant #1.2 by this bot."
+    text="#{generate_rarity_row(k,'servant')}\n\nThis costume is considered Servant #1.2 by this bot."
   end
   if args.include?('just') || args.include?('justart') || args.include?('blank') || args.include?('noinfo')
     f=nil
@@ -2193,9 +2274,12 @@ def disp_ce_card(bot,event,args=nil)
   text=''
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-  text="#{"<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]}\n**Cost:** #{ce[3]}"
-  text="#{text}\n**<:Bond:523903660913197056> Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
-  text="#{text}\n**<:Valentines:523903633453219852> Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k2[0]}]*" unless k2.nil?
+  text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+  cemoji=['<:Bond:523903660913197056>','<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+  cemoji=['<:RRAffinity:565064751780986890>','<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if ce[10].include?('FEH') || (!k.nil? && k[13].include?('FEH Servant')) || (!k2.nil? && k2[13].include?('FEH Servant'))
+  cemoji=['<:Type_Healing:532107867348533249>','<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if ce[10].include?('DL') || (!k.nil? && k[13].include?('DL Servant')) || (!k2.nil? && k2[13].include?('DL Servant'))
+  text="#{text}\n**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
+  text="#{text}\n**#{cemoji[1]} Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k2[0]}]*" unless k2.nil?
   text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
   if !ce[10].nil? && ce[10].include?('NewYear')
     text="#{text}\n\n__**Japan** stats__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}"
@@ -2203,16 +2287,15 @@ def disp_ce_card(bot,event,args=nil)
     if ce[6]==ce[7]
       text="#{text}\n\n__**Effect**__\n#{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
-      text="#{text}\n\n__**Base Limit**__\n#{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
-      text="#{text}\n\n__**Max Limit**__\n#{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n__#{cemoji[2]}**Base Limit**__\n#{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+      text="#{text}\n\n__#{cemoji[3]}**Max Limit**__\n#{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
   elsif ce[4]==ce[5] && ce[6]==ce[7]
     text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
   else
-    text="#{text}\n\n__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
-    text="#{text}\n\n__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    text="#{text}\n\n__#{cemoji[2]}**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    text="#{text}\n\n__#{cemoji[3]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
   end
-  text="#{text}\n\n__**Artist**__\n#{ce[9].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[9].nil? || ce[9].length.zero?
   text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
@@ -2232,7 +2315,7 @@ def disp_ce_art(bot,event,args=nil)
   xcolor=0x718F93 if ce[2]>2
   xcolor=0xF5D672 if ce[2]>3
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Crafts/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-  text="<:FGO_icon_rarity_mono:523903551144198145>"*ce[2]
+  text=generate_rarity_row(ce,'craft')
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
   text='Requested art not found.' if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
@@ -2330,7 +2413,7 @@ def disp_code_data(bot,event,args=nil)
   xcolor=0x7D4529
   xcolor=0x718F93 if ce[2]>2
   xcolor=0xF5D672 if ce[2]>3
-  text="#{"<:FGO_icon_rarity_rust:523903558928826372>"*ce[2]}"
+  text=generate_rarity_row(ce,'code')
   text="#{text}\n\n**Effect:** #{ce[3]}"
   text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
