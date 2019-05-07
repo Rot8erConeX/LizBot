@@ -1275,7 +1275,7 @@ def servant_moji(bot,event,k,mode=0)
     wpn='Tome' if k[2]=='Alter Ego'
     wpn='Dragon' if k[2]=='Foreigner'
     moji=bot.server(443172595580534784).emoji.values.reject{|q| q.name != "#{clr}_#{wpn}"}
-    clsmoji="#{['','<:Icon_Rarity_1:448266417481973781>','<:Icon_Rarity_2:448266417872044032>','<:Icon_Rarity_3:448266417934958592>','<:Icon_Rarity_4:448266418459377684>','<:Icon_Rarity_5:448266417553539104>','<:Icon_Rarity_6:491487784650145812>'][k[3]]}#{moji[0].mention unless moji.length<=0}"
+    clsmoji="#{['','<:Icon_Rarity_1:448266417481973781>','<:Icon_Rarity_2:448266417872044032>','<:Icon_Rarity_3:448266417934958592>','<:Icon_Rarity_4:448266418459377684>','<:Icon_Rarity_5:448266417553539104>','<:Icon_Rarity_6:491487784650145812>'][k[3]] unless mode%4>1}#{moji[0].mention unless moji.length<=0}"
   elsif k[13].include?('DL Servant')
     clr='Staff'
     clr='Sword' if k[2]=='Saber'
@@ -1286,9 +1286,9 @@ def servant_moji(bot,event,k,mode=0)
     clr='Wand' if k[2]=='Caster'
     clr='Dagger' if k[2]=='Assassin'
     moji=bot.server(532083509083373579).emoji.values.reject{|q| q.name != "Weapon_#{clr}"}
-    clsmoji="#{['','<:Rarity_1:532086056594440231>','<:Rarity_2:532086056254963713>','<:Rarity_3:532086056519204864>','<:Rarity_4:532086056301101067>','<:Rarity_5:532086056737177600>'][k[3]]}#{moji[0].mention unless moji.length<=0}"
+    clsmoji="#{['','<:Rarity_1:532086056594440231>','<:Rarity_2:532086056254963713>','<:Rarity_3:532086056519204864>','<:Rarity_4:532086056301101067>','<:Rarity_5:532086056737177600>'][k[3]] unless mode%4>1}#{moji[0].mention unless moji.length<=0}"
   end
-  return clsmoji if mode==1
+  return clsmoji if mode%2==1
   deckmoji=''
   m=k[17][0,5]
   if m.include?('QQQ')
@@ -1419,7 +1419,7 @@ def disp_servant_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,1)}",text,xcolor,ftr,xpic,flds,2)
+  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic,flds,2)
 end
 
 def disp_tiny_stats(bot,event,args=nil)
@@ -1490,7 +1490,7 @@ def disp_tiny_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,1)}",text,xcolor,ftr,xpic)
+  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic)
 end
 
 def disp_servant_traits(bot,event,args=nil,chain=false)
@@ -1517,7 +1517,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   k[13].push('Evil *[added]*') if k[0]==74 && event.message.text.downcase.include?('crime')
-  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
 end
 
 def disp_enemy_traits(bot,event,args=nil,chain=false)
@@ -1646,7 +1646,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     end
     create_embed(event,'__**Passive Skills**__',passklz.join("\n"),xcolor,ftr)
   else
-    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
+    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
   end
 end
 
@@ -1681,7 +1681,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=4 if event.message.text.downcase.split(' ').include?('kh4') && k[0]==154
   npl=5 if event.message.text.downcase.split(' ').include?('kh5') && k[0]==154
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
-  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant') || @shardizard==4
+  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant')
   unless nophan.nil?
     l=[nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï',''),nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')]
     text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q',"#{cemoji[0]} Quick").gsub('A',"#{cemoji[1]} Arts").gsub('B',"#{cemoji[2]} Buster")}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
@@ -1792,7 +1792,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   return nil if chain && text.length<=0
-  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
@@ -1969,7 +1969,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
-  hdr="#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k)}" unless chain}"
+  hdr="#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}"
   if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
     create_embed(event,hdr,str,xcolor,nil,xpic,nil,1)
     str="__**#{flds[-1][0]}**__"
@@ -2239,7 +2239,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       else
         create_embed(event,'','',xcolor,nil,nil,f)
       end
-      create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
+      create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
       return nil
     elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1400 || (f.map{|q| q[1].split("\n").length}.max>12 && !safe_to_spam?(event))
       text="#{text}\nThe list of servants and CEs with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
@@ -2250,7 +2250,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
       end
     end
-    create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}]\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
+    create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
   end
 end
 
