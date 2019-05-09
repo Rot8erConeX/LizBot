@@ -185,7 +185,7 @@ system("title loading #{shard_data(2)[@shardizard]} LizBot")
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
-  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id) # it is safe to spam in the emoji servers
+  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
   return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
   return false if event.message.text.downcase.split(' ').include?('smol') && chn.id==502288368777035777
@@ -309,6 +309,8 @@ def data_load()
     b[i][5]=b[i][5].split(', ').map{|q| q.to_i}
     b[i][10]='' if b[i][10].nil?
     b[i][10]=b[i][10].split(', ')
+    b[i][11]='' if b[i][11].nil?
+    b[i][11]=b[i][11].split(', ').map{|q| q.to_i}
   end
   @crafts=b.map{|q| q}
   if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt')
@@ -720,9 +722,9 @@ end
 def overlap_prevent(event) # used to prevent servers with both Liz and her debug form from receiving two replies
   if event.server.nil? # failsafe code catching PMs as not a server
     return false
-  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(event.server.id)
+  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id)
     return @shardizard != 4 # the debug bot can be forced to be used in the emoji servers by including the word "debug" in your message
-  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(event.server.id) # emoji servers will use default Elise otherwise
+  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) # emoji servers will use default Elise otherwise
     return @shardizard == 4
   end
   return false
@@ -1840,7 +1842,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
       text="#{text}\n\n#{cemoji[1]}__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       text="#{text}\n\n__#{cemoji[2]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
-    text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
+    text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
   end
   create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
 end
@@ -1878,14 +1880,14 @@ def disp_servant_ce2(bot,event,args=nil)
     cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
     text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+    text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*"
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
       text="#{text}\n\n#{cemoji[1]}__**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       text="#{text}\n\n#{cemoji[2]}__**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     end
-    text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
+    text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
   end
   create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
   if k[26].length>1
@@ -1908,14 +1910,14 @@ def disp_servant_ce2(bot,event,args=nil)
       cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
       xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
       text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
-      text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*"
+      text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*"
       if ce[4]==ce[5] && ce[6]==ce[7]
         text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       else
         text="#{text}\n\n__#{cemoji[1]}**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
         text="#{text}\n\n__#{cemoji[2]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
       end
-      text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
+      text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
     end
     create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
   end
@@ -2101,6 +2103,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     f=nil
   else
     f=[[],[],[]]
+    inart=[]
     f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
     f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
     f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
@@ -2108,6 +2111,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     crf=@crafts.map{|q| q}
     for i in 0...crf.length
       f[0].push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist
+      inart.push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][11].include?(k[0].to_i)
     end
     if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
       b=[]
@@ -2190,6 +2194,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       end
     end
     f=[['Same Artist',f[0]],['Same VA',f[1]],['Same everything',f[2],1]]
+    f.push(['Appears in these CEs',inart]) if inart.length>0
     if k[25].include?(' & ')
       m=k[25].split(' & ')
       for i in 0...m.length
@@ -2278,8 +2283,8 @@ def disp_ce_card(bot,event,args=nil)
   cemoji=['<:Bond:523903660913197056>','<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
   cemoji=['<:RRAffinity:565064751780986890>','<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if ce[10].include?('FEH') || (!k.nil? && k[13].include?('FEH Servant')) || (!k2.nil? && k2[13].include?('FEH Servant'))
   cemoji=['<:Type_Healing:532107867348533249>','<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if ce[10].include?('DL') || (!k.nil? && k[13].include?('DL Servant')) || (!k2.nil? && k2[13].include?('DL Servant'))
-  text="#{text}\n**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k[0]}]*" unless k.nil?
-  text="#{text}\n**#{cemoji[1]} Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [##{k2[0]}]*" unless k2.nil?
+  text="#{text}\n**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless k.nil?
+  text="#{text}\n**#{cemoji[1]} Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k2[0]}]*" unless k2.nil?
   text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
   if !ce[10].nil? && ce[10].include?('NewYear')
     text="#{text}\n\n__**Japan** stats__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}"
@@ -2296,7 +2301,7 @@ def disp_ce_card(bot,event,args=nil)
     text="#{text}\n\n__#{cemoji[2]}**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     text="#{text}\n\n__#{cemoji[3]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
   end
-  text="#{text}\n\n__**Additional info**__\n#{ce[11].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[11].nil? || ce[11].length.zero?
+  text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
@@ -2322,31 +2327,20 @@ def disp_ce_art(bot,event,args=nil)
   artist=nil
   artist=ce[9] unless ce[9].nil? || ce[9].length<=0
   f=[]
-  unless artist.nil? || artist=='-'
-    f=@servants.reject{|q| q[24]!=artist}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}
-    f.push("~~Every servant's April Fool's Day art~~") if artist=='Riyo'
-    crf=@crafts.map{|q| q}
-    for i in 0...crf.length
-      f.push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist && crf[i][0]!=ce[0]
-    end
-    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
-      b=[]
-      File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
-        b.push(line)
+  if args.include?('just') || args.include?('justart') || args.include?('blank') || args.include?('noinfo')
+    f=nil
+    str2=''
+  else
+    unless artist.nil? || artist=='-'
+      f=@servants.reject{|q| q[24]!=artist}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}
+      f.push("~~Every servant's April Fool's Day art~~") if artist=='Riyo'
+      crf=@crafts.map{|q| q}
+      for i in 0...crf.length
+        f.push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist && crf[i][0]!=ce[0]
       end
-    else
-      b=[]
-    end
-    for i in 0...b.length
-      b[i]=b[i].gsub("\n",'').split('\\'[0])
-      if !b[i][6].nil? && b[i][6].length>0
-        f.push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist
-      end
-    end
-    if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
-      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt')
+      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
         b=[]
-        File.open('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt').each_line do |line|
+        File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
           b.push(line)
         end
       else
@@ -2354,10 +2348,34 @@ def disp_ce_art(bot,event,args=nil)
       end
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
-        unless b[i][7].nil? || b[i][7].length<=0
-          m=b[i][7].split(' as ')
-          f.push("*[DL-Print]* #{b[i][0]}") if m[0]==artist
+        if !b[i][6].nil? && b[i][6].length>0
+          f.push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist
         end
+      end
+      if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
+        if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt')
+          b=[]
+          File.open('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt').each_line do |line|
+            b.push(line)
+          end
+        else
+          b=[]
+        end
+        for i in 0...b.length
+          b[i]=b[i].gsub("\n",'').split('\\'[0])
+          unless b[i][7].nil? || b[i][7].length<=0
+            m=b[i][7].split(' as ')
+            f.push("*[DL-Print]* #{b[i][0]}") if m[0]==artist
+          end
+        end
+      end
+    end
+    srv=@servants.map{|q| q}
+    str2=''
+    unless ce[11].nil? || ce[11].length<=0
+      for i in 0...ce[11].length
+        m=srv.find_index{|q| q[0]==ce[11][i]}
+        str2="#{str2}#{"\n" unless i==0}Srv-#{ce[11][i]}.) #{srv[m][1]}" unless m.nil?
       end
     end
   end
@@ -2371,25 +2389,45 @@ def disp_ce_art(bot,event,args=nil)
         str=extend_message(str,f[i].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
       end
     end
+    unless str2.length<=0
+      m=str2.split("\n")
+      str=extend_message(str,'__**Servants in art**__',event,2)
+      for i in 0...m.length
+        ff='  -  '
+        ff="\n" if i==0
+        str=extend_message(str,m[i].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
+      end
+    end
     str=extend_message(str,"#{text}#{"#{"\n\n" if text.length>0}**Artist:** #{artist}" unless artist.nil?}\n#{xpic}",event,2)
     event.respond str
   else
-    unless artist.nil?
-      text="#{text}\n\n**Artist:** #{artist}"
-    end
+    text="#{text}\n\n**Artist:** #{artist}" unless artist.nil?
     if f.nil?
-    elsif f.join("\n").length>=1400 && safe_to_spam?(event)
+    elsif f.join("\n").length+str2.length>=1400 && safe_to_spam?(event)
       if f.join("\n").length>=1400
         str='__**Same Artist**__'
-        puts f.map{|q| q.to_s}
         for i in 0...f.length
           ff='  -  '
           ff="\n" if i==0
           str=extend_message(str,f[i].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
         end
         event.respond str
+      elsif f.length<=0
       else
         create_embed(event,'','',xcolor,nil,nil,[['Same Artist',f.join("\n")]])
+      end
+      if str2.length>=1400
+        str='__**Servants in Art**__'
+        m=str2.split("\n")
+        for i in 0...m.length
+          ff='  -  '
+          ff="\n" if i==0
+          str=extend_message(str,m[i].gsub(' ',"\u00A0").gsub('-',"\u2011"),event,1,ff)
+        end
+        event.respond str
+      elsif str2.length<=0
+      else
+        create_embed(event,'','',xcolor,nil,nil,[['Servants in Art',str2]])
       end
       create_embed(event,"__**#{ce[1]}**__ [CE ##{ce[0]}]",text,xcolor,nil,[nil,xpic])
       return nil
@@ -2398,6 +2436,7 @@ def disp_ce_art(bot,event,args=nil)
       f=nil
     end
     text="#{text}\n\n__**Same Artist**__\n#{f.join("\n")}" unless f.nil? || f.length<=0
+    text="#{text}\n\n__**Servants in art**__\n#{str2}" unless str2.nil? || str2.length<=0
     create_embed(event,"__**#{ce[1]}**__ [CE ##{ce[0]}]",text,xcolor,nil,[nil,xpic])
   end
 end
@@ -5548,7 +5587,7 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
   metadata_load()
   if event.server.nil?
     event.respond 'It is safe for me to send long replies here because this is my PMs with you.'
-  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579].include?(event.server.id)
+  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id)
     event.respond 'It is safe for me to send long replies here because this is one of my emoji servers.'
   elsif @shardizard==4
     event.respond 'It is safe for me to send long replies here because this is my debug mode.'
@@ -6262,7 +6301,7 @@ bot.server_create do |event|
     end
     chn=chnn[0] if chnn.length>0
   end
-  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(event.server.id) && @shardizard==4
+  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) && @shardizard==4
     (chn.send_message(get_debug_leave_message()) rescue nil)
     event.server.leave
   else
@@ -6751,7 +6790,7 @@ end
 bot.ready do |event|
   if @shardizard==4
     for i in 0...bot.servers.values.length
-      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,572792502159933440].include?(bot.servers.values[i].id)
+      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(bot.servers.values[i].id)
         bot.servers.values[i].general_channel.send_message(get_debug_leave_message()) rescue nil
         bot.servers.values[i].leave
       end
