@@ -449,6 +449,54 @@ def metadata_save()
   }
 end
 
+def devservants_load() # loads information regarding the devunits
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt').each_line do |line|
+      b.push(line.gsub("\n",''))
+    end
+  else
+    b=[]
+  end
+  b=b.join("\n").split("\n\n").map{|q| q.split("\n").map{|q2| q2.split(' # ')[0]}}
+  @dev_units=[]
+  for i in 0...b.length
+    b[i][0]=b[i][0].to_i
+    b[i][1]=b[i][1].split('\\'[0]).map{|q| q.to_i}
+    b[i][2]=b[i][2].split('\\'[0]).map{|q| q.to_i}
+    b[i][3]=b[i][3].split('\\'[0])
+    b[i][5]=b[i][5].to_i
+    b[i][6]=b[i][6].to_i
+    b[i][7]=b[i][7].split('\\'[0]).map{|q| q.to_i}
+  end
+  @dev_units=b.map{|q| q}
+  return @dev_units
+end
+
+def devservants_save() # used by the edit command to save the donorunits
+  # sort the unit list alphabetically
+  k=@dev_units.map{|q| q}
+  k.compact!
+  k=k.sort{|a,b| a[0]<=>b[0]}
+  k2=k.find_index{|q| q[0]==74}
+  untz=[]
+  untz.push(k[k2])
+  for i in 0...k.length
+    untz.push(k[i].map{|q| q}) unless i==k2
+  end
+  s=''
+  data_load()
+  for i in 0...untz.length
+    m=@servants.find_index{|q| q[0]==untz[i][0]}
+    s="#{s}#{"\n\n" unless i==0}#{untz[i][0]} # #{@servants[m][1]}\n#{untz[i][1].join('\\'[0])}\n#{untz[i][2].join('\\'[0])}\n#{untz[i][3].join('\\'[0])}\n#{untz[i][4]}\n#{untz[i][5]}\n#{untz[i][6]}\n#{untz[i][7].join('\\'[0])}" unless m.nil?
+  end
+  open('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt', 'w') { |f|
+    f.puts s
+    f.puts "\n"
+  }
+  return nil
+end
+
 def nicknames_load(mode=1)
   if mode==2 && File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
     b=[]
@@ -748,6 +796,97 @@ def all_commands(include_nil=false,permissions=-1)
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
   return k
+end
+
+def donate_trigger_word(event,str=nil,mode=0)
+  if !str.is_a?(String) && File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{str}.txt")
+    b=[]
+    File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{str}.txt").each_line do |line|
+      b.push(line.gsub("\n",''))
+    end
+    f=[b[0].split('\\'[0])[0],str,b[0].split('\\'[0])[1],b[0].split('\\'[0])[2]]
+    return f[mode+1]
+  else
+    str=event.message.text if str.nil?
+    str=str.downcase
+    d=Dir["C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/*.txt"]
+    f=[]
+    for i in 0...d.length
+      b=[]
+      File.open(d[i]).each_line do |line|
+        b.push(line.gsub("\n",''))
+      end
+      f.push([b[0].split('\\'[0])[0],d[i].gsub("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/",'').gsub('.txt','').to_i,b[0].split('\\'[0])[1],b[0].split('\\'[0])[2]])
+      f[-1][2]=f[-1][2].hex unless f[-1][2].nil?
+      if !get_donor_list().reject{|q| q[2][1]<3}.map{|q| q[0]}.include?(f[-1][1])
+        f[-1]=nil
+        f.compact!
+      elsif !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(f[-1][1])
+        f[-1][2]=nil
+        f[-1][3]=nil
+        f[-1].compact!
+      end
+    end
+  end
+  for i in 0...f.length
+    return f[i][2] if str.split(' ').include?("#{f[i][0].downcase}'s") && mode==1
+    return f[i][3] if str.split(' ').include?("#{f[i][0].downcase}'s") && mode==2
+    return f[i][1] if str.split(' ').include?("#{f[i][0].downcase}'s")
+  end
+  return -1
+end
+
+def donor_servant_list(uid,mode=0)
+  return [] unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  b=[]
+  File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
+    b.push(line.gsub("\n",''))
+  end
+  m=b[0]
+  b.shift
+  b.shift
+  untz=[]
+  b=b.join("\n").split("\n\n").map{|q| q.split("\n").map{|q2| q2.split(' # ')[0]}}
+  untz=[]
+  for i in 0...b.length
+    b[i][0]=b[i][0].to_i
+    b[i][1]=b[i][1].split('\\'[0]).map{|q| q.to_i}
+    b[i][2]=b[i][2].split('\\'[0]).map{|q| q.to_i}
+    b[i][3]=b[i][3].split('\\'[0])
+    b[i][5]=b[i][5].to_i
+    b[i][6]=b[i][6].to_i
+    b[i][7]=b[i][7].split('\\'[0]).map{|q| q.to_i}
+  end
+  untz=b.map{|q| q}
+  return untz
+end
+
+def donor_servant_save(uid,table) # used by the edit command to save the donorservants
+  return nil unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  # snag the username
+  b=[]
+  File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
+    b.push(line.gsub("\n",''))
+  end
+  # sort the unit list alphabetically
+  k=table.map{|q| q}
+  k.compact!
+  k=k.sort{|a,b| a[0]<=>b[0]}
+  untz=[]
+  for i in 0...k.length
+    untz.push(k[i].map{|q| q})
+  end
+  s="#{b[0]}"
+  data_load()
+  for i in 0...untz.length
+    m=@servants.find_index{|q| q[0]==untz[i][0]}
+    s="#{s}\n\n#{untz[i][0]} # #{@servants[m][1]}\n#{untz[i][1].join('\\'[0])}\n#{untz[i][2].join('\\'[0])}\n#{untz[i][3].join('\\'[0])}\n#{untz[i][4]}\n#{untz[i][5]}\n#{untz[i][6]}\n#{untz[i][7].join('\\'[0])}" unless m.nil?
+  end
+  open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt", 'w') { |f|
+    f.puts s
+    f.puts "\n"
+  }
+  return nil
 end
 
 def find_servant(name,event,fullname=false)
@@ -1194,7 +1333,7 @@ def avg_color(c,mode=0)
   return 256*256*m[0]+256*m[1]+m[2]
 end
 
-def servant_color(k)
+def servant_color(event,k)
   xcolor=[237,97,154]
   xcolor=[33,188,44] if k[17][6,1]=='Q'
   xcolor=[11,77,223] if k[17][6,1]=='A'
@@ -1208,6 +1347,19 @@ def servant_color(k)
   m.push([254,33,22]) if k[17][2,2]=='BB'
   m.push([11,77,223]) if k[17].include?('AA')
   m.push([11,77,223]) if k[17].include?('AAA')
+  devservants_load()
+  if event.message.text.downcase.split(' ').include?("mathoo's") && @dev_units.map{|q| q[0]}.include?(k[0])
+    return 0xFFABAF if k[0]==74
+    m.push([0,218,250])
+    m.push([0,218,250])
+    m.push([0,218,250])
+    m.push([0,218,250])
+    m.push([0,218,250])
+    m.push([0,218,250])
+    m.push([0,218,250])
+    m.push([0,218,250])
+    m.push([0,218,250])
+  end
   return avg_color(m)
 end
 
@@ -1317,6 +1469,7 @@ def servant_moji(bot,event,k,mode=0)
   semoji=''
   semoji='<:Great_Badge_Golden:443704781068959744>' if k[13].include?('FEH Servant')
   semoji='<:Tribe_Dragon:549947361745567754>' if k[13].include?('DL Servant')
+  semoji='<:Valentines:523903633453219852>' if k[0]==74 && event.message.text.downcase.split(' ').include?("mathoo's")
   npmoji=k[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')
   npmoji='' if k[13].include?('FEH Servant')
   return "#{clsmoji}#{deckmoji}#{npmoji}#{semoji}"
@@ -1333,7 +1486,16 @@ end
 
 def generate_rarity_row(k,type='servant')
   str=''
-  if type=='servant'
+  if type=="Mathoo's"
+    str="<:FGO_Rarity_M:577777835041751040>"*k[3]
+    str="<:FGO_Rarity_S:577774548280147969>"*k[3] if k[0]==74
+    if k[13].include?('FEH Servant')
+      str='<:FEH_rarity_M:577779126891577355>'*k[3]
+      str='<:FEH_rarity_Mp10:577779126853959681>'*k[3] if k[3]>=5
+      str='<:Icon_Rarity_S:448266418035621888>'*k[3] if k[0]==74
+    end
+    str="**0-star**" if k[3]==0
+  elsif type=='servant'
     str="<:fgo_icon_rarity:523858991571533825>"*k[3]
     if k[13].include?('FEH Servant')
       str=['','<:Icon_Rarity_1:448266417481973781>','<:Icon_Rarity_2:448266417872044032>','<:Icon_Rarity_3:448266417934958592>','<:Icon_Rarity_4:448266418459377684>','<:Icon_Rarity_5:448266417553539104>','<:Icon_Rarity_6:491487784650145812>'][k[3]]*k[3]
@@ -1374,6 +1536,27 @@ def disp_servant_stats(bot,event,args=nil)
     event.respond 'No matches found.'
     return nil
   end
+  mfou=[0,0]
+  dv=-1
+  if event.message.text.downcase.split(' ').include?("mathoo's")
+    devservants_load()
+    dv=@dev_units.find_index{|q| q[0]==k[0]}
+    if dv.nil?
+      dv=-1
+    else
+      mfou=@dev_units[dv][1]
+    end
+  elsif donate_trigger_word(event)>0
+    uid=donate_trigger_word(event)
+    x=donor_servant_list(uid)
+    dvx=x.find_index{|q| q[0]==k[0]}
+    unless dvx.nil?
+      dispfou=0
+      mfou=x[dvx][1]
+    end
+  end
+  k[6]=k[6].map{|q| q+mfou[0]}
+  k[7]=k[7].map{|q| q+mfou[1]}
   atk='Atk'
   if dispstr.include?('effective') || dispstr.include?('eff')
     atk='EffAtk'
@@ -1387,8 +1570,9 @@ def disp_servant_stats(bot,event,args=nil)
       k[7]=k[7].map{|q| (q*11)/10}
     end
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
   text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
   cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
@@ -1410,8 +1594,8 @@ def disp_servant_stats(bot,event,args=nil)
   fou=1000 if dispstr.include?('fou') && dispstr.include?('jp')
   fou=1000 if dispstr.include?('jpfou') || dispstr.include?('jp_fou') || dispstr.include?('foujp') || dispstr.include?('fou_jp')
   fou=1000 if dispstr.include?('fou-jp') || dispstr.include?('jp-fou')
-  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}  \n*#{atk}* - #{longFormattedNumber(k[7][0])}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}  \n*#{atk}* - #{longFormattedNumber(k[7][1])}  \n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{longFormattedNumber(k[6][2])}  \n*#{atk}* - #{longFormattedNumber(k[7][2])}  "]]
-  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  \n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou
+  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}\n*#{atk}* - #{longFormattedNumber(k[7][0])}\n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}\n*#{atk}* - #{longFormattedNumber(k[7][1])}\n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{longFormattedNumber(k[6][2])}\n*#{atk}* - #{longFormattedNumber(k[7][2])}"]]
+  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  \n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou && mfou.max<=0
   flds.push(["Attack Parameters","__**Hit Counts**__\n#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\n<:Blank:509232907555045386>#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   xpic=servant_icon(k,event)
   ftr=nil
@@ -1421,7 +1605,7 @@ def disp_servant_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic,flds,2)
+  create_embed(event,"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic,flds,2)
 end
 
 def disp_tiny_stats(bot,event,args=nil)
@@ -1445,6 +1629,28 @@ def disp_tiny_stats(bot,event,args=nil)
     event.respond 'No matches found.'
     return nil
   end
+  mfou=[0,0]
+  dv=-1
+  if event.message.text.downcase.split(' ').include?("mathoo's")
+    devservants_load()
+    dv=@dev_units.find_index{|q| q[0]==k[0]}
+    if dv.nil?
+      dv=-1
+    else
+      dispfou=0
+      mfou=@dev_units[dv][1]
+    end
+  elsif donate_trigger_word(event)>0
+    uid=donate_trigger_word(event)
+    x=donor_servant_list(uid)
+    dvx=x.find_index{|q| q[0]==k[0]}
+    unless dvx.nil?
+      dispfou=0
+      mfou=x[dvx][1]
+    end
+  end
+  k[6]=k[6].map{|q| q+mfou[0]}
+  k[7]=k[7].map{|q| q+mfou[1]}
   atk='Atk'
   if dispstr.include?('effective') || dispstr.include?('eff')
     atk='EffAtk'
@@ -1458,8 +1664,9 @@ def disp_tiny_stats(bot,event,args=nil)
       k[7]=k[7].map{|q| (q*11)/10}
     end
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
   text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
   cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
@@ -1492,7 +1699,7 @@ def disp_tiny_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic)
+  create_embed(event,"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic)
 end
 
 def disp_servant_traits(bot,event,args=nil,chain=false)
@@ -1503,8 +1710,20 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
+  dv=-1
+  if event.message.text.downcase.split(' ').include?("mathoo's")
+    devservants_load()
+    dv=@dev_units.find_index{|q| q[0]==k[0]}
+    if dv.nil?
+      dv=-1
+    else
+      k[13].push('Smol *[added]*') if k[13][0]=='Female'
+      k[13].push('Cuddly *[added]*') if k[0]==74
+    end
+  end
   text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   text='' if chain
   text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
   text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
@@ -1519,7 +1738,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   k[13].push('Evil *[added]*') if k[0]==74 && event.message.text.downcase.include?('crime')
-  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+  create_embed(event,"#{"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
 end
 
 def disp_enemy_traits(bot,event,args=nil,chain=false)
@@ -1541,11 +1760,46 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
   dispnum="0012" if k[0]<2
   dispnum="0016" if k[0]==1.2
+  dv=-1
+  mlvl=[-1,-1,-1]
+  if event.message.text.downcase.split(' ').include?("mathoo's")
+    devservants_load()
+    dv=@dev_units.find_index{|q| q[0]==k[0]}
+    if dv.nil?
+      dv=-1 
+    else
+      mlvl=@dev_units[dv][3].map{|q| q}
+      for i in 0...mlvl.length
+        if mlvl[i].include?('u')
+          k[14][i]=[k[14][i][1]]
+        else
+          k[14][i]=[k[14][i][0]]
+        end
+        mlvl[i]=mlvl[i].gsub('u','').to_i
+      end
+    end
+  elsif donate_trigger_word(event)>0
+    uid=donate_trigger_word(event)
+    x=donor_servant_list(uid)
+    dvx=x.find_index{|q| q[0]==k[0]}
+    unless dvx.nil?
+      mlvl=x[dvx][3].map{|q| q}
+      for i in 0...mlvl.length
+        if mlvl[i].include?('u')
+          k[14][i]=[k[14][i][1]]
+        else
+          k[14][i]=[k[14][i][0]]
+        end
+        mlvl[i]=mlvl[i].gsub('u','').to_i
+      end
+    end
+  end
   text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   text='' if chain
   actsklz=[]
   if k[14][0][0]=='-'
@@ -1556,7 +1810,14 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       str="#{str}\n*Obtained in Interlude or Rank-Up Quest*" if [19,21,9,32,42,28,23,29,35,31,15,34,16,53,56,13,25,22,36,48,45,54,46,41,5,103,50,14,30,49,57,26,27].include?(k[0]) && i==k[14].length-1
       if safe_to_spam?(event,nil,1)
         k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}].map{|q| q}
-        str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+        if mlvl[i]>0
+          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]<7
+          str="#{str}\n*Cooldown:* #{k2[3]-1}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>6 && mlvl[i]<10
+          str="#{str}\n*Cooldown:* #{k2[3]-2}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>9
+        else
+          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}"
+        end
+        str="#{str}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         for i2 in 6...k2.length
           unless k2[i2][0]=='-'
             str="#{str}\n#{k2[i2][0]}"
@@ -1566,6 +1827,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
               x3=k2[i2][10]
               if x==x2 && x==x3
                 str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
+              elsif mlvl[i]>0
+                str="#{str}  \u00B7  #{k2[i2][mlvl[i]]} L#{micronumber(mlvl[i])}"
               else
                 str="#{str}  \u00B7  #{x} L#{micronumber(1)}  \u00B7  #{x2} L#{micronumber(6)}  \u00B7  #{x3} L#{micronumber(10)}"
               end
@@ -1577,7 +1840,14 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
         str="#{str}\n#{"\n__" if safe_to_spam?(event,nil,1)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event,nil,1)}"
         if safe_to_spam?(event,nil,1)
           k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && k2 != q}].map{|q| q}
-          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+          if mlvl[i]>0
+            str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]<7
+            str="#{str}\n*Cooldown:* #{k2[3]-1}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>6 && mlvl[i]<10
+            str="#{str}\n*Cooldown:* #{k2[3]-2}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>9
+          else
+            str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}"
+          end
+          str="#{str}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
           for i2 in 6...k2.length
             unless k2[i2][0]=='-'
               str="#{str}\n#{k2[i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
@@ -1592,6 +1862,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
                 end
                 if x==x2 && x==x3
                   str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
+                elsif mlvl[i]>0
+                  str="#{str}  \u00B7  #{k2[i2][mlvl[i]]} L#{micronumber(mlvl[i])}"
                 else
                   str="#{str}  \u00B7  #{x}\u00A0L#{micronumber(1)}  \u00B7  #{x2}\u00A0L#{micronumber(6)}  \u00B7  #{x3}\u00A0L#{micronumber(10)}"
                 end
@@ -1600,6 +1872,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
           end
         end
       end
+      str="~~#{str}~~" if mlvl[i]==0
       actsklz.push(str)
     end
   end
@@ -1648,7 +1921,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     end
     create_embed(event,'__**Passive Skills**__',passklz.join("\n"),xcolor,ftr)
   else
-    create_embed(event,"#{"__**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
+    create_embed(event,"#{"__#{"Mathoo's " if dv>=0}**#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}","#{text}\n\n#{actsklz.join("\n\n")}\n\n__**Passive Skills**__\n#{passklz.join("\n")}",xcolor,ftr,xpic)
   end
 end
 
@@ -1660,11 +1933,34 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
+  dv=-1
+  mlvl=-1
+  nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
+  if event.message.text.downcase.split(' ').include?("mathoo's")
+    devservants_load()
+    dv=@dev_units.find_index{|q| q[0]==k[0]}
+    if dv.nil?
+      dv=-1 
+    else
+      mlvl=@dev_units[dv][4]
+      nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"} if mlvl.include?('u')
+      mlvl=mlvl.gsub('u','').to_i
+    end
+  elsif donate_trigger_word(event)>0
+    uid=donate_trigger_word(event)
+    x=donor_servant_list(uid)
+    dvx=x.find_index{|q| q[0]==k[0]}
+    unless dvx.nil?
+      mlvl=x[dvx][4]
+      nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"} if mlvl.include?('u')
+      mlvl=mlvl.gsub('u','').to_i
+    end
+  end
   text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   text='' if chain
   np="*"
-  nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
   unless nophan.nil?
     nophan=@skills[nophan]
     np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}" if nophan[3].length>0
@@ -1682,11 +1978,17 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=3 if event.message.text.downcase.split(' ').include?('kh3') && k[0]==154
   npl=4 if event.message.text.downcase.split(' ').include?('kh4') && k[0]==154
   npl=5 if event.message.text.downcase.split(' ').include?('kh5') && k[0]==154
+  npl=0 if mlvl>0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant')
   unless nophan.nil?
     l=[nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï',''),nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')]
-    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q',"#{cemoji[0]} Quick").gsub('A',"#{cemoji[1]} Arts").gsub('B',"#{cemoji[2]} Buster")}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\n__**Effects**__"
+    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q',"#{cemoji[0]} Quick").gsub('A',"#{cemoji[1]} Arts").gsub('B',"#{cemoji[2]} Buster")}"
+    text="#{text}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    text="#{text}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    text="#{text}\n**Hit Count:** #{k[9][4]}" unless k[9][4]<=0
+    text="#{text}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    text="#{text}\n__**Effects**__"
     for i in 8...18
       unless nophan[i][0]=='-'
         nxx=nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
@@ -1702,7 +2004,9 @@ def disp_servant_np(bot,event,args=nil,chain=false)
           nxx=nxx.join(' ')
         end
         text="#{text}\n#{nxx}"
-        if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
+        if nophan[i][0].include?('<LEVEL>') && mlvl>0
+          text="#{text} - #{nophan[i][mlvl].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(mlvl)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+        elsif nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
           text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
         elsif nophan[i][0].include?('<OVERCHARGE>')
           text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
@@ -1723,7 +2027,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
     tags=nophan[7]
     nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}
-    if nophan.nil?
+    if nophan.nil? || mlvl>=0 
       text="#{text}\n\n**Skill tags:** #{tags.join(', ')}" if tags.length>0
     else
       nophan=@skills[nophan]
@@ -1751,7 +2055,9 @@ def disp_servant_np(bot,event,args=nil,chain=false)
             nxx=nxx.join(' ')
           end
           text="#{text}\n#{nxx}"
-          if nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
+          if nophan[i][0].include?('<LEVEL>') && mlvl>0
+            text="#{text} - #{nophan[i][mlvl].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(mlvl)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+          elsif nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
             text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
           elsif nophan[i][0].include?('<OVERCHARGE>')
             text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
@@ -1794,7 +2100,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   return nil if chain && text.length<=0
-  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
@@ -1805,7 +2111,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     event.respond 'No matches found.' unless chain
     return nil
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
   text=''
   ce=@crafts.find_index{|q| q[0]==k[23]}
   ce=@crafts[ce] unless ce.nil?
@@ -1859,7 +2165,7 @@ def disp_servant_ce2(bot,event,args=nil)
     event.respond "#{k[1]} [Srv-##{k[0]}] has no Valentine's CEs"
     return nil
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
   xcolor=0xFF42AC
   text=''
   ce=@crafts.find_index{|q| q[0]==k[26][0]}
@@ -1933,8 +2239,30 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
   elsif k[20]=='Unavailable' && chain
     return nil
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
+  dv=-1
+  asc=-1
+  mlvl=-1
+  if event.message.text.downcase.split(' ').include?("mathoo's")
+    devservants_load()
+    dv=@dev_units.find_index{|q| q[0]==k[0]}
+    if dv.nil?
+      dv=-1 
+    else
+      asc=@dev_units[dv][7][1]
+      mlvl=@dev_units[dv][3].map{|q| q.gsub('u','').to_i}.min
+    end
+  elsif donate_trigger_word(event)>0
+    uid=donate_trigger_word(event)
+    x=donor_servant_list(uid)
+    dvx=x.find_index{|q| q[0]==k[0]}
+    unless dvx.nil?
+      asc=x[dvx][7][1]
+      mlvl=x[dvx][3].map{|q| q.gsub('u','').to_i}.min
+    end
+  end
   text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   text='' if chain
   xpic=servant_icon(k,event)
   if k[18][4].nil? && !k[18][5].nil?
@@ -1955,12 +2283,38 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
   k[19]=k[19].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   qpd='<:QP:523842660407181324>'
   qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)","*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}"]]
-  flds[0]=['Ascension',"*First Ascension:* #{k[18][0].join(', ')}\n*Second Ascension:* #{k[18][1].join(', ')}\n*Third Ascension:* #{k[18][2].join(', ')}\n*Final Ascension:* #{k[18][3].join(', ')}"] if k[0]<2
+  ascstr=''
+  ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}" if asc<1
+  ascstr="#{ascstr}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}" if asc<2
+  ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}" if asc<3
+  ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}" if asc<4
+  flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
+  if k[0]<2
+    ascstr=''
+    ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}" if asc<1
+    ascstr="#{ascstr}\n*Second Ascension:* #{k[18][1].join(', ')}" if asc<2
+    ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}" if asc<3
+    ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}" if asc<4
+    flds[0]=['Ascension',ascstr]
+  end
   flds=[] unless lists[0]
   flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2 || !lists[1]
   flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}\n~~the second costume is listed in this bot as Servant #1.2~~" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2 || !lists[1]
-  flds.push(["Skill Enhancement materials (#{numabr(3*(qp[4,9].inject(0){|sum,x| sum + x }))}#{qpd} total)","*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}"]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-' || !lists[2]
+  sklstr=''
+  sklstr="#{sklstr}\n*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}" if mlvl<2
+  sklstr="#{sklstr}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}" if mlvl<3
+  sklstr="#{sklstr}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}" if mlvl<4
+  sklstr="#{sklstr}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}" if mlvl<5
+  sklstr="#{sklstr}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}" if mlvl<6
+  sklstr="#{sklstr}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}" if mlvl<7
+  sklstr="#{sklstr}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}" if mlvl<8
+  sklstr="#{sklstr}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}" if mlvl<9
+  sklstr="#{sklstr}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}" if mlvl<10
+  sklstr=sklstr[2,sklstr.length-2] if sklstr[0,2]=="\n"
+  sklstr=sklstr[1,sklstr.length-1] if sklstr[0,1]=="\n"
+  fqp=qp[4,9]
+  fqp=qp[3+mlvl,10-mlvl] if mlvl>0
+  flds.push(["Skill Enhancement materials (#{numabr(3*(fqp.inject(0){|sum,x| sum + x }))}#{qpd} total)",sklstr]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-' || !lists[2]
   ftr=nil
   ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
   if chain
@@ -1970,9 +2324,9 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
-  str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__\n#{q[1]}"}.join("\n\n")}"
-  hdr="#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}"
-  if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__\n#{flds[-1][1]}".length>=1900
+  str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__#{"\n" unless [q[1][0,1],q[1][0,2]].include?("\n")}#{q[1]}"}.join("\n\n")}"
+  hdr="#{"__#{"Mathoo's " if dv>-1}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}"
+  if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__#{"\n" unless [flds[-1][1][0,1],flds[-1][1][0,2]].include?("\n")}#{flds[-1][1]}".length>=1900
     create_embed(event,hdr,str,xcolor,nil,xpic,nil,1)
     str="__**#{flds[-1][0]}**__"
     hdr=''
@@ -2003,7 +2357,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     event.respond 'No matches found.'
     return nil
   end
-  xcolor=servant_color(k)
+  xcolor=servant_color(event,k)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_s.gsub('.','p')}"
   disptext=event.message.text.downcase
   if has_any?(disptext.split(' '),['bondce','bond','bond_ce','bonds','bond-ce'])
@@ -2039,6 +2393,23 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   nicknames_load()
   k2=@aliases.reject{|q| q[0]!='Servant' || q[2]!=k[0] || q[5].nil?}
   ftr=nil
+  dv=-1
+  if event.message.text.downcase.split(' ').include?("mathoo's")
+    devservants_load()
+    dv=@dev_units.find_index{|q| q[0]==k[0]}
+    if dv.nil?
+      dv=-1 
+    else
+      asc=@dev_units[dv][7][1]
+    end
+  elsif donate_trigger_word(event)>0
+    uid=donate_trigger_word(event)
+    x=donor_servant_list(uid)
+    dvx=x.find_index{|q| q[0]==k[0]}
+    asc=x[dvx][7][1] unless dvx.nil?
+  end
+  text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   if k2.length>0
     asc2=0
     for i in 0...k2.length
@@ -2082,7 +2453,6 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     cex=@crafts[0]
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
-  text=generate_rarity_row(k,'servant')
   m=false
   IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
   toptext=''
@@ -2098,6 +2468,12 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     asc=1
     k=@servants[@servants.find_index{|q| q[0]==1.2}].map{|q| q}
     text="#{generate_rarity_row(k,'servant')}\n\nThis costume is considered Servant #1.2 by this bot."
+  end
+  if k[0]==163 && dv>=0
+    xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/MiniMelt.png"
+    asc=7
+    midtext=''
+    artist='Tanaka Gorbachev'
   end
   if args.include?('just') || args.include?('justart') || args.include?('blank') || args.include?('noinfo')
     f=nil
@@ -2146,7 +2522,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         unless b[i][10].nil? || b[i][10].length<=0
-          f[1].push("*[DL-Adv]* #{b[i][0]} *[Japanese]*") if b[i][10].split(' as ')[0]==k[25]
+          f[1].push("*[DL-Adv]* #{b[i][0]}") if b[i][10].split(' as ')[0]==k[25]
         end
       end
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLDragons.txt')
@@ -2160,7 +2536,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         unless b[i][13].nil? || b[i][13].length<=0
-          f[1].push("*[DL-Drg]* #{b[i][0]} *[Japanese]*") if b[i][13].split(' as ')[0]==k[25]
+          f[1].push("*[DL-Drg]* #{b[i][0]}") if b[i][13].split(' as ')[0]==k[25]
         end
       end
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DL_NPCs.txt')
@@ -2174,7 +2550,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         unless b[i][4].nil? || b[i][4].length<=0
-          f[1].push("*[DL-NPC]* #{b[i][0]} *[Japanese]*") if b[i][4].split(' as ')[0]==k[25]
+          f[1].push("*[DL-NPC]* #{b[i][0]}") if b[i][4].split(' as ')[0]==k[25]
         end
       end
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt')
@@ -2208,7 +2584,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     f.compact!
     f=nil if f.length<=0
   end
-  asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][asc]
+  asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume','Smol and Cute'][asc]
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
     str=''
     for i in 0...f.length
@@ -2244,7 +2620,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       else
         create_embed(event,'','',xcolor,nil,nil,f)
       end
-      create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
+      create_embed(event,"#{toptext}__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
       return nil
     elsif f.map{|q| q.join("\n")}.join("\n\n").length>=1400 || (f.map{|q| q[1].split("\n").length}.max>12 && !safe_to_spam?(event))
       text="#{text}\nThe list of servants and CEs with the same artist and/or VA is so long that I cannot fit it into a single embed. Please use this command in PM."
@@ -2255,7 +2631,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         text="#{text}\n\n__**#{f[i][0]}**__\n#{f[i][1]}"
       end
     end
-    create_embed(event,"#{toptext}__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
+    create_embed(event,"#{toptext}__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}\n#{midtext}#{asc}#{"\n#{censor}" if censor.is_a?(String)}",text,xcolor,ftr,[nil,xpic])
   end
 end
 
@@ -2274,7 +2650,7 @@ def disp_ce_card(bot,event,args=nil)
   k2=@servants.find_index{|q| !q[26].nil? && q[26].include?(ce[0])}
   k=@servants[k] unless k.nil?
   k2=@servants[k2] unless k2.nil?
-  xcolor=servant_color(k) unless k.nil?
+  xcolor=servant_color(event,k) unless k.nil?
   xcolor=0xFF42AC unless k2.nil?
   text=''
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
@@ -2799,19 +3175,6 @@ def disp_mat_data(bot,event,args=nil)
   end
   str=extend_message(str,"#{fff.length} total servants use this material\n#{fff2} total uses for this material\n#{longFormattedNumber(fff3)} total copies of this material are required to max everyone#{"\n~~Unavailable servants aren't counted in the totals~~" if str.include?('total~~')}",event,2)
   event.respond str
-end
-
-def is_mod?(user,server,channel,mode=0) # used by certain commands to determine if a user can use them
-  return true if user.id==167657750971547648 # bot developer is always a LizMod
-  return false if server.nil? # no one is a LizMod in PMs
-  return true if user.id==server.owner.id # server owners are LizMods by default
-  for i in 0...user.roles.length # certain role names will count as LizMods even if they don't have legitimate mod powers
-    return true if ['mod','mods','moderator','moderators','admin','admins','administrator','administrators','owner','owners'].include?(user.roles[i].name.downcase.gsub(' ',''))
-  end
-  return true if user.permission?(:manage_messages,channel) # legitimate mod powers also confer LizMod powers
-  return false if mode>0
-  return true if get_donor_list().reject{|q| q[2]<1}.map{|q| q[0]}.include?(user.id) # people who donate to the laptop fund will always be EliseMods
-  return false
 end
 
 def disp_aliases(bot,event,args=nil,mode=0)
@@ -4415,12 +4778,12 @@ def find_in_servants(bot,event,args=nil,mode=0)
     end
   end
   char=char.reject{|q| !has_any?(q[22].split(' / '),align)}.uniq if align.length>0
-  if (char.length>50 || char.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.join("\n").length+search.join("\n").length+textra.length>=1900) && !safe_to_spam?(event) && mode==0
+  if safe_to_spam?(event)
+  elsif (char.length>50 || char.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.join("\n").length+search.join("\n").length+textra.length>=1900) && mode==0
     event.respond "Too much data is trying to be displayed.  Please use this command in PM."
     return nil
-  else
-    return [search,textra,char]
   end
+  return [search,textra,char]
 end
 
 def find_skills(bot,event,args=nil,ces_only=false)
@@ -5693,6 +6056,70 @@ end
 
 bot.command([:donation, :donate]) do |event, uid|
   return nil if overlap_prevent(event)
+  uid="#{event.user.id}" if uid.nil? || uid.length.zero?
+  if /<@!?(?:\d+)>/ =~ uid
+    uid=event.message.mentions[0].id
+  else
+    uid=uid.to_i
+    uid=event.user.id if uid==0
+  end
+  g=get_donor_list()
+  if uid==167657750971547648
+    n=["#{bot.user(uid).distinct} is","He"]
+    n=["You are","You"] if uid==event.user.id
+    create_embed(event,"#{n[0]} my developer.","#{n[1]} can have whatever permissions #{n[1].downcase} want#{'s' unless uid==event.user.id} to have.",0x00DAFA)
+  elsif g.map{|q| q[0]}.include?(uid)
+    n="#{bot.user(uid).distinct} is"
+    n="You are" if uid==event.user.id
+    g=g[g.find_index{|q| q[0]==uid}]
+    str=""
+    n4=bot.user(uid).name
+    n4=n4[0,[3,n4.length].min]
+    n4=" #{n4}" if n4.length<2
+    n2=n4.downcase
+    n3=[]
+    for i in 0...n2.length
+      if "abcdefghijklmnopqrstuvwxyz".include?(n2[i])
+        n3.push(9*("abcdefghijklmnopqrstuvwxyz".split(n2[i])[0].length)+25)
+        n3[i]+=5 if n4[i]!=n2[i]
+      elsif n2[i].to_i.to_s==n2[i]
+        n3.push(n2[i].to_i*2+1)
+      else
+        n3.push(0)
+      end
+    end
+    color=n3[0]*256*256+n3[1]*256+n3[2]
+    str="**Tier 1:** Ability to give server-specific aliases in any server\n\u2713 Given" if g[2].max>=1
+    if g[2][1]>=2
+      if g[3].nil? || g[3].length.zero? || g[4].nil? || g[4].length.zero?
+        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      elsif g[4][1]=='-'
+        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2713 May be given via another bot."
+      elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/EliseImages/#{g[4][1]}.png")
+        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected.\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
+      else
+        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2713 Given\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
+      end
+    end
+    if g[2][1]>=3
+      if !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+        str="#{str}\n\n**Tier 3:** Servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      else
+        str="#{str}\n\n**Tier 3:** Servant tracking\n\u2713 Given\n*Trigger word:* #{donor_unit_list(uid,1)[0].split('\\'[0])[0]}'s"
+      end
+    end
+    if g[2][1]>=4
+      if !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+        str="#{str}\n\n**Tier 4:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      elsif donor_unit_list(uid,1)[0].split('\\'[0])[1].nil?
+        str="#{str}\n\n**Tier 4:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      else
+        str="#{str}\n\n**Tier 4:** __*Colored*__ servant tracking\n\u2713 Given\n*Color of choice:* #{donor_unit_list(uid,1)[0].split('\\'[0])[1]}"
+        color=donor_unit_list(uid,1)[0].split('\\'[0])[1].hex
+      end
+    end
+    create_embed(event,"__**#{n} a Tier #{g[2][1]} donor.**__",str,color)
+  end
   donor_embed(bot,event)
 end
 
@@ -6663,7 +7090,7 @@ def next_holiday(bot,mode=0)
   holidays=[[0,4,1,'RiyoLiz','Fate/Grand Order?',"April Fool's Day"],
             [0,4,24,'Rhyme','dressup as my last owner.',"Coder's birthday"]]
   d=get_donor_list()
-  d=d.reject{|q| q[2]<2}
+  d=d.reject{|q| q[2][1]<2 || q[4][1]=='-'}
   for i in 0...d.length
     if d[i][4][1]!='-'
       holidays.push([0,d[i][3][0],d[i][3][1],d[i][4][1],"in recognition of #{bot.user(d[i][0]).distinct}","Donator's birthday"])
