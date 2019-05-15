@@ -1,0 +1,36 @@
+74 # Nursury Rhyme
+990\990 # Fous
+0\0\0\0\0 # Command Codes
+2\2\0 # Skill levels - string
+1 # NP strength - string
+18 # Equipped CE
+5 # bond level
+2\2 # Highest Ascension, Art used
+
+1.0 # Mash Kyrielight
+0\60
+0\0\0\0\0
+3\3\0
+1
+401
+1
+0\1
+
+56 # Kiyohime (Berserker)
+10\120
+0\0\0\0\0
+2\1\0
+3
+401
+5
+2\2
+
+163 # Meltryllis
+10\120
+0\0\0\0\0
+2\1\0
+3
+401
+5
+2\2
+

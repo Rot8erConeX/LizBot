@@ -32,7 +32,7 @@ def get_donor_list()
     end
     for i in 0...b.length
       b[i][0]=b[i][0].to_i
-      b[i][2]=b[i][2].to_i
+      b[i][2]=b[i][2].split(', ').map{|q| q.to_i}
       b[i][3]=b[i][3].split('/').map{|q| q.to_i} unless b[i][3].nil?
       b[i][4]=b[i][4].split(', ') unless b[i][4].nil?
     end
@@ -51,7 +51,7 @@ def is_mod?(user,server,channel,mode=0) # used by certain commands to determine 
   end
   return true if user.permission?(:manage_messages,channel) # legitimate mod powers also confer BotMod powers
   return false if mode>0
-  return true if get_donor_list().reject{|q| q[2]<1}.map{|q| q[0]}.include?(user.id) # people who donate to the laptop fund will always be BotMods for aliases
+  return true if get_donor_list().reject{|q| q[2].max<1}.map{|q| q[0]}.include?(user.id) # people who donate to the laptop fund will always be BotMods for aliases
   return false
 end
 
@@ -698,7 +698,7 @@ def bliss_mode(bot,event,user_id)
 end
 
 def dev_message(bot,event,channel_id)
-  return nil unless event.server.nil? || [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395].include?(event.server.id)
+  return nil unless event.server.nil? || [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,508792801455243266,508793141202255874,508793425664016395,572792502159933440,523830882453422120].include?(event.server.id)
   if event.user.id==167657750971547648
   else
     event.respond 'Are you trying to use the `bugreport`, `suggestion`, or `feedback` command?'
@@ -724,11 +724,12 @@ def donor_embed(bot,event,str='')
     event << ''
     event << '~~Please note that supporting me means indirectly enabling my addiction to pretzels and pizza rolls.~~'
     event << ''
-    event << "Donor List and perks: <https://goo.gl/ds1LHA>"
+    event << "Donor List: <https://goo.gl/ds1LHA>"
+    event << "Donor perks: <https://urlzs.com/kthnr>"
     event << ''
     event << str
   else
-    create_embed(event,"__**If you wish to donate to me:** A word from my developer__","Due to income regulations within the building where I live, I cannot accept donations in the form of PayPal, Patreon, or other forms of direct payment.  Only a small percentage of any such donations would actually reach me and the rest would end up in the hands of the owners of my building.\n\nHowever, there are other options:\n- You can purchase items from [this list](http://a.co/0p3sBec) and they will be delivered to me.\n- You can also [purchase an Amazon gift card](https://goo.gl/femEcw) and have it delivered via email to **rot8er.conex@gmail.com**.\n\n[Donor List and perks](https://goo.gl/ds1LHA)\n\n#{str}",0x008b8b,"Please note that supporting me means indirectly enabling my addiction to pretzels and pizza rolls.")
+    create_embed(event,"__**If you wish to donate to me:** A word from my developer__","Due to income regulations within the building where I live, I cannot accept donations in the form of PayPal, Patreon, or other forms of direct payment.  Only a small percentage of any such donations would actually reach me and the rest would end up in the hands of the owners of my building.\n\nHowever, there are other options:\n- You can purchase items from [this list](http://a.co/0p3sBec) and they will be delivered to me.\n- You can also [purchase an Amazon gift card](https://goo.gl/femEcw) and have it delivered via email to **rot8er.conex@gmail.com**.\n\n[Donor List](https://goo.gl/ds1LHA)\n[Donor Perks](https://urlzs.com/kthnr)\n\n#{str}",0x008b8b,"Please note that supporting me means indirectly enabling my addiction to pretzels and pizza rolls.")
     event.respond "If you are on a mobile device and cannot click the links in the embed above, retype the command but with \"mobile\" in your message, to receive this message as plaintext."
   end
 end
