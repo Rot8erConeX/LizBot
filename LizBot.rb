@@ -1511,8 +1511,9 @@ def generate_rarity_row(k,type='servant')
       str=['','<:Rarity_1:532086056594440231>','<:Rarity_2:532086056254963713>','<:Rarity_3:532086056519204864>','<:Rarity_4:532086056301101067>','<:Rarity_5:532086056737177600>'][k[2]]*k[2]
     end
   elsif type=='code'
-    str="<:FGO_icon_rarity_mono:523903551144198145>"*k[2]
-    if k[4].include?('FEH')
+    str="<:FGO_icon_rarity_rust:523903558928826372>"*k[2]
+    if k[4].nil?
+    elsif k[4].include?('FEH')
       str=['','<:Icon_Rarity_1n:570979179781160980>','<:Icon_Rarity_2n:570979178627858432>','<:Icon_Rarity_3n:570979178812407834>','<:Icon_Rarity_4n:570979181077463061>','<:Icon_Rarity_5n:570979178917396490>','<:Icon_Rarity_6n:570979179009409054>'][k[2]]*k[2]
     elsif k[4].include?('DL')
       str=['','<:Rarity_1_Blank:555459856476274691>','<:Rarity_2_Blank:555459856400908299>','<:Rarity_3_Blank:555459856568418314>','<:Rarity_4_Blank:555459856497246218>','<:Rarity_5_Blank:555459856190930955>'][k[2]]*k[2]
@@ -1571,8 +1572,8 @@ def disp_servant_stats(bot,event,args=nil)
     end
   end
   xcolor=servant_color(event,k)
-  text=generate_rarity_row(k,'servant')
-  text=generate_rarity_row(k,"Mathoo's") if dv>=0
+  title=generate_rarity_row(k,'servant')
+  title=generate_rarity_row(k,"Mathoo's") if dv>=0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
   cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
@@ -1585,7 +1586,7 @@ def disp_servant_stats(bot,event,args=nil)
   text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)"
   text="#{text}\n**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
-  text="#{text}\n\n#{servant_superclass(bot,event,k)}"
+  title="#{title}\n#{servant_superclass(bot,event,k)}"
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}"
   text="#{text}\n\n#{bond}"
@@ -1605,7 +1606,7 @@ def disp_servant_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic,flds,2)
+  create_embed(event,["__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",title],text,xcolor,ftr,xpic,flds,2)
 end
 
 def disp_tiny_stats(bot,event,args=nil)
@@ -1665,8 +1666,8 @@ def disp_tiny_stats(bot,event,args=nil)
     end
   end
   xcolor=servant_color(event,k)
-  text=generate_rarity_row(k,'servant')
-  text=generate_rarity_row(k,"Mathoo's") if dv>=0
+  title=generate_rarity_row(k,'servant')
+  title=generate_rarity_row(k,"Mathoo's") if dv>=0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
   cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
@@ -1681,7 +1682,7 @@ def disp_tiny_stats(bot,event,args=nil)
   bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
   text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
-  text="#{text}\n\n#{servant_superclass(bot,event,k)}"
+  title="#{title}\n#{servant_superclass(bot,event,k)}"
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
   text="#{text}\n\n#{bond}"
@@ -1699,7 +1700,7 @@ def disp_tiny_stats(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  create_embed(event,"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",text,xcolor,ftr,xpic)
+  create_embed(event,["__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3)}",title],text,xcolor,ftr,xpic)
 end
 
 def disp_servant_traits(bot,event,args=nil,chain=false)
@@ -1729,6 +1730,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
   text="#{text}\n~~**Gender:** *Effeminate*~~" if [10,94,143].include?(k[0])
   xpic=servant_icon(k,event)
+  xpic=nil if chain
   ftr=nil
   unless chain
     ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
@@ -1738,7 +1740,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   k[13].push('Evil *[added]*') if k[0]==74 && event.message.text.downcase.include?('crime')
-  create_embed(event,"#{"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}",text,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+  create_embed(event,["#{"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}",text],'',xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
 end
 
 def disp_enemy_traits(bot,event,args=nil,chain=false)
@@ -1888,6 +1890,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     end
   end
   xpic=servant_icon(k,event)
+  xpic=nil if chain
   ftr=nil
   unless chain
     ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
@@ -1965,7 +1968,9 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     nophan=@skills[nophan]
     np="#{':* ' unless chain}#{nophan[3].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}" if nophan[3].length>0
   end
-  text="#{text}\n\n**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
+  title=''
+  title="**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
+  text=''
   npl=1
   npl=0 if ['Event','Welfare'].include?(k[20])
   npl=1 if event.message.text.downcase.split(' ').include?('np1')
@@ -1982,12 +1987,31 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant')
   unless nophan.nil?
-    l=[nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï',''),nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')]
-    text="#{text}\n**Card Type:** #{k[17][6,1].gsub('Q',"#{cemoji[0]} Quick").gsub('A',"#{cemoji[1]} Arts").gsub('B',"#{cemoji[2]} Buster")}"
-    text="#{text}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
-    text="#{text}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
-    text="#{text}\n**Hit Count:** #{k[9][4]}" unless k[9][4]<=0
-    text="#{text}\n\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    nophan2=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}
+    title="#{title}\n**Card Type:** #{k[17][6,1].gsub('Q',"#{cemoji[0]} Quick").gsub('A',"#{cemoji[1]} Arts").gsub('B',"#{cemoji[2]} Buster")}"
+    if nophan2.nil?
+      title="#{title}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      title="#{title}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+    else
+      nophan2=@skills[nophan2]
+      l=[nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï',''),nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')]
+      nophan2[5]=nophan2[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+      nophan2[6]=nophan2[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+      l[0]=(nophan2[5]!=l[0] rescue (nophan2[5].encode(Encoding::UTF_8)!=l[0].encode(Encoding::UTF_8)))
+      l[1]=(nophan2[6]!=l[1] rescue (nophan2[6].encode(Encoding::UTF_8)!=l[1].encode(Encoding::UTF_8)))
+      if l[0]
+        text="#{text}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      else
+        title="#{title}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      end
+      if l[1]
+        text="#{text}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      else
+        title="#{title}\n**Target:** #{nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      end
+    end
+    title="#{title}\n**Hit Count:** #{k[9][4]}" unless k[9][4]<=0
+    text="#{text}\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
     text="#{text}\n__**Effects**__"
     for i in 8...18
       unless nophan[i][0]=='-'
@@ -2031,13 +2055,9 @@ def disp_servant_np(bot,event,args=nil,chain=false)
       text="#{text}\n\n**Skill tags:** #{tags.join(', ')}" if tags.length>0
     else
       nophan=@skills[nophan]
-      nophan[5]=nophan[5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
-      nophan[6]=nophan[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
-      l[0]=(nophan[5]!=l[0] rescue (nophan[5].encode(Encoding::UTF_8)!=l[0].encode(Encoding::UTF_8)))
-      l[1]=(nophan[6]!=l[1] rescue (nophan[6].encode(Encoding::UTF_8)!=l[1].encode(Encoding::UTF_8)))
       text="#{text}#{"\n" if l[0] || l[1]}"
-      text="#{text}#{"\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8)}" if l[0]}"
-      text="#{text}#{"\n**Target:** #{nophan[6].encode(Encoding::UTF_8)}" if l[1]}"
+      text="#{text}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8)}" if l[0]
+      text="#{text}\n**Target:** #{nophan[6].encode(Encoding::UTF_8)}" if l[1]
       text="#{text}#{"\n" unless l[1] || l[0]}\n**Rank:** #{nophan[4].encode(Encoding::UTF_8)}"
       text="#{text}\n__**Effects**__"
       for i in 8...18
@@ -2100,7 +2120,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   return nil if chain && text.length<=0
-  create_embed(event,"#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",text,xcolor,ftr,nil)
+  create_embed(event,["#{"__**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",title],text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
@@ -2130,6 +2150,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     cex=@crafts[0]
     ftr="This is the Bond CE for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
+  title=nil
   if ce.nil?
     xpic=nil
     text=">No CE information known<"
@@ -2140,8 +2161,8 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     cemoji=['<:RRAffinity:565064751780986890>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
     cemoji=['<:Type_Healing:532107867348533249>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-    text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
-    text="#{text}\n**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless chain
+    title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+    text="**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless chain
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
     else
@@ -2150,14 +2171,13 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     end
     text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
   end
-  create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+  create_embed(event,["#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
 end
 
 def disp_servant_ce2(bot,event,args=nil)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   k=find_data_ex(:find_servant,args.join(' '),event)
-  puts k.map{|q| q.to_s}
   if k.length.zero?
     event.respond 'No matches found.'
     return nil
@@ -2176,6 +2196,7 @@ def disp_servant_ce2(bot,event,args=nil)
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+  title=nil
   if ce.nil?
     xpic=nil
     text=">No CE information known<"
@@ -2185,7 +2206,7 @@ def disp_servant_ce2(bot,event,args=nil)
     cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
     cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-    text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+    title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
     text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*"
     if ce[4]==ce[5] && ce[6]==ce[7]
       text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
@@ -2195,7 +2216,7 @@ def disp_servant_ce2(bot,event,args=nil)
     end
     text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
   end
-  create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+  create_embed(event,["#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
   if k[26].length>1
     text=''
     ce=@crafts.find_index{|q| q[0]==k[26][1]}
@@ -2206,6 +2227,7 @@ def disp_servant_ce2(bot,event,args=nil)
     ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+    title=nil
     if ce.nil?
       xpic=nil
       text=">No CE information known<"
@@ -2215,7 +2237,7 @@ def disp_servant_ce2(bot,event,args=nil)
       cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
       cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
       xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-      text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+      title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
       text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*"
       if ce[4]==ce[5] && ce[6]==ce[7]
         text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
@@ -2225,7 +2247,7 @@ def disp_servant_ce2(bot,event,args=nil)
       end
       text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
     end
-    create_embed(event,"#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",text,xcolor,ftr,xpic)
+    create_embed(event,["#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
   end
 end
 
@@ -2261,9 +2283,10 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       mlvl=x[dvx][3].map{|q| q.gsub('u','').to_i}.min
     end
   end
-  text=generate_rarity_row(k,'servant')
-  text=generate_rarity_row(k,"Mathoo's") if dv>=0
-  text='' if chain
+  title=generate_rarity_row(k,'servant')
+  title=generate_rarity_row(k,"Mathoo's") if dv>=0
+  title='' if chain
+  text=''
   xpic=servant_icon(k,event)
   if k[18][4].nil? && !k[18][5].nil?
     k[18][4]=k[18][5].map{|q| q}
@@ -2345,7 +2368,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
     str=extend_message(str,ftr,event,2)
     event.respond str
   else
-    create_embed(event,hdr,str,xcolor,ftr,xpic,nil,1)
+    create_embed(event,[hdr,title],str,xcolor,ftr,xpic,nil,1)
   end
 end
 
@@ -2652,16 +2675,15 @@ def disp_ce_card(bot,event,args=nil)
   k2=@servants[k2] unless k2.nil?
   xcolor=servant_color(event,k) unless k.nil?
   xcolor=0xFF42AC unless k2.nil?
-  text=''
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-  text="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+  title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
   cemoji=['<:Bond:523903660913197056>','<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
   cemoji=['<:RRAffinity:565064751780986890>','<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if ce[10].include?('FEH') || (!k.nil? && k[13].include?('FEH Servant')) || (!k2.nil? && k2[13].include?('FEH Servant'))
   cemoji=['<:Type_Healing:532107867348533249>','<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if ce[10].include?('DL') || (!k.nil? && k[13].include?('DL Servant')) || (!k2.nil? && k2[13].include?('DL Servant'))
-  text="#{text}\n**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless k.nil?
-  text="#{text}\n**#{cemoji[1]} Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k2[0]}]*" unless k2.nil?
-  text="#{text}\n**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil?
+  text="**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless k.nil?
+  text="**#{cemoji[1]} Valentine's CE for:** *#{k2[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k2[0]}]*" unless k2.nil?
+  text="**Availability:** #{ce[8].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" if k.nil? && k2.nil?
   if !ce[10].nil? && ce[10].include?('NewYear')
     text="#{text}\n\n__**Japan** stats__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}"
     text="#{text}\n\n__**North America** stats__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}"
@@ -2681,7 +2703,7 @@ def disp_ce_card(bot,event,args=nil)
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
-  create_embed(event,"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]",text,xcolor,ftr,xpic)
+  create_embed(event,["**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]",title],text,xcolor,ftr,xpic)
 end
 
 def disp_ce_art(bot,event,args=nil)
@@ -2828,11 +2850,11 @@ def disp_code_data(bot,event,args=nil)
   xcolor=0x7D4529
   xcolor=0x718F93 if ce[2]>2
   xcolor=0xF5D672 if ce[2]>3
-  text=generate_rarity_row(ce,'code')
-  text="#{text}\n\n**Effect:** #{ce[3]}"
+  title=generate_rarity_row(ce,'code')
+  text="**Effect:** #{ce[3]}"
   text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-  create_embed(event,"**#{ce[1]}** [Cmd-##{ce[0]}]",text,xcolor,nil,xpic)
+  create_embed(event,["**#{ce[1]}** [Cmd-##{ce[0]}]",title],text,xcolor,nil,xpic)
 end
 
 def disp_skill_data(bot,event,args=nil)
@@ -3124,12 +3146,13 @@ def disp_mat_data(bot,event,args=nil)
   s2s=true if safe_to_spam?(event)
   s2s=false if has_any?(event.message.text.downcase.split(' '),['just','noinfo','justart','blank'])
   text=''
+  title=''
   unless s2s
     ftr='For an actual list of servants who need this material, use this command in PM.' unless safe_to_spam?(event)
-    text="#{text}\n#{lst[0].length} servants use this material for Ascension"
-    text="#{text}\n#{lst[2].length} servants use this material for Skill Enhancement"
-    text="#{text}\n#{lst[1].length} servants use this material for Costumes" if lst[1].length>0
-    text="#{text}\n\n#{fff.length} total servants use this material"
+    title="#{lst[0].length} servant#{'s' unless lst[0].length==1} use#{'s' if lst[0].length==1} this material for Ascension"
+    title="#{title}\n#{lst[2].length} servant#{'s' unless lst[2].length==1} use#{'s' if lst[2].length==1} this material for Skill Enhancement"
+    title="#{title}\n#{lst[1].length} servant#{'s' unless lst[1].length==1} use#{'s' if lst[1].length==1} this material for Costumes" if lst[1].length>0
+    text="#{fff.length} total servants use this material"
     text="#{text}\n#{fff2} total uses for this material"
     text="#{text}\n#{fff3} total copies of this material are required to max everyone"
   end
@@ -3149,7 +3172,7 @@ def disp_mat_data(bot,event,args=nil)
     mmkk.push("#{k.gsub('Secret Gem of ','')} Cookie")
     mmkk.push("Cookie of #{k.gsub('Secret Gem of ','')}")
   end
-  create_embed(event,"__**#{k}**__#{"\n#{mmkk.join("\n")}" if mmkk.length>0}",text,0x162C6E,ftr,find_emote(bot,event,k,1))
+  create_embed(event,["__**#{k}**__#{"\n#{mmkk.join("\n")}" if mmkk.length>0}",title],text,0x162C6E,ftr,find_emote(bot,event,k,1))
   return nil unless s2s
   str="__**Ascension uses for #{k}**__ (#{lst[0].length} total)"
   if lst[0].length<=0
