@@ -254,6 +254,7 @@ def data_load()
     b[i][21]=b[i][21].to_i
     b[i][23]=b[i][23].to_i
     b[i][26]=b[i][26].split(', ').map{|q| q.to_i} unless b[i][26].nil?
+    b[i][28]=b[i][28].split(', ') unless b[i][28].nil?
   end
   @servants=b.map{|q| q}
   if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkills.txt')
@@ -791,7 +792,7 @@ def all_commands(include_nil=false,permissions=-1)
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
-     'cexp','ceexp','clevel','celevel','prefix','shard','deck']
+     'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels'] if permissions==2
   k.push(nil) if include_nil
@@ -1572,8 +1573,8 @@ def disp_servant_stats(bot,event,args=nil)
     end
   end
   xcolor=servant_color(event,k)
-  title=generate_rarity_row(k,'servant')
-  title=generate_rarity_row(k,"Mathoo's") if dv>=0
+  text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
   cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
@@ -1586,7 +1587,7 @@ def disp_servant_stats(bot,event,args=nil)
   text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)"
   text="#{text}\n**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
-  title="#{title}\n#{servant_superclass(bot,event,k)}"
+  title="#{servant_superclass(bot,event,k)}"
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}"
   text="#{text}\n\n#{bond}"
@@ -1666,8 +1667,8 @@ def disp_tiny_stats(bot,event,args=nil)
     end
   end
   xcolor=servant_color(event,k)
-  title=generate_rarity_row(k,'servant')
-  title=generate_rarity_row(k,"Mathoo's") if dv>=0
+  text=generate_rarity_row(k,'servant')
+  text=generate_rarity_row(k,"Mathoo's") if dv>=0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
   cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
@@ -1682,7 +1683,7 @@ def disp_tiny_stats(bot,event,args=nil)
   bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless kx.nil?
   text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
-  title="#{title}\n#{servant_superclass(bot,event,k)}"
+  title="#{servant_superclass(bot,event,k)}"
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
   text="#{text}\n\n#{bond}"
@@ -1723,8 +1724,8 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
       k[13].push('Cuddly *[added]*') if k[0]==74
     end
   end
-  text=generate_rarity_row(k,'servant')
-  text=generate_rarity_row(k,"Mathoo's") if dv>=0
+  text2=generate_rarity_row(k,'servant')
+  text2=generate_rarity_row(k,"Mathoo's") if dv>=0
   text='' if chain
   text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
   text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
@@ -1740,7 +1741,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
   k[13].push('Evil *[added]*') if k[0]==74 && event.message.text.downcase.include?('crime')
-  create_embed(event,["#{"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}",text],'',xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
+  create_embed(event,["#{"__#{"Mathoo's " if dv>=0}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}",text],text2,xcolor,ftr,xpic,triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)}))
 end
 
 def disp_enemy_traits(bot,event,args=nil,chain=false)
@@ -2350,7 +2351,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
   str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__#{"\n" unless [q[1][0,1],q[1][0,2]].include?("\n")}#{q[1]}"}.join("\n\n")}"
   hdr="#{"__#{"Mathoo's " if dv>-1}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}" unless chain}"
   if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__#{"\n" unless [flds[-1][1][0,1],flds[-1][1][0,2]].include?("\n")}#{flds[-1][1]}".length>=1900
-    create_embed(event,hdr,str,xcolor,nil,xpic,nil,1)
+    create_embed(event,[hdr,title],str,xcolor,nil,xpic,nil,1)
     str="__**#{flds[-1][0]}**__"
     hdr=''
     xpic=''
@@ -2533,6 +2534,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         f[1].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]!=artist && b[i][7][1].split(' as ')[0]==k[25]
       end
     end
+    fehunts=b.map{|q| q}
+    dladv=[]
+    dldrg=[]
+    dlnpc=[]
     if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLAdventurers.txt')
         b=[]
@@ -2548,6 +2553,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
           f[1].push("*[DL-Adv]* #{b[i][0]}") if b[i][10].split(' as ')[0]==k[25]
         end
       end
+      dladv=b.map{|q| q}
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLDragons.txt')
         b=[]
         File.open('C:/Users/Mini-Matt/Desktop/devkit/DLDragons.txt').each_line do |line|
@@ -2562,6 +2568,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
           f[1].push("*[DL-Drg]* #{b[i][0]}") if b[i][13].split(' as ')[0]==k[25]
         end
       end
+      dldrg=b.map{|q| q}
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DL_NPCs.txt')
         b=[]
         File.open('C:/Users/Mini-Matt/Desktop/devkit/DL_NPCs.txt').each_line do |line|
@@ -2576,6 +2583,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
           f[1].push("*[DL-NPC]* #{b[i][0]}") if b[i][4].split(' as ')[0]==k[25]
         end
       end
+      dlnpc=b.map{|q| q}
       if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt')
         b=[]
         File.open('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt').each_line do |line|
@@ -2598,6 +2606,14 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       m=k[25].split(' & ')
       for i in 0...m.length
         f[1][1].push(@servants.reject{|q| q[25]!=m[i]}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]} *[voice #{i+1}]*"}.join("\n"))
+        fxx=fehunts.reject{|q| q[7].nil? || q[7][1].nil? || q[7][1].length<=0 || q[7][1]!=m[i]}
+        f[1][1].push(fxx.map{|q| "*[FEH]* #{q[0]} *[voice #{i+1}]*"}.join("\n")) if fxx.length>0
+        fxx=dladv.reject{|q| q[10].nil? || q[10].length<=0 || q[10]!=m[i]}
+        f[1][1].push(fxx.map{|q| "*[DL-Adv]* #{q[0]} *[voice #{i+1}]*"}.join("\n")) if fxx.length>0
+        fxx=dldrg.reject{|q| q[13].nil? || q[13].length<=0 || q[13]!=m[i]}
+        f[1][1].push(fxx.map{|q| "*[DL-Drg]* #{q[0]} *[voice #{i+1}]*"}.join("\n")) if fxx.length>0
+        fxx=dlnpc.reject{|q| q[4].nil? || q[4].length<=0 || q[4]!=m[i]}
+        f[1][1].push(fxx.map{|q| "*[DL-NPC]* #{q[0]} *[voice #{i+1}]*"}.join("\n")) if fxx.length>0
       end
     end
     for i in 0...f.length
@@ -5485,6 +5501,213 @@ def generate_deck(event,bot,args=nil)
   event.respond str
 end
 
+def generate_random_servant(event,bot)
+  d1=['Q','A','B'].sample
+  d2=['Q','A','B'].sample
+  np=['Q','A','B'].sample
+  deck="Q#{d1 if d1=='Q'}#{d2 if d2=='Q'}A#{d1 if d1=='A'}#{d2 if d2=='A'}B#{d1 if d1=='B'}#{d2 if d2=='B'}"
+  rarity=rand(5)+1
+  rarity-=1 if rand(1000)<=0
+  x=['Alter Ego','Avenger','Foreigner','Moon Cancer','Ruler','Shielder']
+  x.push('Beast') if rand(1000)<=0
+  clzz=['Saber','Lancer','Archer','Assassin','Caster','Rider','Berserker'].sample
+  clzz=x.sample if rand(1000)<=0
+  alter=''
+  alter=' (Alter)' if rand(5)<=0
+  alter=" (#{['Maid','Santa'].sample} Alter)" if rand(50)<=0
+  imgx=event.user
+  unless event.server.nil?
+    imgx=event.server.users.sample
+    imgx=event.user if rand(100).zero? && event.server.users.length>100
+  end
+  if event.message.mentions.length>0 && rand(100)<[event.message.mentions.length*10,50].min
+    imgx=event.message.mentions.sample
+  end
+  img=imgx.avatar_url
+  title="**Class:** #{clzz}"
+  att=['Man','Earth','Sky','Star'].sample
+  att='Beast' if rand(1000)<=0
+  title="#{title}\n**Attribute:** #{att}"
+  halg=['Chaotic','Neutral','Lawful'].sample
+  valg=['Good','Balanced','Evil'].sample
+  valg=['Summer','Bride','Maid'].sample if rand(100)<=0
+  title="#{title}\n**Alignment:** #{halg} #{valg}"
+  text="<:fgo_icon_rarity:523858991571533825>"*rarity
+  text="**0-star**" if rarity==0
+  rarstats=[[65,4],[60,3],[65,4],[70,7],[80,12],[90,16]]
+  text="#{text}\n**Max. default level:** *#{rarstats[rarity][0]}*"
+  text="#{text} (#{['Linear','S','Reverse S','Semi S','Semi Reverse S'].sample} growth curve)"
+  t=rarstats[rarity][1]
+  t=0 if clzz=='Shielder' && rand(2)==0
+  text="#{text}\n**Team cost:** *#{t}*"
+  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
+  text="#{text}\n\n**Command Deck:** #{deck.gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{deck})"
+  text="#{text}\n**Noble Phantasm:** #{np.gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{np.gsub('Q','Quick').gsub('A','Arts').gsub('B','Buster')})"
+  type=['Personnel','Evil','Fortress','Army'].sample
+  type=['Encampment','World','Magecraft','Barrier','Divine','Demon','Populace','Wave','Dragon','Mountain','Purge','King','Beast','Boundary'].sample if rand(10)<=0
+  type="Anti-#{type}"
+  type=['Magic','Spirit','War Outbreak','Poetry'].sample if rand(10)<=0
+  type="#{type}#{[' Hidden Technique',' Mystic Technique','(Self)',' (Encampment)'].sample}" if rand(100)<=0
+  type='???' if rand(1000)<=0
+  target=['All Allies','All Enemies','Enemy','Self'].sample
+  text="#{text}\n*Type:* #{type}  -  *Target:* #{target}"
+  data_load()
+  f=@servants.reject{|q| q[3]!=rarity && q[2]!=clzz}
+  f=@servants.reject{|q| q[2]!=clzz} if clzz=='Beast'
+  f=(f.map{|q| q[11]}.max*10).to_i
+  death=rand(f)+1
+  death=rand(f)+1 if death>f/6
+  death=rand(f)+1 if death>f/5
+  death=rand(f)+1 if death>f/4
+  death=rand(f)+1 if death>f/3
+  death=rand(f)+1 if death>f/2
+  f=@servants.reject{|q| q[3]!=rarity || q[2]!=clzz}
+  f=@servants.reject{|q| q[2]!=clzz} if f.length<=1
+  text="#{text}\n\n**Death Rate:** #{death/10}.#{death%10}%"
+  f2=f.map{|q| q[9]}
+  f2.push([3,3,3,3,3])
+  text="#{text}\n\n**Hit Counts:**"
+  text="#{text} <:Quick_y:526556106986618880>#{rand(f2.map{|q| q[0]}.max)+1}"
+  text="#{text} <:Arts_y:526556105489252352>#{rand(f2.map{|q| q[1]}.max)+1}"
+  text="#{text} <:Buster_y:526556105422274580>#{rand(f2.map{|q| q[2]}.max)+1}"
+  text="#{text} <:Extra_y:526556105388720130>#{rand(f2.map{|q| q[3]}.max)+1}"
+  text="#{text}  \u00B7  <:NP:523858635843960833>#{rand(f2.map{|q| q[4]}.max)+1}"
+  f2=f.map{|q| [q[8][0]*100-3,0].max}
+  text="#{text}\n**NP Gain:**"
+  text="#{text}  *Attack:* #{(rand(f2.max)+3)/100.0}%"
+  f2=f.map{|q| q[8][1]}
+  f2.push(3)
+  text="#{text}  \u00B7  *Defense:* #{rand(f2.max)+1}%"
+  f2=f.map{|q| q[10][0]}
+  text="#{text}\n**Crit Stars:**"
+  text="#{text}  *Weight:* #{(rand(f2.max-f2.min)+f2.min).to_i}"
+  f2=f.map{|q| (q[10][1]*10).to_i}
+  f2=rand(f2.max-f2.min)+f2.min
+  text="#{text}  \u00B7  *Drop Rate:* #{(f2/10).to_i}.#{(f2%10).to_i}%"
+  color='gold'
+  color='silver' if rarity<4
+  color='bronze' if rarity<3
+  color='black' if rarity<1
+  moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{clzz.downcase.gsub(' ','')}_#{color}"}
+  if moji.length>0
+    clsmoji=moji[0].mention
+  else
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_unknown_#{color}"}
+    if moji.length>0
+      clsmoji=moji[0].mention
+    else
+      clsmoji='<:class_unknown_blue:523948997229019136>'
+    end
+  end
+  clsmoji='<:class_beast_gold:562413138356731905>' if clzz=='Beast'
+  name="__**#{imgx.name.gsub('(','').gsub(')','')}#{" (#{clzz})" unless alter.include?(' Alter')}#{alter}**__ [Srv-*i*]#{clsmoji}"
+  xcolor=[237,97,154]
+  xcolor=[33,188,44] if np=='Q'
+  xcolor=[11,77,223] if np=='A'
+  xcolor=[254,33,22] if np=='B'
+  m=[]
+  m.push(xcolor)
+  m.push(xcolor)
+  m.push([33,188,44]) if deck[1,1]=='Q'
+  m.push([33,188,44]) if deck[1,2]=='QQ'
+  m.push([254,33,22]) if deck[3,1]=='B'
+  m.push([254,33,22]) if deck[2,2]=='BB'
+  m.push([11,77,223]) if deck.include?('AA')
+  m.push([11,77,223]) if deck.include?('AAA')
+  xcolor=avg_color(m)
+  create_embed(event,[name,title],text,xcolor,nil,img)
+end
+
+def show_servant_alts(event,bot,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  args=args.reject{ |a| a.downcase=='smol' } if @shardizard==4
+  args=args.map{|q| q.downcase}
+  k=find_data_ex(:find_servant,args.join(' '),event)
+  if k.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  xcolor=servant_color(event,k)
+  data_load()
+  srvs=@servants.reject{|q| q[28][0]!=k[28][0]}
+  universes=srvs.map{|q| q[28][1]}.sort.uniq
+  flds=[]
+  flds2=[]
+  flds3=[]
+  dispstr=''
+  dispstr2=''
+  if universes.length>1
+    puts 'x3'
+    for i in 0...universes.length
+      str=''
+      str2=''
+      unisrvs=srvs.reject{|q| q[28][1]!=universes[i]}
+      facets=unisrvs.map{|q| q[28][2]}.sort.uniq
+      flds2.push(["__Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**__",avg_color(unisrvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"#{unisrvs.length} alt#{'s' unless unisrvs.length==1} from this universe",[],''])
+      if facets.length>1
+        for i2 in 0...facets.length
+          facsrvs=unisrvs.reject{|q| q[28][2]!=facets[i2]}
+          str="#{str}\n\n__Facet #{i2+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}**__"
+          str="#{str}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+          str2="#{str2}\n\n__Facet #{i2+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}**__"
+          str2="#{str2}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+          flds2[-1][3].push(["Facet #{i2+1}: #{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}",facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
+        end
+        flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str])
+        flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str2])
+      else
+        flds2[-1][4]="#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+        flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",flds2[-1][4]])
+        flds2[-1][3]=nil
+      end
+    end
+  else
+    facets=srvs.map{|q| q[28][2]}.uniq
+    if facets.length>1
+      for i in 0...facets.length
+        facsrvs=srvs.reject{|q| q[28][2]!=facets[i]}
+        str="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+        str2="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+        flds.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str])
+        flds3.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str2])
+        flds2.push(["__Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**__",avg_color(facsrvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"this facet has #{facsrvs.length} alt#{'s' unless facsrvs.length==1}",nil,facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
+      end
+    else
+      flds=nil
+      flds3=nil
+      dispstr=srvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")
+      dispstr2=srvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")
+    end
+  end
+  if !flds.nil? && dispstr.length+flds.map{|q| "#{q[0]}\n#{q[1]}"}.join("\n").length>1500
+    if !safe_to_spam?(event)
+      if !flds3.nil? && dispstr2.length+flds3.map{|q| "#{q[0]}\n#{q[1]}"}.join("\n").length>1500
+        event.respond "Too many alts are being displayed.  Please use this command in PM."
+      else
+        create_embed(event,"__**#{k[28][0]}**__",dispstr2,avg_color(srvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"#{srvs.length} total",nil,flds3)
+      end
+      return nil
+    end
+    for i in 0...flds2.length
+      create_embed(event,"#{flds2[i][0]}",flds2[i][4],flds2[i][1],flds2[i][2],nil,flds2[i][3])
+    end
+    event.respond "#{srvs.length} total alts"
+  else
+    create_embed(event,"__**#{k[28][0]}**__",dispstr,avg_color(srvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"#{srvs.length} total",nil,flds)
+  end
+end
+
+bot.command([:alts,:alt]) do |event, *args|
+  return nil if overlap_prevent(event)
+  show_servant_alts(event,bot,args)
+end
+
+bot.command([:random,:rand]) do |event|
+  return nil if overlap_prevent(event)
+  generate_random_servant(event,bot)
+end
+
 bot.command([:deck]) do |event, *args|
   return nil if overlap_prevent(event)
   generate_deck(event,bot,args)
@@ -6239,11 +6462,30 @@ bot.command(:sortaliases, from: 167657750971547648) do |event, *args|
   event.respond 'The alias list has been sorted alphabetically'
 end
 
-bot.command(:status, from: 167657750971547648) do |event, *args|
+bot.command([:status, :avatar, :avvie]) do |event, *args|
   return nil if overlap_prevent(event)
-  return nil unless event.user.id==167657750971547648
-  bot.game=args.join(' ')
-  event.respond 'Status set.'
+  t=Time.now
+  timeshift=6
+  t-=60*60*timeshift
+  if event.user.id==167657750971547648 && !args.nil? && args.length>0 # only work when used by the developer
+    bot.game=args.join(' ')
+    event.respond 'Status set.'
+    return nil
+  end
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
+    event << "Current avatar: #{bot.user(312451658908958721).avatar_url}"
+    event << "Servant in avatar: #{@avvie_info[0]}"
+    event << ''
+    event << "Current status:"
+    event << "[Playing] #{@avvie_info[1]}"
+    event << ''
+    event << "Reason: #{@avvie_info[2]}" unless @avvie_info[2].length.zero?
+    event << ''
+    event << "Dev's timezone: #{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year} (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]}) | #{'0' if t.hour<10}#{t.hour}:#{'0' if t.min<10}#{t.min}"
+  else
+    create_embed(event,'',"Servant in avatar: #{@avvie_info[0]}\n\nCurrent status:\n[Playing] #{@avvie_info[1]}#{"\n\nReason: #{@avvie_info[2]}" unless @avvie_info[2].length.zero?}\n\n[For a full calendar of avatars, click here](https://docs.google.com/spreadsheets/d/1j-tdpotMO_DcppRLNnT8DN8Ftau-rdQ-ZmZh5rZkZP0/edit?usp=sharing)",(t.day*7+t.month*21*256+(t.year-2000)*10*256*256),"Dev's timezone: #{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year} (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]}) | #{'0' if t.hour<10}#{t.hour}:#{'0' if t.min<10}#{t.min}",bot.user(502288364838322176).avatar_url)
+  end
+  return nil
 end
 
 bot.command(:backupaliases, from: 167657750971547648) do |event|
@@ -6785,6 +7027,14 @@ bot.mention do |event|
   elsif ['help','command_list','commandlist'].include?(args[0].downcase)
     args.shift
     help_text(event,bot,args[0],args[1])
+    m=false
+  elsif ['random','rand'].include?(args[0].downcase)
+    args.shift
+    generate_random_servant(event,bot)
+    m=false
+  elsif ['alts','alt'].include?(args[0].downcase)
+    args.shift
+    show_servant_alts(event,bot,args)
     m=false
   elsif ['find','search'].include?(args[0].downcase)
     args.shift
