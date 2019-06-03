@@ -1,36 +1,108 @@
-74 # Nursury Rhyme
-990\990 # Fous
-0\0\0\0\0 # Command Codes
-2\2\0 # Skill levels - string
-1 # NP strength - string
-28 # Equipped CE
-5 # bond level
-2\2 # Highest Ascension, Art used
+74 # Nursery Rhyme
+1000\1000
+0\0\0\0\0
+4\4\2
+1
+28 # The Imaginary Element
+6
+4\2\1
 
 1.0 # Mash Kyrielight
-310\790
+1000\1000
 0\0\0\0\0
-3\3\0
+8\4\0
 1
-401
+401 # Room Guard
 1
-0\1
+0\1\0
 
-56 # Kiyohime (Berserker)
-40\200
+16 # Arash
+240\120
+0\0\0\0\0
+5\5\0
+5
+0
+0
+3\1\0
+
+17 # Cu Chulainn
+0\0
+0\0\0\0\0
+2\1\0
+3
+0
+0
+2\1\0
+
+18 # Elisabeth Bathory (Lancer)
+120\60
+0\0\0\0\0
+5\2\0
+1
+55 # Anchors Aweigh
+6
+1\2\0
+
+33 # Hans Christian Andersen
+50\50
+0\0\0\0\0
+2\2\1
+5
+72 # Clock Tower
+0
+3\3\0
+
+38 # Cu Chulainn (Caster)
+0\0
 0\0\0\0\0
 2\2\0
-3
-401
-5
-2\2
+2
+0
+0
+2\2\0
 
-163 # Meltryllis
+56 # Kiyohime (Berserker)
+40\220
+0\0\0\0\0
+4\4\0
+4
+401 # Room Guard
+6
+3\2\0
+
+68 # Okita Souji
+90\250
+0\0\0\0\0
+4\4\0
+1
+18 # Dragon's Meridian
+5
+2\2\0
+
+142 # Ishtar (Archer)
 0\0
 0\0\0\0\0
 2\2\0
 1
-46
+418 # Reality Marble
 0
-0\1
+1\2\0
+
+162 # Chacha
+20\20
+0\0\0\0\0
+2\0\0
+3
+0
+0
+1\2\0
+
+163 # Meltryllis
+0\130
+0\0\0\0\0
+2\2\1
+1
+112 # Melty Sweetheart
+0
+2\2\0
 
