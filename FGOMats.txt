@@ -1,6 +1,7 @@
 Add Plush
 Archer Monument
 Archer Piece
+Arrowhead of Catastrophic Sin
 Assassin Monument
 Assassin Piece
 Aurora Steel
@@ -13,7 +14,6 @@ Berserker Piece
 Black Beast Grease
 Caster Monument
 Caster Piece
-Chichi Divine Wine
 Chicken Bucket
 Claw of Chaos
 Crystal Ball
@@ -26,6 +26,7 @@ Dragon Fang
 Dragon Orb
 Dragon's Reverse Scale
 Dragon's Reversed Scale
+Egg of Truth
 Eternal Frost
 Eternal Gear
 Evil Bone
@@ -64,6 +65,7 @@ Magic Gem of Lancer
 Magic Gem of Rider
 Magic Gem of Saber
 Meteor Horseshoe
+Mysterious Divine Wine
 Mystic Spinal Fluid
 Octuplet Crystals
 Phoenix Feather
@@ -103,4 +105,5 @@ Twinkle Candy
 Void's Dust
 Warhorse's Young Horn
 Wazamono Knife
+mysterious divine Wine
 

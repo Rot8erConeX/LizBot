@@ -9,7 +9,7 @@
 9\Concentration\2\3\112, 75\375, 250\Increase NP Gain by 5%\Increase NP Gain by 10%\-\\\
 10\Divine Oracle\2\3\0, 150\0, 500\Increase NP Strength by 5%\Increase NP Strength by 10%\-\\\
 11\Azoth Blade\3\5\200, 0\1000, 0\Increase DEF by 8%\Increase DEF by 10%\-\\\
-12\False Attendant's Writings\3\5\300, 0\1500, 0\Increase Debuff Resist by 15%\Increase Debuff Resist by 20%\-\Bsuke\\
+12\False Attendant's Writings\3\5\300, 0\1500, 0\Increase Debuff Resist by 15%\Increase Debuff Resist by 20%\-\Bsuke\\Shinji Matou
 13\The Azure Black Keys\3\5\0, 200\0, 1000\Increase Arts Card effectiveness by 8%\Increase Arts Card effectiveness by 10%\-\\\
 14\The Verdant Black Keys\3\5\0, 200\0, 1000\Increase Quick Card effectiveness by 8%\Increase Quick Card effectiveness by 10%\-\\\
 15\The Crimson Black Keys\3\5\0, 200\0, 1000\Increase Buster Card effectiveness by 8%\Increase Buster Card effectiveness by 10%\-\\\
@@ -18,7 +18,7 @@
 18\Dragon's Meridian\3\5\150, 100\750, 500\Increase NP Gauge by 30% at the start of battle\Increase NP Gauge by 50% at the start of battle\-\\\
 19\Sorcery Ore\3\5\150, 100\750, 500\Increase NP Gain by 15%\Increase NP Gain by 20%\-\\\
 20\Dragonkin\3\5\0, 200\0, 1000\Increase NP Strength by 15%\Increase NP Strength by 20%\-\\\
-21\Iron-Willed Training\4\9\400, 0\1500, 0\Increase DEF by 15%\Increase DEF by 20%\-\Medori\\
+21\Iron-Willed Training\4\9\400, 0\1500, 0\Increase DEF by 15%\Increase DEF by 20%\-\Medori\\Kirei Kotomine
 22\Primeval Curse\4\9\600, 0\2250, 0\Increase Debuff Resist by 25%\Increase Debuff Resist by 30%\-\Ginka\\
 23\Projection\4\9\0, 400\0, 1500\Increase Arts Card effectiveness by 15%\Increase Arts Card effectiveness by 20%\-\Takeuchi Takashi\\
 24\Gandr\4\9\0, 400\0, 1500\Increase Quick Card effectiveness by 15%\Increase Quick Card effectiveness by 20%\-\Soga Makoto\\
@@ -107,7 +107,7 @@
 107\Heroic Portrait: Mephistopheles\4\5\500, 500\500, 500\Increase Bond Points received from battle by 50; Received at Lv.80 with Max Limit unlocked\\-\Simosi\\\5 Million Downloads Campaign
 108\Heroic Portrait: Darius III\4\5\500, 500\500, 500\Increase Bond Points received from battle by 50; Received at Lv.80 with Max Limit unlocked\\-\PFALZ\\\5 Million Downloads Campaign
 109\Valentine Dojo of Tears\3\5\0, 200\0, 1000\Apply Sure Hit; Increase NP Gauge by 3% per turn; Decrease Charm Resist by 10% [Demerit]; Increase Coin Choco drops from the equipped Servant's class by 1 [Valentines 1]\Apply Sure Hit; Increase NP Gauge by 5% per turn; Decrease Charm Resist by 10% [Demerit]; Increase Coin Choco drops from the equipped Servant's class by 2 [Valentines 1]\-\Tsurusaki Yuu\\\Chocolate Lady's Commotion ~Valentine's 2016~
-110\Kitchen☆Patissiere\4\9\320, 200\1200, 750\Increase Critical Star Drop Rate by 15%; Increase NP Gain by 15%; Increase Coin Choco drops from the equipped Servant's class by 3 [Valentines 1]\Increase Critical Star Drop Rate by 20%; Increase NP Gain by 20%; Increase Coin Choco drops from the equipped Servant's class by 4 [Valentines 1]\-\Nekotawawa\\\Chocolate Lady's Commotion ~Valentine's 2016~
+110\Kitchen Patissiere\4\9\320, 200\1200, 750\Increase Critical Star Drop Rate by 15%; Increase NP Gain by 15%; Increase Coin Choco drops from the equipped Servant's class by 3 [Valentines 1]\Increase Critical Star Drop Rate by 20%; Increase NP Gain by 20%; Increase Coin Choco drops from the equipped Servant's class by 4 [Valentines 1]\-\Nekotawawa\\\Chocolate Lady's Commotion ~Valentine's 2016~
 111\Street Choco-Maid\5\12\400, 250\1600, 1000\Increase Arts Card effectiveness by 10%; Increase Quick Card effectiveness by 10%; Increase HP Recovery Amount by 20%; Increase Coin Choco drops from the equipped Servant's class by 5 [Valentines 1]\Increase Arts Card effectiveness by 15%; Increase Quick Card effectiveness by 15%; Increase HP Recovery Amount by 30%; Increase Coin Choco drops from the equipped Servant's class by 6 [Valentines 1]\-\ReDrop\\\Chocolate Lady's Commotion ~Valentine's 2016~
 112\Melty Sweetheart\5\12\750, 0\3000, 0\Increase DEF against [Male] by 100% (3 times); Increase Critical Star Drop Rate by 10%; Increase Coin Choco drops from all classes by 2 [Valentines 1]\Increase DEF against [Male] by 100% (3 times); Increase Critical Star Drop Rate by 20%; Increase Coin Choco drops from all classes by 3 [Valentines 1]\-\Haimura Kiyotaka\\\Chocolate Lady's Commotion ~Valentine's 2016~
 113\Chaldea Standard\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2 [Valentines 1/2]; Increase Fer Flavor drop amount by 1 [Valentines 3]; Increase Poetry Composition Points by 10% [Valentines 4]\\-\Akita Inu\\
@@ -307,7 +307,7 @@
 307\My Loathsome Life\4\9\100, 100\100, 100\When equipped to Sanson (Assassin) only. Increase Death Success Rate of all allies by 10% and NP Gain by 10% while he's on the field\\-\\\
 308\There is No Love Here\4\9\100, 100\100, 100\When equipped to Caligula (Berserker) only. Increase Buster Card effectiveness of all allies by 20% but decrease DEF by 10% [Demerit] while he's on the field\\-\Kuzuboshi Hikaru\\
 309\Magical Girl of Sapphire\5\12\0, 500\0, 2000\Increase NP Gain by 25%; Increase NP Gauge by 40% at the start of battle; Increase Mr. Lion-Go Toy drop amount by 1 [Prillya]\Increase NP Gain by 30%; Increase NP Gauge by 50% at the start of battle; Increase Mr. Lion-Go Toy drop amount by 2 [Prillya]\-\Hiroyama Hiroshi\\\Magical Girl Cruise ~PRISMA CODES~
-310\Kill on Sight\4\9\320, 200\1200, 750\Increase Arts Card effectiveness by 8%; Increase NP Strength by 15%; Increase Magical☆Bushido Musashi drop amount by 1 [Prillya]\Increase Arts Card effectiveness by 10%; Increase NP Strength by 20%; Increase Magical☆Bushido Musashi drop amount by 2 [Prillya]\-\Inue Shinsuke\\\Magical Girl Cruise ~PRISMA CODES~
+310\Kill on Sight\4\9\320, 200\1200, 750\Increase Arts Card effectiveness by 8%; Increase NP Strength by 15%; Increase Magical Bushido Musashi drop amount by 1 [Prillya]\Increase Arts Card effectiveness by 10%; Increase NP Strength by 20%; Increase Magical Bushido Musashi drop amount by 2 [Prillya]\-\Inue Shinsuke\\\Magical Girl Cruise ~PRISMA CODES~
 311\Zunga Zunga!\3\5\300, 0\1500, 0\Apply Damage Cut 100; Increase HP Recovery Amount by 5%; Increase Expensive Pudding drop amount by 1 [Prillya]\Apply Damage Cut 200; Increase HP Recovery Amount by 10%; Increase Expensive Pudding drop amount by 2 [Prillya]\-\Imaizumi Teruhiko\\\Magical Girl Cruise ~PRISMA CODES~
 312\Kaleid Ruby\4\9\0, 400\0, 1500\Increase Buster Card effectiveness by 10%; Increase NP Strength by 8%; When equipped to a [Female] Servant:; Increase ATK Strength by 50% during [PRISMA CODES]; Increase Buster Card effectiveness by 50% during [World End Match] [Prillya]\Increase Buster Card effectiveness by 15%; Increase NP Strength by 10%; When equipped to a [Female] Servant:; Increase ATK Strength by 100% during [PRISMA CODES]; Increase Buster Card effectiveness by 100% during [World End Match] [Prillya]\-\Anmi\\\Magical Girl Cruise ~PRISMA CODES~
 313\Kaleid Sapphire\4\9\0, 400\0, 1500\Increase Arts Card effectiveness by 10%; Increase NP Strength by 8%; When equipped to a [Female] Servant:; Increase ATK Strength by 50% during [PRISMA CODES]; Increase Arts Card effectiveness by 50% during [World End Match] [Prillya]\Increase Arts Card effectiveness by 15%; Increase NP Strength by 10%; When equipped to a [Female] Servant:; Increase ATK Strength by 100% during [PRISMA CODE]; Increase Arts Card effectiveness by 100% during [World End Match] [Prillya]\-\Mashima Saki\\\Magical Girl Cruise ~PRISMA CODES~
@@ -344,7 +344,7 @@
 344\Dangerous Beast\5\12\0, 500\0, 2000\Increase Quick Card effectiveness by 15%; Gain 3 Critical Stars per turn; Increase Sack of Gold drop amount by 1 [Halloween 2]\Increase Quick Card effectiveness by 20%; Gain 4 Critical Stars per turn; Increase Sack of Gold drop amount by 2 [Halloween 2]\-\ReDrop\\\Halloween Comeback! Mega Huge Pumpkin Village
 345\Witch of the Moonlit Night\4\9\320, 200\1200, 750\Increase Arts Card effectiveness by 10%; Increase NP Gain by 5%; Increase Sack of Silver drop amount by 1 [Halloween 2]\Increase Arts Card effectiveness by 15%; Increase NP Gain by 10%; Increase Sack of Silver drop amount by 2 [Halloween 2]\-\Jikeshi\\\Halloween Comeback! Mega Huge Pumpkin Village
 346\Count Romani Archaman's Hospitality\3\5\300, 0\1500, 0\Increase NP Gain by 5%; Increase DEF by 3%; Increase Sack of Bronze drop amount by 1 [Halloween 2]\Increase NP Gain by 10%; Increase DEF by 5%; Increase Sack of Bronze drop amount by 2 [Halloween 2]\-\Komiya Kuniharu\\\Halloween Comeback! Mega Huge Pumpkin Village
-347\Brave Hero Eli-chan's Quest\5\12\0, 500\0, 2000\Increase Buster Card effectiveness by 10%; Increase NP Strength by 20%; Increase [Werewolf], [Homunculus], [Knight] appearance rate by 25% [Halloween 2]\Increase Buster Card effectiveness by 15%; Increase NP Strength by 25%; Increase [Werewolf], [Homunculus], [Knight] appearance rate by 100% [Halloween 2]\-\Himukai Yuuji\\\Halloween Comeback! Mega Huge Pumpkin Village
+347\Hero Elly's Adventure\5\12\0, 500\0, 2000\Increase Buster Card effectiveness by 10%; Increase NP Strength by 20%; Increase [Werewolf], [Homunculus], [Knight] appearance rate by 25% [Halloween 2]\Increase Buster Card effectiveness by 15%; Increase NP Strength by 25%; Increase [Werewolf], [Homunculus], [Knight] appearance rate by 100% [Halloween 2]\-\Himukai Yuuji\\\Halloween Comeback! Mega Huge Pumpkin Village
 348\Wizard & Priest\4\9\320, 200\1200, 750\Increase NP Strength by 15%; Increase HP Recovery Amount by 10%; Increase [Skeleton], [Ghost], [Lamia] appearance rate by 25% [Halloween 2]\Increase NP Strength by 20%; Increase HP Recovery Amount by 20%; Increase [Skeleton], [Ghost], [Lamia] appearance rate by 100% [Halloween 2]\-\TAa\\\Halloween Comeback! Mega Huge Pumpkin Village
 349\Mata Hari's Tavern\3\5\0, 200\0, 1000\Increase Quick Card effectiveness by 2%; Increase Arts Card effectiveness by 2%; Increase Buster Card effectiveness by 2%; Increase Critical Strength by 5%; Increase [Insect] and [Golem] appearance rate by 25% [Halloween 2]\Increase Quick Card effectiveness by 3%; Increase Arts Card effectiveness by 3%; Increase Buster Card effectiveness by 3%; Increase Critical Strength by 10%; Increase [Insect] and [Golem] appearance rate by 100% [Halloween 2]\-\MELON23\\\Halloween Comeback! Mega Huge Pumpkin Village
 350\Hell of Blazing Punishment\4\9\100, 100\100, 100\When equipped to Jeanne d'Arc [Alter] (Avenger) only. Increase Buster Card effectiveness of all allies by 15% while she's on the field\\-\\\
@@ -426,122 +426,122 @@
 426\Composure of the Victor\3\5\300, 0\1500, 0\Apply Damage Cut 100; Increase Critical Star Drop Rate by 5%; Increase Coin Choco drops received from class weak to the Servant equipped by 1 [Valentines 2]\Apply Damage Cut 200; Increase Critical Star Drop Rate by 10%; Increase Coin Choco drops received from class weak to the Servant equipped by 2 [Valentines 2]\-\TCB\\\Rerun: Chocolate Lady's Commotion ~Valentine's 2016~ Expanded Version
 427\Sweet Crystal\5\12\0, 500\0, 2000\Apply Ignore Invincible; Increase NP Gauge by 30% at the start of battle; Increase Coin Choco drops from all classes by 2 [Valentines 2]\Apply Ignore Invincible; Increase NP Gauge by 50% at the start of battle; Increase Coin Choco drops from all classes by 3 [Valentines 2]\-\Shiromizakana\\\Rerun: Chocolate Lady's Commotion ~Valentine's 2016~ Expanded Version
 428\Fondant au Chocolat\5\12\0, 500\0, 2000\Apply Special Attack [Divine] 25%; Increase NP Gauge by 30% at the start of battle; Increase Coin Choco drops from all classes by 2 [Valentines 2]\Apply Special Attack [Divine] 30%; Increase NP Gauge by 50% at the start of battle; Increase Coin Choco drops from all classes by 3 [Valentines 2]\-\Hanamura Mai\\\Rerun: Chocolate Lady's Commotion ~Valentine's 2016~ Expanded Version
-429\Black Knight-kun\4\9\100, 100\100, 100\When equipped to Heroine X [Alter] (Berserker) only. Apply Special Attack [Saber] 20% to all allies while she's on the field\\-\\\
-430\High-Class Japanese Confectionary\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Matsuyuki Ann\\
-431\Special Dango\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Arai Kasumi\\
-432\You Can Be A Dragon Set\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-433\Little Bit of Fun, With You\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Furudate Koichi\\
-434\Banana (From Hanuman)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-435\Hopeful Flower of Hope\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Matsuyuki Ann\\
-436\Protection For Your Skin\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-437\Legendary Orb Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-438\Ceasar-Style Cena\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
-439\Jeanne Fan Club Set\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu & Veia\\
-440\I Already Reserved a Room\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-441\Silver Box\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+429\Mini Black Knight\4\9\100, 100\100, 100\When equipped to Heroine X [Alter] (Berserker) only. Apply Special Attack [Saber] 20% to all allies while she's on the field\\-\\\
+430\High-End Japanese Sweets\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Matsuyuki Ann\\
+431\Special Dumplings\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Arai Kasumi\\
+432\Dragon Cosplay\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+433\Brief Moment of Joy\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Furudate Koichi\\
+434\Hanuman's Favorite Bananas\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+435\Blossom of Noble Hope\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Matsuyuki Ann\\
+436\Your Skin's Best Friend\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+437\Legendary Chocolate Orb\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+438\Cena, Caesar Style\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
+439\Jeanne Fan Club Monthly\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu & Veia\\
+440\Our Room is Ready\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+441\Silver Box of Cookies\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Saber drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 442\Lapis Lazuli Bracelet\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-443\Club (Barbecue Flavor)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\AMAO\\
-444\AC-Type Lightning Cookies\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Ichihashi Makoto\\
-445\An Arrow to Karna\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
+443\Snack Stick (BBQ Flavor)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\AMAO\\
+444\AC Lightning Cookies\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Ichihashi Makoto\\
+445\Karna's Bane\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
 446\Blue Sky Vanilla Mountain\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-447\Jewel Cut Stars\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-448\I'll Serve It On Time From Now On Cooking Set\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
-449\~Best of Tristan~\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Take & Veia\\
-450\Ordinary Choco (?)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
-451\The Return Gift is a Kiss\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Gin\\
-452\Nameless Memorial Silver Coins\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-453\Love Devoted to Abishag\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-454\Exciting Splash Sunday Ticket\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+447\Chocolate Gems\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+448\Kitchen Starter Set\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
+449\Tristan's Greatest Hits\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Take & Veia\\
+450\Just an Ordinary (?) Chocolate\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
+451\Just Pay Me Back with a Kiss\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Gin\\
+452\Nameless Commemorative Coins\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+453\My Love for Abishag\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+454\Waku Waku Zabuun VIP Ticket\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 455\Silver Bullet\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
-456\Anything But the Ultimate Delicacy\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Okamoto Hirokazu\\
-457\Chickpea Paste with…\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
-458\Piercings of the Setting Sun\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+456\Touta's Secret Fishing Gear\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Okamoto Hirokazu\\
+457\Hummus Dip\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Archer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
+458\Dusk Earrings\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 459\World's End Castle\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
-460\Chocolate Driver\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+460\Chocolate Screwdriver\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 461\White Flower\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 462\Red Flower\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 463\DHA\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 464\Tieguanyin Tea (?)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Matsuyuki Ann\\
-465\Completely Ordinary Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-466\Carnival\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-467\Heart Choco Bitter Bitter Bitter\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-468\Egg Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-469\Rune Stone Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-470\Vestige of Year 1999\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+465\Just Some Ordinary Chocolates\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+466\Carnivore Carnival\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+467\Bitter Bitter Bitter Chocolates\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+468\Chocolate Egg\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+469\Rune Stone Earring Chocolates\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+470\Remnant from 1999\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 471\Pax Romana\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
-472\Trojan Horse (Palm Size)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-473\White Rose of Gratitude\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-474\Cacao Seeds\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
-475\Blank Subscription Paper (Signed by Benkei)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
-476\Iron Marshmallow\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-477\Medb-chan Brand Honey Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
-478\Grail of Brave Heroes\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+472\Miniature Trojan Horse\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+473\White Rose Bouquet\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+474\Cacao Beans\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
+475\Blank Subscription List\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
+476\Iron Marshmallows\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Lancer drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+477\Medb's Honey Chocolate\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
+478\Goblet of a Hero\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 479\Sphinx Awlad\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Take\\
-480\Cacahuatl of Freedom\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
-481\Hippogriff Stuffed Toy (1/1)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-482\Rabbit Cute Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+480\Xocolatl Libertad\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
+481\Hippogriff Plushie (1:1 Scale)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+482\Cute Rabbit Chocolates\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
 483\Rider Belt Replica\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
-484\S Thunder Crunch Choco Stick\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
-485\Reading Iliad\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
-486\Mane of Bayard\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-487\Confidential, Prized, and Treasured Album\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
+484\Super Thunder Chocolate Crunch Stick\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
+485\Half-Read Iliad\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
+486\Bayard's Mane\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+487\Secret, Prized, Treasured Albums\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Rider drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
 488\Cigar and Wine\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-489\Donut Peach Compote\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aomidori\\
-490\Bastenyan X Model\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+489\Peach Compote\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aomidori\\
+490\Bastenyan X\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 491\Chocolate of Perfection\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-492\Homemade Love Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Gin\\
-493\Fou Muppet\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+492\Lovingly Handmade Chocolates\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Gin\\
+493\Puppet Fou\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
 494\UFO\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-495\DC-Type Grateful Cookies\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Ichihashi Makoto\\
-496\Mama's Best\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Sasaki Midori\\
-497\Blessing of Nile\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Eihi\\
-498\Montblanc au Chocolat\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\alma\\
-499\Evening of Euphrates\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tateishi Takeru\\
-500\Gilles Doll\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-501\Ticktock\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aoki Daichi\\
-502\Druid Wand\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-503\The Vision I Once Saw\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-504\The Source of Everything, Numbers\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-505\Geronimo-Style Moccasin\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tawawa Minoru\\
-506\Blue Bird-Looking Mouse\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-507\155th Sonnet\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
+495\DC Grateful Cookies\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Ichihashi Makoto\\
+496\Mama's Best Cake\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Sasaki Midori\\
+497\Blessings of the Nile\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Eihi\\
+498\Mont Blanc au Chocolat\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\alma\\
+499\Evenings by the Euphrates\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tateishi Takeru\\
+500\Gilles Doll Rais\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+501\Tick-Tock\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aoki Daichi\\
+502\Druid's Staff\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+503\Tea Time with the Five Elements\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+504\Everything Begins with Numbers\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+505\Geronimo-Style Moccasins\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tawawa Minoru\\
+506\Bluebird Mouse\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+507\Sonnet CLV\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
 508\Toy Piano\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Caster drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-509\Nectar Bon Bon\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-510\Al Bakhoor\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-511\Red and White Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Arai Kasumi\\
-512\Bullets and Guns\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-513\Bitter Taste Summer\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
-514\Super Nile Flowers\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Furudate Koichi\\
-515\Homemade Riceball\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-516\One Hundred Choco Pack\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-517\Excellent Sweet Demon Manju\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Eihi\\
-518\Black Black Kiss\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-519\All-Purpose Cloth Hassan\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-520\Sanson's Nutritional Choco Drink\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
-521\White Death Mask\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-522\Harvest Moon\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Sasaki Midori\\
+509\Nectar Bonbons\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+510\Al-Bakhoor\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+511\Red and White Chocolate\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Arai Kasumi\\
+512\Bullets and a Gun\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+513\Bitter Tasting Summer\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Aono Sumio\\
+514\Super Nile Fruit Basket\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Furudate Koichi\\
+515\Handmade Rice Balls\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+516\Assorted Chocolates, 100 Count\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+517\Fuuma Manjuu\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Eihi\\
+518\Dark Black Kiss\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+519\Hassan's Throw\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+520\Sanson's Nutritious Chocolate Drink\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
+521\White Mask of Death\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+522\Full Moon Viewing\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Assassin drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Sasaki Midori\\
 523\Golden Gold Set\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Ichihashi Makoto\\
 524\Scapegoat\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\AMAO\\
 525\First Aid Kit\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 526\Mini Cu\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\alma\\
-527\Finest Genji Rice Cakes\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tawawa Minoru\\
-528\Mysterious Hot Cocoa X\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-529\Wild Boar Headgear\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-530\Someone's Treasured Sword\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-531\Grilled Swedish Firedrake Sirloin\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+527\Supreme Genji Kashiwa Mochi\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tawawa Minoru\\
+528\Mysterious Hot Chocolate X\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+529\Boar Hoodie\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+530\Sword from Someone's Treasury\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+531\Chargrilled Swedish Dragon Sirloin\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 532\Sweet Stuff\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-533\Celebratory Ornaments\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
-534\Peal Gaugamela\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tawawa Minoru\\
-535\Si Vales, Valeo\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Gin\\
-536\Letter of Gratitude from My Wife\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
-537\Rebellion's First Step\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Furudate Koichi\\
+533\Headpiece of Celebration\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+534\Pil Gaugamela\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Tawawa Minoru\\
+535\Si Vales Valeo\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Gin\\
+536\Letter from Mrs. Bloodaxe\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Kuzuboshi Hikaru\\
+537\First Step to Rebellion\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Furudate Koichi\\
 538\Labyrinth Map\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of Berserker drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Hayosena\\
-539\Church-Style Handmade Cookies\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
-540\Serenity of the Holy Maiden\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
+539\Handmade Church Cookies\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Akita Inu\\
+540\The Maiden Saint's Breather\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\\\
 541\Freshly Brewed Coffee\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\alma\\
-542\Self-Destruct Big Bang Choco\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Arai Kasumi\\
-543\Egg Choco (Many)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
-544\Bandana of the Devil\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+542\Self Destructing Giant Destruction Chocolate\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Arai Kasumi\\
+543\Chocolate Eggs (Multiple)\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
+544\Devil's Bandana\4\3\0, 0\0, 0\No Effect; Increase Coin Choco of All drop amount by 2; Increase Fer Flavor drop amount by 1\\-\Beppu Mitsunaka\\
 545\Freelancer\3\5\0, 0\200, 1000\Increase Quick Card Critical Strength by 25%\Increase Quick Card Critical Strength by 30%\-\torino\\
 546\The Dynamics of an Asteroid\4\9\100, 100\100, 100\When equipped to James Moriarty (Archer) only. Increase NP Strength of all allies with [Evil] trait by 25% while he's on the field\\-\\\
 547\Kanshou & Bakuya (Pistols)\4\9\100, 100\100, 100\When equipped to Emiya [Alter] (Archer) only. Increase Quick, Arts, and Buster Card effectiveness of all allies by 8% while he's on the field\\-\\\
@@ -656,7 +656,7 @@
 656\Mop of Selection\4\9\100, 100\100, 100\When equipped to Altria [Alter] (Rider) only. Increase ATK of all allies by 20%, but decrease DEF by 15% [Demerit] while she's on the field\\-\\\
 657\NYARF!\4\9\100, 100\100, 100\When equipped to Helena Blavatsky (Archer) only. Increase Quick & Arts Card effectiveness of all allies by 10% while she's on the field\\-\\\
 658\Kyougoku\4\9\100, 100\100, 100\When equipped to Raikou (Lancer) only. Increase Quick & Buster Card effectiveness of all allies by 10% while she's on the field\\-\\\
-659\PRISMA☆ILLYA: Oath Under Snow\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\Hirata Kazuya (SILVER LINK.)\\\Fate/Kaleid Liner PRISMA☆ILLYA Movie: Oath Under Snow Commemorative CE
+659\PRISMA ILLYA: Oath Under Snow\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50; Received at Lv.80 with Max Limit unlocked\\-\Hirata Kazuya (SILVER LINK.)\\\Fate/Kaleid Liner PRISMA ILLYA Movie: Oath Under Snow Commemorative CE
 660\Battle Olympia\5\12\0, 500\0, 2000\Increase Arts Card effectiveness by 8%; Increase Buster Card effectiveness by 8%; Increase NP Gauge by 50% at the start of battle; Increase Nero Medal [Gold] drop amount by 1 [Nerofest 3]\Increase Arts Card effectiveness by 10%; Increase Buster Card effectiveness by 10%; Increase NP Gauge by 60% at the start of battle; Increase Nero Medal [Gold] drop amount by 2 [Nerofest 3]\-\Imigimuru\\\The Return of Nero Fest ~2017 Autumn~
 661\Two Gods Three Legs\5\12\0, 500\0, 2000\Apply Guts (1 HP, 1 time); Increase NP Strength by 15%; Increase ATK Strength by 100% [Nerofest 3]\Apply Guts (1 HP, 1 time); Increase NP Strength by 20%; Increase ATK Strength by 200% [Nerofest 3]\-\CanceR\\\The Return of Nero Fest ~2017 Autumn~
 662\Cheer for Master\5\12\400, 250\1600, 1000\Increase Quick Card effectiveness by 6%; Increase Arts Card effectiveness by 6%; Increase Buster Card effectiveness by 6%; Gain 3 Critical Stars per turn; Increase Crimson Petals drop amount by 1 [Nerofest 3]\Increase Quick Card effectiveness by 8%; Increase Arts Card effectiveness by 8%; Increase Buster Card effectiveness by 8%; Gain 4 Critical Stars per turn; Increase Crimson Petals drop amount by 2 [Nerofest 3]\-\Mo\\\The Return of Nero Fest ~2017 Autumn~
@@ -1000,7 +1000,7 @@
 1000\Spring Beauty\4\9\320, 200\1200, 750\Increase NP Gain by 15%, Increase Critical Strength by 15%, Increase Moon Luster Rouge drop amount by 1 [Tokugawa]\Increase NP Gain by 20%, Increase Critical Strength by 20%, Increase Moon Luster Rouge drop amount by 2 [Tokugawa]\-\Ono Tako\\\Tokugawa Kaiten Labyrinth: Ooku
 1001\Firefighter Spirit\3\5\0, 200\0, 1000\Increase Buster Card effectiveness by 3%, Increase NP Gain by 5%, Increase Snow Face Powder drop amount by 1 [Tokugawa]\Increase Buster Card effectiveness by 5%, Increase NP Gain by 10%, Increase Snow Face Powder drop amount by 2 [Tokugawa]\-\Iwamoto Eiri\\\Tokugawa Kaiten Labyrinth: Ooku
 1002\Crowning Beauty\5\12\400, 250\1600, 1000\Increase Quick Card effectiveness by 8%, Increase Arts Card effectiveness by 8%, Gain 15 Critical Stars when entering the battle (1 time), Increase ATK Strength by 100% [Tokugawa]\Increase Quick Card effectiveness by 10%, Increase Arts Card effectiveness by 10%, Gain 20 Critical Stars when entering the battle (1 time), Increase ATK Strength by 200% [Tokugawa]\-\TAKOLEGS\\\Tokugawa Kaiten Labyrinth: Ooku
-"1003\Arrows of Flower\4\9\100, 100\100, 100\When equipped to Kama (Assassin) only, Increase own Quick Card effectivess by 15% and Critical Strength by 20%	\\-\\\\Kama Bond Lv. 10"
+1003\Arrows of Flower\4\9\100, 100\100, 100\When equipped to Kama (Assassin) only, Increase own Quick Card effectivess by 15% and Critical Strength by 20%	\\-\\\\Kama Bond Lv. 10
 1004\Escape from the Pyramid\4\9\100, 100\100, 100\Increase Mystic Code EXP received from clearing quest by 50\\-\Kazuaki\\\｢Mysterious Singularity II: Escape from the Pyramid｣ Commemoration Campaign
 1005\Whydunnit\5\12\400, 250\1600, 1000\Increase Buster Card effectiveness by 10%, Increase NP Gain by 20%, Increase Noble Clock drop amount by 1 [Case Files]\Increase Buster Card effectiveness by 15%, Increase NP Gain by 25%, Increase Noble Clock drop amount by 2 [Case Files]\-\Kinako\\\Lady Reines Case Files
 1006\Prayers of Winter\4\9\600, 0\2250, 0\Increase NP Gauge by 4% per turn, Increase Critical Strength by 10%, Increase Dandy Rabbit drop amount by 1 [Case Files]\Increase NP Gauge by 5% per turn, Increase Critical Strength by 15%, Increase Dandy Rabbit drop amount by 2 [Case Files]\-\Cogecha\\\Lady Reines Case Files
@@ -1012,3 +1012,10 @@
 1012\Personal Coaching\5\12\400, 250\1600, 1000\Increase Master EXP from clearing quests by 1% (Increased to 3% when used as Support)\Increase Master EXP from clearing quests by 5% (Increased to 15% when used as Support)\-\Kodama\\
 1013\Singing Spear, Roaring Spear\4\9\100, 100\100, 100\Increase Mystic Code EXP from clearing quests by 50\\-\KEI\\
 1014\Sexy Pin-up\4\9\100, 100\100, 100\Increase Master EXP from clearing quests by 50\\-\Riyo\\
+1015\Twilight Holy King\5\12\400, 250\1600, 1000\Increase Buster Card effectiveness by 20%, Increase NP Strength by 10%\Increase Buster Card effectiveness by 25%, Increase NP Strength by 15%\-\hou\\
+1016\La Folia\4\9\320, 200\1200, 750\Increase Buster Card effectiveness by 10%, Increase HP Recovery Amount by 10%\Increase Buster Card effectiveness by 15%, Increase HP Recovery Amount by 20%\-\okojo\\
+1017\Day After\3\5\160, 100\800, 500\Increase NP Gauge by 1% per turn, Increase Debuff Resist by 5%\Increase NP Gauge by 2% per turn, Increase Debuff Resist by 10%\-\Hino Hinako\\
+1018\Family Protrait\4\9\600, 0\2250, 0\Increase HP Recovery Amount by 15%, Apply Damage Cut 300\Increase HP Recovery Amount by 20%, Apply Damage Cut 400\-\bob\\\Reward for clearing Lostbelt No.4: Yuga Kshetra
+1019\At the Gate of Delicious Food\4\9\100, 100\100, 100\When equipped to Ganesha (Jinako) (Moon Cancer) only, Gain 8 Critical Stars per turn, Restore HP of all allies by 300 per turn while she's on the field\\-\Tatsuyo\\\Ganesha (Jinako) Bond Lv.10
+1020\In the End, My Feelings Still Persevere\4\9\100, 100\100, 100\When equipped to Lakshmi Bai (Saber) only, Increase Quick Card effectiveness of all allies by 10% and NP Gain by 10% while she's on the field\\-\\\\Lakshmi Bai Bond Lv.10
+1021\One Arrow's Narrative\4\9\100, 100\100, 100\When equipped to William Tell (Archer) only, Increase Arts Card effectiveness of all allies by 10% and Critical Strength by 15% while he's on the field\\-\Gin no Fude\\\William Tell Bond Lv.10

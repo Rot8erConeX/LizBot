@@ -1,108 +1,111 @@
+190490901
+
+74\34
+68\18
+142\418
+18\28
+115\261
+33\72
+0\24
+56\15
+163\262
+
 74 # Nursery Rhyme
-1000\1000
+1080\1080
 0\0\0\0\0
-4\4\2
+6\7\6
 1
-28 # The Imaginary Element
-6
+34 # Kaleidoscope
+7
 4\2\1
 
 1.0 # Mash Kyrielight
 1000\1000
 0\0\0\0\0
-8\4\0
+10\10\0
 1
-401 # Room Guard
-1
-0\1\0
-
-16 # Arash
-240\120
-0\0\0\0\0
-5\5\0
-5
-0
-0
-3\1\0
-
-17 # Cu Chulainn
-0\0
-0\0\0\0\0
-2\1\0
-3
-0
-0
-2\1\0
+262 # Hot Spring Under the Moon
+2
+1\2\0
 
 18 # Elisabeth Bathory (Lancer)
-120\60
+130\130
 0\0\0\0\0
-5\2\0
+6\2\0
 1
-55 # Anchors Aweigh
-6
+28 # The Imaginary Element
+7
 1\2\0
 
 33 # Hans Christian Andersen
-50\50
+60\80
 0\0\0\0\0
-2\2\1
+5\2\2
 5
-72 # Clock Tower
+0
 0
 3\3\0
 
 38 # Cu Chulainn (Caster)
 0\0
 0\0\0\0\0
-2\2\0
-2
+2\2\2
+3
 0
 0
-2\2\0
+3\3\0
 
 56 # Kiyohime (Berserker)
-40\220
+40\240
 0\0\0\0\0
-4\4\0
-4
-401 # Room Guard
-6
-3\2\0
+5u\5\0
+5
+261 # Golden Sumo: Boulder Tournament
+7
+4\2\0
 
 68 # Okita Souji
-90\250
+90\350
 0\0\0\0\0
-4\4\0
+4\5\0
 1
 18 # Dragon's Meridian
-5
+6
 2\2\0
 
-142 # Ishtar (Archer)
-0\0
+115 # Sakata Kintoki (Rider)
+0\70
 0\0\0\0\0
-2\2\0
-1
-418 # Reality Marble
+5\5\0
+5
+0
 0
 1\2\0
+
+142 # Ishtar (Archer)
+30\90
+0\0\0\0\0
+2\2\2
+1
+0
+0
+3\3\0
 
 162 # Chacha
 20\20
 0\0\0\0\0
-2\0\0
+5\2\0
 3
 0
 0
 1\2\0
 
 163 # Meltryllis
-0\130
+1000\1000
 0\0\0\0\0
-2\2\1
+2\2\2
 1
-112 # Melty Sweetheart
 0
-2\2\0
+0
+4\3\0
 
