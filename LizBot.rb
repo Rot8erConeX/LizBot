@@ -462,7 +462,10 @@ def devservants_load() # loads information regarding the devunits
   else
     b=[]
   end
-  b=b.join("\n").split("\n\n").map{|q| q.split("\n").map{|q2| q2.split(' # ')[0]}}
+  b=b.join("\n").split("\n\n")
+  b.shift
+  b.shift
+  b=b.map{|q| q.split("\n").map{|q2| q2.split(' # ')[0]}}
   @dev_units=[]
   for i in 0...b.length
     b[i][0]=b[i][0].to_f
@@ -478,7 +481,31 @@ def devservants_load() # loads information regarding the devunits
   return @dev_units
 end
 
-def devservants_save() # used by the edit command to save the donorunits
+def devsupport_load() # loads information regarding the dev's support lineup
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt')
+    b=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt').each_line do |line|
+      b.push(line.gsub("\n",''))
+    end
+  else
+    b=[]
+  end
+  b=b.join("\n").split("\n\n")
+  id=b[0].to_i
+  supp=b[1].split("\n").map{|q| q.split('\\'[0])}.map{|q| [q[0].to_f, q[1].to_i]}
+  for i in 0...supp.length
+    supp[i][0]=supp[i][0].to_i if supp[i][0]>=2 || supp[i][0]==0
+  end
+  return [id,supp]
+end
+
+def devservants_save(table=[]) # used by the edit command to save the devunits
+  return nil unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt")
+  # snag the username
+  bb=[]
+  File.open("C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt").each_line do |line|
+    bb.push(line.gsub("\n",''))
+  end
   # sort the unit list alphabetically
   k=@dev_units.map{|q| q}
   k.compact!
@@ -489,12 +516,17 @@ def devservants_save() # used by the edit command to save the donorunits
   for i in 0...k.length
     untz.push(k[i].map{|q| q}) unless i==k2
   end
-  s=''
+  if table.nil? || table.length<9
+    s="#{bb[2,9].join("\n")}"
+  else
+    s=table[0,9].map{|q| q.join('\\'[0])}.join("\n")
+  end
+  s="#{bb[0]}\n\n#{s}"
   data_load()
   for i in 0...untz.length
     m=@servants.find_index{|q| q[0]==untz[i][0]}
     m2=@crafts.find_index{|q| q[0]==untz[i][5]}
-    s="#{s}#{"\n\n" unless i==0}#{untz[i][0]} # #{@servants[m][1]}\n#{untz[i][1].join('\\'[0])}\n#{untz[i][2].join('\\'[0])}\n#{untz[i][3].join('\\'[0])}\n#{untz[i][4]}\n#{untz[i][5]}#{" # #{@crafts[m2][1]}" unless m2.nil?}\n#{untz[i][6]}\n#{untz[i][7].join('\\'[0])}" unless m.nil?
+    s="#{s}\n\n#{untz[i][0]} # #{@servants[m][1]}\n#{untz[i][1].join('\\'[0])}\n#{untz[i][2].join('\\'[0])}\n#{untz[i][3].join('\\'[0])}\n#{untz[i][4]}\n#{untz[i][5]}#{" # #{@crafts[m2][1]}" unless m2.nil?}\n#{untz[i][6]}\n#{untz[i][7].join('\\'[0])}" unless m.nil?
   end
   open('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt', 'w') { |f|
     f.puts s
@@ -528,12 +560,12 @@ bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
   exec "cd C:/Users/Mini-Matt/Desktop/devkit && LizBot.rb #{@shardizard}"
 end
 
-bot.command([:help,:command_list,:commandlist,:Help]) do |event, command, subcommand|
+bot.command([:help,:command_list,:commandlist,:Help]) do |event, command, subcommand, *args|
   return nil if overlap_prevent(event)
-  help_text(event,bot,command,subcommand)
+  help_text(event,bot,command,subcommand,args)
 end
 
-def help_text(event,bot,command=nil,subcommand=nil)
+def help_text(event,bot,command=nil,subcommand=nil,args=[])
   command='' if command.nil?
   subcommand='' if subcommand.nil?
   k=0
@@ -544,9 +576,15 @@ def help_text(event,bot,command=nil,subcommand=nil)
   end
   if command.downcase=='reboot'
     create_embed(event,'**reboot**',"Reboots this shard of the bot, installing any updates.\n\n**This command is only able to be used by Rot8er_ConeX**",0x008b8b)
+  elsif ['support','supports','profile','friend','friends'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __user__","Shows `user`'s stored Support lineup.\n\nAccepts either a user mention or user ID as input.\nIf no valid user is provided, uses the user who invoked the command as input.",0xED619A)
   elsif ['devedit','dev_edit'].include?(command.downcase)
     subcommand='' if subcommand.nil?
-    if ['create'].include?(subcommand.downcase)
+    subcommand2=args[0]
+    subcommand2='' if subcommand2.nil?
+    if has_any?([subcommand.downcase,subcommand2.downcase],['ce','craft','craftessence']) && has_any?([subcommand.downcase,subcommand2.downcase],['support','supports','friends','friend'])
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase} #{subcommand2.downcase}** __slot__ __craft__","Causes me to equip the Craft Essence with the name `craft` to the support slot `slot`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+    elsif ['create'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Allows me to create a new devservant with the character `servant`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
     elsif ['fou','fous'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__ __stat__ __value__","Causes me to apply Fous to the devservant with the name `servant`.\n`stat` can be either HP/Health or Attack/Atk.\n`value` will be added to the pre-existing stats for the devservant, for a maximum of 2000 total per stat.\n\nIf no stat is defined, this command will fail.\nIf no value is defined, the stat will default to applying 10, the minimum amount applicable at once in-game.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
@@ -555,7 +593,7 @@ def help_text(event,bot,command=nil,subcommand=nil)
     elsif ['np','merge','merges'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to increase the Noble Phantasm level of one of the skills belonging to the devservant with the name `servant`.\nYou can include the word \"upgrade\" to upgrade the NP instead.\nYou can also include the word \"reset\" to reset the NP level to NP1.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
     elsif ['ce','craft','craftessence'].include?(subcommand.downcase)
-      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to equip a Craft Essence to the devservant with the name `servant`.\nYou can include the word \"bond\" to automatically equip the servant's Bond CE, but only if their bond level is high enough.\nYou can also include the word \"none\" to de-equip their CE.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__ __craft__","Causes me to equip the Craft Essence with the name `craft` to the devservant with the name `servant`.\nYou can include the word \"bond\" to automatically equip the servant's Bond CE, but only if their bond level is high enough.\nYou can also include the word \"none\" to de-equip their CE.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
     elsif ['bond'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to increase the bond level of one of the skills belonging to the devservant with the name `servant`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
     elsif ['ascension','ascend'].include?(subcommand.downcase)
@@ -568,12 +606,20 @@ def help_text(event,bot,command=nil,subcommand=nil)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to grailshift the devservant with the name `servant`.\n\nThis can only be used on devservants who have reached their Final Ascension.\nIt can also only be used on devservants who are not yet already gold.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
     elsif ['burn','delete'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to delete the devservant with the name `servant`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+    elsif ['command','code','deck'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__ __slot__ __code__","Causes me to equip the Command Code with the name `code` to the deck slot `slot` of the devservant with the name `servant`.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+    elsif ['support','supports','friend','friends'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to edit your support lineup to add the devservant with the name `servant` in the appropriate slot based on their class.\nIf you include the word \"all\", the devservant will be placed in your All slot instead.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
     else
-      create_embed(event,"**#{command.downcase}** __subcommand__ __servant__ __\*effects__","Allows me to create and edit the devservants.\n\nAvailable subcommands include:\n`FGO!#{command.downcase} create` - creates a new devservant\n`FGO!#{command.downcase} fou` - applies fous to an existing devservant's HP or Atk\n`FGO!#{command.downcase} skill` - increases a devservant's skill\n`FGO!#{command.downcase} np` - increases a devservant's NP *(also `merge`)*\n`FGO!#{command.downcase} ce` - equips a CE to a devservant\n`FGO!#{command.downcase} bond` - increases a devservant's bond level\n`FGO!#{command.downcase} ascension` - ascends a devservant\n`FGO!#{command.downcase} art` - changes which art gets displayed for a devservant\n`FGO!#{command.downcase} upgrade` - upgrades a devservant's skill or NP\n`FGO!#{command.downcase} grail` - grailshifts a devservant\n`FGO!#{command.downcase} burn` - burns a devservant *(also `delete`)*\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+      create_embed(event,"**#{command.downcase}** __subcommand__ __servant__ __\*effects__","Allows me to create and edit the devservants.\n\nAvailable subcommands include:\n`FGO!#{command.downcase} create` - creates a new devservant\n`FGO!#{command.downcase} fou` - applies fous to an existing devservant's HP or Atk\n`FGO!#{command.downcase} skill` - increases a devservant's skill\n`FGO!#{command.downcase} np` - increases a devservant's NP *(also `merge`)*\n`FGO!#{command.downcase} ce` - equips a CE to a devservant\n`FGO!#{command.downcase} bond` - increases a devservant's bond level\n`FGO!#{command.downcase} ascension` - ascends a devservant\n`FGO!#{command.downcase} art` - changes which art gets displayed for a devservant\n`FGO!#{command.downcase} upgrade` - upgrades a devservant's skill or NP\n`FGO!#{command.downcase} code` - gives a devservant a Command Code\n`FGO!#{command.downcase} support` - edits the dev's support lineup\n`FGO!#{command.downcase} grail` - grailshifts a devservant\n`FGO!#{command.downcase} burn` - burns a devservant *(also `delete`)*\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
     end
   elsif ['edit'].include?(command.downcase)
     subcommand='' if subcommand.nil?
-    if ['create'].include?(subcommand.downcase)
+    subcommand2=args[0]
+    subcommand2='' if subcommand2.nil?
+    if has_any?([subcommand.downcase,subcommand2.downcase],['ce','craft','craftessence']) && has_any?([subcommand.downcase,subcommand2.downcase],['support','supports','friends','friend'])
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase} #{subcommand2.downcase}** __slot__ __craft__","Causes me to equip the Craft Essence with the name `craft` to the support slot `slot`.\n\n**This command is only able to be used by certain people**.",0x9E682C)
+    elsif ['create'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Allows me to create a new donorservant with the character `servant`.\n\n**This command is only able to be used by certain people**.",0x9E682C)
     elsif ['fou','fous'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__ __stat__ __value__","Causes me to apply Fous to the donorservant with the name `servant`.\n`stat` can be either HP/Health or Attack/Atk.\n`value` will be added to the pre-existing stats for the donorservant, for a maximum of 2000 total per stat.\n\nIf no stat is defined, this command will fail.\nIf no value is defined, the stat will default to applying 10, the minimum amount applicable at once in-game.\n\n**This command is only able to be used by certain people**.",0x9E682C)
@@ -595,8 +641,12 @@ def help_text(event,bot,command=nil,subcommand=nil)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to grailshift the donorservant with the name `servant`.\n\nThis can only be used on donorservants who have reached their Final Ascension.\nIt can also only be used on donorservants who are not yet already gold.\n\n**This command is only able to be used by certain people**.",0x9E682C)
     elsif ['burn','delete'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to delete the donorservant with the name `servant`.\n\n**This command is only able to be used by certain people**.",0x9E682C)
+    elsif ['command','code','deck'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__ __slot__ __code__","Causes me to equip the Command Code with the name `code` to the deck slot `slot` of the devservant with the name `servant`.\n\n**This command is only able to be used by certain people**.",0x9E682C)
+    elsif ['support','supports','friend','friends'].include?(subcommand.downcase)
+      create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __servant__","Causes me to edit your support lineup to add the donorservant with the name `servant` in the appropriate slot based on their class.\nIf you include the word \"all\", the donorservant will be placed in your All slot instead.\n\n**This command is only able to be used by certain people**.",0x9E682C)
     else
-      create_embed(event,"**#{command.downcase}** __subcommand__ __servant__ __\*effects__","Allows me to create and edit the donorservants.\n\nAvailable subcommands include:\n`FGO!#{command.downcase} create` - creates a new donorservant\n`FGO!#{command.downcase} fou` - applies fous to an existing donorservant's HP or Atk\n`FGO!#{command.downcase} skill` - increases a donorservant's skill\n`FGO!#{command.downcase} np` - increases a donorservant's NP *(also `merge`)*\n`FGO!#{command.downcase} ce` - equips a CE to a donorservant\n`FGO!#{command.downcase} bond` - increases a donorservant's bond level\n`FGO!#{command.downcase} ascension` - ascends a donorservant\n`FGO!#{command.downcase} art` - changes which art gets displayed for a donorservant\n`FGO!#{command.downcase} upgrade` - upgrades a donorservant's skill or NP\n`FGO!#{command.downcase} grail` - grailshifts a donorservant\n`FGO!#{command.downcase} burn` - burns a donorservant *(also `delete`)*\n\n**This command is only able to be used by certain people**.",0x9E682C)
+      create_embed(event,"**#{command.downcase}** __subcommand__ __servant__ __\*effects__","Allows me to create and edit the donorservants.\n\nAvailable subcommands include:\n`FGO!#{command.downcase} create` - creates a new donorservant\n`FGO!#{command.downcase} fou` - applies fous to an existing donorservant's HP or Atk\n`FGO!#{command.downcase} skill` - increases a donorservant's skill\n`FGO!#{command.downcase} np` - increases a donorservant's NP *(also `merge`)*\n`FGO!#{command.downcase} ce` - equips a CE to a donorservant\n`FGO!#{command.downcase} bond` - increases a donorservant's bond level\n`FGO!#{command.downcase} ascension` - ascends a donorservant\n`FGO!#{command.downcase} art` - changes which art gets displayed for a donorservant\n`FGO!#{command.downcase} upgrade` - upgrades a donorservant's skill or NP\n`FGO!#{command.downcase} code` - gives a donorservant a Command Code\n`FGO!#{command.downcase} grail` - grailshifts a donorservant\n`FGO!#{command.downcase} support` - edits the donor's support lineup\n`FGO!#{command.downcase} burn` - burns a donorservant *(also `delete`)*\n\n**This command is only able to be used by certain people**.",0x9E682C)
     end
   elsif command.downcase=='prefix'
     create_embed(event,'**prefix** __new prefix__',"Sets the server's custom prefix to `prefix`.\n\n**This command can only be used by server mods.**",0xC31C19)
@@ -638,6 +688,8 @@ def help_text(event,bot,command=nil,subcommand=nil)
     create_embed(event,"**#{command.downcase}**","Shows the day's in-game daily events.\nIf in PM, will also show tomorrow's.\n\nYou can also show include the word \"tomorrow\" to force the next day's data.\nYou can also include a day of the week and force that to show instead.",0xED619A)
   elsif ['next','schedule'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __type__","Shows the next time in-game daily events of the type `type` will happen.\nIf in PM and `type` is unspecified, shows the entire schedule.\n\n__*Accepted Inputs*__\nTraining / Ground(s)\nEmber(s) / Gather(ing)\nMat(s) / Material(s) ~~this one only works fully in PM.~~",0xED619A)
+  elsif ['affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}** __class__","Shows the given class's affinities with other classes.\nIf no class is given, tries to find a servant name instead and uses their class as input.\nIf neither a class nor a servant is given, shows default affinities.",0xED619A)
   elsif ['exp','level','xp'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __start__ __end__","Shows how much EXP to get from level `start` to level `end`.\nIf the levels are in the wrong order, will auto-switch them.\n\nIf only one level is listed, will show *both* EXP to get from level 1 to specified level, and EXP to get from specified level to max level.\nIf no level is listed, will show EXP required to get from level 1 to max level.\n\nIn PM, shows everything unless you specify a particular type of EXP.\nOtherwise, only works if you specify a particular type of EXP:\n- Player\n- Servant\n- Craft Essence",0xED619A)
   elsif ['plxp','plexp','pllevel','plevel','pxp','pexp'].include?(command.downcase)
@@ -730,10 +782,10 @@ def help_text(event,bot,command=nil,subcommand=nil)
         end
       end
     else
-      create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+      create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Command Deck\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
     end
   elsif ['sort','list'].include?(command.downcase)
-    create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
+    create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Command Deck\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
   elsif ['deck'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*list of servants__","Shows all listed servants' decks, and then calculates how likely it is for the combined deck to generate a hand with each type of chain.",0xED619A)
   elsif ['aliases','checkaliases','seealiases','alias'].include?(command.downcase)
@@ -783,6 +835,7 @@ def help_text(event,bot,command=nil,subcommand=nil)
     str="#{str}\n`mysticcode` __name__ - displays data for a Mystic Code (*also `clothing` or `clothes`*)"
     str="#{str}\n`skill` __name__ - displays a skill's effects"
     str="#{str}\n`mat` __name__ - displays a material (*also `material`*)"
+    str="#{str}\n`affinity` __name__ - displays class affinities (*also `effective`*)"
     str="#{str}\n`find` __\*filters__ - search for servants (*also `search`*)"
     str="#{str}\n`sort` __\*filters__ - sort servants by HP or Atk (*also `list`*)"
     str="#{str}\n`deck` __\*servant list__ - to calculate deck probabilities"
@@ -858,7 +911,8 @@ def all_commands(include_nil=false,permissions=-1)
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
-     'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit']
+     'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit','support',
+     'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit'] if permissions==2
   k.push(nil) if include_nil
@@ -885,10 +939,10 @@ def donate_trigger_word(event,str=nil,mode=0)
       end
       f.push([b[0].split('\\'[0])[0],d[i].gsub("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/",'').gsub('.txt','').to_i,b[0].split('\\'[0])[1],b[0].split('\\'[0])[2]])
       f[-1][2]=f[-1][2].hex unless f[-1][2].nil?
-      if !get_donor_list().reject{|q| q[2][1]<3}.map{|q| q[0]}.include?(f[-1][1])
+      if !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(f[-1][1])
         f[-1]=nil
         f.compact!
-      elsif !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(f[-1][1])
+      elsif !get_donor_list().reject{|q| q[2][1]<5}.map{|q| q[0]}.include?(f[-1][1])
         f[-1][2]=nil
         f[-1][3]=nil
         f[-1].compact!
@@ -914,6 +968,8 @@ def donor_servant_list(uid,mode=0)
   b.shift
   untz=[]
   b=b.join("\n").split("\n\n").map{|q| q.split("\n").map{|q2| q2.split(' # ')[0]}}
+  b.shift
+  b.shift
   untz=[]
   for i in 0...b.length
     b[i][1]=b[i][1].split('\\'[0]).map{|q| q.to_i}
@@ -928,12 +984,30 @@ def donor_servant_list(uid,mode=0)
   return untz
 end
 
-def donor_servant_save(uid,table) # used by the edit command to save the donorservants
-  return nil unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
-  # snag the username
+def donor_support_list(uid,mode=0,jp=false)
+  return [] unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
   b=[]
   File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
     b.push(line.gsub("\n",''))
+  end
+  b=b.join("\n").split("\n\n")
+  id=b[0].split('\\'[0])[2]
+  id=b[0].split('\\'[0])[3] if jp
+  b2=b[1]
+  b2=b[2] if jp
+  b2=b2.split("\n").map{|q| q.split('\\'[0])}.map{|q| [q[0].to_f, q[1].to_i]}
+  for i in 0...b2.length
+    b2[i][0]=b2[i][0].to_i if b2[i][0]>=2 || b2[i][0]==0
+  end
+  return [id,b2]
+end
+
+def donor_servant_save(uid,table,table2=[],jp=false) # used by the edit command to save the donorservants
+  return nil unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  # snag the username
+  bb=[]
+  File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
+    bb.push(line.gsub("\n",''))
   end
   # sort the unit list alphabetically
   k=table.map{|q| q}
@@ -943,7 +1017,9 @@ def donor_servant_save(uid,table) # used by the edit command to save the donorse
   for i in 0...k.length
     untz.push(k[i].map{|q| q})
   end
-  s="#{b[0]}"
+  s="#{bb[0,21].join("\n")}"
+  s="#{bb[0]}\n\n#{table2[0,9].map{|q| q.join('\\'[0])}.join("\n")}\n\n#{bb[12,9].join("\n")}" if !table2.nil? && table2.length>=9
+  s="#{bb[0,11].join("\n")}\n\n#{table2[0,9].map{|q| q.join('\\'[0])}.join("\n")}" if !table2.nil? && table2.length>=9 && jp
   data_load()
   for i in 0...untz.length
     m=@servants.find_index{|q| q[0]==untz[i][0].gsub('j','').to_i}
@@ -1437,7 +1513,7 @@ def servant_color(event,k)
   extracolor=nil
   if donate_trigger_word(event)>0
     uid=donate_trigger_word(event)
-    if get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(uid)
+    if get_donor_list().reject{|q| q[2][1]<5}.map{|q| q[0]}.include?(uid)
       x=donor_servant_list(uid)
       dvx=x.find_index{|q| q[0].to_i==k[0].to_i}
       dvx=x.find_index{|q| q[0].downcase.include?('j') && q[0].downcase.gsub('j','').to_i==k[0].to_i} if has_any?(event.message.text.downcase.split(' '),['japan','jp']) || dvx.nil?
@@ -1682,6 +1758,7 @@ def disp_servant_stats(bot,event,args=nil)
       art=@dev_units[dv][7][1]
       cedata=@dev_units[dv][5]
       colorshift=@dev_units[dv][7][2] unless @dev_units[dv][7][2].nil?
+      support=devsupport_load()[1]
     end
   elsif donate_trigger_word(event)>0
     uid=donate_trigger_word(event)
@@ -1700,6 +1777,7 @@ def disp_servant_stats(bot,event,args=nil)
       cedata=x[dvx][5]
       art=x[dvx][7][1]
       colorshift=x[dvx][7][2] unless x[dvx][7][2].nil?
+      support=donor_support_list(uid,0,donorjp)[1]
     end
   end
   k[6]=k[6].map{|q| q+mfou[0]}
@@ -1732,8 +1810,20 @@ def disp_servant_stats(bot,event,args=nil)
     bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
   else
     kx=@crafts.find_index{|q| q[0]==cedata}
-    bond=">No CE equipped<"
-    bond="**Equipped CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
+    sup=support.find_index{|q| q[0]==k[0]}
+    if sup.nil?
+      bond=">No CE equipped<"
+      bond="**Equipped CE (local):** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
+    elsif kx.nil?
+      kx=@crafts.find_index{|q| q[0]==support[sup][1]}
+      bond=">No CE equipped<"
+      bond="**Equipped CE (support):** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
+    else
+      kx2=@crafts.find_index{|q| q[0]==support[sup][1]}
+      bond="**Equipped CE (local):** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]"
+      bond="__**Equipped CE**__\n*Local:* #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]\n*Support:* #{@crafts[kx2][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx2][0]}]" unless kx2.nil?
+      bond="**Equipped CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" if kx==kx2
+    end
   end
   text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)"
   text="#{text}\n**Team Cost:** #{k[21]}"
@@ -1793,6 +1883,7 @@ def disp_tiny_stats(bot,event,args=nil)
       cedata=@dev_units[dv][5]
       art=@dev_units[dv][7][1]
       colorshift=@dev_units[dv][7][2] unless @dev_units[dv][7][2].nil?
+      support=devsupport_load()[1]
     end
   elsif donate_trigger_word(event)>0
     uid=donate_trigger_word(event)
@@ -1811,6 +1902,7 @@ def disp_tiny_stats(bot,event,args=nil)
       cedata=x[dvx][5]
       art=x[dvx][7][1]
       colorshift=x[dvx][7][2] unless x[dvx][7][2].nil?
+      support=donor_support_list(uid,0,donorjp)[1]
     end
   end
   k[6]=k[6].map{|q| q+mfou[0]}
@@ -1847,8 +1939,20 @@ def disp_tiny_stats(bot,event,args=nil)
     bond="**Bond CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
   else
     kx=@crafts.find_index{|q| q[0]==cedata}
-    bond=">No CE equipped<"
-    bond="**Equipped CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
+    sup=support.find_index{|q| q[0]==k[0]}
+    if sup.nil?
+      bond=">No CE equipped<"
+      bond="**Equipped CE (local):** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
+    elsif kx.nil?
+      kx=@crafts.find_index{|q| q[0]==support[sup][1]}
+      bond=">No CE equipped<"
+      bond="**Equipped CE (support):** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" unless kx.nil?
+    else
+      kx2=@crafts.find_index{|q| q[0]==support[sup][1]}
+      bond="**Equipped CE (local):** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]"
+      bond="__**Equipped CE**__\n*Local:* #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]\n*Support:* #{@crafts[kx2][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx2][0]}]" unless kx2.nil?
+      bond="**Equipped CE:** #{@crafts[kx][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [CE-##{@crafts[kx][0]}]" if kx==kx2
+    end
   end
   text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
@@ -2002,37 +2106,11 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       str="#{'__' if safe_to_spam?(event,nil,1)}**Skill #{i+1}: #{k[14][i][0]}**#{'__' if safe_to_spam?(event,nil,1)}"
       str="#{str}\n*Obtained in Interlude or Rank-Up Quest*" if [19,21,9,32,42,28,23,29,35,31,15,34,16,53,56,13,25,22,36,48,45,54,46,41,5,103,50,14,30,49,57,26,27].include?(k[0]) && i==k[14].length-1
       if safe_to_spam?(event,nil,1)
-        k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}].map{|q| q}
-        if mlvl[i]>0
-          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]<7
-          str="#{str}\n*Cooldown:* #{k2[3]-1}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>6 && mlvl[i]<10
-          str="#{str}\n*Cooldown:* #{k2[3]-2}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>9
+        k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][0]}
+        if k2.nil?
+          str="#{str}\n~~ERROR LOADING SKILL DATA~~"
         else
-          str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}"
-        end
-        str="#{str}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
-        for i2 in 6...k2.length
-          unless k2[i2][0]=='-'
-            str="#{str}\n#{k2[i2][0]}"
-            unless k2[i2][1].nil?
-              x=k2[i2][1]
-              x2=k2[i2][6]
-              x3=k2[i2][10]
-              if x==x2 && x==x3
-                str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
-              elsif mlvl[i]>0
-                str="#{str}  \u00B7  #{k2[i2][mlvl[i]]} L#{micronumber(mlvl[i])}"
-              else
-                str="#{str}  \u00B7  #{x} L#{micronumber(1)}  \u00B7  #{x2} L#{micronumber(6)}  \u00B7  #{x3} L#{micronumber(10)}"
-              end
-            end
-          end
-        end
-      end
-      unless k[14][i][1].nil?
-        str="#{str}\n#{"\n__" if safe_to_spam?(event,nil,1)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event,nil,1)}"
-        if safe_to_spam?(event,nil,1)
-          k2=@skills[@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && k2 != q}].map{|q| q}
+          k2=@skills[k2].map{|q| q}
           if mlvl[i]>0
             str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]<7
             str="#{str}\n*Cooldown:* #{k2[3]-1}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>6 && mlvl[i]<10
@@ -2043,22 +2121,58 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
           str="#{str}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
           for i2 in 6...k2.length
             unless k2[i2][0]=='-'
-              str="#{str}\n#{k2[i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+              str="#{str}\n#{k2[i2][0]}"
               unless k2[i2][1].nil?
                 x=k2[i2][1]
                 x2=k2[i2][6]
                 x3=k2[i2][10]
-                if x.to_f<1
-                  x="#{(x.to_f*1000).to_i/10.0}%" 
-                  x2="#{(x2.to_f*1000).to_i/10.0}%"
-                  x3="#{(x3.to_f*1000).to_i/10.0}%"
-                end
                 if x==x2 && x==x3
                   str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
                 elsif mlvl[i]>0
                   str="#{str}  \u00B7  #{k2[i2][mlvl[i]]} L#{micronumber(mlvl[i])}"
                 else
-                  str="#{str}  \u00B7  #{x}\u00A0L#{micronumber(1)}  \u00B7  #{x2}\u00A0L#{micronumber(6)}  \u00B7  #{x3}\u00A0L#{micronumber(10)}"
+                  str="#{str}  \u00B7  #{x} L#{micronumber(1)}  \u00B7  #{x2} L#{micronumber(6)}  \u00B7  #{x3} L#{micronumber(10)}"
+                end
+              end
+            end
+          end
+        end
+      end
+      unless k[14][i][1].nil?
+        str="#{str}\n#{"\n__" if safe_to_spam?(event,nil,1)}*When upgraded: #{k[14][i][1]}*#{'__' if safe_to_spam?(event,nil,1)}"
+        if safe_to_spam?(event,nil,1)
+          k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][1] && k2 != q}
+          if k2.nil?
+            str="#{str}\n~~ERROR LOADING SKILL DATA~~"
+          else
+            k2=@skills[k2].map{|q| q}
+            if mlvl[i]>0
+              str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]<7
+              str="#{str}\n*Cooldown:* #{k2[3]-1}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>6 && mlvl[i]<10
+              str="#{str}\n*Cooldown:* #{k2[3]-2}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>9
+            else
+              str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}"
+            end
+            str="#{str}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+            for i2 in 6...k2.length
+              unless k2[i2][0]=='-'
+                str="#{str}\n#{k2[i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+                unless k2[i2][1].nil?
+                  x=k2[i2][1]
+                  x2=k2[i2][6]
+                  x3=k2[i2][10]
+                  if x.to_f<1
+                    x="#{(x.to_f*1000).to_i/10.0}%" 
+                    x2="#{(x2.to_f*1000).to_i/10.0}%"
+                    x3="#{(x3.to_f*1000).to_i/10.0}%"
+                  end
+                  if x==x2 && x==x3
+                    str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
+                  elsif mlvl[i]>0
+                    str="#{str}  \u00B7  #{k2[i2][mlvl[i]]} L#{micronumber(mlvl[i])}"
+                  else
+                    str="#{str}  \u00B7  #{x}\u00A0L#{micronumber(1)}  \u00B7  #{x2}\u00A0L#{micronumber(6)}  \u00B7  #{x3}\u00A0L#{micronumber(10)}"
+                  end
                 end
               end
             end
@@ -2075,8 +2189,13 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   else
     for i in 0...k[15].length
       str="*#{k[15][i].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
-      k2=@skills[@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}]
-      str="#{str}: #{k2[3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      k2=@skills.find_index{|q| q[2]=='Passive' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[15][i]}
+      if k2.nil?
+        str="#{str}: ~~ERROR~~"
+      else
+        k2=@skills[k2]
+        str="#{str}: #{k2[3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+      end
       passklz.push(str)
     end
   end
@@ -2535,7 +2654,14 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
   ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}" if asc<3
   ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}" if asc<4
   flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
-  if k[0]<2
+  if k[18][0,4].uniq.length<=1
+    ascstr="__*Per stage:* #{k[18][0].join(', ')}__"
+    ascstr="#{ascstr}\n*First Ascension:* #{numabr(qp[0])}#{qpd}" if asc<1
+    ascstr="#{ascstr}\n*Second Ascension:* #{numabr(qp[1])}#{qpd}" if asc<2
+    ascstr="#{ascstr}\n*Third Ascension:* #{numabr(qp[2])}#{qpd}" if asc<3
+    ascstr="#{ascstr}\n*Final Ascension:* #{numabr(qp[3])}#{qpd}" if asc<4
+    flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
+  elsif k[0]<2
     ascstr=''
     ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}" if asc<1
     ascstr="#{ascstr}\n*Second Ascension:* #{k[18][1].join(', ')}" if asc<2
@@ -2625,7 +2751,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     end
   end
   artist=nil
-  artist=k[24] unless k[24].nil? || k[24].length<=0
+  artist=k[24].split(' as ')[0] unless k[24].nil? || k[24].length<=0
   t=Time.now
   t-=6*60*60
   riyodefault= !riyodefault if t.month==4 && t.day==1
@@ -2722,7 +2848,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
     midtext="~~#{["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][asc]}~~\n"
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
-    artist=k[24] unless k[24].nil? || k[24].length<=0
+    artist=k[24].split(' as ') unless k[24].nil? || k[24].length<=0
     asc=1
     text="#{text}\n\nRequested art not found.  Default art shown."
   elsif k[0]<1.2 && asc==6
@@ -2742,9 +2868,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   else
     f=[[],[],[]]
     inart=[]
-    f[2]=@servants.reject{|q| q[24]!=artist || q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
-    f[0]=@servants.reject{|q| q[24]!=artist || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
-    f[1]=@servants.reject{|q| q[25]!=k[25] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
+    f[2]=@servants.reject{|q| q[24].split(' as ')[0]!=artist || q[25].split(' as ')[0]!=k[25].split(' as ')[0] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"} unless artist.nil? || k[25].nil? || k[25].length<=0
+    f[0]=@servants.reject{|q| q[24].split(' as ')[0]!=artist || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless artist.nil?
+    f[1]=@servants.reject{|q| q[25].split(' as ')[0]!=k[25].split(' as ')[0] || q[0]==k[0]}.map{|q| "Srv-#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.reject{|q| f[2].include?(q)} unless k[25].nil? || k[25].length<=0
     f[0].push("~~Every servant's April Fool's Day art~~") if artist=='Riyo'
     crf=@crafts.map{|q| q}
     for i in 0...crf.length
@@ -2763,13 +2889,13 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       b[i]=b[i].gsub("\n",'').split('\\'[0])
       b[i][7]=b[i][7].split(';; ')
       if !b[i][6].nil? && b[i][6].length>0 && !b[i][7][1].nil? && b[i][7][1].length>0
-        f[2].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][7][1].split(' as ')[0]==k[25]
+        f[2].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[0]==artist && b[i][7][1].split(' as ')[0]==k[25]
       end
       if !b[i][6].nil? && b[i][6].length>0
-        f[0].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]==artist && b[i][7][1].split(' as ')[0]!=k[25]
+        f[0].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[0]==artist && b[i][7][1].split(' as ')[0]!=k[25]
       end
       if !b[i][7][1].nil? && b[i][7][1].length>0
-        f[1].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[-1]!=artist && b[i][7][1].split(' as ')[0]==k[25]
+        f[1].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[0]!=artist && b[i][7][1].split(' as ')[0]==k[25]
       end
     end
     fehunts=b.map{|q| q}
@@ -2788,7 +2914,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         unless b[i][10].nil? || b[i][10].length<=0
-          f[1].push("*[DL-Adv]* #{b[i][0]}") if b[i][10].split(' as ')[0]==k[25]
+          f[1].push("*[DL-Adv]* #{b[i][0]}") if b[i][10].split(' as ')[0]==k[25].split(' as ')[0]
         end
       end
       dladv=b.map{|q| q}
@@ -2803,7 +2929,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         unless b[i][13].nil? || b[i][13].length<=0
-          f[1].push("*[DL-Drg]* #{b[i][0]}") if b[i][13].split(' as ')[0]==k[25]
+          f[1].push("*[DL-Drg]* #{b[i][0]}") if b[i][13].split(' as ')[0]==k[25].split(' as ')[0]
         end
       end
       dldrg=b.map{|q| q}
@@ -2818,7 +2944,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         unless b[i][4].nil? || b[i][4].length<=0
-          f[1].push("*[DL-NPC]* #{b[i][0]}") if b[i][4].split(' as ')[0]==k[25]
+          f[1].push("*[DL-NPC]* #{b[i][0]}") if b[i][4].split(' as ')[0]==k[25].split(' as ')[0]
         end
       end
       dlnpc=b.map{|q| q}
@@ -2872,6 +2998,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     asc="#{cemoji[1]*(asc)}#{cemoji[0]*(4-asc)}"
   else
     asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume','Smol and Cute'][asc]
+  end
+  unless artist=='Riyo' || (k[0]==163 && dv>=0)
+    artist=nil
+    artist=k[24].split(' as ')[-1] unless k[24].nil? || k[24].length<=0
   end
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
     str=''
@@ -2968,7 +3098,7 @@ def disp_ce_card(bot,event,args=nil)
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
-  create_embed(event,["**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]",title],text,xcolor,ftr,xpic)
+  create_embed(event,["__**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]__",title],text,xcolor,ftr,xpic)
 end
 
 def disp_ce_art(bot,event,args=nil)
@@ -3418,10 +3548,10 @@ def disp_mat_data(bot,event,args=nil)
         for i3 in 0...x[i2].length
           m=x[i2][i3].split(' ')
           f=m.pop
-          if m.join(' ')==k && lists[2] && srvs[i][6].reject{|q| q>i2+2}.length>0
+          if m.join(' ')==k && lists[2] && srvs[i][6].reject{|q| q>i2+1}.length>0
             mts.push("**#{f.gsub('x','')}** to reach L#{i2+2}")
-            fff3+=srvs[i][6].reject{|q| q>i2+2}.length*f.gsub('x','').to_i if m.join(' ')==k
-            srvtot[2]+=srvs[i][6].reject{|q| q>i2+2}.length*f.gsub('x','').to_i if m.join(' ')==k
+            fff3+=srvs[i][6].reject{|q| q>i2+1}.length*f.gsub('x','').to_i if m.join(' ')==k
+            srvtot[2]+=srvs[i][6].reject{|q| q>i2+1}.length*f.gsub('x','').to_i if m.join(' ')==k
           end
         end
       end
@@ -4217,7 +4347,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     dispstr=['Material',"#{unit}",'Material',unit]
   elsif type[1]=='Clothes'
     unit=find_clothes(unit,event)
-    dispstr=['Clothes',"#{unit[0]}",'Mytic Code',"#{unit[0]}"]
+    dispstr=['Clothes',"#{unit[0]}",'Mystic Code',"#{unit[0]}"]
   elsif type[1]=='Command'
     unit=find_code(unit,event,true)
     dispstr=['Command',"#{unit[1]} [Cmd-##{unit[0]}]",'Command Code',unit[0]]
@@ -4888,6 +5018,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
   attributes=[]
   traits=[]
   nps=[]
+  decks=[]
   targets=[]
   avail=[]
   align1=[]
@@ -4917,7 +5048,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
     clzz.push('Rider') if ['rider','riders','raida','raidas'].include?(args[i])
     clzz.push('Caster') if ['caster','casters','castor','castors','mage','mages','magic'].include?(args[i])
     clzz.push('Assassin') if ['assassin','assasshin','assassins','assasshins'].include?(args[i])
-    clzz.push('Berserker') if ['berserker','berserkers','berserk','berserks'].include?(args[i])
+    clzz.push('Berserker') if ['berserker','berserkers','berserk','berserks','zerker','zerkers'].include?(args[i])
     clzz.push('Shielder') if ['shielder','shielders','shield','shields','sheilder','sheilders','sheild','sheilds','extra','extras'].include?(args[i])
     clzz.push('Ruler') if ['ruler','rulers','king','kings','queen','queens','leader','leaders','extra','extras'].include?(args[i])
     for i2 in 0...lookout2.length
@@ -4946,8 +5077,21 @@ def find_in_servants(bot,event,args=nil,mode=0)
       traits.push(lookout[i2][0]) if lookout[i2][1].include?(args[i])
     end
     nps.push('Quick') if ['quick','q'].include?(args[i])
-    nps.push('Arts') if ['arts','a'].include?(args[i])
-    nps.push('Buster') if ['buster','b'].include?(args[i])
+    nps.push('Arts') if ['arts','art','a'].include?(args[i])
+    nps.push('Buster') if ['buster','bust','b'].include?(args[i])
+    decks.push('QQQAB') if ['quickbrave','qbrave','bravequick','braveq','quickquick','qq'].include?(args[i])
+    decks.push('QQAAB') if ['quickarts','quickart','qa'].include?(args[i])
+    decks.push('QQABB') if ['quickbuster','quickbust','qb','lancerdeck','deckoflancer','lancedeck','deckoflance'].include?(args[i])
+    decks.push('QAAAB') if ['artsbrave','artbrave','abrave','bravearts','braveart','bravea','artsarts','artsart','artarts','artart','aa','casterdeck','castordeck','deckofcaster','deckofcastor','magedeck','magicdeck'].include?(args[i])
+    decks.push('QAABB') if ['artsbuster','artbuster','artsbust','artbust','ab','saberdeck','seibadeck','deckofsaber','deckofseiba'].include?(args[i])
+    decks.push('QABBB') if ['busterbrave','bbrave','bravebuster','braveb','bustbrave','bravebust','busterbuster','busterbust','bustbuster','bustbust','bb','berserkerdeck','berserkdeck','zerkerdeck','deckofberserker','deckofberserk','deckofzerker'].include?(args[i])
+    if args[i].include?('q') && args[i].include?('a') && args[i].include?('b') && args[i].length>=5 && args[i].gsub('q','').gsub('a','').gsub('b','').gsub('(','').gsub(')','').gsub('-','').gsub('_','').length<=0
+      args[i]=args[i].gsub('(','').gsub(')','').gsub('-','').gsub('_','')
+      m=args[i][0,5].upcase.scan(/\w/).sort{|a,b| dsort(a)<=>dsort(b)}.join('')
+      n=''
+      n="(#{args[i][5,1].upcase})" if args[i].length>5
+      decks.push("#{m}#{n}")
+    end
     targets.push('Self') if ['self'].include?(args[i])
     targets.push('All Enemies') if ['enemies','allenemies','all_enemies','all-enemies','aoe','areaofeffect','area_of_effect','area_of-effect','area-of_effect','area-of-effect'].include?(args[i])
     targets.push('Enemy') if ['enemy','singleenemy','single_enemy','single-enemy','singlenemy','oneenemy','one_enemy','one-enemy','onenemy','st','singletarget','single-target','single_target','single'].include?(args[i])
@@ -4990,6 +5134,26 @@ def find_in_servants(bot,event,args=nil,mode=0)
     align.push('None') if ['noalignment','nonealignment','none'].include?(args[i])
   end
   textra=''
+  if nps.length>=5 && nps.include?('Quick') && nps.include?('Arts') && nps.include?('Buster')
+    m=true
+    while nps.length>=5 && m
+      mx=nps[0,5]
+      if mx.include?('Quick') && mx.include?('Arts') && mx.include?('Buster')
+        mx=mx.map{|q| q[0]}.sort{|a,b| dsort(a)<=>dsort(b)}.join('')
+        decks.push(mx)
+        nps.shift
+        nps.shift
+        nps.shift
+        nps.shift
+        nps.shift
+      else
+        m=false
+      end
+    end
+  end
+  decks.push('QQQAB') if nps.reject{|q| q !='Quick'}.length>1
+  decks.push('QAAAB') if nps.reject{|q| q !='Arts'}.length>1
+  decks.push('QABBB') if nps.reject{|q| q !='Buster'}.length>1
   if align1.include?('Neutral') && !align2.include?('Balanced')
     textra="#{textra}\n\nThe search for \"Neutral\" is being applied to the Horizontal spectrum (Lawful-Chaotic).\nIf you would like the vertical alignment called \"Neutral\" in JP, please use the search term \"Balanced\" instead."
   end
@@ -5013,6 +5177,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
   attributes.uniq!
   traits.uniq!
   nps.uniq!
+  decks.uniq!
   targets.uniq!
   avail.uniq!
   align1.uniq!
@@ -5055,8 +5220,25 @@ def find_in_servants(bot,event,args=nil,mode=0)
       end
     end
   end
-  if nps.length>0
+  if decks.length>0
+    search.push("*Command Decks*: #{decks.join(', ')}")
+    nps=['Q','A','B'] if nps.length<=0
+    total_decks=[]
+    for i in 0...decks.length
+      if decks[i].length>5
+        total_decks.push(decks[i])
+      else
+        for i2 in 0...nps.length
+          total_decks.push("#{decks[i]}(#{nps[i2][0,1]})")
+        end
+      end
+    end
+    nps=[] if nps.reject{|q| q.length<2}.length<=0
+    char=char.reject{|q| !total_decks.include?(q[17])}.uniq
+  elsif nps.length>0
     char=char.reject{|q| !nps.map{|q| q[0]}.include?(q[17][6,1])}.uniq
+  end
+  if nps.length>0
     for i in 0...nps.length
       nps[i]='<:Quick_y:526556106986618880>Quick' if nps[i]=='Quick'
       nps[i]='<:Arts_y:526556105489252352>Arts' if nps[i]=='Arts'
@@ -5555,7 +5737,7 @@ def level(event,bot,args=nil,mode=0)
   if [3,0].include?(mode)
     dxp=[1,3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,231,253,276,300,325,351,378,406,435,465,496,528,561,595,630,666,703,741,780,820,861,
          903,946,990,1035,1081,1128,1176,1225,1275,1326,1378,1431,1485,1540,1596,1653,1711,1770,1830,1891,1953,2016,2080,2145,2211,2278,2346,2415,2485,2556,
-         2628,2701,2775,2850,2926,3003,3081,3160,3240,3321,3403,3486,3570,3655,3741,3828,3916,4005,4095,4186,4278,4371,4465,4560,4656,4753,4851,4950,5050,0]
+         2628,2701,2775,2850,2926,3003,3081,3160,3240,3321,3403,3486,3570,3655,3741,3828,3916,4005,4095,4186,4278,4371,4465,4560,4656,4753,4851,4950,5050]
     str=extend_message(str,"__**Craft Essence EXP**__",event,2)
     if nums.length<=0
       m=dxp[0,10].map{|q| q*100}.inject(0){|sum,x| sum + x }
@@ -5658,9 +5840,14 @@ end
 
 def dsort(s)
   return 1 if s=='Q'
+  return 1 if s=='Quick'
   return 2 if s=='A'
+  return 2 if s=='Arts'
   return 3 if s=='B'
-  return 4
+  return 3 if s=='Buster'
+  return 4 if s=='E'
+  return 4 if s=='Extra'
+  return 5
 end
 
 def generate_deck(event,bot,args=nil)
@@ -5996,6 +6183,351 @@ def show_servant_alts(event,bot,args=nil)
   else
     create_embed(event,"__**#{k[28][0]}**__",dispstr,avg_color(srvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"#{srvs.length} total",nil,flds)
   end
+end
+
+def support_lineup(event,bot,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  args=args.reject{ |a| a.downcase=='smol' } if @shardizard==4
+  args=args.map{|q| q.downcase}
+  m=event.message.mentions.reject{|q| [502288364838322176,431895561193390090].include?(q.id)}
+  uid=event.user.id
+  if m.length>0
+    uid=m[0].id
+  else
+    for i in 0...args.length
+      uid=args[i].to_i if args[i].to_i.to_s==args[i] && !bot.user(args[i].to_i).nil?
+    end
+  end
+  jp=false
+  xcolor=0xED619A
+  if uid==167657750971547648
+    m=devsupport_load()
+    devservants_load()
+    srvlist=@dev_units.map{|q| q}
+    xcolor=0x00DAFA
+    dispname='Mathoo'
+  elsif !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(uid)
+    if uid==event.user.id
+      event.respond "You do not have permission to store your support lineup in my data."
+    else
+      event.respond "That user does not have permission to store their support lineup in my data."
+    end
+    return nil
+  elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+    event.respond "The file required for this command to work hasn't been created.  Please be patient."
+    return nil
+  else
+    jp=true if has_any?(args.map{|q| q.downcase},['japan','jp'])
+    m=donor_support_list(uid,0,jp)
+    srvlist=donor_servant_list(uid,0)
+    if jp
+      srvlist=srvlist.reject{|q| !q[0].include?('j')}
+      for i in 0...srvlist.length
+        srvlist[i][0]=srvlist[i][0].gsub('j','')
+      end
+    else
+      srvlist=srvlist.reject{|q| q[0].include?('j')}
+    end
+    xcolor=donor_servant_list(uid,1)[0].split('\\'[0])[1].hex unless donor_servant_list(uid,1)[0].split('\\'[0])[1].nil? || !get_donor_list().reject{|q| q[2][1]<5}.map{|q| q[0]}.include?(uid)
+    dispname=donor_servant_list(uid,1)[0].split('\\'[0])[0]
+  end
+  for i in 0...srvlist.length
+    srvlist[i][0]=srvlist[i][0].to_f
+    srvlist[i][0]=srvlist[i][0].to_i if srvlist[i][0]>=2
+  end
+  img=bot.user(uid).avatar_url
+  title="**Friend Code:** #{longFormattedNumber(m[0].to_i)}"
+  title="#{title}\n**Server:** North America" unless jp
+  title="#{title}\n**Server:** Japan" if jp
+  m=m[1]
+  name=bot.user(uid).name
+  if name==dispname
+    name="__**#{name}**__"
+  else
+    name="__**#{dispname}** (#{name})__"
+  end
+  text=''
+  data_load()
+  srvs=@servants.map{|q| q}
+  crft=@crafts.map{|q| q}
+  clzz=['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra']
+  dispfous=false
+  dispce=false
+  if safe_to_spam?(event,nil,1)
+    if has_any?(event.message.text.downcase.split(' '),['np','merges','merge','skill','skills','skl','skls','fou','fous'])
+      dispfous=true
+    else
+      dispce=true
+    end
+  end
+  for i in 0...clzz.length
+    newline="\n\n"
+    newline="\n" if !safe_to_spam?(event,nil,1)
+    newline="\n" if i>0 && (m[i].nil? || m[i].length<=0 || m[i].max<=0) && (m[i-1].nil? || m[i-1].length<=0 || m[i-1].max<=0)
+    if m[i].nil? || m[i].length<=0 || m[i][0]<=0
+      text="#{text}#{newline}~~**#{clzz[i]}:** >Empty<~~"
+    else
+      j=srvs[srvs.find_index{|q| q[0]==m[i][0]}]
+      ntry=srvlist.find_index{|q| q[0]==m[i][0]}
+      srvname="#{j[1]}"
+      srvname=srvname.gsub(" (#{clzz[i]})",'') unless [0,8].include?(i)
+      if ntry.nil?
+        text="#{text}#{newline}~~**#{clzz[i]}:** #{srvname} [Srv-##{j[0]}] #{servant_moji(bot,event,j,2)}~~"
+      else
+        text="#{text}#{newline}**#{clzz[i]}:** #{srvname} [Srv-##{j[0]}] #{servant_moji(bot,event,j,2,srvlist[ntry][7][2],uid)}"
+        if safe_to_spam?(event) || dispfous
+          text="#{text}\n*NP#{srvlist[ntry][4]}*"
+          text="#{text}  \u00B7  *Skills:*\u00A0\u00A0#{srvlist[ntry][3].join("/")}"
+          text="#{text}  \u00B7  *Fous:*\u00A0\u00A0#{srvlist[ntry][1][0]}\u00A0HP\u00A0/\u00A0#{srvlist[ntry][1][1]}\u00A0Atk"
+        end
+      end
+    end
+    if safe_to_spam?(event) || dispce
+      if m[i].nil? || m[i].length<=1 || m[i][1]<=0
+        text="#{text}\n~~*CE:* >Empty<~~" if safe_to_spam?(event) && (!m[i].nil? && m[i].length>0 && m[i][0]>0)
+      else
+        j=crft[crft.find_index{|q| q[0]==m[i][1]}]
+        text="#{text}\n*CE:* #{j[1]} [CE-##{j[0]}]"        
+      end
+    end
+  end
+  if title.length+text.length>=1900
+    m=[0,text.split("\n\n")]
+    str=''
+    for i in 0...m[1].length
+      if "#{str}\n\n#{m[1][i]}".length>=1900
+        if m[0]==0
+          create_embed(event,[name,title],str,xcolor,nil,img)
+        else
+          create_embed(event,'',str,xcolor)
+        end
+        m[0]+=1
+        str="#{m[1][i]}"
+      else
+        str="#{str}\n\n#{m[1][i]}"
+      end
+    end
+    if m[0]==0
+      create_embed(event,[name,title],str,xcolor,nil,img)
+    else
+      create_embed(event,'',str,xcolor)
+    end
+  else
+    create_embed(event,[name,title],text,xcolor,nil,img)
+  end
+end
+
+def affinity_data(event,bot,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
+  args=args.reject{ |a| a.downcase=='smol' } if @shardizard==4
+  args=args.map{|q| q.downcase}
+  clzz=''
+  lookout=[]
+  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+    lookout=[]
+    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+      lookout.push(eval line)
+    end
+  end
+  dmg=false
+  lookout2=lookout.reject{|q| q[2]!='Class'}
+  for i in 0...args.length
+    clzz='Saber' if ['saber','sabers','seiba','seibas'].include?(args[i]) && clzz.length<=0
+    clzz='Archer' if ['archer','bow','sniper','archa','archers','bows','snipers','archas'].include?(args[i]) && clzz.length<=0
+    clzz='Lancer' if ['lancer','lancers','lance','lances'].include?(args[i]) && clzz.length<=0
+    clzz='Rider' if ['rider','riders','raida','raidas'].include?(args[i]) && clzz.length<=0
+    clzz='Caster' if ['caster','casters','castor','castors','mage','mages','magic'].include?(args[i]) && clzz.length<=0
+    clzz='Assassin' if ['assassin','assasshin','assassins','assasshins'].include?(args[i]) && clzz.length<=0
+    clzz='Berserker' if ['berserker','berserkers','berserk','berserks','zerker','zerkers'].include?(args[i]) && clzz.length<=0
+    clzz='Shielder' if ['shielder','shielders','shield','shields','sheilder','sheilders','sheild','sheilds','extra','extras'].include?(args[i]) && clzz.length<=0
+    clzz='Ruler' if ['ruler','rulers','king','kings','queen','queens','leader','leaders'].include?(args[i]) && clzz.length<=0
+    for i2 in 0...lookout2.length
+      clzz=lookout2[i2][0] if lookout2[i2][1].include?(args[i]) && clzz.length<=0
+    end
+  end
+  str=''
+  xcolor=0xED619A
+  xpic=nil
+  if clzz.length<=0
+    k=find_data_ex(:find_servant,args.join(' '),event)
+    if k.length.zero?
+      clzz='Default Affinity'
+      xpic='https://cdn.discordapp.com/emojis/523838967058006027.png?v=1'
+    else
+      str="*Servant:* #{k[1]} [Srv-##{k[0]}] #{servant_moji(bot,event,k,2)}\n*Class:* "
+      clzz=k[2]
+      xpic=servant_icon(k,event)
+      xcolor=servant_color(event,k)
+    end
+  else
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{clzz.downcase.gsub(' ','')}_silver"}
+    xpic=moji[0].icon_url if moji.length>0
+  end
+  str="#{str}__**#{clzz}**__"
+  title=''
+  data=[100,10,100]
+  data=[95,8,150] if clzz=='Archer'
+  data=[105,12,90] if clzz=='Lancer'
+  data=[100,9,200] if clzz=='Rider'
+  data=[90,25,100] if clzz=='Assassin'
+  data=[90,11,50] if clzz=='Caster'
+  data=[110,5,10] if clzz=='Berserker'
+  data=[110,10,100] if clzz=='Ruler'
+  data=[100,15,50] if clzz=='Moon Cancer'
+  data=[110,6,30] if clzz=='Avenger'
+  data=[110,15,150] if clzz=='Foreigner'
+  unless k.nil? || k.length<=0
+    data[2]=k[10][0]
+    data[1]=k[10][1]
+  end
+  title="*Base Damage modifier:* #{data[0]}%"
+  title="#{title}\n*Crit Star Drop Rate:* #{data[1]}%"
+  title="#{title}\n*Crit Star Absorb Weight:* #{data[2]}%"
+  atk=[0,0,0,0,0,0,2,-1,0,0,0,0]
+  defn=[0,0,0,0,0,0,1,0,0,0,0,0]
+  if clzz=='Shielder'
+    for i in 0...atk.length
+      atk[i]=0
+      defn[i]=0
+    end
+  elsif clzz=='Saber'
+    atk[1]=-1
+    defn[1]=2
+    defn[2]=-1
+    atk[2]=2
+  elsif clzz=='Archer'
+    atk[2]=-1
+    defn[2]=2
+    defn[0]=-1
+    atk[0]=2
+  elsif clzz=='Lancer'
+    atk[0]=-1
+    defn[0]=2
+    defn[1]=-1
+    atk[1]=2
+  elsif clzz=='Rider'
+    atk[4]=-1
+    defn[4]=2
+    defn[5]=-1
+    atk[5]=2
+  elsif clzz=='Assassin'
+    atk[5]=-1
+    defn[5]=2
+    defn[3]=-1
+    atk[3]=2
+  elsif clzz=='Caster'
+    atk[3]=-1
+    defn[3]=2
+    defn[4]=-1
+    atk[4]=2
+  elsif clzz=='Berserker'
+    for i in 0...atk.length
+      atk[i]=1
+      defn[i]=2
+    end
+    defn[6]=1
+    atk[11]=-1
+  elsif clzz=='Ruler'
+    for i in 0...6
+      defn[i]=-1
+    end
+    atk[7]=0
+    atk[8]=-1
+    defn[8]=2
+    defn[9]=-1
+    atk[9]=2
+  elsif clzz=='Avenger'
+    atk[9]=-1
+    defn[9]=2
+    defn[7]=-1
+    atk[7]=2
+  elsif clzz=='Moon Cancer'
+    atk[7]=-1
+    defn[7]=2
+    defn[8]=-1
+    atk[8]=2
+  elsif clzz=='Alter Ego'
+    for i in 0...3
+      atk[i]=-1
+      atk[i+3]=1
+    end
+  elsif clzz=='Foreigner'
+    defn[6]=-1
+    defn[10]=1
+    atk[10]=-1
+    atk[11]=2
+    defn[11]=2
+  end
+  defn[10]=-1 if ['Saber','Archer','Lancer'].include?(clzz)
+  defn[10]=1 if ['Rider','Assassin','Caster'].include?(clzz)
+  atk.unshift(0)
+  defn.unshift(0)
+  classes=['Shielder','Saber','Archer','Lancer','Rider','Assassin','Caster','Berserker','Ruler','Avenger','Moon Cancer','Alter Ego','Foreigner']
+  for i in 0...atk.length
+    m=['silver',100+50*atk[i]]
+    m[0]='bronze' if atk[i]<0
+    m[0]='gold' if atk[i]>0
+    m2=['silver',100+50*defn[i]]
+    m2[0]='bronze' if defn[i]>0
+    m2[0]='gold' if defn[i]<0
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{classes[i].downcase.gsub(' ','')}_#{m[0]}"}
+    moji2=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{classes[i].downcase.gsub(' ','')}_#{m2[0]}"}
+    if k.nil?
+      atk[i]="#{moji[0].mention unless moji.length<=0}#{classes[i]}: #{m[1]}%"
+      defn[i]="#{moji2[0].mention unless moji.length<=0}#{classes[i]}: #{m2[1]}%"
+    elsif k[0]==175 && defn[i]>0
+      atk[i]="#{moji[0].mention unless moji.length<=0}#{classes[i]}: #{m[1]}%"
+      defn[i]="#{moji2[0].mention unless moji.length<=0}#{classes[i]}: #{m2[1]}% (100% after S2)"
+    elsif k[0]==199 && classes[i]=='Caster'
+      atk[i]="#{moji[0].mention unless moji.length<=0}#{classes[i]}: #{m[1]}% (100% after S2)"
+      defn[i]="#{moji2[0].mention unless moji.length<=0}#{classes[i]}: #{m2[1]}% (100% after S2)"
+    elsif k[0]==239 && classes[i]=='Alter Ego'
+      atk[i]="#{moji[0].mention unless moji.length<=0}#{classes[i]}: #{m[1]}% (200% after S3)"
+      defn[i]="#{moji2[0].mention unless moji.length<=0}#{classes[i]}: #{m2[1]}% (50% after S3)"
+    else
+      atk[i]="#{moji[0].mention unless moji.length<=0}#{classes[i]}: #{m[1]}%"
+      defn[i]="#{moji2[0].mention unless moji.length<=0}#{classes[i]}: #{m2[1]}%"
+    end
+  end
+  if safe_to_spam?(event,nil,1)
+    atk[0]="__#{atk[0]}__"
+    atk[7]="__#{atk[7]}__"
+    defn[0]="__#{defn[0]}__"
+    defn[7]="__#{defn[7]}__"
+  else
+    atk=atk.reject{|q| q.include?(' 100%') && !q.include?(' after ')}
+    defn=defn.reject{|q| q.include?(' 100%') && !q.include?(' after ')}
+  end
+  flds=[['Offense',atk.join("\n")],['Defensive',defn.join("\n")]]
+  flds=flds.reject{|q| q[1].nil? || q[1].length<=0}
+  text="Bronze icons mark unfavorable matchups."
+  text="#{text}\nSilver icons mark neutral matchups." if safe_to_spam?(event,nil,1)
+  text="#{text}\nGold icons mark favorable matchups."
+  text="#{text}\nFor brevity, neutral matchups are not shown." unless safe_to_spam?(event,nil,1)
+  ftr='Affinities can be adjusted by certain skills and NPs, which usually remove defense disadvantages.'
+  if flds.length<=0
+    flds=nil
+    ftr=nil
+    text="All affinities are neutral."
+  elsif clzz=='Beast'
+    flds=nil
+    ftr=nil
+    text="Special affinities have been granted by story, are not formulaic."
+    xcolor=0x800000
+  end
+  create_embed(event,[str,title],text,xcolor,ftr,xpic,flds)
+end
+
+bot.command([:affinity, :affinities, :affinitys, :effective, :eff, :resist, :resistance, :resistances, :res]) do |event, *args|
+  return nil if overlap_prevent(event)
+  affinity_data(event,bot,args)
+end
+
+bot.command([:support,:supports,:friends,:friend,:profile]) do |event, *args|
+  return nil if overlap_prevent(event)
+  support_lineup(event,bot,args)
 end
 
 bot.command([:alts,:alt]) do |event, *args|
@@ -6421,7 +6953,8 @@ bot.command([:command]) do |event, *args|
   if args.nil? || args[0].nil?
   elsif args[0].downcase=='list'
     args.shift
-    help_text(event,bot,args[0],args[1])
+    help_text(event,bot,args[0],args[1]) if args.length<2
+    help_text(event,bot,args[0],args[1],args[2,args.length-2]) if args.length>1
     return nil
   end
   disp_code_data(bot,event,args)
@@ -6642,32 +7175,33 @@ bot.command([:donation,:donate]) do |event, uid|
       end
     end
     color=n3[0]*256*256+n3[1]*256+n3[2]
-    str="**Tier 1:** Ability to give server-specific aliases in any server\n\u2713 Given" if g[2].max>=1
-    if g[2][1]>=2
-      if g[3].nil? || g[3].length.zero? || g[4].nil? || g[4].length.zero?
-        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
-      elsif g[4][1]=='-'
-        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2713 May be given via another bot."
-      elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/EliseImages/#{g[4][1]}.png")
-        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected.\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
-      else
-        str="#{str}\n\n**Tier 2:** Birthday avatar\n\u2713 Given\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
-      end
-    end
+    str="**Tier 1:** Access to the donor-exclusive channel in my debug server.\n\u2713 This perk cannot be checked dynamically.\nYou can check if it was given to you by clicking this channel link: <#590642838497394689>" if g[2].max>=1
+    str="#{str}\n\n**Tier 2:** Ability to give server-specific aliases in any server\n\u2713 Given" if g[2].max>=2
     if g[2][1]>=3
-      if !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
-        str="#{str}\n\n**Tier 3:** Servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      if g[3].nil? || g[3].length.zero? || g[4].nil? || g[4].length.zero?
+        str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      elsif g[4][1]=='-'
+        str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2713 May be given via another bot."
+      elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/EliseImages/#{g[4][1]}.png")
+        str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected.\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
       else
-        str="#{str}\n\n**Tier 3:** Servant tracking\n\u2713 Given\n*Trigger word:* #{donor_unit_list(uid,1)[0].split('\\'[0])[0]}'s"
+        str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2713 Given\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
       end
     end
     if g[2][1]>=4
       if !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
-        str="#{str}\n\n**Tier 4:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
-      elsif donor_servant_list(uid,1)[0].split('\\'[0])[1].nil?
-        str="#{str}\n\n**Tier 4:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+        str="#{str}\n\n**Tier 4:** Servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
       else
-        str="#{str}\n\n**Tier 4:** __*Colored*__ servant tracking\n\u2713 Given\n*Color of choice:* #{donor_unit_list(uid,1)[0].split('\\'[0])[1]}"
+        str="#{str}\n\n**Tier 4:** Servant tracking\n\u2713 Given\n*Trigger word:* #{donor_unit_list(uid,1)[0].split('\\'[0])[0]}'s"
+      end
+    end
+    if g[2][1]>=5
+      if !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+        str="#{str}\n\n**Tier 5:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      elsif donor_servant_list(uid,1)[0].split('\\'[0])[1].nil?
+        str="#{str}\n\n**Tier 5:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
+      else
+        str="#{str}\n\n**Tier 5:** __*Colored*__ servant tracking\n\u2713 Given\n*Color of choice:* #{donor_unit_list(uid,1)[0].split('\\'[0])[1]}"
         color=donor_servant_list(uid,1)[0].split('\\'[0])[1].hex
       end
     end
@@ -7363,24 +7897,83 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
     subcommand=nil
     subcommand=args[0] unless args.nil? || args.length.zero?
     subcommand='' if subcommand.nil?
-    help_text(event,bot,'devedit',subcommand)
+    args=[] if args.nil?
+    args=args[1,args.length-1]
+    help_text(event,bot,'devedit',subcommand,args)
     return nil
   end
   data_load()
-  j3=find_data_ex(:find_servant,event.message.text,event,false,true)
-  j=j3[0]
-  if j.nil? || j<=0
-    event.respond "There is no servant by that name.\nPlease know that servant IDs do not work for this command because numbers have to be used for other things."
-    return nil
-  end
   devservants_load()
-  j2=@dev_units.find_index{|q| q[0]==j3[0]}
-  if j3[0]<2
-    j2=@dev_units.find_index{|q| q[0]<2}
-    j3=@servants[@servants.find_index{|q| q[0]==@dev_units[j2][0]}]
+  j3=find_data_ex(:find_servant,event.message.text,event,false,true)
+  unless has_any?([cmd,args[0].downcase],['ce','craft','craftessence']) && has_any?([cmd,args[0].downcase],['support','supports','friends','friend'])
     j=j3[0]
+    if j.nil? || j<=0
+      event.respond "There is no servant by that name.\nPlease know that servant IDs do not work for this command because numbers have to be used for other things."
+      return nil
+    end
+    j2=@dev_units.find_index{|q| q[0]==j3[0]}
+    if j3[0]<2
+      j2=@dev_units.find_index{|q| q[0]<2}
+      j3=@servants[@servants.find_index{|q| q[0]==@dev_units[j2][0]}]
+      j=j3[0]
+    end
   end
-  if j2.nil? || j2<0
+  if has_any?([cmd,args[0].downcase],['ce','craft','craftessence']) && has_any?([cmd,args[0].downcase],['support','supports','friends','friend'])
+    args.shift
+    if args.length<=0
+      event.respond "No slot given."
+      return nil
+    end
+    args=args.map{|q| q.downcase}
+    support=devsupport_load()[1]
+    pos=-1
+    pos=0 if args[0]=='all'
+    pos=1 if ['saber','sabers','seiba','seibas'].include?(args[0])
+    pos=2 if ['archer','bow','sniper','archa','archers','bows','snipers','archas'].include?(args[0])
+    pos=3 if ['lancer','lancers','lance','lances'].include?(args[0])
+    pos=4 if ['rider','riders','raida','raidas'].include?(args[0])
+    pos=5 if ['caster','casters','castor','castors','mage','mages','magic'].include?(args[0])
+    pos=6 if ['assassin','assasshin','assassins','assasshins'].include?(args[0])
+    pos=7 if ['berserker','berserkers','berserk','berserks','zerker','zerkers'].include?(args[0])
+    pos=8 if ['extra','extras'].include?(args[0])
+    if pos<0
+      j3=find_servant(args[0],event)
+      if j3.length>0
+        pos=8
+        pos=1 if j3[2]=='Saber'
+        pos=2 if j3[2]=='Archer'
+        pos=3 if j3[2]=='Lancer'
+        pos=4 if j3[2]=='Rider'
+        pos=5 if j3[2]=='Caster'
+        pos=6 if j3[2]=='Assassin'
+        pos=7 if j3[2]=='Berserker'
+      end
+    end
+    if pos<0
+      event.respond "Invalid slot given."
+      return nil
+    end
+    args.shift
+    if args.length<=0
+      event.respond "No CE was included."
+      return nil
+    end
+    j4=find_data_ex(:find_ce,args.join(' '),event)
+    if j4.nil? || j4.length<=0
+      if has_any?(args.map{|q| q.downcase},['nothing','none','dequip','deequip','de-equip','unequip','un-equip'])
+        support[pos][1]=0
+        devservants_save(support)
+        event.respond "Your Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot is no longer equipping a CE."
+      else
+        event.respond "No CE was included."
+      end
+      return nil
+    end
+    support[pos][1]=j4[0]
+    devservants_save(support)
+    event.respond "Your Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot has equipped #{j4[1]} [CE-##{j4[0]}]."
+    return nil
+  elsif j2.nil? || j2<0
     if cmd.downcase=='create'
       @dev_units.push([j3[0],[0,0],[0,0,0,0,0],['1','0','0'],'1',0,0,[0,1,0]])
       devservants_save()
@@ -7395,7 +7988,7 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
           j3=@stored_event[1]
           @dev_units.push([j3[0],[0,0],[0,0,0,0,0],['1','0','0'],'1',0,0,[0,1,0]])
           devservants_save()
-          event.respond "You have added a #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)} to your collection."
+          e.respond "You have added a #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,e,j3,2)} to your collection."
         end
       end
     end
@@ -7713,9 +8306,131 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
     @dev_units.compact!
     devservants_save()
     event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)} has been burned."
+  elsif ['code','command','commandcode','deck','c1','c2','c3','c4','c5','code1','code2','code3','code4','code5','card1','card2','card3','card4','card5','q1','q2','q3','quick1','quick2','quick3','a1','a2','a3','arts1','arts2','arts3','art1','art2','art3','b1','b2','b3','buster1','buster2','buster3','bust1','bust2','bust3'].include?(cmd.downcase)
+    args=args.map{|q| q.downcase}
+    m=-1
+    m=0 if ['code1','card1','c1','quick1','q1'].include?(cmd.downcase)
+    m=1 if ['code2','card2','c2'].include?(cmd.downcase)
+    m=2 if ['code3','card3','c3'].include?(cmd.downcase)
+    m=3 if ['code4','card4','c4'].include?(cmd.downcase)
+    m=4 if ['code5','card5','c5'].include?(cmd.downcase)
+    m=12 if ['quick2','q2'].include?(cmd.downcase)
+    m=13 if ['quick2','q3'].include?(cmd.downcase)
+    m=21 if ['arts1','art1','a1'].include?(cmd.downcase)
+    m=22 if ['arts2','art2','a2'].include?(cmd.downcase)
+    m=23 if ['arts3','art3','a3'].include?(cmd.downcase)
+    m=31 if ['buster1','bust1','b1'].include?(cmd.downcase)
+    m=32 if ['buster2','bust2','b2'].include?(cmd.downcase)
+    m=33 if ['buster3','bust3','b3'].include?(cmd.downcase)
+    nums=[]
+    for i in 0...args.length
+      nums.push(0) if has_any?(['code1','card1','c1','quick1','q1'],args)
+      nums.push(1) if has_any?(['code2','card2','c2'],args)
+      nums.push(2) if has_any?(['code3','card3','c3'],args)
+      nums.push(3) if has_any?(['code4','card4','c4'],args)
+      nums.push(4) if has_any?(['code5','card5','c5'],args)
+      nums.push(12) if has_any?(['quick2','q2'],args)
+      nums.push(13) if has_any?(['quick2','q3'],args)
+      nums.push(21) if has_any?(['arts1','art1','a1'],args)
+      nums.push(22) if has_any?(['arts2','art2','a2'],args)
+      nums.push(23) if has_any?(['arts3','art3','a3'],args)
+      nums.push(31) if has_any?(['buster1','bust1','b1'],args)
+      nums.push(32) if has_any?(['buster2','bust2','b2'],args)
+      nums.push(33) if has_any?(['buster3','bust3','b3'],args)
+    end
+    m=nums[0] if nums.length>0 && m<0
+    crds=[1,1,1]
+    crds[0]+=1 if j3[17].include?('QQ')
+    crds[0]+=1 if j3[17].include?('QQQ')
+    crds[1]+=1 if j3[17].include?('AA')
+    crds[1]+=1 if j3[17].include?('AAA')
+    crds[2]+=1 if j3[17].include?('BB')
+    crds[2]+=1 if j3[17].include?('BBB')
+    jx=find_data_ex(:find_code,args.join(' '),event)
+    m2=[]
+    for i in 0...crds[0]
+      m2.push("#{['1st','2nd','3rd'][i]} Quick")
+    end
+    for i in 0...crds[1]
+      m2.push("#{['1st','2nd','3rd'][i]} Arts")
+    end
+    for i in 0...crds[2]
+      m2.push("#{['1st','2nd','3rd'][i]} Buster")
+    end
+    if m<0
+      event.respond "No Command Card was specified."
+      return nil
+    elsif m>10 && m%10>crds[m/10-1]
+      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)} only has #{crds[m/10-1]} #{['Quick','Arts','Buster'][m/10-1]} card#{'s' unless crds[m/10-1]==1}."
+      return nil
+    elsif has_any?(['reset','revert'],args)
+      if m>10
+        m-=11 if m<20
+        m-=21-crds[0] if m>20 && m<30
+        m-=31-crds[0]-crds[1] if m>30
+      end
+      @dev_units[j2][2][m]=0
+      devservants_save()
+      event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)} has removed the Command Card attached to their #{m2[m]} card."
+      return nil
+    elsif jx.nil? || jx.length<=0
+      event.respond "No Command Code was specified."
+      return nil
+    elsif j3[0]==127 && jx[0]==39 && !has_any?(['cmd39','cmd-39','cmd_39','cmddavinci','davincicmd','commanddavinci','davincicommand'],args)
+      event.respond "I am detecting\n- the servant #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}\n- the Command Code #{jx[1]} [Cmd-#{jx[0]}]\n\nPlease try this command again but include an alias for the Command Code that doesn't conflict with the servant."
+      return nil
+    elsif m>10
+      m-=11 if m<20
+      m-=21-crds[0] if m>20 && m<30
+      m-=31-crds[0]-crds[1] if m>30
+    end
+    @dev_units[j2][2][m]=jx[0]
+    devservants_save()
+    event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)} has equipped #{jx[1]} [Cmd-#{jx[0]}] to their #{m2[m]} card."
+  elsif ['support','supports','friends','friend'].include?(cmd.downcase)
+    support=devsupport_load()
+    pos=8
+    pos=1 if j3[2]=='Saber'
+    pos=2 if j3[2]=='Archer'
+    pos=3 if j3[2]=='Lancer'
+    pos=4 if j3[2]=='Rider'
+    pos=5 if j3[2]=='Caster'
+    pos=6 if j3[2]=='Assassin'
+    pos=7 if j3[2]=='Berserker'
+    pos=0 if event.message.text.downcase.split(' ').include?('all')
+    support=support[1]
+    support[pos][0]=j3[0]
+    devservants_save(support)
+    str="Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)} is now in your Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot."
+    if @dev_units[j2][5]>0
+      cfts=@crafts.map{|q| q}
+      ce=cfts.find_index{|q| q[0]==@dev_units[j2][5]}
+      if ce.nil?
+        event.respond str
+      else
+        ce=cfts[ce]
+        event.respond "#{str}\nThey have #{ce[1]} [CE-##{ce[0]}] as their local CE.  Would you like to copy this to your Support lineup?"
+        @stored_event=[event,support,pos,ce]
+        event.channel.await(:bob, contains: /(yes)|(no)/i, from: 167657750971547648) do |e|
+          if e.message.text.downcase.include?('no')
+            e.respond 'Okay.'
+          else
+            support=@stored_event[1]
+            pos=@stored_event[2]
+            ce=@stored_event[3]
+            support[pos][1]=ce[0]
+            devservants_save(support)
+            e.respond "You have equipped a #{ce[1]} [CE-##{ce[0]}] to your Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot."
+          end
+        end
+      end
+    else
+      event.respond str
+    end
   else
     event.respond 'Edit mode was not specified.'
   end
+  return nil
 end
 
 bot.command(:edit) do |event, cmd, *args|
@@ -7724,7 +8439,7 @@ bot.command(:edit) do |event, cmd, *args|
   if uid==167657750971547648
     event.respond "This command is for the donors.  Your version of the command is `FEH!devedit`."
     return nil
-  elsif !get_donor_list().reject{|q| q[2][1]<3}.map{|q| q[0]}.include?(uid)
+  elsif !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(uid)
     event.respond "You do not have permission to use this command."
     return nil
   elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
@@ -7734,32 +8449,91 @@ bot.command(:edit) do |event, cmd, *args|
     subcommand=nil
     subcommand=args[0] unless args.nil? || args.length.zero?
     subcommand='' if subcommand.nil?
-    help_text(event,bot,'edit',subcommand)
+    args=[] if args.nil?
+    args=args[1,args.length-1]
+    help_text(event,bot,'edit',subcommand,args)
     return nil
   end
   data_load()
-  j3=find_data_ex(:find_servant,event.message.text,event,false,true)
-  j=j3[0]
-  if j.nil? || j<=0
-    event.respond "There is no servant by that name.\nPlease know that servant IDs do not work for this command because numbers have to be used for other things."
-    return nil
-  end
+  donor_units=donor_servant_list(uid)
   jp=false
   jp=true if has_any?(args.map{|q| q.downcase},['japan','jp'])
-  donor_units=donor_servant_list(uid)
-  j2=donor_units.find_index{|q| !q[0].downcase.include?('j') && q[0].to_i==j3[0].to_i}
-  j2=donor_units.find_index{|q| q[0].downcase.include?('j') && q[0].downcase.gsub('j','').to_i==j3[0].to_i} if jp || (j2.nil? && !(cmd.downcase=='create' && !jp))
-  if j<2
-    j2=donor_units.find_index{|q| !q[0].downcase.include?('j') && q[0].to_i<2}
-    j2=donor_units.find_index{|q| q[0].downcase.include?('j') && q[0].downcase.gsub('j','')<2} if jp || (j2.nil? && !(cmd.downcase=='create' && !jp))
-    j3=@servants[@servants.find_index{|q| q[0]==donor_units[j2][0]}]
+  unless has_any?([cmd,args[0].downcase],['ce','craft','craftessence']) && has_any?([cmd,args[0].downcase],['support','supports','friends','friend'])
+    j3=find_data_ex(:find_servant,event.message.text,event,false,true)
     j=j3[0]
+    if j.nil? || j<=0
+      event.respond "There is no servant by that name.\nPlease know that servant IDs do not work for this command because numbers have to be used for other things."
+      return nil
+    end
+    j2=donor_units.find_index{|q| !q[0].downcase.include?('j') && q[0].to_i==j3[0].to_i}
+    j2=donor_units.find_index{|q| q[0].downcase.include?('j') && q[0].downcase.gsub('j','').to_i==j3[0].to_i} if jp || (j2.nil? && !(cmd.downcase=='create' && !jp))
+    if j<2
+      j2=donor_units.find_index{|q| !q[0].downcase.include?('j') && q[0].to_i<2}
+      j2=donor_units.find_index{|q| q[0].downcase.include?('j') && q[0].downcase.gsub('j','')<2} if jp || (j2.nil? && !(cmd.downcase=='create' && !jp))
+      j3=@servants[@servants.find_index{|q| q[0]==donor_units[j2][0]}]
+      j=j3[0]
+    end
+    unless j2.nil? || j2<0
+      jp=false
+      jp=true if donor_units[j2][0].include?('j')
+    end
   end
-  unless j2.nil? || j2<0
-    jp=false
-    jp=true if donor_units[j2][0].include?('j')
-  end
-  if j2.nil? || j2<0
+  if has_any?([cmd,args[0].downcase],['ce','craft','craftessence']) && has_any?([cmd,args[0].downcase],['support','supports','friends','friend'])
+    args.shift
+    if args.length<=0
+      event.respond "No slot given."
+      return nil
+    end
+    args=args.map{|q| q.downcase}
+    support=donor_support_list(uid,0,jp)[1]
+    pos=-1
+    pos=0 if args[0]=='all'
+    pos=1 if ['saber','sabers','seiba','seibas'].include?(args[0])
+    pos=2 if ['archer','bow','sniper','archa','archers','bows','snipers','archas'].include?(args[0])
+    pos=3 if ['lancer','lancers','lance','lances'].include?(args[0])
+    pos=4 if ['rider','riders','raida','raidas'].include?(args[0])
+    pos=5 if ['caster','casters','castor','castors','mage','mages','magic'].include?(args[0])
+    pos=6 if ['assassin','assasshin','assassins','assasshins'].include?(args[0])
+    pos=7 if ['berserker','berserkers','berserk','berserks','zerker','zerkers'].include?(args[0])
+    pos=8 if ['extra','extras'].include?(args[0])
+    if pos<0
+      j3=find_servant(args[0],event)
+      if j3.length>0
+        pos=8
+        pos=1 if j3[2]=='Saber'
+        pos=2 if j3[2]=='Archer'
+        pos=3 if j3[2]=='Lancer'
+        pos=4 if j3[2]=='Rider'
+        pos=5 if j3[2]=='Caster'
+        pos=6 if j3[2]=='Assassin'
+        pos=7 if j3[2]=='Berserker'
+      end
+    end
+    if pos<0
+      event.respond "Invalid slot given."
+      return nil
+    end
+    args.shift
+    if args.length<=0
+      event.respond "No CE was included."
+      return nil
+    end
+    j4=find_data_ex(:find_ce,args.join(' '),event)
+    if j4.nil? || j4.length<=0
+      if has_any?(args.map{|q| q.downcase},['nothing','none','dequip','deequip','de-equip','unequip','un-equip'])
+        support[pos][1]=0
+        donor_servant_save(uid,donor_units,support,jp)
+        event.respond "Your #{'Japanese ' if jp}Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot is no longer equipping a CE."
+      else
+        event.respond "No CE was included."
+      end
+      return nil
+    end
+    support[pos][1]=j4[0]
+    donor_servant_save(uid,donor_units,support,jp)
+    event.respond "Your #{'Japanese ' if jp}Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot has equipped #{j4[1]} [CE-##{j4[0]}]."
+    return nil
+  elsif j2.nil? || j2<0
     if cmd.downcase=='create'
       donor_units.push(["#{j3[0]}#{'j' if jp}",[0,0],[0,0,0,0,0],['1','0','0'],'1',0,0,[0,1,0]])
       donor_servant_save(uid,donor_units)
@@ -7806,13 +8580,13 @@ bot.command(:edit) do |event, cmd, *args|
     elsif typ<0
       donor_units[j2][1][m]=0
       donor_servant_save(uid,donor_units)
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s #{['HP','Attack'][m]} Fous have been reset to 0."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s #{['HP','Attack'][m]} Fous have been reset to 0."
     else
       f=donor_units[j2][1][m]*1
       donor_units[j2][1][m]+=typ
       donor_units[j2][1][m]=[donor_units[j2][1][m],2000].min
       donor_servant_save(uid,donor_units)
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s #{['HP','Attack'][m]} Fous have been increased by #{longFormattedNumber(typ)} ~~(from #{longFormattedNumber(f)} to #{longFormattedNumber(donor_units[j2][1][m])})~~"
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s #{['HP','Attack'][m]} Fous have been increased by #{longFormattedNumber(typ)} ~~(from #{longFormattedNumber(f)} to #{longFormattedNumber(donor_units[j2][1][m])})~~"
     end
   elsif ['skill','skill1','skill2','skill3','skill-1','skill-2','skill-3','skill_1','skill_2','skill_3','s1','s2','s3'].include?(cmd.downcase)
     m=-1
@@ -7855,27 +8629,27 @@ bot.command(:edit) do |event, cmd, *args|
       return nil
     elsif typ==-1
       if donor_units[j2][3][m].include?('u')
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s S#{m+1} is already upgraded."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} is already upgraded."
       elsif j3[14][m][1].nil? || j3[14][m][1].length<=0
         event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s S#{m+1} cannot be upgraded yet."
       else
         donor_units[j2][3][m]="#{donor_units[j2][3][m]}u"
         donor_servant_save(uid,donor_units)
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s S#{m+1} has been upgraded due to an Interlude or Rank-Up Quest."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been upgraded due to an Interlude or Rank-Up Quest."
       end
       return nil
     elsif typ==-2
       donor_units[j2][3][m]="0"
       donor_units[j2][3][m]="1" if m==0
       donor_servant_save(uid,donor_units)
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s S#{m+1} has been reset to an un-upgraded level #{donor_units[j2][3][m]}."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been reset to an un-upgraded level #{donor_units[j2][3][m]}."
       return nil
     end
     n=''
     n='u' if donor_units[j2][3][m].include?('u')
     donor_units[j2][3][m]="#{[donor_units[j2][3][m].gsub('u','').to_i+typ,10].min}#{n}"
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s S#{m+1} has been leveled to #{donor_units[j2][3][m].gsub('u','')}."
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been leveled to #{donor_units[j2][3][m].gsub('u','')}."
   elsif ['np','merge','merges'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -7892,38 +8666,38 @@ bot.command(:edit) do |event, cmd, *args|
     typ=1 if typ.zero?
     if typ==-1
       if donor_units[j2][4].include?('u')
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s Noble Phantasm is already upgraded."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded."
       elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
         event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s Noble Phantasm cannot be upgraded yet."
       else
         donor_units[j2][4]="#{donor_units[j2][4]}u"
         donor_servant_save(uid,donor_units)
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s Noble Phantasm has been upgraded due to an Interlude or Rank-Up Quest."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm has been upgraded due to an Interlude or Rank-Up Quest."
       end
       return nil
     elsif typ==-2
       donor_units[j2][4]='1'
       donor_servant_save(uid,donor_units)
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s Noble Phantasm has been reset to an unupgraded NP1."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm has been reset to an unupgraded NP1."
       return nil
     end
     n=''
     n='u' if donor_units[j2][4].include?('u')
     donor_units[j2][4]="#{[donor_units[j2][4].gsub('u','').to_i+typ,5].min}#{n}"
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has been merged to NP#{donor_units[j2][4].gsub('u','')}."
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has been merged to NP#{donor_units[j2][4].gsub('u','')}."
   elsif ['ce','craft','craftessence'].include?(cmd.downcase)
     j4=find_data_ex(:find_ce,event.message.text,event)
     if j4.nil? || j4.length<=0
       if has_any?(args.map{|q| q.downcase},['nothing','none','dequip','deequip','de-equip','unequip','un-equip'])
         donor_units[j2][5]=0
         donor_servant_save(uid,donor_units)
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s CE has been removed."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s CE has been removed."
       elsif has_any?(args.map{|q| q.downcase},['bond']) && !@crafts.find_index{|q| q[0]==j3[23]}.nil? && donor_units[j2][6]>9
         donor_units[j2][5]=j3[23]
         ce=@crafts[@crafts.find_index{|q| q[0]==j3[23]}]
         donor_servant_save(uid,donor_units)
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has equipped their bond CE, #{ce[1]} [CE-##{ce[0]}]."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has equipped their bond CE, #{ce[1]} [CE-##{ce[0]}]."
       else
         event.respond "No CE was included."
       end
@@ -7931,7 +8705,7 @@ bot.command(:edit) do |event, cmd, *args|
     end
     donor_units[j2][5]=j4[0]
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has equipped #{j4[1]} [CE-##{j4[0]}]."
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has equipped #{j4[1]} [CE-##{j4[0]}]."
   elsif ['bond'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -7949,19 +8723,19 @@ bot.command(:edit) do |event, cmd, *args|
     if typ==-1
       donor_units[j2][6]=0
       donor_servant_save(uid,donor_units)
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s bond level has been reset."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s bond level has been reset."
       return nil
     elsif typ==-2 && !@crafts.find_index{|q| q[0]==j3[23]}.nil?
       donor_units[j2][5]=j3[23]
       ce=@crafts[@crafts.find_index{|q| q[0]==j3[23]}]
       donor_servant_save(uid,donor_units)
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has equipped their bond CE, #{ce[1]} [CE-##{ce[0]}]."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has equipped their bond CE, #{ce[1]} [CE-##{ce[0]}]."
       return nil
     end
     typ=1 if typ<=0
     donor_units[j2][6]=[donor_units[j2][6]+typ,15].min
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s bond level has increased by #{typ} to #{donor_units[j2][6]}."
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s bond level has increased by #{typ} to #{donor_units[j2][6]}."
   elsif ['ascension','ascend'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -7977,7 +8751,7 @@ bot.command(:edit) do |event, cmd, *args|
     if typ==-1
       donor_units[j2][7]=[0,1]
       donor_servant_save(uid,donor_units)
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s ascension has been reset."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s ascension has been reset."
       return nil
     end
     mx=[1,2,2,3,4]
@@ -7991,7 +8765,7 @@ bot.command(:edit) do |event, cmd, *args|
       str="#{['','Default','First Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][donor_units[j2][7][1]]} art is still being used.  If you wish to change that, use the `FGO!devedit art` command"
     end
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has reached their #{['Zeroth','First','Second','Third','Final'][donor_units[j2][7][0]]} Ascension.\n#{str}"
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has reached their #{['Zeroth','First','Second','Third','Final'][donor_units[j2][7][0]]} Ascension.\n#{str}"
   elsif ['art'].include?(cmd.downcase)
     args=args.map{|q| q.downcase}
     disptext=" #{args.join(' ')} "
@@ -8005,7 +8779,7 @@ bot.command(:edit) do |event, cmd, *args|
     mx=[1,2,2,3,4]
     m=mx[donor_units[j2][7][0]]
     if asc<5 && asc>m
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has too low of an ascension to display that art."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has too low of an ascension to display that art."
       return nil
     elsif asc.zero?
       donor_units[j2][7][1]=m
@@ -8013,18 +8787,18 @@ bot.command(:edit) do |event, cmd, *args|
       donor_units[j2][7][1]=asc
     end
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} is now using their #{['','Default','First Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][donor_units[j2][7][1]]} art."
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} is now using their #{['','Default','First Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][donor_units[j2][7][1]]} art."
   elsif ['upgrade','interlude','rankup','rank','up'].include?(cmd.downcase)
     args=args.map{|q| q.downcase}
     if has_any?(['np','merge','merges'],args)
       if donor_units[j2][4].include?('u')
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s Noble Phantasm is already upgraded."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded."
       elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
         event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s Noble Phantasm cannot be upgraded yet."
       else
         donor_units[j2][4]="#{donor_units[j2][4]}u"
         donor_servant_save(uid,donor_units)
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s Noble Phantasm has been upgraded due to an Interlude or Rank-Up Quest."
+        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm has been upgraded due to an Interlude or Rank-Up Quest."
       end
       return nil
     else
@@ -8041,36 +8815,36 @@ bot.command(:edit) do |event, cmd, *args|
         end
         donor_units[j2][0]=j3[0]
         donor_servant_save(uid,donor_units)
-        event.respond "Your #{'Japanese ' if jp}#{j4[1]} [Srv-##{j4[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has entered her #{['Default','Camelot','Orthenaus'][(j3[0]*10-10).to_i]} form [Srv-##{j3[0]}]."
+        event.respond "Your #{'Japanese ' if jp}#{j4[1]} [Srv-##{j4[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has entered her #{['Default','Camelot','Orthenaus'][(j3[0]*10-10).to_i]} form [Srv-##{j3[0]}]."
       elsif m<0
         event.respond "No skills were upgraded because no skill slot was defined."
       else
         if donor_units[j2][3][m].include?('u')
-          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s S#{m+1} is already upgraded."
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} is already upgraded."
         elsif j3[14][m][1].nil? || j3[14][m][1].length<=0
           event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s S#{m+1} cannot be upgraded yet."
         else
           donor_units[j2][3][m]="#{donor_units[j2][3][m]}u"
           donor_servant_save(uid,donor_units)
-          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)}'s S#{m+1} has been upgraded due to an Interlude or Rank-Up Quest."
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been upgraded due to an Interlude or Rank-Up Quest."
         end
       end
     end
   elsif ['grail','silver','gold'].include?(cmd.downcase)
     if donor_units[j2][7][0]<4
-      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} needs to have reached their Fianl Ascension before you can use this command."
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} needs to have reached their Fianl Ascension before you can use this command."
       return nil
     elsif j3[3]<=0
-      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has their own color gimmicks, and never attains grailshift colors."
+      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has their own color gimmicks, and never attains grailshift colors."
       return nil
     elsif j3[3]>3 && donor_units[j2][7][2]>=0
-      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} is already gold naturally."
+      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} is already gold naturally."
       return nil
     elsif j3[3]>2 && donor_units[j2][7][2]>=1
-      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} is already grailshifted once, to gold."
+      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} is already grailshifted once, to gold."
       return nil
     elsif j3[3]>0 && donor_units[j2][7][2]>=2
-      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} is already grailshifted twice, to gold."
+      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} is already grailshifted twice, to gold."
       return nil
     end
     donor_units[j2][7][2]+=1
@@ -8081,9 +8855,9 @@ bot.command(:edit) do |event, cmd, *args|
     color=1 if j3[3]<3
     color=0 if j3[3]<1
     color+=donor_units[j2][7][2]
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],event.user.id)} has been grailshifted to #{clrz[color]}"
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has been grailshifted to #{clrz[color]}"
   elsif ['burn','delete'].include?(cmd.downcase)
-    if j3[0]==127 && event.user.id==78649866577780736
+    if j3[0]==127 && uid==78649866577780736
       event.respond "Who are you and what have you done with Ace?  He will never burn Da Vinci."
       return nil
     end
@@ -8093,9 +8867,131 @@ bot.command(:edit) do |event, cmd, *args|
     donor_units.compact!
     donor_servant_save(uid,donor_units)
     event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)} has been burned."
+  elsif ['code','command','commandcode','deck','c1','c2','c3','c4','c5','code1','code2','code3','code4','code5','card1','card2','card3','card4','card5','q1','q2','q3','quick1','quick2','quick3','a1','a2','a3','arts1','arts2','arts3','art1','art2','art3','b1','b2','b3','buster1','buster2','buster3','bust1','bust2','bust3'].include?(cmd.downcase)
+    args=args.map{|q| q.downcase}
+    m=-1
+    m=0 if ['code1','card1','c1','quick1','q1'].include?(cmd.downcase)
+    m=1 if ['code2','card2','c2'].include?(cmd.downcase)
+    m=2 if ['code3','card3','c3'].include?(cmd.downcase)
+    m=3 if ['code4','card4','c4'].include?(cmd.downcase)
+    m=4 if ['code5','card5','c5'].include?(cmd.downcase)
+    m=12 if ['quick2','q2'].include?(cmd.downcase)
+    m=13 if ['quick2','q3'].include?(cmd.downcase)
+    m=21 if ['arts1','art1','a1'].include?(cmd.downcase)
+    m=22 if ['arts2','art2','a2'].include?(cmd.downcase)
+    m=23 if ['arts3','art3','a3'].include?(cmd.downcase)
+    m=31 if ['buster1','bust1','b1'].include?(cmd.downcase)
+    m=32 if ['buster2','bust2','b2'].include?(cmd.downcase)
+    m=33 if ['buster3','bust3','b3'].include?(cmd.downcase)
+    nums=[]
+    for i in 0...args.length
+      nums.push(0) if has_any?(['code1','card1','c1','quick1','q1'],args)
+      nums.push(1) if has_any?(['code2','card2','c2'],args)
+      nums.push(2) if has_any?(['code3','card3','c3'],args)
+      nums.push(3) if has_any?(['code4','card4','c4'],args)
+      nums.push(4) if has_any?(['code5','card5','c5'],args)
+      nums.push(12) if has_any?(['quick2','q2'],args)
+      nums.push(13) if has_any?(['quick2','q3'],args)
+      nums.push(21) if has_any?(['arts1','art1','a1'],args)
+      nums.push(22) if has_any?(['arts2','art2','a2'],args)
+      nums.push(23) if has_any?(['arts3','art3','a3'],args)
+      nums.push(31) if has_any?(['buster1','bust1','b1'],args)
+      nums.push(32) if has_any?(['buster2','bust2','b2'],args)
+      nums.push(33) if has_any?(['buster3','bust3','b3'],args)
+    end
+    m=nums[0] if nums.length>0 && m<0
+    crds=[1,1,1]
+    crds[0]+=1 if j3[17].include?('QQ')
+    crds[0]+=1 if j3[17].include?('QQQ')
+    crds[1]+=1 if j3[17].include?('AA')
+    crds[1]+=1 if j3[17].include?('AAA')
+    crds[2]+=1 if j3[17].include?('BB')
+    crds[2]+=1 if j3[17].include?('BBB')
+    jx=find_data_ex(:find_code,args.join(' '),event)
+    if m<0
+      event.respond "No Command Card was specified."
+      return nil
+    elsif m>10 && m%10>crds[m/10-1]
+      event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)} only has #{crds[m/10-1]} #{['Quick','Arts','Buster'][m/10-1]} card#{'s' unless crds[m/10-1]==1}."
+      return nil
+    elsif has_any?(['reset','revert'],args)
+      if m>10
+        m-=11 if m<20
+        m-=21-crds[0] if m>20 && m<30
+        m-=31-crds[0]-crds[1] if m>30
+      end
+      donor_units[j2][2][m]=0
+      donor_servant_save(uid,donor_units)
+      event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has removed the Command Card attached to their #{m2[m]} card."
+      return nil
+    elsif jx.nil? || jx.length<=0
+      event.respond "No Command Code was specified."
+      return nil
+    elsif j3[0]==127 && jx[0]==39 && !has_any?(['cmd39','cmd-39','cmd_39','cmddavinci','davincicmd','commanddavinci','davincicommand'],args)
+      event.respond "I am detecting\n- the servant #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}\n- the Command Code #{jx[1]} [Cmd-#{jx[0]}]\n\nPlease try this command again but include an alias for the Command Code that doesn't conflict with the servant."
+      return nil
+    elsif m>10
+      m-=11 if m<20
+      m-=21-crds[0] if m>20 && m<30
+      m-=31-crds[0]-crds[1] if m>30
+    end
+    donor_units[j2][2][m]=jx[0]
+    donor_servant_save(uid,donor_units)
+    m2=[]
+    for i in 0...crds[0]
+      m2.push("#{['1st','2nd','3rd'][i]} Quick")
+    end
+    for i in 0...crds[1]
+      m2.push("#{['1st','2nd','3rd'][i]} Arts")
+    end
+    for i in 0...crds[2]
+      m2.push("#{['1st','2nd','3rd'][i]} Buster")
+    end
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} has equipped #{jx[1]} [Cmd-#{jx[0]}] to their #{m2[m]} card."
+  elsif ['support','supports','friends','friend'].include?(cmd.downcase)
+    support=donor_support_list(uid,0,jp)
+    pos=8
+    pos=1 if j3[2]=='Saber'
+    pos=2 if j3[2]=='Archer'
+    pos=3 if j3[2]=='Lancer'
+    pos=4 if j3[2]=='Rider'
+    pos=5 if j3[2]=='Caster'
+    pos=6 if j3[2]=='Assassin'
+    pos=7 if j3[2]=='Berserker'
+    pos=0 if event.message.text.downcase.split(' ').include?('all')
+    support=support[1]
+    support[pos][0]=j3[0]
+    donor_servant_save(uid,donor_units,support,jp)
+    str="Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)} is now in your Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot."
+    if donor_units[j2][5]>0
+      cfts=@crafts.map{|q| q}
+      ce=cfts.find_index{|q| q[0]==donor_units[j2][5]}
+      if ce.nil?
+        event.respond str
+      else
+        ce=cfts[ce]
+        event.respond "#{str}\nThey have #{ce[1]} [CE-##{ce[0]}] as their local CE.  Would you like to copy this to your Support lineup?"
+        @stored_event=[event,support,pos,ce,jp,donor_units]
+        event.channel.await(:bob, contains: /(yes)|(no)/i, from: 167657750971547648) do |e|
+          if e.message.text.downcase.include?('no')
+            e.respond 'Okay.'
+          else
+            support=@stored_event[1]
+            pos=@stored_event[2]
+            ce=@stored_event[3]
+            jp=@stored_event[4]
+            donor_units=@stored_event[5]
+            support[pos][1]=ce[0]
+            donor_servant_save(uid,donor_units,support,jp)
+            e.respond "You have equipped a #{ce[1]} [CE-##{ce[0]}] to your #{'Japanese ' if jp}Support #{['All','Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Extra'][pos]} Slot."
+          end
+        end
+      end
+    end
   else
     event.respond 'Edit mode was not specified.'
   end
+  return nil
 end
 
 bot.server_create do |event|
@@ -8145,6 +9041,14 @@ bot.mention do |event|
   elsif ['random','rand'].include?(args[0].downcase)
     args.shift
     generate_random_servant(event,bot)
+    m=false
+  elsif ['support','supports','friends','friend','profile'].include?(args[0].downcase)
+    args.shift
+    support_lineup(event,bot,args)
+    m=false
+  elsif ['affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res'].include?(args[0].downcase)
+    args.shift
+    affinity_data(event,bot,args)
     m=false
   elsif ['alts','alt'].include?(args[0].downcase)
     args.shift
@@ -8523,11 +9427,13 @@ end
 def next_holiday(bot,mode=0)
   t=Time.now
   t-=60*60*6
-  holidays=[[0,3,17,'DaVinci',"pretend that I'm a genius","Info gatherer's birthday"],
+  holidays=[[0,1,1,'Mashu','alongside Mt. Fuji and a hawk',"New Year's Day"],
+            [0,3,17,'DaVinci',"pretend that I'm a genius","Info gatherer's birthday"],
             [0,4,1,'RiyoLiz','Fate/Grand Order?',"April Fool's Day"],
-            [0,4,24,'Rhyme','dressup as my last owner.',"Coder's birthday"]]
-  d=get_donor_list()
-  d=d.reject{|q| q[2][1]<2 || q[4][1]=='-'}
+            [0,4,24,'Rhyme','dressup as my last owner.',"Coder's birthday"],
+            [0,7,4,'Edison','games against my rival, Tesla',"4th of July"],
+            [0,10,31,'Carmilla','as my spooky older self',"All Hallow's Eve"]]
+  d=get_donor_list().reject{|q| q[2][1]<3 || q[4][1]=='-'}
   for i in 0...d.length
     if d[i][4][1]!='-' && d[i][0]!=78649866577780736
       holidays.push([0,d[i][3][0],d[i][3][1],d[i][4][1],"in recognition of #{bot.user(d[i][0]).distinct}","Donator's birthday"])
@@ -8642,14 +9548,20 @@ def next_holiday(bot,mode=0)
     t=Time.now
     t-=60*60*6
     bot.game='Fate/Grand Order (FGO!help for info)'
-    if [7].include?(t.month)
+    if [1].include?(t.month)
+      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Eggplant).png','r')) rescue nil if @shardizard.zero?
+      @avvie_info=['Liz(Eggplant)','*Fate/Grand Order*','']
+    elsif [4].include?(t.month)
+      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Mecha).png','r')) rescue nil if @shardizard.zero?
+      @avvie_info=['Liz(Mecha)','*Fate/Grand Order*','']
+    elsif [7].include?(t.month)
       bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Brave).png','r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz(Brave)','*Fate/Grand Order*','']
     elsif [10].include?(t.month)
       bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Halloween).png','r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz(Halloween)','*Fate/Grand Order*','']
     else
-      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.png','r')) rescue nil if @shardizard.zero?
+      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz.png','r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz','*Fate/Grand Order*','']
     end
     t+=24*60*60
