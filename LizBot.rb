@@ -210,9 +210,9 @@ def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe t
 end
 
 def data_load()
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOServants.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOServants.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOServants.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOServants.txt").each_line do |line|
       b.push(line)
     end
   else
@@ -260,9 +260,9 @@ def data_load()
     b[i][28]=b[i][28].split(', ') unless b[i][28].nil?
   end
   @servants=b.map{|q| q}
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkills.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkills.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkills.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkills.txt").each_line do |line|
       b.push(line)
     end
   else
@@ -294,9 +294,9 @@ def data_load()
     end
   end
   @skills=b.map{|q| q}
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOCraftEssances.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOCraftEssances.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOCraftEssances.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOCraftEssances.txt").each_line do |line|
       b.push(line)
     end
   else
@@ -317,9 +317,9 @@ def data_load()
     b[i][11]=b[i][11].split(', ').map{|q| q.to_i}
   end
   @crafts=b.map{|q| q}
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOCommandCodes.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOCommandCodes.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOCommandCodes.txt").each_line do |line|
       b.push(line)
     end
   else
@@ -333,9 +333,9 @@ def data_load()
     b[i][2]=b[i][2].to_i
   end
   @codes=b.map{|q| q}
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOEnemies.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOEnemies.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOEnemies.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOEnemies.txt").each_line do |line|
       b.push(line)
     end
   else
@@ -348,9 +348,9 @@ def data_load()
     b[i][2]=b[i][2].split(', ')
   end
   @enemies=b.map{|q| q}
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOClothes.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOClothes.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOClothes.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOClothes.txt").each_line do |line|
       b.push(line)
     end
   else
@@ -368,13 +368,13 @@ def data_load()
     k[i].pop
   end
   k=k.reject{|q| q.length<=0}.map{|q| q.join(' ')}.uniq.sort
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGOMats.txt", 'w') { |f|
     f.puts k.join("\n")
     f.puts "\n"
   }
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOMats.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOMats.txt").each_line do |line|
       b.push(line)
     end
   else
@@ -388,15 +388,15 @@ end
 
 def prefixes_save()
   x=@prefixes
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGOPrefix.rb', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGOPrefix.rb", 'w') { |f|
     f.puts x.to_s.gsub('=>',' => ').gsub(', ',",\n  ").gsub('{',"@prefixes = {\n  ").gsub('}',"\n}")
   }
 end
 
 def metadata_load()
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSave.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSave.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSave.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSave.txt").each_line do |line|
       b.push(eval line)
     end
   else
@@ -434,7 +434,7 @@ def metadata_save()
     end
   end
   x=[@embedless.map{|q| q}, @ignored.map{|q| q}, @server_data.map{|q| q}, @spam_channels.map{|q| q}]
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGOSave.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGOSave.txt", 'w') { |f|
     f.puts x[0].to_s
     f.puts x[1].to_s
     f.puts x[2].to_s
@@ -447,16 +447,16 @@ def metadata_save()
     k[i].pop
   end
   k=k.map{|q| q.join(' ')}.uniq.sort
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGOMats.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGOMats.txt", 'w') { |f|
     f.puts k.join("\n")
     f.puts "\n"
   }
 end
 
 def devservants_load() # loads information regarding the devunits
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGODevServants.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGODevServants.txt").each_line do |line|
       b.push(line.gsub("\n",''))
     end
   else
@@ -482,9 +482,9 @@ def devservants_load() # loads information regarding the devunits
 end
 
 def devsupport_load() # loads information regarding the dev's support lineup
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGODevServants.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGODevServants.txt").each_line do |line|
       b.push(line.gsub("\n",''))
     end
   else
@@ -500,10 +500,10 @@ def devsupport_load() # loads information regarding the dev's support lineup
 end
 
 def devservants_save(table=[]) # used by the edit command to save the devunits
-  return nil unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt")
+  return nil unless File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGODevServants.txt")
   # snag the username
   bb=[]
-  File.open("C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt").each_line do |line|
+  File.open("C:/Users/#{@mash}/Desktop/devkit/FGODevServants.txt").each_line do |line|
     bb.push(line.gsub("\n",''))
   end
   # sort the unit list alphabetically
@@ -528,7 +528,7 @@ def devservants_save(table=[]) # used by the edit command to save the devunits
     m2=@crafts.find_index{|q| q[0]==untz[i][5]}
     s="#{s}\n\n#{untz[i][0]} # #{@servants[m][1]}\n#{untz[i][1].join('\\'[0])}\n#{untz[i][2].join('\\'[0])}\n#{untz[i][3].join('\\'[0])}\n#{untz[i][4]}\n#{untz[i][5]}#{" # #{@crafts[m2][1]}" unless m2.nil?}\n#{untz[i][6]}\n#{untz[i][7].join('\\'[0])}" unless m.nil?
   end
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGODevServants.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGODevServants.txt", 'w') { |f|
     f.puts s
     f.puts "\n"
   }
@@ -536,15 +536,15 @@ def devservants_save(table=[]) # used by the edit command to save the devunits
 end
 
 def nicknames_load(mode=1)
-  if mode==2 && File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
+  if mode==2 && File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt").each_line do |line|
       b.push(eval line)
     end
     return b
-  elsif File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt')
+  elsif File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt").each_line do |line|
       b.push(eval line)
     end
   else
@@ -557,7 +557,7 @@ bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
   return nil if overlap_prevent(event)
   return nil unless event.user.id==167657750971547648 # only work when used by the developer
   puts 'FGO!reboot'
-  exec "cd C:/Users/Mini-Matt/Desktop/devkit && LizBot.rb #{@shardizard}"
+  exec "cd C:/Users/#{@mash}/Desktop/devkit && LizBot.rb #{@shardizard}"
 end
 
 bot.command([:help,:command_list,:commandlist,:Help]) do |event, command, subcommand, *args|
@@ -748,9 +748,9 @@ def help_text(event,bot,command=nil,subcommand=nil,args=[])
     return nil
   elsif ['find','search','lookup'].include?(command.downcase)
     lookout=[]
-    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+    if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt")
       lookout=[]
-      File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+      File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt").each_line do |line|
         lookout.push(eval line)
       end
     end
@@ -920,9 +920,9 @@ def all_commands(include_nil=false,permissions=-1)
 end
 
 def donate_trigger_word(event,str=nil,mode=0)
-  if !str.is_a?(String) && File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{str}.txt")
+  if !str.is_a?(String) && File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{str}.txt")
     b=[]
-    File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{str}.txt").each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{str}.txt").each_line do |line|
       b.push(line.gsub("\n",''))
     end
     f=[b[0].split('\\'[0])[0],str,b[0].split('\\'[0])[1],b[0].split('\\'[0])[2]]
@@ -930,14 +930,14 @@ def donate_trigger_word(event,str=nil,mode=0)
   else
     str=event.message.text if str.nil?
     str=str.downcase
-    d=Dir["C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/*.txt"]
+    d=Dir["C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/*.txt"]
     f=[]
     for i in 0...d.length
       b=[]
       File.open(d[i]).each_line do |line|
         b.push(line.gsub("\n",''))
       end
-      f.push([b[0].split('\\'[0])[0],d[i].gsub("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/",'').gsub('.txt','').to_i,b[0].split('\\'[0])[1],b[0].split('\\'[0])[2]])
+      f.push([b[0].split('\\'[0])[0],d[i].gsub("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/",'').gsub('.txt','').to_i,b[0].split('\\'[0])[1],b[0].split('\\'[0])[2]])
       f[-1][2]=f[-1][2].hex unless f[-1][2].nil?
       if !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(f[-1][1])
         f[-1]=nil
@@ -958,9 +958,9 @@ def donate_trigger_word(event,str=nil,mode=0)
 end
 
 def donor_servant_list(uid,mode=0)
-  return [] unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  return [] unless File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt")
   b=[]
-  File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
+  File.open("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
     b.push(line.gsub("\n",''))
   end
   m=b[0]
@@ -985,9 +985,9 @@ def donor_servant_list(uid,mode=0)
 end
 
 def donor_support_list(uid,mode=0,jp=false)
-  return [] unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  return [] unless File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt")
   b=[]
-  File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
+  File.open("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
     b.push(line.gsub("\n",''))
   end
   b=b.join("\n").split("\n\n")
@@ -1003,10 +1003,10 @@ def donor_support_list(uid,mode=0,jp=false)
 end
 
 def donor_servant_save(uid,table,table2=[],jp=false) # used by the edit command to save the donorservants
-  return nil unless File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  return nil unless File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt")
   # snag the username
   bb=[]
-  File.open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
+  File.open("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt").each_line do |line|
     bb.push(line.gsub("\n",''))
   end
   # sort the unit list alphabetically
@@ -1026,7 +1026,7 @@ def donor_servant_save(uid,table,table2=[],jp=false) # used by the edit command 
     m2=@crafts.find_index{|q| q[0]==untz[i][5]}
     s="#{s}\n\n#{untz[i][0]} # #{@servants[m][1]}\n#{untz[i][1].join('\\'[0])}\n#{untz[i][2].join('\\'[0])}\n#{untz[i][3].join('\\'[0])}\n#{untz[i][4]}\n#{untz[i][5]}#{" # #{@crafts[m2][1]}" unless m2.nil?}\n#{untz[i][6]}\n#{untz[i][7].join('\\'[0])}" unless m.nil?
   end
-  open("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt", 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt", 'w') { |f|
     f.puts s
     f.puts "\n"
   }
@@ -1446,6 +1446,8 @@ def find_data_ex(callback,name,event,fullname=false,buffer=nil)
 end
 
 def find_emote(bot,event,item,mode=0,forcemoji=false)
+  k2=event.message.text.downcase.split(' ')
+  f=''
   if mode==1
     moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
@@ -1458,9 +1460,10 @@ def find_emote(bot,event,item,mode=0,forcemoji=false)
     moji=bot.server(523822789308841985).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
     return ''
+  elsif has_any?(k2,['total','totals','summary','summarized','summery','summerized']) && !forcemoji
+    f="#{item.split(' ')[0,item.split(' ').length-1].join(' ')} "
   end
-  k=event.message.text.downcase.split(' ')
-  return item if (k.include?('colorblind') || k.include?('textmats')) && !forcemoji
+  return item if has_any?(k2,['colorblind','textmats']) && !forcemoji
   k=item.split(' ')[-1]
   if mode==2
     k=''
@@ -1470,15 +1473,15 @@ def find_emote(bot,event,item,mode=0,forcemoji=false)
     item=item.join(' ')
   end
   moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
-  return "#{moji[0].mention}#{k}" if moji.length>0
+  return "#{moji[0].mention}#{f}#{k}" if moji.length>0
   moji=bot.server(523830882453422120).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
-  return "#{moji[0].mention}#{k}" if moji.length>0
+  return "#{moji[0].mention}#{f}#{k}" if moji.length>0
   moji=bot.server(523824424437415946).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
-  return "#{moji[0].mention}#{k}" if moji.length>0
+  return "#{moji[0].mention}#{f}#{k}" if moji.length>0
   moji=bot.server(523825319916994564).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
-  return "#{moji[0].mention}#{k}" if moji.length>0
+  return "#{moji[0].mention}#{f}#{k}" if moji.length>0
   moji=bot.server(523822789308841985).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
-  return "#{moji[0].mention}#{k}" if moji.length>0
+  return "#{moji[0].mention}#{f}#{k}" if moji.length>0
   return "#{item} #{k}"
 end
 
@@ -1680,8 +1683,8 @@ def servant_icon(k,event,art=0)
   dispnum="001#{art}" if k[0]<2
   unless art<=1
     m=false
-    IO.copy_stream(open("http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
-    return servant_icon(k,event,art-1) if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=10 || m
+    IO.copy_stream(open("http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"), "C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+    return servant_icon(k,event,art-1) if File.size("C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png")<=10 || m
   end
   return "http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"
 end
@@ -1722,6 +1725,19 @@ def generate_rarity_row(k,type='servant')
     end
   end
   return str
+end
+
+def smol_err(event,smol=true)
+  if !smol || @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
+    event.respond 'No servant was included' unless ignore
+    return nil
+  else
+    event.channel.send_embed("__**No servant was included.  Have a smol me instead.**__") do |embed|
+      embed.color = 0xED619A
+      embed.title = "Image Source: **Jack-O'-Lantern [CE-#49]**"
+      embed.image = Discordrb::Webhooks::EmbedImage.new(url: "https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Crafts/craft_essence_049.png")
+    end
+  end
 end
 
 def disp_servant_stats(bot,event,args=nil)
@@ -1862,7 +1878,7 @@ def disp_tiny_stats(bot,event,args=nil)
   dispfou=2000 if dispstr.include?('fougolden') || dispstr.include?('fou_golden') || dispstr.include?('fou-golden') || dispstr.include?('golden-fou')
   k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
-    event.respond 'No matches found.'
+    smol_err(event)
     return nil
   end
   mfou=[0,0]
@@ -2590,7 +2606,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
   xcolor=servant_color(event,k)
   dv=-1
   asc=-1
-  mlvl=-1
+  mlvl=[-1,-1,-1]
   uid=0
   donorjp=false
   colorshift=0
@@ -2605,7 +2621,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       asc=@dev_units[dv][7][0]
       art=@dev_units[dv][7][1]
       colorshift=@dev_units[dv][7][2] unless @dev_units[dv][7][2].nil?
-      mlvl=@dev_units[dv][3].map{|q| q.gsub('u','').to_i}.min
+      mlvl=@dev_units[dv][3].map{|q| q.gsub('u','').to_i}
     end
   elsif donate_trigger_word(event)>0
     uid=donate_trigger_word(event)
@@ -2622,7 +2638,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       asc=x[dvx][7][0]
       art=x[dvx][7][1]
       colorshift=x[dvx][7][2] unless x[dvx][7][2].nil?
-      mlvl=x[dvx][3].map{|q| q.gsub('u','').to_i}.min
+      mlvl=x[dvx][3].map{|q| q.gsub('u','').to_i}
     end
   end
   title=generate_rarity_row(k,'servant')
@@ -2647,78 +2663,200 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
   k[18]=k[18].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   k[19]=k[19].map{|q| q.map{|q2| find_emote(bot,event,q2)}}
   qpd='<:QP:523842660407181324>'
-  qpd=' QP' if event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  ascstr=''
-  ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}" if asc<1
-  ascstr="#{ascstr}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}" if asc<2
-  ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}" if asc<3
-  ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}" if asc<4
-  flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
-  if k[18][0,4].uniq.length<=1
-    ascstr="__*Per stage:* #{k[18][0].join(', ')}__"
-    ascstr="#{ascstr}\n*First Ascension:* #{numabr(qp[0])}#{qpd}" if asc<1
-    ascstr="#{ascstr}\n*Second Ascension:* #{numabr(qp[1])}#{qpd}" if asc<2
-    ascstr="#{ascstr}\n*Third Ascension:* #{numabr(qp[2])}#{qpd}" if asc<3
-    ascstr="#{ascstr}\n*Final Ascension:* #{numabr(qp[3])}#{qpd}" if asc<4
-    flds=[["Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
-  elsif k[0]<2
+  qpd=' QP' if has_any?(event.message.text.downcase.split(' '),['colorblind','textmats'])
+  if has_any?(event.message.text.downcase.split(' '),['total','totals','summary','summarized','summery','summerized'])
+    mttz=[]
+    mttz2=[]
+    costqp=0
+    mainqp=0
+    if k[0]<2
+      m=[7,5,3,1,0][asc]
+      m=7 if asc<0
+      mttz.push("**Story Progress** x#{m}") if lists[0] && asc<4
+      if lists[1]
+        mttz2.push('**Story Progress** x3')
+        for i in 0...k[18][4].length
+          mttz2.push(k[18][4][i])
+        end
+      end
+      costqp=3000000
+    else
+      if asc<4 && lists[0]
+        for i in (asc-1)...4
+          for i2 in 0...k[18][i].length
+            mttz.push(k[18][i][i2])
+          end
+          mainqp+=qp[i]
+        end
+      end
+      if lists[1] && !k[18][4].nil?
+        for i in 0...k[18][4].length
+          mttz2.push(k[18][4][i])
+        end
+        costqp+=3000000
+      end
+      if lists[1] && !k[18][5].nil?
+        for i in 0...k[18][5].length
+          mttz2.push(k[18][5][i])
+        end
+        costqp+=3000000
+      end
+    end
+    if lists[2]
+      for i in 0...9
+        mainqp+=qp[4+i] if mlvl[0]<i+2
+        mainqp+=qp[4+i] if mlvl[1]<i+2
+        mainqp+=qp[4+i] if mlvl[2]<i+2
+        for i2 in 0...k[19][i].length
+          mttz.push(k[19][i][i2]) if mlvl[0]<i+2
+          mttz.push(k[19][i][i2]) if mlvl[1]<i+2
+          mttz.push(k[19][i][i2]) if mlvl[2]<i+2
+        end
+      end
+    end
+    if has_any?(event.message.text.downcase.split(' '),['costume','costumes','justcostume','justcostumes'])
+      for i in 0...mttz2.length
+        mttz.push(mttz2[i])
+      end
+      mttz2=[]
+    end
+    mttz=mttz.map{|q| [q.split(' ')[0,q.split(' ').length-1].join(' '),q.split(' ')[-1].gsub('x','').to_i]}
+    mttz2=mttz2.map{|q| [q.split(' ')[0,q.split(' ').length-1].join(' '),q.split(' ')[-1].gsub('x','').to_i]}
+    mttz3="#{mttz.map{|q| q[0]}.join("\n")}\n#{mttz2.map{|q| q[0]}.join("\n")}".split("\n").uniq.sort.map{|q| [q,0,0]}
+    for i in 0...mttz3.length
+      f=mttz.reject{|q| q[0]!=mttz3[i][0]}
+      for i2 in 0...f.length
+        mttz3[i][1]+=f[i2][1]
+      end
+      f=mttz2.reject{|q| q[0]!=mttz3[i][0]}
+      for i2 in 0...f.length
+        mttz3[i][2]+=f[i2][1]
+      end
+    end
+    hdr="#{"__#{"Mathoo's " if dv>-1}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}" unless chain}"
+    mttz3=mttz3.reject{|q| q[1]<=0 && q[2]<=0}
+    mttz3=mttz3.map{|q| "*#{q[0]}* **x#{q[1]}**#{" (#{q[1]+q[2]})" unless q[2]<=0}"}
+    mttz3.push("**#{longFormattedNumber(mainqp)}** <:QP:523842660407181324>*QP*#{" (#{longFormattedNumber(mainqp+costqp)})" unless costqp<=0}") if mainqp+costqp>0
+    ftr=nil
+    ftr='Numbers in parenthesis include costume mats.' if mttz3.join("\n").include?('(')
+    if chain
+      ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+      ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+      ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+      ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+      ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+    end
+    if mttz3.length<=0
+      create_embed(event,[hdr,title],'No mats needed.',xcolor,ftr,xpic,nil,1)
+    elsif hdr.length+(ftr.length rescue 0)+mttz3.join("\n").length>=1900
+      if mttz3.length>20 && !safe_to_spam?(event) && lists.reject{|q| q==true}.length<=0
+        event.respond "#{hdr.gsub('__','')} has way too many different kinds of mats for me to display the list here.  Please either use this command in PM, or refine your search by including one of the following words: \"ascension\", \"skills\"#{", \"costumes\"" if k[18].length>4}."
+        return nil
+      end
+      str=''
+      f=[0,0]
+      for i in 0...mttz3.length
+        if "#{str}\n#{mttz3[i]}".length>=1800
+          if f[0]==0
+            create_embed(event,[hdr,title],str,xcolor,nil,xpic,nil,1)
+          else
+            create_embed(event,'',str,xcolor,nil,nil,nil,1)
+          end
+          str="#{mttz3[i]}"
+          f[0]+=1
+        else
+          str="#{str}\n#{mttz3[i]}"
+        end
+      end
+      if f[0]==0
+        create_embed(event,[hdr,title],str,xcolor,nil,xpic,nil,1)
+      else
+        create_embed(event,'',str,xcolor,nil,nil,nil,1)
+      end
+      event.respond ftr unless ftr.nil?
+    else
+      create_embed(event,[hdr,title],'',xcolor,ftr,xpic,triple_finish(mttz3,true),1)
+    end
+  else
     ascstr=''
-    ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}" if asc<1
-    ascstr="#{ascstr}\n*Second Ascension:* #{k[18][1].join(', ')}" if asc<2
-    ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}" if asc<3
-    ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}" if asc<4
-    flds[0]=['Ascension',ascstr]
-  end
-  flds=[] unless lists[0]
-  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2 || !lists[1]
-  flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}\n~~the second costume is listed in this bot as Servant #1.2~~" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2 || !lists[1]
-  sklstr=''
-  sklstr="#{sklstr}\n*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}" if mlvl<2
-  sklstr="#{sklstr}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}" if mlvl<3
-  sklstr="#{sklstr}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}" if mlvl<4
-  sklstr="#{sklstr}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}" if mlvl<5
-  sklstr="#{sklstr}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}" if mlvl<6
-  sklstr="#{sklstr}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}" if mlvl<7
-  sklstr="#{sklstr}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}" if mlvl<8
-  sklstr="#{sklstr}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}" if mlvl<9
-  sklstr="#{sklstr}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}" if mlvl<10
-  sklstr=sklstr[2,sklstr.length-2] if sklstr[0,2]=="\n"
-  sklstr=sklstr[1,sklstr.length-1] if sklstr[0,1]=="\n"
-  fqp=qp[4,9]
-  fqp=qp[3+mlvl,10-mlvl] if mlvl>0
-  flds.push(["Skill Enhancement materials (#{numabr(3*(fqp.inject(0){|sum,x| sum + x }))}#{qpd} total)",sklstr]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-' || !lists[2]
-  ftr=nil
-  ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
-  if chain
-    ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
-    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
-    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
-    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
-    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  end
-  str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__#{"\n" unless [q[1][0,1],q[1][0,2]].include?("\n")}#{q[1]}"}.join("\n\n")}"
-  hdr="#{"__#{"Mathoo's " if dv>-1}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}" unless chain}"
-  if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__#{"\n" unless [flds[-1][1][0,1],flds[-1][1][0,2]].include?("\n")}#{flds[-1][1]}".length>=1900
-    create_embed(event,[hdr,title],str,xcolor,nil,xpic,nil,1)
-    str="__**#{flds[-1][0]}**__"
-    hdr=''
-    title=nil
-    xpic=''
-  else
-    str=extend_message(str,"__**#{flds[-1][0]}**__",event,2)
-  end
-  k=flds[-1][1].split("\n")
-  respo=false
-  respo=true if str[0,1]!='_' && str[0,2]!='**' && str[0,2]!='<:' && ![str[0,1],str[0,2]].include?("\n")
-  for i in 0...k.length
-    str=extend_message(str,k[i],event)
+    ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}  \u00B7  #{numabr(qp[0])}#{qpd}" if asc<1
+    ascstr="#{ascstr}\n*Second Ascension:* #{k[18][1].join(', ')}  \u00B7  #{numabr(qp[1])}#{qpd}" if asc<2
+    ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}" if asc<3
+    ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}" if asc<4
+    flds=[["Ascension materials (#{numabr(qp[asc,4-asc].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
+    if k[18][0,4].uniq.length<=1
+      ascstr="__*Per stage:* #{k[18][0].join(', ')}__"
+      ascstr="#{ascstr}\n*First Ascension:* #{numabr(qp[0])}#{qpd}" if asc<1
+      ascstr="#{ascstr}\n*Second Ascension:* #{numabr(qp[1])}#{qpd}" if asc<2
+      ascstr="#{ascstr}\n*Third Ascension:* #{numabr(qp[2])}#{qpd}" if asc<3
+      ascstr="#{ascstr}\n*Final Ascension:* #{numabr(qp[3])}#{qpd}" if asc<4
+      flds=[["Ascension materials (#{numabr(qp[asc,4-asc].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
+    elsif k[0]<2
+      ascstr=''
+      ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}" if asc<1
+      ascstr="#{ascstr}\n*Second Ascension:* #{k[18][1].join(', ')}" if asc<2
+      ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}" if asc<3
+      ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}" if asc<4
+      flds[0]=['Ascension',ascstr]
+    end
+    flds=[] unless lists[0]
+    flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2 || !lists[1]
+    flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}\n~~the second costume is listed in this bot as Servant #1.2~~" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2 || !lists[1]
+    sklstr=''
+    sklstr="#{sklstr}\n*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}" if mlvl.min<2
+    sklstr="#{sklstr}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}" if mlvl.min<3
+    sklstr="#{sklstr}\n*Level 3\u21924:* #{k[19][2].join(', ')}  \u00B7  #{numabr(qp[6])}#{qpd}" if mlvl.min<4
+    sklstr="#{sklstr}\n*Level 4\u21925:* #{k[19][3].join(', ')}  \u00B7  #{numabr(qp[7])}#{qpd}" if mlvl.min<5
+    sklstr="#{sklstr}\n*Level 5\u21926:* #{k[19][4].join(', ')}  \u00B7  #{numabr(qp[8])}#{qpd}" if mlvl.min<6
+    sklstr="#{sklstr}\n*Level 6\u21927:* #{k[19][5].join(', ')}  \u00B7  #{numabr(qp[9])}#{qpd}" if mlvl.min<7
+    sklstr="#{sklstr}\n*Level 7\u21928:* #{k[19][6].join(', ')}  \u00B7  #{numabr(qp[10])}#{qpd}" if mlvl.min<8
+    sklstr="#{sklstr}\n*Level 8\u21929:* #{k[19][7].join(', ')}  \u00B7  #{numabr(qp[11])}#{qpd}" if mlvl.min<9
+    sklstr="#{sklstr}\n*Level 9\u219210:* #{k[19][8].join(', ')}  \u00B7  #{numabr(qp[12])}#{qpd}" if mlvl.min<10
+    sklstr="#{sklstr}\n~~The above numbers are all on a per-skill basis.~~" if mlvl.min<10
+    mzzt=0
+    for i in 0...9
+      mzzt+=qp[4+i] if mlvl[0]<2+i
+      mzzt+=qp[4+i] if mlvl[1]<2+i
+      mzzt+=qp[4+i] if mlvl[2]<2+i
+    end
+    sklstr=sklstr[2,sklstr.length-2] if sklstr[0,2]=="\n"
+    sklstr=sklstr[1,sklstr.length-1] if sklstr[0,1]=="\n"
+    fqp=qp[4,9]
+    fqp=qp[3+mlvl.min,10-mlvl.min] if mlvl.min>0
+    flds.push(["Skill Enhancement materials (#{numabr(mzzt)}#{qpd} total)",sklstr]) unless k[20]=='Unavailable' || k[19].nil? || k[19][0].nil? || k[19][0]=='-' || k[19][0][0].nil? || k[19][0][0].length<=0 || k[19][0][0]=='-' || !lists[2]
+    ftr=nil
+    ftr='If you have trouble seeing the material icons, try the command again with the word "TextMats" included in your message.' unless event.message.text.downcase.split(' ').include?('colorblind') || event.message.text.downcase.split(' ').include?('textmats')
+    if chain
+      ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+      ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+      ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+      ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+      ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+    end
+    str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__#{"\n" unless [q[1][0,1],q[1][0,2]].include?("\n")}#{q[1]}"}.join("\n\n")}"
+    hdr="#{"__#{"Mathoo's " if dv>-1}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}" unless chain}"
+    if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__#{"\n" unless [flds[-1][1][0,1],flds[-1][1][0,2]].include?("\n")}#{flds[-1][1]}".length>=1900
+      create_embed(event,[hdr,title],str,xcolor,nil,xpic,nil,1)
+      str="__**#{flds[-1][0]}**__"
+      hdr=''
+      title=nil
+      xpic=''
+    else
+      str=extend_message(str,"__**#{flds[-1][0]}**__",event,2)
+    end
+    k=flds[-1][1].split("\n")
+    respo=false
     respo=true if str[0,1]!='_' && str[0,2]!='**' && str[0,2]!='<:' && ![str[0,1],str[0,2]].include?("\n")
-  end
-  if respo
-    str=extend_message(str,ftr,event,2)
-    event.respond str
-  else
-    create_embed(event,[hdr,title],str,xcolor,ftr,xpic,nil,1)
+    for i in 0...k.length
+      str=extend_message(str,k[i],event)
+      respo=true if str[0,1]!='_' && str[0,2]!='**' && str[0,2]!='<:' && ![str[0,1],str[0,2]].include?("\n")
+    end
+    if respo
+      str=extend_message(str,ftr,event,2)
+      event.respond str
+    else
+      create_embed(event,[hdr,title],str,xcolor,ftr,xpic,nil,1)
+    end
   end
 end
 
@@ -2816,8 +2954,8 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   end
   if censor
     m=false
-    IO.copy_stream(open(xpic.gsub('.png','c.png')), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
-    if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+    IO.copy_stream(open(xpic.gsub('.png','c.png')), "C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+    if File.size("C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
       censor=false
     else
       censor='Censored NA version'
@@ -2825,8 +2963,8 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     end
   else
     m=false
-    IO.copy_stream(open(xpic.gsub('.png','c.png')), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
-    unless File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+    IO.copy_stream(open(xpic.gsub('.png','c.png')), "C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+    unless File.size("C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
       censor='Default JP version'
     end
   end
@@ -2842,10 +2980,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
   m=false
-  IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+  IO.copy_stream(open(xpic), "C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
   toptext=''
   midtext=''
-  if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+  if File.size("C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
     midtext="~~#{["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][asc]}~~\n"
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
     artist=k[24].split(' as ') unless k[24].nil? || k[24].length<=0
@@ -2877,9 +3015,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       f[0].push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist
       inart.push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][11].include?(k[0].to_i)
     end
-    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
+    if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHUnits.txt")
       b=[]
-      File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
+      File.open("C:/Users/#{@mash}/Desktop/devkit/FEHUnits.txt").each_line do |line|
         b.push(line)
       end
     else
@@ -2903,9 +3041,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     dldrg=[]
     dlnpc=[]
     if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
-      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLAdventurers.txt')
+      if File.exist?("C:/Users/#{@mash}/Desktop/devkit/DLAdventurers.txt")
         b=[]
-        File.open('C:/Users/Mini-Matt/Desktop/devkit/DLAdventurers.txt').each_line do |line|
+        File.open("C:/Users/#{@mash}/Desktop/devkit/DLAdventurers.txt").each_line do |line|
           b.push(line)
         end
       else
@@ -2918,9 +3056,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         end
       end
       dladv=b.map{|q| q}
-      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLDragons.txt')
+      if File.exist?("C:/Users/#{@mash}/Desktop/devkit/DLDragons.txt")
         b=[]
-        File.open('C:/Users/Mini-Matt/Desktop/devkit/DLDragons.txt').each_line do |line|
+        File.open("C:/Users/#{@mash}/Desktop/devkit/DLDragons.txt").each_line do |line|
           b.push(line)
         end
       else
@@ -2933,9 +3071,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         end
       end
       dldrg=b.map{|q| q}
-      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DL_NPCs.txt')
+      if File.exist?("C:/Users/#{@mash}/Desktop/devkit/DL_NPCs.txt")
         b=[]
-        File.open('C:/Users/Mini-Matt/Desktop/devkit/DL_NPCs.txt').each_line do |line|
+        File.open("C:/Users/#{@mash}/Desktop/devkit/DL_NPCs.txt").each_line do |line|
           b.push(line)
         end
       else
@@ -2948,9 +3086,9 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
         end
       end
       dlnpc=b.map{|q| q}
-      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt')
+      if File.exist?("C:/Users/#{@mash}/Desktop/devkit/DLWyrmprints.txt")
         b=[]
-        File.open('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt').each_line do |line|
+        File.open("C:/Users/#{@mash}/Desktop/devkit/DLWyrmprints.txt").each_line do |line|
           b.push(line)
         end
       else
@@ -3115,8 +3253,8 @@ def disp_ce_art(bot,event,args=nil)
   xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Crafts/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
   text=generate_rarity_row(ce,'craft')
   m=false
-  IO.copy_stream(open(xpic), "C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
-  text='Requested art not found.' if File.size("C:/Users/Mini-Matt/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
+  IO.copy_stream(open(xpic), "C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
+  text='Requested art not found.' if File.size("C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
   artist=nil
   artist=ce[9] unless ce[9].nil? || ce[9].length<=0
   f=[]
@@ -3131,9 +3269,9 @@ def disp_ce_art(bot,event,args=nil)
       for i in 0...crf.length
         f.push("CE-#{crf[i][0]}.) #{crf[i][1]}") if crf[i][9]==artist && crf[i][0]!=ce[0]
       end
-      if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt')
+      if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHUnits.txt")
         b=[]
-        File.open('C:/Users/Mini-Matt/Desktop/devkit/FEHUnits.txt').each_line do |line|
+        File.open("C:/Users/#{@mash}/Desktop/devkit/FEHUnits.txt").each_line do |line|
           b.push(line)
         end
       else
@@ -3146,9 +3284,9 @@ def disp_ce_art(bot,event,args=nil)
         end
       end
       if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
-        if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt')
+        if File.exist?("C:/Users/#{@mash}/Desktop/devkit/DLWyrmprints.txt")
           b=[]
-          File.open('C:/Users/Mini-Matt/Desktop/devkit/DLWyrmprints.txt').each_line do |line|
+          File.open("C:/Users/#{@mash}/Desktop/devkit/DLWyrmprints.txt").each_line do |line|
             b.push(line)
           end
         else
@@ -3508,7 +3646,7 @@ def disp_mat_data(bot,event,args=nil)
         srvs[i][6]=@dev_units[mx][3].map{|q| q.gsub('u','').to_i} unless mx.nil?
         srvs[i][7]=@dev_units[mx][7][0] unless mx.nil?
       end
-    elsif File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{event.user.id}.txt")
+    elsif File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{event.user.id}.txt")
       x=donor_servant_list(event.user.id)
       srvs=srvs.reject{|q| !x.map{|q2| q2[0]}.include?(q[0])}
       for i in 0...srvs.length
@@ -4422,7 +4560,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
   end
   @aliases.uniq!
   nzzz=@aliases.map{|a| a}
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
     for i in 0...nzzz.length
       f.puts "#{nzzz[i].to_s}#{"\n" if i<nzzz.length-1}"
     end
@@ -4432,7 +4570,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
   nzzz=@aliases.map{|a| a}
   if nzzz[nzzz.length-1].length>1 && nzzz[nzzz.length-1][2]>=nzz[nzz.length-1][2]
     bot.channel(logchn).send_message('Alias list saved.')
-    open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
+    open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt", 'w') { |f|
       for i in 0...nzzz.length
         f.puts "#{nzzz[i].to_s}#{"\n" if i<nzzz.length-1}"
       end
@@ -5025,9 +5163,9 @@ def find_in_servants(bot,event,args=nil,mode=0)
   align2=[]
   align=[]
   lookout=[]
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt")
     lookout=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt").each_line do |line|
       lookout.push(eval line)
     end
   end
@@ -5314,9 +5452,9 @@ def find_skills(bot,event,args=nil,ces_only=false)
   types=[]
   tags=[]
   lookout=[]
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt")
     lookout=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt").each_line do |line|
       lookout.push(eval line)
     end
   end
@@ -6214,7 +6352,7 @@ def support_lineup(event,bot,args=nil)
       event.respond "That user does not have permission to store their support lineup in my data."
     end
     return nil
-  elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  elsif !File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt")
     event.respond "The file required for this command to work hasn't been created.  Please be patient."
     return nil
   else
@@ -6325,9 +6463,9 @@ def affinity_data(event,bot,args=nil)
   args=args.map{|q| q.downcase}
   clzz=''
   lookout=[]
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt")
     lookout=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt").each_line do |line|
       lookout.push(eval line)
     end
   end
@@ -6460,6 +6598,7 @@ def affinity_data(event,bot,args=nil)
     atk[11]=2
     defn[11]=2
   end
+  atk[7]=1 if !k.nil? && k.length>0 && k[0]==167
   defn[10]=-1 if ['Saber','Archer','Lancer'].include?(clzz)
   defn[10]=1 if ['Rider','Assassin','Caster'].include?(clzz)
   atk.unshift(0)
@@ -6588,7 +6727,7 @@ bot.command([:sort,:list]) do |event, *args|
     nicknames_load()
     @aliases.uniq!
     @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
-    open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+    open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
       for i in 0...@aliases.length
         f.puts "#{@aliases[i].to_s}#{"\n" if i<@aliases.length-1}"
       end
@@ -6828,7 +6967,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
   srvname='PM with dev'
   srvname=bot.server(srv).name unless event.server.nil? && srv.zero?
   bot.channel(logchn).send_message("**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n~~**#{j[0]} Alias:** #{name} for #{j[1]}~~ **DELETED**.")
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
     for i in 0...@aliases.length
       f.puts "#{@aliases[i].to_s}#{"\n" if i<@aliases.length-1}"
     end
@@ -6839,7 +6978,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
   nzzz=@aliases.map{|a| a}
   if nzzz[nzzz.length-1].length>2 && nzzz[nzzz.length-1][2]>=nzz[nzz.length-1][2]
     bot.channel(logchn).send_message("Alias list saved.")
-    open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
+    open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt", 'w') { |f|
       for i in 0...nzzz.length
         f.puts "#{nzzz[i].to_s}#{"\n" if i<nzzz.length-1}"
       end
@@ -7182,21 +7321,21 @@ bot.command([:donation,:donate]) do |event, uid|
         str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
       elsif g[4][1]=='-'
         str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2713 May be given via another bot."
-      elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/EliseImages/#{g[4][1]}.png")
+      elsif !File.exist?("C:/Users/#{@mash}/Desktop/devkit/EliseImages/#{g[4][1]}.png")
         str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected.\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
       else
         str="#{str}\n\n**Tier 3:** Birthday avatar\n\u2713 Given\n*Birthday:* #{g[3][1]} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][g[3][0]]}\n*Character:* #{g[4][1]}"
       end
     end
     if g[2][1]>=4
-      if !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+      if !File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt")
         str="#{str}\n\n**Tier 4:** Servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
       else
         str="#{str}\n\n**Tier 4:** Servant tracking\n\u2713 Given\n*Trigger word:* #{donor_unit_list(uid,1)[0].split('\\'[0])[0]}'s"
       end
     end
     if g[2][1]>=5
-      if !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+      if !File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt")
         str="#{str}\n\n**Tier 5:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
       elsif donor_servant_list(uid,1)[0].split('\\'[0])[1].nil?
         str="#{str}\n\n**Tier 5:** __*Colored*__ servant tracking\n\u2717 Not given.  Please contact <@167657750971547648> to have this corrected."
@@ -7295,7 +7434,7 @@ bot.command(:sortaliases, from: 167657750971547648) do |event, *args|
   nicknames_load()
   @aliases.uniq!
   @aliases.sort! {|a,b| (a[0] <=> b[0]) == 0 ? ((a[2] <=> b[2]) == 0 ? (a[1].downcase <=> b[1].downcase) : (a[2] <=> b[2])) : (a[0] <=> b[0])}
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
     for i in 0...@aliases.length
       f.puts "#{@aliases[i].to_s}#{"\n" if i<@aliases.length-1}"
     end
@@ -7343,7 +7482,7 @@ bot.command(:backupaliases, from: 167657750971547648) do |event|
     return nil
   end
   nzzzzz=@aliases.map{|a| a}
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt", 'w') { |f|
     for i in 0...nzzzzz.length
       f.puts "#{nzzzzz[i].to_s}#{"\n" if i<nzzzzz.length-1}"
     end
@@ -7355,9 +7494,9 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
   return nil if overlap_prevent(event)
   return nil unless [167657750971547648,bot.profile.id].include?(event.user.id) || event.channel.id==502288368777035777
   bot.gateway.check_heartbeat_acks = false
-  if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt')
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt")
     b=[]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames2.txt').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt").each_line do |line|
       b.push(eval line)
     end
   else
@@ -7367,9 +7506,9 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
   nz=nzzzzz.reject{|q| q[0]!='Servant'}
   if nz[nz.length-1][2]<238
     event << 'Last backup of the alias list has been corrupted.  Restoring from manually-created backup.'
-    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGONames3.txt')
+    if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt")
       b=[]
-      File.open('C:/Users/Mini-Matt/Desktop/devkit/FGONames3.txt').each_line do |line|
+      File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt").each_line do |line|
         b.push(eval line)
       end
     else
@@ -7379,7 +7518,7 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
   else
     event << 'Last backup of the alias list being used.'
   end
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
     for i in 0...nzzzzz.length
       f.puts "#{nzzzzz[i].to_s}#{"\n" if i<nzzzzz.length-1}"
     end
@@ -7434,7 +7573,7 @@ bot.command(:cleanupaliases, from: 167657750971547648) do |event|
     end
   end
   nmz.compact!
-  open('C:/Users/Mini-Matt/Desktop/devkit/FGONames.txt', 'w') { |f|
+  open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
     for i in 0...nmz.length
       f.puts "#{nmz[i].to_s}#{"\n" if i<nmz.length-1}"
     end
@@ -7520,9 +7659,9 @@ bot.command(:snagstats) do |event, f, f2|
     return nil
   elsif ['servant','servants','unit','units','character','characters','chara','charas','char','chars'].include?(f.downcase)
     lookout=[]
-    if File.exist?('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt')
+    if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt")
       lookout=[]
-      File.open('C:/Users/Mini-Matt/Desktop/devkit/FGOSkillSubsets.txt').each_line do |line|
+      File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt").each_line do |line|
         lookout.push(eval line)
       end
     end
@@ -7692,25 +7831,25 @@ bot.command(:snagstats) do |event, f, f2|
   elsif ['code','lines','line','sloc'].include?(f.downcase)
     event.channel.send_temporary_message('Calculating data, please wait...',3)
     b=[[],[],[],[],[]]
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.rb').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/LizBot.rb").each_line do |line|
       l=line.gsub("\n",'')
       b[0].push(l)
       b[3].push(l)
       l=line.gsub("\n",'').gsub(' ','')
       b[1].push(l) unless l.length<=0
     end
-    File.open('C:/Users/Mini-Matt/Desktop/devkit/rot8er_functs.rb').each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/rot8er_functs.rb").each_line do |line|
       l=line.gsub("\n",'')
       b[0].push(l)
       b[4].push(l)
       l=line.gsub("\n",'').gsub(' ','')
       b[2].push(l) unless l.length<=0
     end
-    event << "**I am #{longFormattedNumber(File.foreach("C:/Users/Mini-Matt/Desktop/devkit/LizBot.rb").inject(0) {|c, line| c+1})} lines of code long.**"
+    event << "**I am #{longFormattedNumber(File.foreach("C:/Users/#{@mash}/Desktop/devkit/LizBot.rb").inject(0) {|c, line| c+1})} lines of code long.**"
     event << "Of those, #{longFormattedNumber(b[1].length)} are SLOC (non-empty)."
     event << "~~When fully collapsed, I appear to be #{longFormattedNumber(b[3].reject{|q| q.length>0 && (q[0,2]=='  ' || q[0,3]=='end' || q[0,4]=='else')}.length)} lines of code long.~~"
     event << ''
-    event << "**I rely on a library that is #{longFormattedNumber(File.foreach("C:/Users/Mini-Matt/Desktop/devkit/rot8er_functs.rb").inject(0) {|c, line| c+1})} lines of code long.**"
+    event << "**I rely on a library that is #{longFormattedNumber(File.foreach("C:/Users/#{@mash}/Desktop/devkit/rot8er_functs.rb").inject(0) {|c, line| c+1})} lines of code long.**"
     event << "Of those, #{longFormattedNumber(b[2].length)} are SLOC (non-empty)."
     event << "~~When fully collapsed, it appears to be #{longFormattedNumber(b[4].reject{|q| q.length>0 && (q[0,2]=='  ' || q[0,3]=='end' || q[0,4]=='else')}.length)} lines of code long.~~"
     event << ''
@@ -7833,7 +7972,7 @@ bot.command(:snagstats) do |event, f, f2|
   glbl=@aliases.reject{|q| q[0]!='Servant' || !q[3].nil?}
   srv_spec=@aliases.reject{|q| q[0]!='Servant' || q[3].nil?}
   b=[]
-  File.open('C:/Users/Mini-Matt/Desktop/devkit/LizBot.rb').each_line do |line|
+  File.open("C:/Users/#{@mash}/Desktop/devkit/LizBot.rb").each_line do |line|
     l=line.gsub(' ','').gsub("\n",'')
     b.push(l) unless l.length<=0
   end
@@ -7856,7 +7995,7 @@ bot.command(:snagstats) do |event, f, f2|
   event << ''
   event << "**There are #{longFormattedNumber(glbl.length)} global and #{longFormattedNumber(srv_spec.length)} server-specific *aliases*.**"
   event << ''
-  event << "**I am #{longFormattedNumber(File.foreach("C:/Users/Mini-Matt/Desktop/devkit/LizBot.rb").inject(0) {|c, line| c+1})} lines of *code* long.**"
+  event << "**I am #{longFormattedNumber(File.foreach("C:/Users/#{@mash}/Desktop/devkit/LizBot.rb").inject(0) {|c, line| c+1})} lines of *code* long.**"
   event << "Of those, #{longFormattedNumber(b.length)} are SLOC (non-empty)."
   return nil
 end
@@ -7889,7 +8028,7 @@ end
 
 bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *args|
   return nil if overlap_prevent(event)
-  if File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{event.user.id}.txt")
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{event.user.id}.txt")
     event.respond "This command is to allow the developer to edit his servants.  Your version of the command is `FGO!edit`"
   end
   return nil unless event.user.id==167657750971547648 # only work when used by the developer
@@ -8442,7 +8581,7 @@ bot.command(:edit) do |event, cmd, *args|
   elsif !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(uid)
     event.respond "You do not have permission to use this command."
     return nil
-  elsif !File.exist?("C:/Users/Mini-Matt/Desktop/devkit/LizUserSaves/#{uid}.txt")
+  elsif !File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{uid}.txt")
     event.respond "Please wait until my developer makes your storage file."
     return nil
   elsif cmd.downcase=='help' || ((cmd.nil? || cmd.length.zero?) && (args.nil? || args.length.zero?))
@@ -9286,7 +9425,7 @@ bot.message do |event|
     a=str.split(' ')
     if a[0].downcase=='reboot'
       event.respond 'Becoming Robin.  Please wait approximately ten seconds...'
-      exec 'cd C:/Users/Mini-Matt/Desktop/devkit && feindex.rb 4'
+      exec "cd C:/Users/#{@mash}/Desktop/devkit && feindex.rb 4"
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond 'I am not Robin right now.  Please use `FE!reboot` to turn me into Robin.'
     end
@@ -9297,7 +9436,7 @@ bot.message do |event|
     a=s.split(' ')
     if a[0].downcase=='reboot'
       event.respond "Becoming Elise.  Please wait approximately ten seconds..."
-      exec "cd C:/Users/Mini-Matt/Desktop/devkit && PriscillaBot.rb 4"
+      exec "cd C:/Users/#{@mash}/Desktop/devkit && PriscillaBot.rb 4"
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond "I am not Elise right now.  Please use `FEH!reboot` to turn me into Elise."
     end
@@ -9307,7 +9446,7 @@ bot.message do |event|
     a=s.split(' ')
     if a[0].downcase=='reboot'
       event.respond "Becoming Botan.  Please wait approximately ten seconds..."
-      exec "cd C:/Users/Mini-Matt/Desktop/devkit && BotanBot.rb 4"
+      exec "cd C:/Users/#{@mash}/Desktop/devkit && BotanBot.rb 4"
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond "I am not Botan right now.  Please use `DL!reboot` to turn me into Botan."
     end
@@ -9500,7 +9639,7 @@ def next_holiday(bot,mode=0)
       # Only one holiday is today.  Display new avatar, and set another check for midnight
       bot.game=k[0][4]
       if @shardizard.zero?
-        bot.profile.avatar=(File.open("C:/Users/Mini-Matt/Desktop/devkit/EliseImages/#{k[0][3]}.png",'r')) rescue nil
+        bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/EliseImages/#{k[0][3]}.png",'r')) rescue nil
       end
       @avvie_info=[k[0][3],k[0][4],k[0][5]]
       t2= Time.now + 18*60*60
@@ -9515,7 +9654,7 @@ def next_holiday(bot,mode=0)
         # in last area of day.  Set avatar to the last one for the day, then set a check for tomorrow at midnight
         bot.game=k[k.length-1][4]
         if @shardizard.zero?
-          bot.profile.avatar=(File.open("C:/Users/Mini-Matt/Desktop/devkit/LizImages/#{k[k.length-1][3]}.png",'r')) rescue nil
+          bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/LizImages/#{k[k.length-1][3]}.png",'r')) rescue nil
         end
         @avvie_info=[k[k.length-1][3],k[k.length-1][4],k[k.length-1][5]]
         t2= Time.now + 18*60*60
@@ -9534,7 +9673,7 @@ def next_holiday(bot,mode=0)
         # ...set avatar properly and set check for the beginning of the next chunk of the day
         bot.game=k[j][4]
         if @shardizard.zero?
-          bot.profile.avatar=(File.open("C:/Users/Mini-Matt/Desktop/devkit/LizImages/#{k[j][3]}.png",'r')) rescue nil
+          bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/LizImages/#{k[j][3]}.png",'r')) rescue nil
         end
         @avvie_info=[k[j][3],k[j][4],k[j][5]]
         t=Time.now
@@ -9549,19 +9688,19 @@ def next_holiday(bot,mode=0)
     t-=60*60*6
     bot.game='Fate/Grand Order (FGO!help for info)'
     if [1].include?(t.month)
-      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Eggplant).png','r')) rescue nil if @shardizard.zero?
+      bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/Liz(Eggplant).png",'r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz(Eggplant)','*Fate/Grand Order*','']
     elsif [4].include?(t.month)
-      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Mecha).png','r')) rescue nil if @shardizard.zero?
+      bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/Liz(Mecha).png",'r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz(Mecha)','*Fate/Grand Order*','']
     elsif [7].include?(t.month)
-      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Brave).png','r')) rescue nil if @shardizard.zero?
+      bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/Liz(Brave).png",'r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz(Brave)','*Fate/Grand Order*','']
     elsif [10].include?(t.month)
-      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz(Halloween).png','r')) rescue nil if @shardizard.zero?
+      bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/Liz(Halloween).png",'r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz(Halloween)','*Fate/Grand Order*','']
     else
-      bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/Liz.png','r')) rescue nil if @shardizard.zero?
+      bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/Liz.png",'r')) rescue nil if @shardizard.zero?
       @avvie_info=['Liz','*Fate/Grand Order*','']
     end
     t+=24*60*60
@@ -9597,7 +9736,7 @@ bot.ready do |event|
   if @shardizard==4
     next_holiday(bot)
     bot.user(bot.profile.id).on(285663217261477889).nickname='LizBot (Debug)'
-    bot.profile.avatar=(File.open('C:/Users/Mini-Matt/Desktop/devkit/DebugLiz.png','r'))
+    bot.profile.avatar=(File.open("C:/Users/#{@mash}/Desktop/devkit/DebugLiz.png",'r'))
   else
     next_holiday(bot)
   end
