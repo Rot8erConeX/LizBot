@@ -754,35 +754,28 @@ def help_text(event,bot,command=nil,subcommand=nil,args=[])
         lookout.push(eval line)
       end
     end
-    lookout=lookout.map{|q| q[0]}
+    str='Skill tags'
     if ['skill','skills','skil','skils'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __\*filters__","Displays all skills and CE effects that fit `filters`.\n\nYou can search by:\n- Skill type (Active, Passive, CE, Clothing, NP)\n- Effect tag#{' (seen below)' if safe_to_spam?(event)}\n\nIf too many skills and/or CEs are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
-      if safe_to_spam?(event)
-        if lookout.join("\n").length>=1900
-          str=lookout[0]
-          for i in 1...lookout.length
-            str=extend_message(str,lookout[i],event,1,',  ')
-          end
-          event.respond str
-        else
-          create_embed(event,'Skill tags','',0x40C0F0,nil,nil,triple_finish(lookout)) if safe_to_spam?(event)
-        end
-      end
+      lookout=lookout.reject{|q| q[2]!='Skill'}.map{|q| q[0]}
     elsif ['ce','ces','craft','crafts','essence','essences'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}** __\*filters__","Displays CEs effects that fit `filters`.\n\nYour search options can be #{'seen below' if safe_to_spam?(event)}#{'shown if you repeat this command in PM' unless safe_to_spam?(event)}\n\nIf too many CEs are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
-      if safe_to_spam?(event)
-        if lookout.join("\n").length>=1900
-          str=lookout[0]
-          for i in 1...lookout.length
-            str=extend_message(str,lookout[i],event,1,',  ')
-          end
-          event.respond str
-        else
-          create_embed(event,'Skill tags','',0x40C0F0,nil,nil,triple_finish(lookout)) if safe_to_spam?(event)
-        end
-      end
+      lookout=lookout.reject{|q| q[2]!='Skill'}.map{|q| q[0]}
     else
       create_embed(event,"**#{command.downcase}** __\*filters__","Displays all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Command Deck\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.",0xED619A)
+      lookout=lookout.reject{|q| q[2]!='Servant'}.map{|q| q[0]}
+      str='Servant traits'
+    end
+    if safe_to_spam?(event)
+      if lookout.join("\n").length>=1900
+        str=lookout[0]
+        for i in 1...lookout.length
+          str=extend_message(str,lookout[i],event,1,',  ')
+        end
+        event.respond str
+      else
+        create_embed(event,str,'',0x40C0F0,nil,nil,triple_finish(lookout)) if safe_to_spam?(event)
+      end
     end
   elsif ['sort','list'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __\*filters__","Sorts all servants that fit `filters`.\n\nYou can search by:\n- Class\n- Growth Curve\n- Rarity\n- Attribute\n- Traits\n- Command Deck\n- Noble Phantasm card type\n- Noble Phantasm target(s)\n- Availability\n- Alignment\n\nYou can sort by:\n- HP\n- Atk\n\nYou can adjust the level sorted by using the following words:\n- Base\n- Max\n- Grail\n\nIf too many servants are trying to be displayed, I will - for the sake of the sanity of other server members - only allow you to use the command in PM.  I will instead show only the top ten results.",0xED619A)
@@ -2513,7 +2506,9 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     end
     text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
   end
-  create_embed(event,["#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
+  ce[1]=ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+  ce[1]="Ni\u00F1a" if ce[0]==589
+  create_embed(event,["#{"**#{ce[1]}** [CE-##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
 end
 
 def disp_servant_ce2(bot,event,args=nil)
@@ -2682,7 +2677,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       costqp=3000000
     else
       if asc<4 && lists[0]
-        for i in (asc-1)...4
+        for i in ([(asc-1),0].max)...4
           for i2 in 0...k[18][i].length
             mttz.push(k[18][i][i2])
           end
@@ -2736,7 +2731,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
     hdr="#{"__#{"Mathoo's " if dv>-1}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}" unless chain}"
     mttz3=mttz3.reject{|q| q[1]<=0 && q[2]<=0}
     mttz3=mttz3.map{|q| "*#{q[0]}* **x#{q[1]}**#{" (#{q[1]+q[2]})" unless q[2]<=0}"}
-    mttz3.push("**#{longFormattedNumber(mainqp)}** <:QP:523842660407181324>*QP*#{" (#{longFormattedNumber(mainqp+costqp)})" unless costqp<=0}") if mainqp+costqp>0
+    mttz3.push("\u00B7  **#{longFormattedNumber(mainqp)}** <:QP:523842660407181324>*QP*#{" (#{longFormattedNumber(mainqp+costqp)})" unless costqp<=0}") if mainqp+costqp>0
     ftr=nil
     ftr='Numbers in parenthesis include costume mats.' if mttz3.join("\n").include?('(')
     if chain
@@ -3236,7 +3231,9 @@ def disp_ce_card(bot,event,args=nil)
   ftr=nil
   ftr='For the other CE given the title "Heaven\'s Feel" in-game, it has been given the name "Heaven\'s Feel (Anime Japan)".' if ce[0]==35
   ftr="For the other CE given the title \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\" in-game, it has been given the name \"#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Lancer]\"." if [595,826].include?(ce[0])
-  create_embed(event,["__**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]__",title],text,xcolor,ftr,xpic)
+  ce[1]=ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+  ce[1]="Ni\u00F1a" if ce[0]==589
+  create_embed(event,["__**#{ce[1]}** [CE-##{ce[0]}]__",title],text,xcolor,ftr,xpic)
 end
 
 def disp_ce_art(bot,event,args=nil)
@@ -3258,6 +3255,7 @@ def disp_ce_art(bot,event,args=nil)
   artist=nil
   artist=ce[9] unless ce[9].nil? || ce[9].length<=0
   f=[]
+  ce[1]="Ni\u00F1a" if ce[0]==589
   if args.include?('just') || args.include?('justart') || args.include?('blank') || args.include?('noinfo')
     f=nil
     str2=''
@@ -3390,12 +3388,40 @@ def disp_code_data(bot,event,args=nil)
   create_embed(event,["**#{ce[1]}** [Cmd-##{ce[0]}]",title],text,xcolor,nil,xpic)
 end
 
-def disp_skill_data(bot,event,args=nil)
+def disp_skill_data(bot,event,args=nil,addmsg=nil)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   k=find_data_ex(:find_skill,args.join(' '),event)
   if k.length.zero?
-    event.respond 'No matches found.'
+    sklz=@skills.map{|q| q}
+    if find_data_ex(:find_servant,args.join(' '),event).length>0 && has_any?(args,['s1','s2','s3','skill1','skill2','skill3','skl1','skl2','skl3','s1u','s2u','s3u','skill1u','skill2u','skill3u','skl1u','skl2u','skl3u','s1upgrade','s2upgrade','s3upgrade','skill1upgrade','skill2upgrade','skill3upgrade','skl1upgrade','skl2upgrade','skl3upgrade'])
+      adv=find_data_ex(:find_servant,args.join(' '),event)
+      p=0
+      p=1 if has_any?(args,['s2','skill2','skl2','s2u','skill2u','skl2u','s2upgrade','skill2upgrade','skl2upgrade'])
+      p=2 if has_any?(args,['s3','skill3','skl3','s3u','skill3u','skl3u','s3upgrade','skill3upgrade','skl3upgrade'])
+      p2=0
+      if adv[14].nil? || adv[14].length<=0 || adv[14][p].length<=0 || adv[14][p][0].nil?
+        event.respond "#{adv[1]} [Srv-##{adv[0]}] does not have a #{['1st','2nd','3rd'][p]} skill."
+        return nil
+      elsif has_any?(args,['s1u','s2u','s3u','skill1u','skill2u','skill3u','skl1u','skl2u','skl3u','s1upgrade','s2upgrade','s3upgrade','skill1upgrade','skill2upgrade','skill3upgrade','skl1upgrade','skl2upgrade','skl3upgrade','upgrade'])
+        if adv[14][p][1].nil?
+          event.respond "#{adv[1]} [Srv-##{adv[0]}] does not have an upgrading #{['1st','2nd','3rd'][p]} skill.  Showing default skill in that slot."
+        elsif sklz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==adv[14][p][1]}.nil?
+          event.respond "#{adv[1]} [Srv-##{adv[0]}]'s upgraded #{['1st','2nd','3rd'][p]} skill, #{adv[14][p][1]}, does not have skill data.  Showing default skill in that slot."
+        else
+          p2=1
+        end
+      end
+      if sklz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==adv[14][p][p2]}.nil?
+        event.respond "#{adv[1]} [Srv-##{adv[0]}]'s #{['1st','2nd','3rd'][p]} skill, #{adv[14][p][p2]}, does not have skill data."
+      else
+        ftr=nil
+        ftr="#{adv[1]} [Srv-##{adv[0]}]'s #{['1st','2nd','3rd'][p]} skill can be upgraded to #{adv[14][p][1]}" unless adv[14][p][1].nil? || adv[14][p][1].length<=0 
+        disp_skill_data(bot,event,adv[14][p][p2].split(' '),ftr)
+      end
+    else
+      event.respond 'No matches found.'
+    end
     return nil
   end
   k=k[0] if k.length<2 && k[0].is_a?(Array)
@@ -3524,7 +3550,7 @@ def disp_skill_data(bot,event,args=nil)
     tags=k[5]
     xcolor=0x006080
     text="**Cooldown:** #{k[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[3]-2}\u00A0L#{micronumber(10)}\n**Target:** #{k[4]}"
-    ftr='Use this command in PM for a list of servants who have this skill.' unless safe_to_spam?(event)
+    ftr='Use this command in PM for a list of servants who have this skill.' unless safe_to_spam?(event,nil,1)
     mx=@skills.reject{|q| q[0][0,k[0].length+2]!="#{k[0]} (" || q[1]!=k[1]}.map{|q| "#{q[0]} #{q[1]}"}.uniq
     ftr="You may also mean: #{list_lift(mx,'or')}" if mx.length>0
     ftr='If you\'re looking for a servants\' aliases, the command name is "aliases", not "alias".' if k[0][0,5].downcase=='alias'
@@ -3547,6 +3573,7 @@ def disp_skill_data(bot,event,args=nil)
       end
     end
   end
+  ftr="#{addmsg}" unless addmsg.nil?
   create_embed(event,header,text,xcolor,ftr)
   if safe_to_spam?(event,nil,1)
     srv=[]
@@ -3856,6 +3883,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
       n=n.reject{|q| q[2].nil?} if mode==1
       for i in 0...n.length
         untnme=@crafts[@crafts.find_index{|q| q[0]==n[i][1]}][1]
+        untnme="Ni\u00F1a" if n[i][1]==589
         if n[i][2].nil?
           f.push("#{n[i][0].gsub('_','\_')} = #{untnme} [CE-##{n[i][1]}]")
         elsif !event.server.nil? && n[i][2].include?(event.server.id)
@@ -3974,6 +4002,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
         n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
           untnme=@crafts[@crafts.find_index{|q| q[0]==n[i][1]}][1]
+          untnme="Ni\u00F1a" if n[i][1]==589
           msg=extend_message(msg,"#{n[i][0]} = #{untnme} [CE-##{n[i][1]}]#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
         msg=extend_message(msg,'__**Material Aliases**__',event,2)
@@ -4213,11 +4242,13 @@ def disp_aliases(bot,event,args=nil,mode=0)
     k=0
     k=event.server.id unless event.server.nil?
     n=n.reject{|q| q[2].nil?} if mode==1
+    ce[1]="Ni\u00F1a" if ce[0]==589
     f.push("__**#{ce[1]}**__ [CE-##{ce[0]}]#{"'s server-specific aliases" if mode==1}")
     unless mode==1
       f.push(ce[1].gsub(' ','').gsub('(','').gsub(')','').gsub('_','').gsub('!','').gsub('?','').gsub("'",'').gsub('"','')) if ce[1].include?('(') || ce[1].include?(')') || ce[1].include?(' ') || ce[1].include?('!') || ce[1].include?('_') || ce[1].include?('?') || ce[1].include?("'") || ce[1].include?('"')
       f.push(ce[0]) if ce[0]>@servants.map{|q| q[0]}.max
     end
+    f.push('Nina') if ce[0]==589
     for i in 0...n.length
       if n[i][1]==ce[0]
         if event.server.nil? && !n[i][2].nil?
