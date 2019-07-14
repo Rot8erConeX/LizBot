@@ -37,3 +37,6 @@
 37\Command Spells of the Crimson-Heart Retainer\3\Increase Critical Strength by 15% when installed into a Buster Card\Lady Reines Case Files
 38\Box of the Immaterial\4\Apply Special Attack [Undead] 15%\Lady Reines Case Files
 39\Da Vinci-chan\5\Increase NP Strength by 15% (1 turn)\Lady Reines Case Files
+40\Command Spells of an Immature Fantasy       \3\Increase Critical Star Gather Rate by 100% when installed into an Arts Card       \GUDAGUDA Final Honnoji 2019
+41\Famed Thin-Bladed Sword\4\Apply Ignore Invincible\GUDAGUDA Final Honnoji 2019
+42\Great Fool of Owari\5\Increase Critical Strength againt [Divine] by 30%\GUDAGUDA Final Honnoji 2019

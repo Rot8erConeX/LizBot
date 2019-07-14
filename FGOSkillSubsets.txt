@@ -39,6 +39,7 @@
 ['DmgUpSpec', ['dmgupspec', 'damageupspec', 'dmgincreasespec', 'damageincreasespec'], 'Skill']
 ['Evasion', ['evasion', 'evade'], 'Skill']
 ['EvilCurse', ['evilcurse', 'supercurse'], 'Skill']
+['FieldChanging', ['fieldchanging', 'feildchanging', 'fieldchange', 'feildchange', 'fieldchanger', 'feildchanger', 'changefield', 'changefeild'], 'Skill']
 ['FlatDmgDown', ['flatdmgdown', 'flatdamagedown', 'flatdmgdecrease', 'flatdamagedecrease'], 'Skill']
 ['GainStars', ['gainstars'], 'Skill']
 ['Guts', ['guts'], 'Skill']

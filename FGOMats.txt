@@ -22,6 +22,7 @@ Cursed Beast Gallstone
 Dawn's Light Core
 Deadly Poisonous Needle
 Dharmapala's Stick
+Dragon Ball of Biten
 Dragon Fang
 Dragon Orb
 Dragon's Reverse Scale
@@ -105,5 +106,4 @@ Twinkle Candy
 Void's Dust
 Warhorse's Young Horn
 Wazamono Knife
-mysterious divine Wine
 
