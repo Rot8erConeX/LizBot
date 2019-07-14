@@ -314,7 +314,7 @@ def data_load()
     b[i][10]='' if b[i][10].nil?
     b[i][10]=b[i][10].split(', ')
     b[i][11]='' if b[i][11].nil?
-    b[i][11]=b[i][11].split(', ').map{|q| q.to_i}
+    b[i][11]=b[i][11].split(', ')
   end
   @crafts=b.map{|q| q}
   if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOCommandCodes.txt")
@@ -716,7 +716,8 @@ def help_text(event,bot,command=nil,subcommand=nil,args=[])
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s skills.\n\nIf it is safe to spam, each skill will also be given additional information.",0xED619A)
   elsif ['skill','skil'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows the skill data for the skill `name`.\nIf no rank is given and `name` is a skill with multiple ranks, shows all.",0xED619A)
-  elsif ['np','noble','phantasm','noblephantasm'].include?(command.downcase)
+  elsif ['np','np1','np2','np3','np4','np5','noble','phantasm','noblephantasm'].include?(command.downcase)
+    command='np' if ['np1','np2','np3','np4','np5'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Noble Phantasm.\n\nIf it is not safe to spam, I will show the effects for only the default NP level, and it can be adjusted to show other NP levels based on included arguments in the format \"NP#{rand(5)+1}\"\nIf it is safe to spam, I will show all the effects naturally.",0xED619A)
   elsif ['bond','bondce'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Bond CE.",0xED619A)
@@ -905,7 +906,7 @@ def all_commands(include_nil=false,permissions=-1)
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
      'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit','support',
-     'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res']
+     'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res','np1','np2','np3','np4','np5']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit'] if permissions==2
   k.push(nil) if include_nil
@@ -2247,7 +2248,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
   end
 end
 
-def disp_servant_np(bot,event,args=nil,chain=false)
+def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
   k=find_data_ex(:find_servant,args.join(' '),event)
@@ -2318,6 +2319,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
   npl=3 if event.message.text.downcase.split(' ').include?('kh3') && k[0]==154
   npl=4 if event.message.text.downcase.split(' ').include?('kh4') && k[0]==154
   npl=5 if event.message.text.downcase.split(' ').include?('kh5') && k[0]==154
+  mlvl=forcenpl*1 unless forcenpl.nil?
   npl=0 if mlvl>0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant')
@@ -2455,7 +2457,7 @@ def disp_servant_np(bot,event,args=nil,chain=false)
     end
   end
   return nil if chain && text.length<=0
-  create_embed(event,["#{"__#{"Mathoo's " if dv>=0}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",title],text,xcolor,ftr,nil)
+  create_embed(event,["#{"__#{"Mathoo's " if dv>=0}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if mlvl<=0 && npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",title],text,xcolor,ftr,nil)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
@@ -7084,6 +7086,36 @@ bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
   return nil
 end
 
+bot.command([:np1]) do |event, *args|
+  return nil if overlap_prevent(event)
+  disp_servant_np(bot,event,args,false,1)
+  return nil
+end
+
+bot.command([:np2]) do |event, *args|
+  return nil if overlap_prevent(event)
+  disp_servant_np(bot,event,args,false,2)
+  return nil
+end
+
+bot.command([:np3]) do |event, *args|
+  return nil if overlap_prevent(event)
+  disp_servant_np(bot,event,args,false,3)
+  return nil
+end
+
+bot.command([:np4]) do |event, *args|
+  return nil if overlap_prevent(event)
+  disp_servant_np(bot,event,args,false,4)
+  return nil
+end
+
+bot.command([:np5]) do |event, *args|
+  return nil if overlap_prevent(event)
+  disp_servant_np(bot,event,args,false,5)
+  return nil
+end
+
 bot.command([:ce,:CE,:cE,:Ce,:craft,:essance,:craftessance]) do |event, *args|
   return nil if overlap_prevent(event)
   if args.nil? || args[0].nil?
@@ -8256,9 +8288,10 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
     end
     n=''
     n='u' if @dev_units[j2][3][m].include?('u')
+    f=@dev_units[j2][3][m].gsub('u','').to_i
     @dev_units[j2][3][m]="#{[@dev_units[j2][3][m].gsub('u','').to_i+typ,10].min}#{n}"
     devservants_save()
-    event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} has been leveled to #{@dev_units[j2][3][m].gsub('u','')}."
+    event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} has been leveled by #{dev_units[j2][3][m].gsub('u','').to_i-f} ~~(from #{f} to #{@dev_units[j2][3][m].gsub('u','')})~~."
   elsif ['np','merge','merges'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -8342,9 +8375,10 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
       return nil
     end
     typ=1 if typ<=0
+    f=@dev_units[j2][6]*1
     @dev_units[j2][6]=[@dev_units[j2][6]+typ,15].min
     devservants_save()
-    event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s bond level has increased by #{typ} to #{@dev_units[j2][6]}."
+    event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s bond level has increased by #{@dev_units[j2][6]-f} ~~(from #{f} to #{@dev_units[j2][6]})~~."
   elsif ['ascension','ascend'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -8817,9 +8851,10 @@ bot.command(:edit) do |event, cmd, *args|
     end
     n=''
     n='u' if donor_units[j2][3][m].include?('u')
+    f=donor_units[j2][3][m].gsub('u','').to_i
     donor_units[j2][3][m]="#{[donor_units[j2][3][m].gsub('u','').to_i+typ,10].min}#{n}"
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been leveled to #{donor_units[j2][3][m].gsub('u','')}."
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been leveled by #{donor_units[j2][3][m].gsub('u','').to_i-f} ~~(from #{f} to #{donor_units[j2][3][m].gsub('u','')})~~."
   elsif ['np','merge','merges'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -8903,9 +8938,10 @@ bot.command(:edit) do |event, cmd, *args|
       return nil
     end
     typ=1 if typ<=0
+    f=donor_units[j2][6]*1
     donor_units[j2][6]=[donor_units[j2][6]+typ,15].min
     donor_servant_save(uid,donor_units)
-    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s bond level has increased by #{typ} to #{donor_units[j2][6]}."
+    event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s bond level has increased by #{donor_units[j2][6]-f} ~~(from #{f} to #{donor_units[j2][6]})~~."
   elsif ['ascension','ascend'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -9295,6 +9331,26 @@ bot.mention do |event|
     args.shift
     disp_servant_np(bot,event,args)
     m=false
+  elsif ['np1'].include?(args[0])
+    args.shift
+    disp_servant_np(bot,event,args,false,1)
+    m=false
+  elsif ['np2'].include?(args[0])
+    args.shift
+    disp_servant_np(bot,event,args,false,2)
+    m=false
+  elsif ['np3'].include?(args[0])
+    args.shift
+    disp_servant_np(bot,event,args,false,3)
+    m=false
+  elsif ['np4'].include?(args[0])
+    args.shift
+    disp_servant_np(bot,event,args,false,4)
+    m=false
+  elsif ['np5'].include?(args[0])
+    args.shift
+    disp_servant_np(bot,event,args,false,5)
+    m=false
   elsif ['bond','bondce'].include?(args[0])
     args.shift
     disp_servant_ce(bot,event,args)
@@ -9383,7 +9439,7 @@ bot.mention do |event|
     m=false
   end
   if m
-    if find_data_ex(:find_ce,name,event,true).length>0
+    if find_data_ex(:find_ce,name,event,true).length>0 && !find_data_ex(:find_ce,s,event,true)[11].include?('EXPCard')
       disp_ce_card(bot,event,args)
     elsif find_data_ex(:find_servant,name,event,true).length>0
       disp_servant_stats(bot,event,args)
@@ -9404,6 +9460,8 @@ bot.mention do |event|
       disp_enemy_traits(bot,event,args)
     elsif find_data_ex(:find_mat,name,event,true).length>0
       disp_mat_data(bot,event,args)
+    elsif find_data_ex(:find_ce,name,event,true).length>0
+      disp_ce_card(bot,event,args)
     elsif find_data_ex(:find_ce,name,event).length>0
       disp_ce_card(bot,event,args)
     elsif find_data_ex(:find_servant,name,event).length>0
@@ -9490,7 +9548,7 @@ bot.message do |event|
     end
   elsif overlap_prevent(event)
   elsif m && !all_commands().include?(s.split(' ')[0])
-    if find_data_ex(:find_ce,s,event,true).length>0
+    if find_data_ex(:find_ce,s,event,true).length>0 && !find_data_ex(:find_ce,s,event,true)[11].include?('EXPCard')
       disp_ce_card(bot,event,s.split(' '))
     elsif find_data_ex(:find_servant,s,event,true).length>0
       disp_servant_stats(bot,event,s.split(' '))
@@ -9511,6 +9569,8 @@ bot.message do |event|
       disp_mat_data(bot,event,s.split(' '))
     elsif find_data_ex(:find_enemy,s,event,true).length>0
       disp_enemy_traits(bot,event,s.split(' '))
+    elsif find_data_ex(:find_ce,s,event,true).length>0
+      disp_ce_card(bot,event,s.split(' '))
     elsif find_data_ex(:find_ce,s,event).length>0
       disp_ce_card(bot,event,s.split(' '))
     elsif find_data_ex(:find_servant,s,event).length>0
