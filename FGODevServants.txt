@@ -11,12 +11,12 @@
 163\262
 
 74 # Nursery Rhyme
-1080\1080
+1120\1140
 0\0\0\0\0
-7\10\7
+8\10\10
 1
 34 # Kaleidoscope
-7
+8
 4\2\1
 
 1.0 # Mash Kyrielight
@@ -31,74 +31,74 @@
 17 # Cu Chulainn
 0\0
 0\0\0\0\0
-2\5\2
+5\6\5
 3
 0
 0
-3\3\0
+4\4\0
 
 18 # Elisabeth Bathory (Lancer)
 400\690
 0\0\0\0\0
-6\2\0
+6u\6\6
 1
 28 # The Imaginary Element
-8
-1\2\0
+9
+4\3\0
 
 33 # Hans Christian Andersen
-80\200
+150\320
 0\0\0\0\0
-5\2\2
+5\5\4
 5
 0
 0
-3\3\0
+4\3\0
 
 38 # Cu Chulainn (Caster)
 0\0
 0\0\0\0\0
-2\2\2
+6u\2\2
 3
 0
 0
-3\3\0
+4\3\0
 
 56 # Kiyohime (Berserker)
-350\1000
+570\1000
 0\0\0\0\0
 5u\5\6
 5
 261 # Golden Sumo: Boulder Tournament
-8
+9
 4\2\0
 
 68 # Okita Souji
-1000\350
+1000\1000
 0\0\0\0\0
-5\5\0
+5\5\5
 1
 63 # Okita
-7
-2\2\0
+8
+4\3\0
 
 115 # Sakata Kintoki (Rider)
-10\90
+60\90
 0\0\0\0\0
-5\5\2
+5\6\5
 5
 0
 0
 4\4\0
 
 142 # Ishtar (Archer)
-50\390
+60\410
 0\0\0\0\0
-2\6\2
+5\6\4
 1
 0
 0
-3\3\0
+4\3\0
 
 162 # Chacha
 20\20
@@ -109,7 +109,7 @@
 0
 1\2\0
 
-163 # Meltryllis
+163 # Meltryllis (Alter Ego)
 1000\1000
 0\0\0\0\0
 2\2\2
@@ -121,9 +121,9 @@
 174 # Paul Bunyan
 100\90
 0\0\0\0\0
-1\0\1
+2\5\1
 5
-0
-0
+292 # Summertime Mistress
+6
 4\1\0
 

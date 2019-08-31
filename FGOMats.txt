@@ -39,6 +39,7 @@ Gem of Assassin
 Gem of Berserker
 Gem of Caster
 Gem of Lancer
+Gem of RIder
 Gem of Rider
 Gem of Saber
 Ghost Lantern
@@ -92,6 +93,7 @@ Secret Gem of RIder
 Secret Gem of Rider
 Secret Gem of Saber
 Seed of Yggdrasil
+Seed of Yggdrassil
 Serpent Jewel
 Shell of Reminiscence
 Spirit Root
@@ -101,6 +103,7 @@ Story Unlock: 4th Singularity:
 Story Unlock: 6th Singularity:
 Story Unlock: 7th Singularity:
 Tearstone of Blood
+Thirty-Six Ice of Mount Fuji
 Tsukumo Kagami
 Twinkle Candy
 Void's Dust

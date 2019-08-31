@@ -26,8 +26,8 @@
 26\Mirror of Eight Leaves\4\Apply Nullify Stun (1 time, 2 turns)\Activity Log of the Sparrow's Inn
 27\Good Wife Smart Fox\5\Increase HP Recovery Amount by 50% (1 time, 2 turns)\Activity Log of the Sparrow's Inn
 28\Command Spells of the Pink Image\3\Remove 1 ATK Buff from the Enemy, Restore own HP by 100
-29\Pigeon Report\3\Remove Critical Strength Buffs from an enemy, If removal succeeds, decrease their Critical Rate by 10% (3 turns)        \Valentines 2019
-30\Evil Holy Sword of Star Extermination\4\Increase Critical Strength against [Saber] class by 25%        \Valentines 2019
+29\Pigeon Report\3\Remove Critical Strength Buffs from an enemy, If removal succeeds, decrease their Critical Rate by 10% (3 turns)\Valentines 2019
+30\Evil Holy Sword of Star Extermination\4\Increase Critical Strength against [Saber] class by 25%\Valentines 2019
 31\Bride of the White Rose\5\Recover HP of all allies by 200\Valentines 2019
 32\BB Slots\4\Randomly apply one of the following effects: Gain 5 Critical Stars, Restore 500 HP, Increase Debuff Resist by 10% (1 turn)\Revival: Deep Sea Cyber Paradise SE.RA.PH -Second Ballet-
 33\Coffin of the Final Loss\4\Remove 1 Nullify Debuff from the enemy, Increase Critical Strength by 20% against [Good] trait\CHALDEA BOYS COLLECTION 2019
@@ -37,6 +37,10 @@
 37\Command Spells of the Crimson-Heart Retainer\3\Increase Critical Strength by 15% when installed into a Buster Card\Lady Reines Case Files
 38\Box of the Immaterial\4\Apply Special Attack [Undead] 15%\Lady Reines Case Files
 39\Da Vinci-chan\5\Increase NP Strength by 15% (1 turn)\Lady Reines Case Files
-40\Command Spells of an Immature Fantasy       \3\Increase Critical Star Gather Rate by 100% when installed into an Arts Card       \GUDAGUDA Final Honnoji 2019
+40\Command Spells of an Immature Fantasy\3\Increase Critical Star Gather Rate by 100% when installed into an Arts Card       \GUDAGUDA Final Honnoji 2019
 41\Famed Thin-Bladed Sword\4\Apply Ignore Invincible\GUDAGUDA Final Honnoji 2019
 42\Great Fool of Owari\5\Increase Critical Strength againt [Divine] by 30%\GUDAGUDA Final Honnoji 2019
+43\Jewel Birds Coat of Arms\3\Increase Critical Strength of all allies by 5% (1 time, 1 turn)\Fate/Grand Order Fes. 2019 ~4th Anniversary~
+44\Fleeting Octopus\3\Remove 1 Buff from the enemy that increases NP Strength. If successful, decrease their DEF against Arts Card attacks by 10% (3 turns)\Behold! The Las Vegas Gozen Match ~Seven-Colored Duels of Swimsuit Swordmasters~
+45\Great Brush of Mad Strokes\4\Increase Critical Strength by 20% when installed into an Arts Card\Behold! The Las Vegas Gozen Match ~Seven-Colored Duels of Swimsuit Swordmasters~
+46\Magus of Flowers\5\Increase NP Gauge by 10% (requires 3 turns of cooldown to be reused)\Behold! The Las Vegas Gozen Match ~Seven-Colored Duels of Swimsuit Swordmasters~
