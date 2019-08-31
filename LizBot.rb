@@ -223,7 +223,7 @@ def data_load()
     b[i]=b[i][0,b[i].length-1] if b[i][-1,1]=='"'
     b[i]=b[i].gsub("\n",'').split('\\'[0])
     b[i][0]=b[i][0].to_f
-    b[i][0]=b[i][0].to_i if b[i][0]>1.9
+    b[i][0]=b[i][0].to_i if b[i][0]>1.9 && b[i][0].to_i != 81
     b[i][3]=b[i][3].to_i
     b[i][5]=b[i][5].to_i
     b[i][6]=b[i][6].split(', ').map{|q| q.to_i}
@@ -258,6 +258,7 @@ def data_load()
     b[i][23]=b[i][23].to_i
     b[i][26]=b[i][26].split(', ').map{|q| q.to_i} unless b[i][26].nil?
     b[i][28]=b[i][28].split(', ') unless b[i][28].nil?
+    b[i][29]=b[i][29].split(';; ') unless b[i][29].nil?
   end
   @servants=b.map{|q| q}
   if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkills.txt")
@@ -538,7 +539,7 @@ end
 def nicknames_load(mode=1)
   if mode==2 && File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt")
     b=[]
-    File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt").each_line do |line|
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt").each_line do |line|
       b.push(eval line)
     end
     return b
@@ -902,7 +903,7 @@ def all_commands(include_nil=false,permissions=-1)
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
      'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
-     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily',
+     'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily','moop',
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
      'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit','support',
@@ -1033,7 +1034,7 @@ def find_servant(name,event,fullname=false,ignoreid=false)
   unless ignoreid
     if name.to_i.to_s==name && name.to_i<=@servants[-1][0] && name.to_i>0
       return @servants[@servants.find_index{|q| q[0]==name.to_i}]
-    elsif name.to_f.to_s==name && name.to_f<2
+    elsif name.to_f.to_s==name && (name.to_f<2 || name.to_i==81)
       return @servants[@servants.find_index{|q| q[0]==name.to_f}]
     end
   end
@@ -1041,28 +1042,28 @@ def find_servant(name,event,fullname=false,ignoreid=false)
     name2=name[1,name.length-1]
     if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
       return @servants[@servants.find_index{|q| q[0]==name2.to_i}]
-    elsif name2.to_f.to_s==name2 && name2.to_f<2
+    elsif name2.to_f.to_s==name2 && (name2.to_f<2 || name2.to_i==81)
       return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
     end
   elsif name[0,5].downcase=='srv-#' || name.downcase[0,5]=='srv_#'
     name2=name[5,name.length-5]
     if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
       return @servants[@servants.find_index{|q| q[0]==name2.to_i}]
-    elsif name2.to_f.to_s==name2 && name2.to_f<2
+    elsif name2.to_f.to_s==name2 && (name2.to_f<2 || name2.to_i==81)
       return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
     end
   elsif ['srv-','srv_','srv#'].include?(name[0,4].downcase)
     name2=name[4,name.length-4]
     if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
       return @servants[@servants.find_index{|q| q[0]==name2.to_i}]
-    elsif name2.to_f.to_s==name2 && name2.to_f<2
+    elsif name2.to_f.to_s==name2 && (name2.to_f<2 || name2.to_i==81)
       return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
     end
   elsif name[0,3].downcase=='srv'
     name2=name[3,name.length-3]
     if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
       return @servants[@servants.find_index{|q| q[0]==name2.to_i}]
-    elsif name2.to_f.to_s==name2 && name2.to_f<2
+    elsif name2.to_f.to_s==name2 && (name2.to_f<2 || name2.to_i==81)
       return @servants[@servants.find_index{|q| q[0]==name2.to_f}]
     end
   end
@@ -1081,7 +1082,6 @@ def find_servant(name,event,fullname=false,ignoreid=false)
   return [] if fullname || name.length<=2
   k=@servants.find_index{|q| q[1].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name}
   return @servants[k] unless k.nil?
-  nicknames_load()
   for i in name.length...alz.map{|q| q[0].length}.max
     k=alz.find_index{|q| q[0].downcase.gsub(' ','').gsub('(','').gsub(')','').gsub('!','').gsub('?','').gsub('_','').gsub("'",'').gsub('"','').gsub(':','')[0,name.length]==name && q[0].length<=i && (q[2].nil? || q[2].include?(g))}
     return @servants[@servants.find_index{|q| q[0]==alz[k][1]}] unless k.nil?
@@ -1364,28 +1364,28 @@ def find_multi_servant(name,event,fullname=false,buffer=nil)
   name=normalize(name)
   if name.to_i.to_s==name && name.to_i<=@servants[-1][0] && name.to_i>0
     return [name,@servants[@servants.find_index{|q| q[0]==name.to_i}]]
-  elsif name.to_f.to_s==name && name.to_f<2
+  elsif name.to_f.to_s==name && (name.to_f<2 || name.to_i==81)
     return [name,@servants[@servants.find_index{|q| q[0]==name.to_f}]]
   end
   if name[0,1]=='#'
     name2=name[1,name.length-1]
     if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
       return [name,@servants[@servants.find_index{|q| q[0]==name2.to_i}]]
-    elsif name2.to_f.to_s==name2 && name2.to_f<2
+    elsif name2.to_f.to_s==name2 && (name2.to_f<2 || name2.to_i==81)
       return [name,@servants[@servants.find_index{|q| q[0]==name2.to_f}]]
     end
   elsif name[0,4].downcase=='srv-' || name.downcase[0,4]=='srv_'
     name2=name[4,name.length-4]
     if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
       return [name,@servants[@servants.find_index{|q| q[0]==name2.to_i}]]
-    elsif name2.to_f.to_s==name2 && name2.to_f<2
+    elsif name2.to_f.to_s==name2 && (name2.to_f<2 || name2.to_i==81)
       return [name,@servants[@servants.find_index{|q| q[0]==name2.to_f}]]
     end
   elsif name[0,3].downcase=='srv'
     name2=name[3,name.length-3]
     if name2.to_i.to_s==name2 && name2.to_i<=@servants[-1][0]
       return [name,@servants[@servants.find_index{|q| q[0]==name2.to_i}]]
-    elsif name2.to_f.to_s==name2 && name2.to_f<2
+    elsif name2.to_f.to_s==name2 && (name2.to_f<2 || name2.to_i==81)
       return [name,@servants[@servants.find_index{|q| q[0]==name2.to_f}]]
     end
   end
@@ -1573,6 +1573,7 @@ def servant_superclass(bot,event,k,mode=0)
       end
     end
   end
+  m=k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').split(' / ').map{|q| "*#{q}*"}.join(" \u2192 ")
   return "**Class:** #{clsmoji}*#{k[2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
 end
 
@@ -1675,6 +1676,7 @@ def servant_icon(k,event,art=0)
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}#{art}"
   dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}2" if k[0]==74 && art==1 && rand(100)<5
   dispnum="001#{art}" if k[0]<2
+  dispnum="081#{art}" if k[0].to_i==81
   unless art<=1
     m=false
     IO.copy_stream(open("http://fate-go.cirnopedia.org/icons/servant/servant_#{dispnum}.png"), "C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png") rescue m=true
@@ -1808,9 +1810,9 @@ def disp_servant_stats(bot,event,args=nil)
   xcolor=servant_color(event,k)
   text=generate_rarity_row(k,'servant')
   text=generate_rarity_row(k,"Mathoo's") if dv>=0
-  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
-  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
-  cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
+  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>','<:Holier_Grail:612717994769907723>']
+  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>','<:Godly_Grail:612717339611496450>'] if k[13].include?('FEH Servant')
+  cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>','<:Holier_Grail:612717994769907723>'] if k[13].include?('DL Servant')
   np="*"
   np=":* #{@skills[@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}][3]}" unless @skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}.nil?
   if cedata==-1
@@ -1844,15 +1846,17 @@ def disp_servant_stats(bot,event,args=nil)
   text="#{text}\n\n#{bond}"
   text="#{text}\n\n**Death Rate:** #{k[11]}%"
   fou=1000
-  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}\n*#{atk}* - #{longFormattedNumber(k[7][0])}\n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}\n*#{atk}* - #{longFormattedNumber(k[7][1])}\n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{longFormattedNumber(k[6][2])}\n*#{atk}* - #{longFormattedNumber(k[7][2])}"]]
-  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  \n\n__**#{cemoji[3]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}"]] if dispfou && mfou.max<=0
-  flds.push(["Attack Parameters","__**Hit Counts**__\n#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\n<:Blank:509232907555045386>#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
+  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}\n*#{atk}* - #{longFormattedNumber(k[7][0])}\n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}\n*#{atk}* - #{longFormattedNumber(k[7][1])}#{"\n\n__**#{cemoji[3]}Level 90**__\n*HP* - #{longFormattedNumber(k[6][2])}\n*#{atk}* - #{longFormattedNumber(k[7][2])}" if k[7].length>3 || k[6].length>3}\n\n__**#{cemoji[13]}Level 100**__\n*HP* - #{longFormattedNumber(k[6][-1])}\n*#{atk}* - #{longFormattedNumber(k[7][-1])}"]]
+  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  #{"\n\n__**#{cemoji[3]}Level 90**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}" if k[7].length>3 || k[6].length>3}\n\n__**#{cemoji[13]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][-1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][-1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][-1]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][-1]+2000)}"]] if dispfou && mfou.max<=0
+  flds.push(["Attack Parameters","__**Hit Counts**__\n#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\n<:Blank:612718380507725824>#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   xpic=servant_icon(k,event,art)
   ftr=nil
   ftr='You can include the word "Fou" to show the values with Fou modifiers' unless dispfou
   ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
   ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+  ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+  ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   create_embed(event,["__#{"Mathoo's " if dv>=0}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3,colorshift)}",title],text,xcolor,ftr,xpic,flds,2)
@@ -1933,9 +1937,9 @@ def disp_tiny_stats(bot,event,args=nil)
   xcolor=servant_color(event,k)
   text=generate_rarity_row(k,'servant')
   text=generate_rarity_row(k,"Mathoo's") if dv>=0
-  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>']
-  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>'] if k[13].include?('FEH Servant')
-  cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>'] if k[13].include?('DL Servant')
+  cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>','<:holy_grail:523842742992764940>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>','<:Fou:544138629694619648>','<:GoldenFou:544138629832769536>','<:Quick_y:526556106986618880>','<:Arts_y:526556105489252352>','<:Buster_y:526556105422274580>','<:Extra_y:526556105388720130>','<:NP:523858635843960833>','<:Holier_Grail:612717994769907723>']
+  cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:Heroic_Grail:574798333898653696>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>','<:Heavenly_Dew:510776806396395530>','<:Divine_Dew:453618312434417691>','<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>','<:FEHExtra:574760822191161384>','<:FEH_NP:574760823403315200>','<:Godly_Grail:612717339611496450>'] if k[13].include?('FEH Servant')
+  cemoji=['<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:holy_grail:523842742992764940>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>','<:Energy:534451856286679040>','<:Energize:559629242137051155>','<:DLQuick:575062116172693559>','<:DLArts:575064722551078922>','<:Type_Attack:532107867520630784>','<:DLExtra:575084966162202644>','<:DL_NP:575084966245957647>','<:Holier_Grail:612717994769907723>'] if k[13].include?('DL Servant')
   if dispfou==2000
     text="#{text}\u00A0\u00B7\u00A0#{cemoji[7]}"
   elsif dispfou>0
@@ -1970,8 +1974,8 @@ def disp_tiny_stats(bot,event,args=nil)
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
   text="#{text}\n\n#{bond}"
-  text="#{text}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][2]+dispfou)}#{cemoji[3]}"
-  text="#{text}\n**#{atk}:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][2]+dispfou)}#{cemoji[3]}"
+  text="#{text}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(k[6][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[6][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{"#{longFormattedNumber(k[6][2]+dispfou)}\u00A0L#{micronumber(90)}\u00A0\u00A0\u00B7\u00A0\u00A0" if k[6].length>3}#{longFormattedNumber(k[6][-1]+dispfou)}#{cemoji[13]}"
+  text="#{text}\n**#{atk}:**\u00A0\u00A0#{longFormattedNumber(k[7][0]+dispfou)}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(k[7][1]+dispfou)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{"#{longFormattedNumber(k[7][2]+dispfou)}\u00A0L#{micronumber(90)}\u00A0\u00A0\u00B7\u00A0\u00A0" if k[7].length>3}#{longFormattedNumber(k[7][-1]+dispfou)}#{cemoji[13]}"
   text="#{text}\n**Death Rate:**\u00A0#{k[11]}%"
   text="#{text}\n\n**Hit Counts**:\u00A0\u00A0#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}  \u00B7  #{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}\u00A0#{k[9][4]}"
   text="#{text}\n**NP\u00A0Gain:**\u00A0\u00A0*Attack:*\u00A0#{k[8][0]}%#{"  \u00B7  *Alt.Atk.:*\u00A0#{k[8][2]}%\u00A0(#{k[8][3].gsub(' ',"\u00A0")})" unless k[8][2].nil?}  \u00B7  *Defense:*\u00A0#{k[8][1]}%"
@@ -1982,6 +1986,8 @@ def disp_tiny_stats(bot,event,args=nil)
   ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
   ftr="This servant can switch to servant #1.2 at her Master's wish." if k[0]==1.1
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+  ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+  ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   create_embed(event,["__#{"Mathoo's " if dv>=0}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,3,colorshift)}",title],text,xcolor,ftr,xpic)
@@ -2016,7 +2022,8 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   text2=generate_rarity_row(k,'servant')
   text2=generate_rarity_row(k,"Mathoo's") if dv>=0
   text='' if chain
-  text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  text="#{text}\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" unless k[0]==81
   text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
   text="#{text}\n~~**Gender:** *Effeminate*~~" if [10,94,143].include?(k[0])
   xpic=servant_icon(k,event,art)
@@ -2026,6 +2033,8 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
     ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
     ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
     ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+    ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
@@ -2053,9 +2062,6 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     return nil
   end
   xcolor=servant_color(event,k)
-  dispnum="#{'0' if k[0]<100}#{'0' if k[0]<10}#{k[0].to_i}1"
-  dispnum="0012" if k[0]<2
-  dispnum="0016" if k[0]==1.2
   dv=-1
   uid=0
   mlvl=[-1,-1,-1]
@@ -2216,6 +2222,8 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
     ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
     ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+    ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
@@ -2319,7 +2327,10 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
   npl=3 if event.message.text.downcase.split(' ').include?('kh3') && k[0]==154
   npl=4 if event.message.text.downcase.split(' ').include?('kh4') && k[0]==154
   npl=5 if event.message.text.downcase.split(' ').include?('kh5') && k[0]==154
-  mlvl=forcenpl*1 unless forcenpl.nil?
+  unless forcenpl.nil?
+    mlvl=forcenpl*1
+    nophan=@skills[@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}] if !@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}.nil? && has_any?(event.message.text.downcase.split(' '),['upgrade','upgraded','update','updated','up','u'])
+  end
   npl=0 if mlvl>0
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant')
@@ -2452,11 +2463,22 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
       ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
       ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
       ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+      ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+      ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
       ftr="For the other servant named Solomon, try servant #152." if k[0]==83
       ftr="For the other servant named Solomon, try servant #83." if k[0]==152
     end
   end
   return nil if chain && text.length<=0
+  if title.length>250
+    title=title.split("\n")
+    j=-1
+    for i in 0...title.length
+      j=i*1 if title[0,i+1].join("\n").length<250
+    end
+    text="#{title[j,title.length-j].join("\n")}\n\n#{text}"
+    title=title[0,j].join("\n")
+  end
   create_embed(event,["#{"__#{"Mathoo's " if dv>=0}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if mlvl<=0 && npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",title],text,xcolor,ftr,nil)
 end
 
@@ -2477,13 +2499,15 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
     ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
     ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+    ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+    ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
-  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2 && !skipftr
+  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2 && k[0].to_i != 81 && !skipftr
     cex=@crafts[k[0]-@crafts[0][0]]
     ftr="This is the Bond CE for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
-  elsif event.message.text.split(' ').include?('1') && k[0]<2 && !skipftr
+  elsif event.message.text.split(' ').include?('1') && (k[0]<2 || k[0].to_i==81) && !skipftr
     cex=@crafts[0]
     ftr="This is the Bond CE for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
@@ -2494,7 +2518,7 @@ def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
     return nil if chain
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
-    cemoji=['<:Bond:523903660913197056>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+    cemoji=['<:Bond:613804021119189012>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
     cemoji=['<:RRAffinity:565064751780986890>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
     cemoji=['<:Type_Healing:532107867348533249>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
@@ -2533,6 +2557,8 @@ def disp_servant_ce2(bot,event,args=nil)
   ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
   ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+  ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+  ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   title=nil
@@ -2687,16 +2713,14 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
         end
       end
       if lists[1] && !k[18][4].nil?
-        for i in 0...k[18][4].length
-          mttz2.push(k[18][4][i])
+        for i2 in 4...k[18].length+1
+          unless k[18][i2].nil?
+            for i in 0...k[18][i2].length
+              mttz2.push(k[18][i2][i])
+            end
+            costqp+=3000000
+          end
         end
-        costqp+=3000000
-      end
-      if lists[1] && !k[18][5].nil?
-        for i in 0...k[18][5].length
-          mttz2.push(k[18][5][i])
-        end
-        costqp+=3000000
       end
     end
     if lists[2]
@@ -2740,6 +2764,8 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
       ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
       ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+      ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+      ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
       ftr="For the other servant named Solomon, try servant #152." if k[0]==83
       ftr="For the other servant named Solomon, try servant #83." if k[0]==152
     end
@@ -2772,7 +2798,9 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       end
       event.respond ftr unless ftr.nil?
     else
-      create_embed(event,[hdr,title],'',xcolor,ftr,xpic,triple_finish(mttz3,true),1)
+      str=''
+      str="Pieces, Monuments, and Gems are shown as if this servant is an Assassin.\nThis conflicts with the internal data, which shows the mats are Berserker-related.\nThis conflict is because you cannot ascend or skill promote in the Hyde form." if k[0]==81.1
+      create_embed(event,[hdr,title],str,xcolor,ftr,xpic,triple_finish(mttz3,true),1)
     end
   else
     ascstr=''
@@ -2797,8 +2825,27 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       flds[0]=['Ascension',ascstr]
     end
     flds=[] unless lists[0]
-    flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]<2 || !lists[1]
-    flds.push(['Costume materials',"#{'*First Costume:* ' unless k[18][5].nil?}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}#{"\n*Second Costume:* #{k[18][5].join(', ')}\n~~the second costume is listed in this bot as Servant #1.2~~" unless k[18][5].nil?}"]) unless k[18][4].nil? || k[0]>=2 || !lists[1]
+    if lists[1] && k[18].length>4
+      costr=''
+      costr='*Costume'
+      costr='*First Costume' if k[18].length>5
+      costr="#{costr} [#{k[29][0]}]" if !k[29].nil? && !k[29][0].nil? && k[29][0].length>0
+      costr="#{costr}:* "
+      costr="#{costr}#{k[18][4].join(', ')}  \u00B7  3mil#{qpd}"
+      if k[0]<2 && k[18].length>5
+        costr="#{costr}\n*Second Costume#{" [#{k[29][1]}]" if !k[29].nil? && !k[29][1].nil? && k[29][1].length>0}:* #{k[18][5].join(', ')}"
+      elsif k[18].length>5
+        costr="#{costr}\n*Second Costume#{" [#{k[29][1]}]" if !k[29].nil? && !k[29][1].nil? && k[29][1].length>0}:* #{k[18][5].join(', ')}  \u00B7  3mil#{qpd}"
+      end
+      for i2 in 0...8
+        if k[18].length>i2+6
+          costr="#{costr}\n*#{['Third','Fourth','Fifth','Sixth','Seventh','Eighth','Ninth','Tenth'][i2]} Costume"
+          costr="#{costr}:* #{k[18][i2+6].join(', ')}  \u00B7  3mil#{qpd}"
+        end
+      end
+      costr="#{costr}\n~~the second costume is listed in this bot as Servant #1.2~~" if k[0]<2 && k[18].length>5
+      flds.push(['Costume materials',costr])
+    end
     sklstr=''
     sklstr="#{sklstr}\n*Level 1\u21922:* #{k[19][0].join(', ')}  \u00B7  #{numabr(qp[4])}#{qpd}" if mlvl.min<2
     sklstr="#{sklstr}\n*Level 2\u21923:* #{k[19][1].join(', ')}  \u00B7  #{numabr(qp[5])}#{qpd}" if mlvl.min<3
@@ -2827,13 +2874,22 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
       ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
       ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+      ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+      ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
       ftr="For the other servant named Solomon, try servant #152." if k[0]==83
       ftr="For the other servant named Solomon, try servant #83." if k[0]==152
     end
     str="#{text}\n\n#{flds[0,flds.length-1].map{|q| "__**#{q[0]}**__#{"\n" unless [q[1][0,1],q[1][0,2]].include?("\n")}#{q[1]}"}.join("\n\n")}"
     hdr="#{"__#{"Mathoo's " if dv>-1}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{k[1]}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,2,colorshift)}" unless chain}"
+    str="Pieces, Monuments, and Gems are shown as if this servant is an Assassin.\nThis conflicts with the internal data, which shows the mats are Berserker-related.\nThis conflict is because you cannot ascend or skill promote in the Hyde form.#{str}" if k[0]==81.1
     if hdr.length+(ftr.length rescue 0)+str.length+"__**#{flds[-1][0]}**__#{"\n" unless [flds[-1][1][0,1],flds[-1][1][0,2]].include?("\n")}#{flds[-1][1]}".length>=1900
-      create_embed(event,[hdr,title],str,xcolor,nil,xpic,nil,1)
+      if hdr.length+(ftr.length rescue 0)+str.length>=1900
+        str=str.split("\n\n")
+        create_embed(event,[hdr,title],str[-2],xcolor,nil,xpic,nil,1)
+        create_embed(event,'',str[-1],xcolor,nil,nil,nil,1)
+      else
+        create_embed(event,[hdr,title],str,xcolor,nil,xpic,nil,1)
+      end
       str="__**#{flds[-1][0]}**__"
       hdr=''
       title=nil
@@ -2896,8 +2952,16 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   asc=2 if has_any?(disptext.split(' '),['first','firstascension','first_ascension','1st','1stascension','1st_ascension','second','secondascension','2nd','second_ascension','2ndascension','2nd_ascension']) || " #{disptext} ".include?(" first ascension ") || " #{disptext} ".include?(" 1st ascension ") || " #{disptext} ".include?(" second ascension ") || " #{disptext} ".include?(" 2nd ascension ")
   asc=3 if has_any?(disptext.split(' '),['third','thirdascension','third_ascension','3rd','3rdascension','3rd_ascension']) || " #{disptext} ".include?(" third ascension ") || " #{disptext} ".include?(" 3rd ascension ")
   asc=4 if has_any?(disptext.split(' '),['fourth','fourthascension','fourth_ascension','4th','4thascension','4th_ascension','final','finalascension','final_ascension']) || " #{disptext} ".include?(" fourth ascension ") || " #{disptext} ".include?(" 4th ascension ") || " #{disptext} ".include?(" final ascension ")
-  asc=5 if has_any?(disptext.split(' '),['costume','firstcostume','first_costume','1stcostume','1st_costume','costume1']) || " #{disptext} ".include?(" first costume ") || " #{disptext} ".include?(" 1st costume ") || " #{disptext} ".include?(" costume 1 ")
-  asc=6 if has_any?(disptext.split(' '),['secondcostume','second_costume','2ndcostume','2nd_costume','costume2']) || " #{disptext} ".include?(" second costume ") || " #{disptext} ".include?(" 2nd costume ") || " #{disptext} ".include?(" costume 2 ")
+  asc=5 if (has_any?(disptext.split(' '),['costume','firstcostume','first_costume','1stcostume','1st_costume','costume1']) || " #{disptext} ".include?(" first costume ") || " #{disptext} ".include?(" 1st costume ") || " #{disptext} ".include?(" costume 1 ")) && k[18].length>4
+  asc=6 if (has_any?(disptext.split(' '),['secondcostume','second_costume','2ndcostume','2nd_costume','costume2']) || " #{disptext} ".include?(" second costume ") || " #{disptext} ".include?(" 2nd costume ") || " #{disptext} ".include?(" costume 2 ")) && k[18].length>5
+  asc=7 if (has_any?(disptext.split(' '),['thirdcostume','third_costume','3rdcostume','3rd_costume','costume3']) || " #{disptext} ".include?(" third costume ") || " #{disptext} ".include?(" 3rd costume ") || " #{disptext} ".include?(" costume 3 ")) && k[18].length>6
+  asc=8 if (has_any?(disptext.split(' '),['fourthcostume','fourth_costume','4thcostume','4th_costume','costume4']) || " #{disptext} ".include?(" fourth costume ") || " #{disptext} ".include?(" 4th costume ") || " #{disptext} ".include?(" costume 4 ")) && k[18].length>7
+  asc=9 if (has_any?(disptext.split(' '),['fifthcostume','fifth_costume','5thcostume','5th_costume','costume5']) || " #{disptext} ".include?(" fifth costume ") || " #{disptext} ".include?(" 5th costume ") || " #{disptext} ".include?(" costume 5 ")) && k[18].length>8
+  asc=10 if (has_any?(disptext.split(' '),['sixthcostume','sixth_costume','6thcostume','6th_costume','costume6']) || " #{disptext} ".include?(" sixth costume ") || " #{disptext} ".include?(" 6th costume ") || " #{disptext} ".include?(" costume 6 ")) && k[18].length>9
+  asc=11 if (has_any?(disptext.split(' '),['seventhcostume','seventh_costume','7thcostume','7th_costume','costume7']) || " #{disptext} ".include?(" seventh costume ") || " #{disptext} ".include?(" 7th costume ") || " #{disptext} ".include?(" costume 7 ")) && k[18].length>10
+  asc=12 if (has_any?(disptext.split(' '),['eighthcostume','eighth_costume','8thcostume','8th_costume','costume8']) || " #{disptext} ".include?(" eighth costume ") || " #{disptext} ".include?(" 8th costume ") || " #{disptext} ".include?(" costume 8 ")) && k[18].length>11
+  asc=13 if (has_any?(disptext.split(' '),['ninthcostume','ninth_costume','9thcostume','9th_costume','costume9']) || " #{disptext} ".include?(" ninth costume ") || " #{disptext} ".include?(" 9th costume ") || " #{disptext} ".include?(" costume 9 ")) && k[18].length>12
+  asc=14 if (has_any?(disptext.split(' '),['tenthcostume','tenth_costume','10thcostume','10th_costume','costume10']) || " #{disptext} ".include?(" tenth costume ") || " #{disptext} ".include?(" 10th costume ") || " #{disptext} ".include?(" costume 10 ")) && k[18].length>12
   nicknames_load()
   k2=@aliases.reject{|q| q[0]!='Servant' || q[2]!=k[0] || q[5].nil?}
   ftr=nil
@@ -2943,7 +3007,8 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       ftr="The ascension art is being forced by the alias you are using.  If you wish to see other arts, try using the servant ID (Srv-##{k[0]}) instead."
     end
   end
-  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}#{asc}.png"
+  xpic="#{dispnum}#{'a' if asc>9}#{asc}"
+  xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{xpic}.png"
   if riyodefault || has_any?(disptext.split(' '),['riyo','aprilfools']) || disptext.split(' ').include?("aprilfool's") || disptext.split(' ').include?("april_fool's") || disptext.split(' ').include?("april_fools") || " #{disptext} ".include?(" april fool's ") || " #{disptext} ".include?(" april fools ")
     asc=0
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/servant_#{dispnum}.png"
@@ -2967,12 +3032,14 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   end
   ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
   ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+  ftr="This servant becomes servant #81.1 when he uses his Noble Phantasm." if k[0]==81.0 
+  ftr="This servant comes from servant #81.0 when he uses his Noble Phantasm." if k[0]==81.1 
   ftr="For the other servant named Solomon, try servant #152." if k[0]==83
   ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2
+  if event.message.text.split(' ').include?(k[0].to_s) && k[0]>=2 && 81!=k[0].to_i
     cex=@crafts[k[0]-@crafts[0][0]]
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0]}, it is named \"#{cex[1]}\"."
-  elsif event.message.text.split(' ').include?('1') && k[0]<2
+  elsif event.message.text.split(' ').include?('1') && (k[0]<2 || k[0].to_i==81)
     cex=@crafts[0]
     ftr="This is the art for servant ##{k[0]}.  For the CE numbered #{k[0].to_i}, it is named \"#{cex[1]}\"."
   end
@@ -2981,7 +3048,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   toptext=''
   midtext=''
   if File.size("C:/Users/#{@mash}/Desktop/devkit/FGOTemp#{@shardizard}.png")<=100 || m
-    midtext="~~#{["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume'][asc]}~~\n"
+    midtext="~~#{["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume','Third Costume','Fourth Costume','Fifth Costume','Sixth Costume','Seventh Costume','Eighth Costume','Ninth Costume','Tenth Costume'][asc]}~~\n"
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/#{dispnum}1.png"
     artist=k[24].split(' as ') unless k[24].nil? || k[24].length<=0
     asc=1
@@ -2994,7 +3061,6 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   end
   if k[0]==163 && dv>=0
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/MiniMelt.png"
-    asc=7
     midtext=''
     artist='Tanaka Gorbachev'
   end
@@ -3125,14 +3191,18 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   cemoji=['<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
   cemoji=['<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant')
   cemoji=['<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant')
-  if asc==1
+  if k[0]==163 && dv>=0
+    asc='Smol and Cute'
+  elsif asc==1
     asc="#{cemoji[1]*(asc-1)}#{cemoji[0]*(5-asc)}"
   elsif asc==2 && !has_any?(k[13],['FEH Servant','DL Servant'])
     asc="#{cemoji[1]*(asc-1)}<:half_asc:581250636612632597>#{cemoji[0]*(4-asc)}"
   elsif asc>0 && asc<5
     asc="#{cemoji[1]*(asc)}#{cemoji[0]*(4-asc)}"
   else
-    asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume','Smol and Cute'][asc]
+    asc2=asc*1
+    asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume','Third Costume','Fourth Costume','Fifth Costume','Sixth Costume','Seventh Costume','Eighth Costume','Ninth Costume','Tenth Costume'][asc]
+    asc="#{asc} [#{k[29][asc2-5]}]" if asc2>4 && !k[29].nil? && !k[29][asc2-5].nil?
   end
   unless artist=='Riyo' || (k[0]==163 && dv>=0)
     artist=nil
@@ -3208,7 +3278,7 @@ def disp_ce_card(bot,event,args=nil)
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
   title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
-  cemoji=['<:Bond:523903660913197056>','<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+  cemoji=['<:Bond:613804021119189012>','<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
   cemoji=['<:RRAffinity:565064751780986890>','<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if ce[10].include?('FEH') || (!k.nil? && k[13].include?('FEH Servant')) || (!k2.nil? && k2[13].include?('FEH Servant'))
   cemoji=['<:Type_Healing:532107867348533249>','<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if ce[10].include?('DL') || (!k.nil? && k[13].include?('DL Servant')) || (!k2.nil? && k2[13].include?('DL Servant'))
   text="**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless k.nil?
@@ -3482,7 +3552,7 @@ def disp_skill_data(bot,event,args=nil,addmsg=nil)
         text="#{text}\n**Rank #{k[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}:** #{k[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
       elsif k[i][2]=='Clothes'
         text="#{text}\n*Cooldown:* #{k[i][1]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][1]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][1]-2}\u00A0L#{micronumber(10)}" unless k.map{|q| q[1]}.uniq.length<=1
-        for i2 in 3...k[i].length
+        for i2 in 4...k[i].length
           unless k[i][i2][0]=='-'
             text="#{text}\n*#{k[i][i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
             if k[i][i2][1].nil? || k[i][i2][1].length<=0 || k[i][i2][1]=='-'
@@ -3530,7 +3600,7 @@ def disp_skill_data(bot,event,args=nil,addmsg=nil)
     ftr="You may also mean: #{list_lift(mx,'or')}" if mx.length>0
     ftr='If you\'re looking for a servants\' aliases, the command name is "aliases", not "alias".' if k[0][0,5].downcase=='alias'
     m=0
-    for i in 3...k.length
+    for i in 4...k.length
       unless k[i][0]=='-'
         m+=1
         text="#{text}\n\n**Effect #{m}:** #{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
@@ -3559,8 +3629,8 @@ def disp_skill_data(bot,event,args=nil,addmsg=nil)
     m=0
     for i in 6...k.length
       unless k[i][0]=='-'
-        m+=1 unless k[i][0][0,1]=='>'
-        text="#{text}\n\n#{"**Effect #{m}:** " unless k[i][0][0,1]=='>'}#{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+        m+=1 unless k[i][0][0,1]=='>' || k[i][0].include?('](')
+        text="#{text}\n\n#{"**Effect #{m}:** " unless k[i][0][0,1]=='>' || k[i][0].include?('](')}#{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         if k[i][1].nil? || k[i][1].length<=0 || k[i][1]=='-'
         elsif k[i][1,10].uniq.length<=1
           text="#{text}\nConstant #{k[i][1]}"
@@ -3666,6 +3736,97 @@ def disp_mat_data(bot,event,args=nil)
     srvs[i][6]=[0,0,0]
     srvs[i][7]=0
   end
+  t=Time.now
+  timeshift=1
+  timeshift-=1 unless t.dst?
+  t_na=t-60*60*timeshift
+  timeshift=-8
+  timeshift-=1 unless t.dst?
+  t_jp=t-60*60*timeshift
+  matz=["Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Eternal Gear, Shell of Reminiscence, Spirit Root, Saber Piece, Saber Monument, Gem of Saber, Magic Gem of Saber, Secret Gem of Saber",
+        "Proof of Hero, Evil Bone, Dragon Fang, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Meteor Horseshoe, Tearstone of Blood, Archer Piece, Archer Monument, Gem of Archer, Magic Gem of Archer, Secret Gem of Archer",
+        "Proof of Hero, Evil Bone, Void's Dust, Seed of Yggdrasil, Phoenix Feather, Homunculus Baby, Warhorse's Young Horn, Lancer Piece, Lancer Monument, Gem of Lancer, Magic Gem of Lancer, Secret Gem of Lancer",
+        "Proof of Hero, Void's Dust, Octuplet Crystals, Claw of Chaos, Berserker Piece, Berserker Monument, Gem of Berserker, Magic Gem of Berserker, Secret Gem of Berserker",
+        "Dragon Fang, Void's Dust, Meteor Horseshoe, Dragon's Reverse Scale, Rider Piece, Rider Monument, Gem of Rider, Magic Gem of Rider, Secret Gem of Rider",
+        "Serpent Jewel, Void's Dust, Forbidden Page, Heart of the Foreign God, Caster Piece, Caster Monument, Gem of Caster, Magic Gem of Caster, Secret Gem of Caster",
+        "Dragon Fang, Void's Dust, Seed of Yggdrasil, Ghost Lantern, Eternal Gear, Black Beast Grease, Assassin Piece, Assassin Monument, Gem of Assassin, Magic Gem of Assassin, Secret Gem of Assassin"]
+  matz=matz.map{|q| q.split(', ').reject{|q2| q2 != k}}
+  m_na=matz.rotate(t_na.wday)
+  m_jp=matz.rotate(t_jp.wday)
+  for i in 0...m_na.length
+    m_na[i]=[m_na[i][0],i]
+    m_jp[i]=[m_jp[i][0],i]
+  end
+  m_na.push([m_na[0][0],7])
+  m_jp.push([m_jp[0][0],7])
+  nextstr=''
+  m_na_x=m_na.find_index{|q| q[0]==k}
+  m_na_x2=m_na.find_index{|q| q[0]==k && q[1]!=m_na_x}
+  m_jp_x=m_jp.find_index{|q| q[0]==k}
+  m_jp_x2=m_jp.find_index{|q| q[0]==k && q[1]!=m_jp_x}
+  if m_na_x.nil?
+  elsif disp_date(t_na)==disp_date(t_jp)
+    if m_na_x==0
+      nextstr='Today in both NA and JP'
+      t2=t_na+m_na_x2*24*60*60
+      if m_na_x2==1
+        nextstr="#{nextstr} - Next available tomorrow (#{disp_date(t2,1)})"
+      else
+        nextstr="#{nextstr} - Next available #{m_na_x2} days from now (#{disp_date(t2,1)})"
+      end
+    elsif m_na_x==1
+      t2=t+24*60*60
+      nextstr="Tomorrow (#{disp_date(t2,1)}) in both NA and JP"
+    else
+      t2=t+m_na_x*24*60*60
+      nextstr="#{m_na_x} days from now (#{disp_date(t2,1)}) in both NA and JP"
+    end
+  elsif m_na_x==0 && m_jp_x==0
+    nextstr='Today in both NA and JP'
+    t2=t_na+m_na_x2*24*60*60
+    if m_na_x2==1
+      nextstr="#{nextstr}\n*NA:* Next available tomorrow (#{disp_date(t2,1)})"
+    else
+      nextstr="#{nextstr}\n*NA:* Next available #{m_na_x2} days from now (#{disp_date(t2,1)})"
+    end
+    t2=t_jp+m_jp_x2*24*60*60
+    if m_jp_x2==1
+      nextstr="#{nextstr}\n*JP:* Next available tomorrow (#{disp_date(t2,1)})"
+    else
+      nextstr="#{nextstr}\n*JP:* Next available #{m_jp_x2} days from now (#{disp_date(t2,1)})"
+    end
+  elsif m_na_x==0
+    nextstr='*NA:* Today'
+    t2=t_na+m_na_x2*24*60*60
+    if m_na_x2==1
+      nextstr="#{nextstr} - Next available tomorrow (#{disp_date(t2,1)})"
+    else
+      nextstr="#{nextstr} - Next available #{m_na_x2} days from now (#{disp_date(t2,1)})"
+    end
+  elsif m_na_x==1
+    t2=t_na+24*60*60
+    nextstr="*NA:* Tomorrow (#{disp_date(t2,1)})"
+  else
+    t2=t_na+m_na_x*24*60*60
+    nextstr="*NA:* #{m_na_x} days from now (#{disp_date(t2,1)})"
+  end
+  if m_jp_x.nil? || disp_date(t_na)==disp_date(t_jp)
+  elsif m_na_x==0 && m_jp_x==0
+  elsif m_jp_x==0
+    nextstr="#{nextstr}\n*JP:* Today'"
+    t2=t_jp+m_jp_x2*24*60*60
+    if m_jp_x2==1
+      nextstr="#{nextstr} - Next available tomorrow (#{disp_date(t2,1)})"
+    else
+      nextstr="#{nextstr} - Next available #{m_jp_x2} days from now (#{disp_date(t2,1)})"
+    end
+  elsif m_jp_x==1
+    t2=t_jp+24*60*60
+    nextstr="#{nextstr}\n*JP:* Tomorrow (#{disp_date(t2,1)})"
+  else
+    t2=t_jp+m_jp_x*24*60*60
+    nextstr="#{nextstr}\n*JP:* #{m_jp_x} days from now (#{disp_date(t2,1)})"
+  end
   if has_any?(event.message.text.downcase.split(' '),['mine','self'])
     if event.user.id==167657750971547648
       devservants_load()
@@ -3689,14 +3850,15 @@ def disp_mat_data(bot,event,args=nil)
     if srvs[i][0].to_i==srvs[i][0] || srvs[i][0]==1.2
       mts=[]
       mts2=[]
-      rnk=['First','Second','Third','Final']
+      rnk=['First','Second','Third','Fourth','Fifth','Sixth','Seventh','Eighth','Ninth']
       x=srvs[i][18]
       srvtot=[0,0,0]
       for i2 in 0...x.length
         for i3 in 0...x[i2].length
           m=x[i2][i3].split(' ')
           f=m.pop
-          mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<4 && lists[0] && srvs[i][7]<=i2
+          mts.push("**#{f.gsub('x','')}** for #{rnk[i2]}") if m.join(' ')==k && i2<3 && lists[0] && srvs[i][7]<=i2
+          mts.push("**#{f.gsub('x','')}** for Final") if m.join(' ')==k && i2==3 && lists[0] && srvs[i][7]<=i2
           mts2.push("**#{f.gsub('x','')}** for #{rnk[i2-4]} Costume") if m.join(' ')==k && i2>3 && lists[1]
           fff3+=f.gsub('x','').to_i if m.join(' ')==k && srvs[i][20]!='Unavailable' && !(i2<4 && srvs[i][7]>i2)
           srvtot[0]+=f.gsub('x','').to_i if m.join(' ')==k && i2<4 && lists[0] && srvs[i][7]<=i2
@@ -3757,6 +3919,7 @@ def disp_mat_data(bot,event,args=nil)
     mmkk.push("#{k.gsub('Secret Gem of ','')} Cookie")
     mmkk.push("Cookie of #{k.gsub('Secret Gem of ','')}")
   end
+  text="__**Totals**__\n#{text}\n\n__**Availability through Training Grounds**__\n#{nextstr}" if !s2s && nextstr.length>0
   create_embed(event,["__**#{k}**__#{"\n#{mmkk.join("\n")}" if mmkk.length>0}",title],text,0x162C6E,ftr,find_emote(bot,event,k,1))
   return nil unless s2s
   str="__**Ascension uses for #{k}**__ (#{lst[0].length} total)"
@@ -3781,7 +3944,8 @@ def disp_mat_data(bot,event,args=nil)
       str=extend_message(str,lst[1][i],event)
     end
   end
-  str=extend_message(str,"#{fff.length} total servants use this material\n#{fff2} total uses for this material\n#{longFormattedNumber(fff3)} total copies of this material are required to max everyone#{"\n~~Unavailable servants aren't counted in the totals~~" if str.include?('total~~')}",event,2)
+  str=extend_message(str,"__*Totals*__\n#{fff.length} total servants use this material\n#{fff2} total uses for this material\n#{longFormattedNumber(fff3)} total copies of this material are required to max everyone#{"\n~~Unavailable servants aren't counted in the totals~~" if str.include?('total~~')}",event,2)
+  str=extend_message(str,"__*Availability through Training Grounds*__\n#{nextstr}",event,2) if nextstr.length>0
   event.respond str
 end
 
@@ -5690,6 +5854,8 @@ def sort_servants(bot,event,args=nil)
   if lvl<0 && srt.reject{|q| q==2}.length>0
     textra="#{textra}\n\nNo level was included, so I am sorting by default maximum level.\nIf you wish to change that, include the word \"Base\" (for level 1) or \"Grail\" (for level 100)." if srt.reject{|q| q==4}.length>0
     lvl=1
+  elsif lvl==2 && srt.reject{|q| q==2}.length>0
+    lvl=-1
   end
   for i in 0...char.length
     char[i][4]=@servants.length+100-char[i][0]
@@ -6108,7 +6274,7 @@ def generate_deck(event,bot,args=nil)
   len='%.2f'
   len='%.4f' if @shardizard==4 && safe_to_spam?(event)
   deck2=deck2.combination(5).to_a.map{|q| q.sort{|a,b| dsort(a) <=> dsort(b)}.join('')}
-  str="__**Included servants**__\n#{srv.map{|q| "Srv-#{q[0]}#{'.' unless q[0]<2}) #{q[1]} - #{q[17][0,5].gsub('Q','<:Quick_x:523975575329701902>').gsub('A','<:Arts_x:523975575552000000>').gsub('B','<:Buster_x:523975575359193089>')} - #{q[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')}"}.join("\n")}#{"\n~~Only the first three names were included~~" if x}"
+  str="__**Included servants**__\n#{srv.map{|q| "Srv-#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]} - #{q[17][0,5].gsub('Q','<:Quick_x:523975575329701902>').gsub('A','<:Arts_x:523975575552000000>').gsub('B','<:Buster_x:523975575359193089>')} - #{q[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')}"}.join("\n")}#{"\n~~Only the first three names were included~~" if x}"
   str2="__**Chain Probabilities**__"
   x=deck2.reject{|q| !q.include?('QQQ')}.length*100.0/deck2.length
   str2="#{str2}#{"\n" if safe_to_spam?(event,nil,1)}\n<:Quick_y:526556106986618880> *Quick chain:* #{(len % x)}%"
@@ -6306,17 +6472,17 @@ def show_servant_alts(event,bot,args=nil)
         for i2 in 0...facets.length
           facsrvs=unisrvs.reject{|q| q[28][2]!=facets[i2]}
           str="#{str}\n\n__Facet #{i2+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}**__"
-          str="#{str}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+          str="#{str}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
           str2="#{str2}\n\n__Facet #{i2+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}**__"
-          str2="#{str2}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
-          flds2[-1][3].push(["Facet #{i2+1}: #{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}",facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
+          str2="#{str2}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+          flds2[-1][3].push(["Facet #{i2+1}: #{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}",facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
         end
         flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str])
         flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str2])
       else
-        flds2[-1][4]="#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+        flds2[-1][4]="#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
         flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",flds2[-1][4]])
-        flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**","#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"])
+        flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**","#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"])
         flds2[-1][3]=nil
       end
     end
@@ -6325,17 +6491,17 @@ def show_servant_alts(event,bot,args=nil)
     if facets.length>1
       for i in 0...facets.length
         facsrvs=srvs.reject{|q| q[28][2]!=facets[i]}
-        str="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
-        str2="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+        str="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
+        str2="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
         flds.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str])
         flds3.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str2])
-        flds2.push(["__Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**__",avg_color(facsrvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"this facet has #{facsrvs.length} alt#{'s' unless facsrvs.length==1}",nil,facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
+        flds2.push(["__Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**__",avg_color(facsrvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"this facet has #{facsrvs.length} alt#{'s' unless facsrvs.length==1}",nil,facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
       end
     else
       flds=nil
       flds3=nil
-      dispstr=srvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")
-      dispstr2=srvs.map{|q| "#{q[0]}#{'.' unless q[0]<2}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")
+      dispstr=srvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")
+      dispstr2=srvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")
     end
   end
   if !flds.nil? && dispstr.length+flds.map{|q| "#{q[0]}\n#{q[1]}"}.join("\n").length>1500
@@ -7866,7 +8032,7 @@ bot.command(:snagstats) do |event, f, f2|
     str2=''
     c=crf.map{|q| q[0].to_i}
     m=srv.map{|q| q[23]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
-    str2="<:Bond:523903660913197056> #{m.length} Bond CE#{'s' if m.length>1}"
+    str2="<:Bond:613804021119189012> #{m.length} Bond CE#{'s' if m.length>1}"
     m=srv.map{|q| q[26]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
     str2="#{str2}\n<:Valentines:523903633453219852> #{m.length} Valentine's CE#{'s' if m.length>1}"
     str2=str2[1,str2.length-1] if str2[0,1]=="\n"
@@ -8291,7 +8457,7 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
     f=@dev_units[j2][3][m].gsub('u','').to_i
     @dev_units[j2][3][m]="#{[@dev_units[j2][3][m].gsub('u','').to_i+typ,10].min}#{n}"
     devservants_save()
-    event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} has been leveled by #{dev_units[j2][3][m].gsub('u','').to_i-f} ~~(from #{f} to #{@dev_units[j2][3][m].gsub('u','')})~~."
+    event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} has been leveled by #{@dev_units[j2][3][m].gsub('u','').to_i-f} ~~(from #{f} to #{@dev_units[j2][3][m].gsub('u','')})~~."
   elsif ['np','merge','merges'].include?(cmd.downcase)
     typ=0
     for i in 0...args.length
@@ -8414,11 +8580,19 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
     disptext=" #{args.join(' ')} "
     asc=0
     asc=1 if has_any?(args,['default','zerothascension','zeroth_ascension','0th','0thascension','0th_ascension','0'])
-    asc=2 if has_any?(args,['first','firstascension','first_ascension','1st','1stascension','1st_ascension','second','secondascension','2nd','second_ascension','2ndascension','2nd_ascension','1','2'])
-    asc=3 if has_any?(args,['third','thirdascension','third_ascension','3rd','3rdascension','3rd_ascension','3'])
-    asc=4 if has_any?(args,['fourth','fourthascension','fourth_ascension','4th','4thascension','4th_ascension','final','finalascension','final_ascension','4'])
-    asc=5 if has_any?(args,['costume','firstcostume','first_costume','1stcostume','1st_costume','costume1']) || disptext.include?(" first costume ") || disptext.include?(" 1st costume ") || disptext.include?(" costume 1 ")
-    asc=6 if has_any?(args,['secondcostume','second_costume','2ndcostume','2nd_costume','costume2']) || disptext.include?(" second costume ") || disptext.include?(" 2nd costume ") || disptext.include?(" costume 2 ")
+    asc=2 if has_any?(disptext.split(' '),['first','firstascension','first_ascension','1st','1stascension','1st_ascension','second','secondascension','2nd','second_ascension','2ndascension','2nd_ascension']) || " #{disptext} ".include?(" first ascension ") || " #{disptext} ".include?(" 1st ascension ") || " #{disptext} ".include?(" second ascension ") || " #{disptext} ".include?(" 2nd ascension ")
+    asc=3 if has_any?(disptext.split(' '),['third','thirdascension','third_ascension','3rd','3rdascension','3rd_ascension']) || " #{disptext} ".include?(" third ascension ") || " #{disptext} ".include?(" 3rd ascension ")
+    asc=4 if has_any?(disptext.split(' '),['fourth','fourthascension','fourth_ascension','4th','4thascension','4th_ascension','final','finalascension','final_ascension']) || " #{disptext} ".include?(" fourth ascension ") || " #{disptext} ".include?(" 4th ascension ") || " #{disptext} ".include?(" final ascension ")
+    asc=5 if (has_any?(disptext.split(' '),['costume','firstcostume','first_costume','1stcostume','1st_costume','costume1']) || " #{disptext} ".include?(" first costume ") || " #{disptext} ".include?(" 1st costume ") || " #{disptext} ".include?(" costume 1 ")) && j3[18].length>4
+    asc=6 if (has_any?(disptext.split(' '),['secondcostume','second_costume','2ndcostume','2nd_costume','costume2']) || " #{disptext} ".include?(" second costume ") || " #{disptext} ".include?(" 2nd costume ") || " #{disptext} ".include?(" costume 2 ")) && j3[18].length>5
+    asc=7 if (has_any?(disptext.split(' '),['thirdcostume','third_costume','3rdcostume','3rd_costume','costume3']) || " #{disptext} ".include?(" third costume ") || " #{disptext} ".include?(" 3rd costume ") || " #{disptext} ".include?(" costume 3 ")) && j3[18].length>6
+    asc=8 if (has_any?(disptext.split(' '),['fourthcostume','fourth_costume','4thcostume','4th_costume','costume4']) || " #{disptext} ".include?(" fourth costume ") || " #{disptext} ".include?(" 4th costume ") || " #{disptext} ".include?(" costume 4 ")) && j3[18].length>7
+    asc=9 if (has_any?(disptext.split(' '),['fifthcostume','fifth_costume','5thcostume','5th_costume','costume5']) || " #{disptext} ".include?(" fifth costume ") || " #{disptext} ".include?(" 5th costume ") || " #{disptext} ".include?(" costume 5 ")) && j3[18].length>8
+    asc=10 if (has_any?(disptext.split(' '),['sixthcostume','sixth_costume','6thcostume','6th_costume','costume6']) || " #{disptext} ".include?(" sixth costume ") || " #{disptext} ".include?(" 6th costume ") || " #{disptext} ".include?(" costume 6 ")) && j3[18].length>9
+    asc=11 if (has_any?(disptext.split(' '),['seventhcostume','seventh_costume','7thcostume','7th_costume','costume7']) || " #{disptext} ".include?(" seventh costume ") || " #{disptext} ".include?(" 7th costume ") || " #{disptext} ".include?(" costume 7 ")) && j3[18].length>10
+    asc=12 if (has_any?(disptext.split(' '),['eighthcostume','eighth_costume','8thcostume','8th_costume','costume8']) || " #{disptext} ".include?(" eighth costume ") || " #{disptext} ".include?(" 8th costume ") || " #{disptext} ".include?(" costume 8 ")) && j3[18].length>11
+    asc=13 if (has_any?(disptext.split(' '),['ninthcostume','ninth_costume','9thcostume','9th_costume','costume9']) || " #{disptext} ".include?(" ninth costume ") || " #{disptext} ".include?(" 9th costume ") || " #{disptext} ".include?(" costume 9 ")) && j3[18].length>12
+    asc=14 if (has_any?(disptext.split(' '),['tenthcostume','tenth_costume','10thcostume','10th_costume','costume10']) || " #{disptext} ".include?(" tenth costume ") || " #{disptext} ".include?(" 10th costume ") || " #{disptext} ".include?(" costume 10 ")) && j3[18].length>12
     mx=[1,2,2,3,4]
     m=mx[@dev_units[j2][7][0]]
     if asc<5 && asc>m
@@ -8977,11 +9151,19 @@ bot.command(:edit) do |event, cmd, *args|
     disptext=" #{args.join(' ')} "
     asc=0
     asc=1 if has_any?(args,['default','zerothascension','zeroth_ascension','0th','0thascension','0th_ascension','0'])
-    asc=2 if has_any?(args,['first','firstascension','first_ascension','1st','1stascension','1st_ascension','second','secondascension','2nd','second_ascension','2ndascension','2nd_ascension','1','2'])
-    asc=3 if has_any?(args,['third','thirdascension','third_ascension','3rd','3rdascension','3rd_ascension','3'])
-    asc=4 if has_any?(args,['fourth','fourthascension','fourth_ascension','4th','4thascension','4th_ascension','final','finalascension','final_ascension','4'])
-    asc=5 if has_any?(args,['costume','firstcostume','first_costume','1stcostume','1st_costume','costume1']) || disptext.include?(" first costume ") || disptext.include?(" 1st costume ") || disptext.include?(" costume 1 ")
-    asc=6 if has_any?(args,['secondcostume','second_costume','2ndcostume','2nd_costume','costume2']) || disptext.include?(" second costume ") || disptext.include?(" 2nd costume ") || disptext.include?(" costume 2 ")
+    asc=2 if has_any?(disptext.split(' '),['first','firstascension','first_ascension','1st','1stascension','1st_ascension','second','secondascension','2nd','second_ascension','2ndascension','2nd_ascension']) || " #{disptext} ".include?(" first ascension ") || " #{disptext} ".include?(" 1st ascension ") || " #{disptext} ".include?(" second ascension ") || " #{disptext} ".include?(" 2nd ascension ")
+    asc=3 if has_any?(disptext.split(' '),['third','thirdascension','third_ascension','3rd','3rdascension','3rd_ascension']) || " #{disptext} ".include?(" third ascension ") || " #{disptext} ".include?(" 3rd ascension ")
+    asc=4 if has_any?(disptext.split(' '),['fourth','fourthascension','fourth_ascension','4th','4thascension','4th_ascension','final','finalascension','final_ascension']) || " #{disptext} ".include?(" fourth ascension ") || " #{disptext} ".include?(" 4th ascension ") || " #{disptext} ".include?(" final ascension ")
+    asc=5 if (has_any?(disptext.split(' '),['costume','firstcostume','first_costume','1stcostume','1st_costume','costume1']) || " #{disptext} ".include?(" first costume ") || " #{disptext} ".include?(" 1st costume ") || " #{disptext} ".include?(" costume 1 ")) && j3[18].length>4
+    asc=6 if (has_any?(disptext.split(' '),['secondcostume','second_costume','2ndcostume','2nd_costume','costume2']) || " #{disptext} ".include?(" second costume ") || " #{disptext} ".include?(" 2nd costume ") || " #{disptext} ".include?(" costume 2 ")) && j3[18].length>5
+    asc=7 if (has_any?(disptext.split(' '),['thirdcostume','third_costume','3rdcostume','3rd_costume','costume3']) || " #{disptext} ".include?(" third costume ") || " #{disptext} ".include?(" 3rd costume ") || " #{disptext} ".include?(" costume 3 ")) && j3[18].length>6
+    asc=8 if (has_any?(disptext.split(' '),['fourthcostume','fourth_costume','4thcostume','4th_costume','costume4']) || " #{disptext} ".include?(" fourth costume ") || " #{disptext} ".include?(" 4th costume ") || " #{disptext} ".include?(" costume 4 ")) && j3[18].length>7
+    asc=9 if (has_any?(disptext.split(' '),['fifthcostume','fifth_costume','5thcostume','5th_costume','costume5']) || " #{disptext} ".include?(" fifth costume ") || " #{disptext} ".include?(" 5th costume ") || " #{disptext} ".include?(" costume 5 ")) && j3[18].length>8
+    asc=10 if (has_any?(disptext.split(' '),['sixthcostume','sixth_costume','6thcostume','6th_costume','costume6']) || " #{disptext} ".include?(" sixth costume ") || " #{disptext} ".include?(" 6th costume ") || " #{disptext} ".include?(" costume 6 ")) && j3[18].length>9
+    asc=11 if (has_any?(disptext.split(' '),['seventhcostume','seventh_costume','7thcostume','7th_costume','costume7']) || " #{disptext} ".include?(" seventh costume ") || " #{disptext} ".include?(" 7th costume ") || " #{disptext} ".include?(" costume 7 ")) && j3[18].length>10
+    asc=12 if (has_any?(disptext.split(' '),['eighthcostume','eighth_costume','8thcostume','8th_costume','costume8']) || " #{disptext} ".include?(" eighth costume ") || " #{disptext} ".include?(" 8th costume ") || " #{disptext} ".include?(" costume 8 ")) && j3[18].length>11
+    asc=13 if (has_any?(disptext.split(' '),['ninthcostume','ninth_costume','9thcostume','9th_costume','costume9']) || " #{disptext} ".include?(" ninth costume ") || " #{disptext} ".include?(" 9th costume ") || " #{disptext} ".include?(" costume 9 ")) && j3[18].length>12
+    asc=14 if (has_any?(disptext.split(' '),['tenthcostume','tenth_costume','10thcostume','10th_costume','costume10']) || " #{disptext} ".include?(" tenth costume ") || " #{disptext} ".include?(" 10th costume ") || " #{disptext} ".include?(" costume 10 ")) && j3[18].length>12
     mx=[1,2,2,3,4]
     m=mx[donor_units[j2][7][0]]
     if asc<5 && asc>m
@@ -9193,6 +9375,8 @@ bot.command(:edit) do |event, cmd, *args|
           end
         end
       end
+    else
+      event.respond str
     end
   else
     event.respond 'Edit mode was not specified.'
@@ -9224,7 +9408,7 @@ end
 
 bot.server_delete do |event|
   unless @shardizard==4
-    bot.user(167657750971547648).pm("Left server **#{event.server.name}**")
+    bot.user(167657750971547648).pm("Left server **#{event.server.name}**\nThis server was using #{shard_data(0,true)[((event.server.id >> 22) % @shards)]} Shards")
     bot.user(239973891626237952).pm("Left server **#{event.server.name}**")
     metadata_load()
     @server_data[0][((event.server.id >> 22) % @shards)] -= 1
