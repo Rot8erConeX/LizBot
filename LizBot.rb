@@ -1669,6 +1669,9 @@ def servant_moji(bot,event,k,mode=0,clrshift=0,usr=0)
 end
 
 def servant_icon(k,event,art=0)
+  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if event.user.id==167657750971547648 && k[0]==196
+  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [163952551237124097,243525860232003595].include?(event.user.id) && k[0]==196 && rand(5)==0
+  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if k[0]==196 && rand(500)==0
   art=2 if event.user.id==167657750971547648 && k[0]==74
   art=4 if event.user.id==78649866577780736 && k[0]==127 && art==0
   art=1 if art==0
@@ -2227,7 +2230,7 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
     ftr="For the other servant named Solomon, try servant #152." if k[0]==83
     ftr="For the other servant named Solomon, try servant #83." if k[0]==152
   end
-  ftr='For skill descriptions, use this command in PM or a bot spam channel.' unless safe_to_spam?(event)
+  ftr='For skill descriptions, use this command in PM or a bot spam channel.' unless safe_to_spam?(event,nil,1)
   if actsklz.join("\n\n").length+passklz.join("\n").length+text.length+"#{"__**#{k[1]}**__ [Srv-##{k[0]}]" unless chain}".length>=1700
     np="*"
     np=":* #{@skills[@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}][3]}" unless @skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}.nil?
@@ -2840,6 +2843,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       for i2 in 0...8
         if k[18].length>i2+6
           costr="#{costr}\n*#{['Third','Fourth','Fifth','Sixth','Seventh','Eighth','Ninth','Tenth'][i2]} Costume"
+          costr="#{costr} [#{k[29][2+i2]}]" if !k[29].nil? && !k[29][2+i2].nil? && k[29][2+i2].length>0
           costr="#{costr}:* #{k[18][i2+6].join(', ')}  \u00B7  3mil#{qpd}"
         end
       end
@@ -2973,7 +2977,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     devservants_load()
     dv=@dev_units.find_index{|q| q[0]==k[0]}
     if dv.nil?
-      dv=-1 
+      dv=-1
     else
       k=@servants[@servants.find_index{|q| q[0]==@dev_units[dv][0]}] if k[0].to_i==1
       asc=@dev_units[dv][7][1]
@@ -3063,6 +3067,16 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     xpic="https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGOArt/MiniMelt.png"
     midtext=''
     artist='Tanaka Gorbachev'
+  elsif k[0]==196 && dv>=0
+    xpic="https://cdn.awwni.me/1070o.png"
+    midtext=''
+    text="#{text}\n[Direct Link](https://www.pixiv.net/en/artworks/66249767)"
+    artist='sogno'
+  elsif [5,90].include?(k[0]) && dv>=0
+    xpic="https://pbs.twimg.com/media/D9Lcdt2UcAEDM3G?format=jpg&name=small"
+    midtext=''
+    text="#{text}\n[Direct Link](https://twitter.com/yayoimaka03/status/1140216715147538432)"
+    artist='@yayoimaka03'
   end
   if args.include?('just') || args.include?('justart') || args.include?('blank') || args.include?('noinfo')
     f=nil
@@ -3193,6 +3207,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
   cemoji=['<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant')
   if k[0]==163 && dv>=0
     asc='Smol and Cute'
+  elsif k[0]==196 && dv>=0
+    asc='Smol Eresh Big Cute'
+  elsif [90,5].include?(k[0]) && dv>=0
+    asc='Neko Nero'
   elsif asc==1
     asc="#{cemoji[1]*(asc-1)}#{cemoji[0]*(5-asc)}"
   elsif asc==2 && !has_any?(k[13],['FEH Servant','DL Servant'])
@@ -3204,7 +3222,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume','Third Costume','Fourth Costume','Fifth Costume','Sixth Costume','Seventh Costume','Eighth Costume','Ninth Costume','Tenth Costume'][asc]
     asc="#{asc} [#{k[29][asc2-5]}]" if asc2>4 && !k[29].nil? && !k[29][asc2-5].nil?
   end
-  unless artist=='Riyo' || (k[0]==163 && dv>=0)
+  unless artist=='Riyo' || ([5,90,163,196].include?(k[0]) && dv>=0)
     artist=nil
     artist=k[24].split(' as ')[-1] unless k[24].nil? || k[24].length<=0
   end
@@ -6858,6 +6876,87 @@ def affinity_data(event,bot,args=nil)
   create_embed(event,[str,title],text,xcolor,ftr,xpic,flds)
 end
 
+def show_tools(bot,event)
+  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
+    event << '**Useful tools for players of** ***Fate/Grand Order***'
+    event << '__Download the game__'
+    event << 'Google Play (NA): <https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US>'
+    event << 'Google Play (JP): <https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US>'
+    event << 'Apple App Store (NA): <https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8>'
+    event << 'Apple App Store (JP): <https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8>'
+    event << ''
+    event << '__Current Master Missions__'
+    event << 'North America: <http://fate-go.cirnopedia.org/master_mission_us.php>'
+    event << 'Japan: <http://fate-go.cirnopedia.org/master_mission.php>'
+    event << ''
+    event << '*Learning With Manga*: <https://fate-go.us/manga_fgo2/>'
+    event << ''
+    event << '__Wikis and databases__'
+    event << 'Cirnopedia: <https://fate-go.cirnopedia.org>'
+    event << ''
+    event << '__Important lists and spreadsheets__'
+    event << 'Interlude info: <https://goo.gl/SCsKJn>' if safe_to_spam?(event)
+    event << 'Material location guide: <https://goo.gl/ijqefs>'
+    event << 'List of Singularity maps with drops: <https://imgur.com/a/6nXq9#f8dRAp5>'
+    event << 'Rate-up History (NA): <http://fate-go.cirnopedia.org/summon_us.php>'
+    event << 'Rate-up History (JP): <http://fate-go.cirnopedia.org/summon.php>'
+    event << 'Order of Interludes and Strengthening Quests: <https://kazemai.github.io/fgo-vz/relate_quest.html>' if safe_to_spam?(event)
+    event << 'Palingenesis data: <https://fate-go.cirnopedia.org/servant_palingenesis.php>' if safe_to_spam?(event)
+    event << ''
+    event << '__Calculators and Planners__'
+    event << 'Damage calculator: <https://tinyurl.com/yc2tuzn9>'
+    event << 'EXP calculator: <https://grandorder.gamepress.gg/exp-calculator>'
+    event << 'Material planner: <http://fgosimulator.webcrow.jp/Material/>'
+    event << 'Servant planner: <https://grandorder.gamepress.gg/servant-planner>'
+    event << 'Daily mats: <https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Mats.png>' if safe_to_spam?(event)
+    if safe_to_spam?(event)
+      event << ''
+      event << '__Cirno direct links__'
+      event << 'Servants: <https://fate-go.cirnopedia.org/servant_all.php>'
+      event << 'Craft Essences: <https://fate-go.cirnopedia.org/craft_essence.php>'
+      event << 'Command Codes: <https://fate-go.cirnopedia.org/command_code.php>'
+    end
+  else
+    xpic='https://lh3.googleusercontent.com/gXUStNHv8sT8NjdXBOJmzqK_JIYlPP_6jKBjEOIyP-28CSsnPempO86swUYhVhVgvH4f=s180-rw'
+    t=Time.now
+    xpic='https://vignette.wikia.nocookie.net/fategrandorder/images/a/ac/FGO_GO_App_Icon.png' if t.month==4 && t.day==1
+    str="__Download the game__"
+    str="#{str}\n[Google Play (NA)](https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US)"
+    str="#{str}  \u00B7  [Google Play (JP)](https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US)"
+    str="#{str}\n[Apple App Store (NA)](https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8)"
+    str="#{str}  \u00B7  [Apple App Store (JP)](https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8)"
+    str="#{str}\n\n__Current Master Missions__"
+    str="#{str}\n[North America](http://fate-go.cirnopedia.org/master_mission_us.php)"
+    str="#{str}\n[Japan](http://fate-go.cirnopedia.org/master_mission.php)"
+    str="#{str}\n\n[*Learning With Manga*](https://fate-go.us/manga_fgo2/)"
+    str="#{str}\n\n__Wikis and databases__"
+    str="#{str}\n[Cirnopedia](https://fate-go.cirnopedia.org)"
+    str="#{str}\n\n__Important lists and spreadsheets__"
+    str="#{str}\n[Interlude info](https://goo.gl/SCsKJn)" if safe_to_spam?(event)
+    str="#{str}\n[Material location guide](https://goo.gl/ijqefs)"
+    str="#{str}\n[List of Singularity maps with drops](https://imgur.com/a/6nXq9#f8dRAp5)"
+    str="#{str}\n[Rate-up History (NA)](http://fate-go.cirnopedia.org/summon_us.php)"
+    str="#{str}  \u00B7  [Rate-up History (JP)](http://fate-go.cirnopedia.org/summon.php)"
+    str="#{str}\n[Order of Interludes and Strengthening Quests](https://kazemai.github.io/fgo-vz/relate_quest.html)" if safe_to_spam?(event)
+    str="#{str}\n[Palingenesis data](https://fate-go.cirnopedia.org/servant_palingenesis.php)" if safe_to_spam?(event)
+    str="#{str}\n\n__Calculators and Planners__"
+    str="#{str}\n[Damage Calculator](https://tinyurl.com/yc2tuzn9)"
+    str="#{str}\n[EXP calculator](https://grandorder.gamepress.gg/exp-calculator)"
+    str="#{str}\n[Material planner](http://fgosimulator.webcrow.jp/Material/)"
+    str="#{str}\n[Servant planner](https://grandorder.gamepress.gg/servant-planner)"
+    str="#{str}\n[Daily mats](https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Mats.png)" if safe_to_spam?(event)
+    if safe_to_spam?(event)
+      str="#{str}\n\n__Cirno direct links__"
+      str="#{str}\n[Servants](https://fate-go.cirnopedia.org/servant_all.php)"
+      str="#{str}\n[Craft Essences](https://fate-go.cirnopedia.org/craft_essence.php)"
+      str="#{str}\n[Command Codes](https://fate-go.cirnopedia.org/command_code.php)"
+    end
+    create_embed(event,'**Useful tools for players of** ***Fate/Grand Order***',str,0xED619A,nil,xpic)
+    event.respond 'If you are on a mobile device and cannot click the links in the embed above, type `FGO!tools mobile` to receive this message as plaintext.'
+  end
+  event << ''
+end
+
 bot.command([:affinity, :affinities, :affinitys, :effective, :eff, :resist, :resistance, :resistances, :res]) do |event, *args|
   return nil if overlap_prevent(event)
   affinity_data(event,bot,args)
@@ -6971,75 +7070,7 @@ end
 
 bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
   return nil if overlap_prevent(event)
-  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
-    event << '**Useful tools for players of** ***Fate/Grand Order***'
-    event << '__Download the game__'
-    event << 'Google Play (NA): <https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US>'
-    event << 'Google Play (JP): <https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US>'
-    event << 'Apple App Store (NA): <https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8>'
-    event << 'Apple App Store (JP): <https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8>'
-    event << ''
-    event << '__Wikis and databases__'
-    event << 'Cirnopedia: <https://fate-go.cirnopedia.org>'
-    event << ''
-    event << '*Learning With Manga*: <https://fate-go.us/manga_fgo2/>'
-    event << ''
-    event << '__Important lists and spreadsheets__'
-    event << 'Interlude info: <https://goo.gl/SCsKJn>'
-    event << 'Material location guide: <https://goo.gl/ijqefs>'
-    event << 'List of Singularity maps with drops: <https://imgur.com/a/6nXq9#f8dRAp5>'
-    event << 'Rate-up History (NA): <http://fate-go.cirnopedia.org/summon_us.php>'
-    event << 'Rate-up History (JP): <http://fate-go.cirnopedia.org/summon.php>'
-    event << 'Order of Interludes and Strengthening Quests: <https://kazemai.github.io/fgo-vz/relate_quest.html>'
-    event << 'Palingenesis data: <https://fate-go.cirnopedia.org/servant_palingenesis.php>'
-    event << 'Current Master Missions: <http://fate-go.cirnopedia.org/master_mission.php>'
-    event << ''
-    event << '__Calculators and Planners__'
-    event << 'Damage calculator: <https://tinyurl.com/yc2tuzn9>'
-    event << 'EXP calculator: <https://grandorder.gamepress.gg/exp-calculator>'
-    event << 'Material planner: <http://fgosimulator.webcrow.jp/Material/>'
-    event << 'Servant planner: <https://grandorder.gamepress.gg/servant-planner>'
-    event << 'Daily mats: <https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Mats.png>'
-    event << ''
-    event << '__Cirno direct links__'
-    event << 'Servants: <https://fate-go.cirnopedia.org/servant_all.php>'
-    event << 'Craft Essences: <https://fate-go.cirnopedia.org/craft_essence.php>'
-    event << 'Command Codes: <https://fate-go.cirnopedia.org/command_code.php>'
-  else
-    xpic='https://lh3.googleusercontent.com/gXUStNHv8sT8NjdXBOJmzqK_JIYlPP_6jKBjEOIyP-28CSsnPempO86swUYhVhVgvH4f=s180-rw'
-    t=Time.now
-    xpic='https://vignette.wikia.nocookie.net/fategrandorder/images/a/ac/FGO_GO_App_Icon.png' if t.month==4 && t.day==1
-    str="__Download the game__"
-    str="#{str}\n[Google Play (NA)](https://play.google.com/store/apps/details?id=com.aniplex.fategrandorder.en&hl=en_US)"
-    str="#{str}  \u00B7  [Google Play (JP)](https://play.google.com/store/apps/details?id=com.xiaomeng.fategrandorder&hl=en_US)"
-    str="#{str}\n[Apple App Store (NA)](https://itunes.apple.com/us/app/fate-grand-order-english/id1183802626?mt=8)"
-    str="#{str}  \u00B7  [Apple App Store (JP)](https://itunes.apple.com/jp/app/fate-grand-order/id1015521325?l=en&mt=8)"
-    str="#{str}\n\n__Wikis and databases__"
-    str="#{str}\n[Cirnopedia](https://fate-go.cirnopedia.org)"
-    str="#{str}\n\n[*Learning With Manga*](https://fate-go.us/manga_fgo2/)"
-    str="#{str}\n\n__Important lists and spreadsheets__"
-    str="#{str}\n[Interlude info](https://goo.gl/SCsKJn)"
-    str="#{str}\n[Material location guide](https://goo.gl/ijqefs)"
-    str="#{str}\n[List of Singularity maps with drops](https://imgur.com/a/6nXq9#f8dRAp5)"
-    str="#{str}\n[Rate-up History (NA)](http://fate-go.cirnopedia.org/summon_us.php)"
-    str="#{str}  \u00B7  [Rate-up History (JP)](http://fate-go.cirnopedia.org/summon.php)"
-    str="#{str}\n[Order of Interludes and Strengthening Quests](https://kazemai.github.io/fgo-vz/relate_quest.html)"
-    str="#{str}\n[Palingenesis data](https://fate-go.cirnopedia.org/servant_palingenesis.php)"
-    str="#{str}\n[Current Master Missions](http://fate-go.cirnopedia.org/master_mission.php)"
-    str="#{str}\n\n__Calculators and Planners__"
-    str="#{str}\n[Damage Calculator](https://tinyurl.com/yc2tuzn9)"
-    str="#{str}\n[EXP calculator](https://grandorder.gamepress.gg/exp-calculator)"
-    str="#{str}\n[Material planner](http://fgosimulator.webcrow.jp/Material/)"
-    str="#{str}\n[Servant planner](https://grandorder.gamepress.gg/servant-planner)"
-    str="#{str}\n[Daily mats](https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/Mats.png)"
-    str="#{str}\n\n__Cirno direct links__"
-    str="#{str}\n[Servants](https://fate-go.cirnopedia.org/servant_all.php)"
-    str="#{str}\n[Craft Essences](https://fate-go.cirnopedia.org/craft_essence.php)"
-    str="#{str}\n[Command Codes](https://fate-go.cirnopedia.org/command_code.php)"
-    create_embed(event,'**Useful tools for players of** ***Fate/Grand Order***',str,0xED619A,nil,xpic)
-    event.respond 'If you are on a mobile device and cannot click the links in the embed above, type `FGO!tools mobile` to receive this message as plaintext.'
-  end
-  event << ''
+  show_tools(bot,event)
 end
 
 bot.command(:prefix) do |event, prefix|
@@ -7682,7 +7713,7 @@ bot.command([:status, :avatar, :avvie]) do |event, *args|
     return nil
   end
   if @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
-    event << "Current avatar: #{bot.user(312451658908958721).avatar_url}"
+    event << "Current avatar: #{bot.user(502288364838322176).avatar_url}"
     event << "Servant in avatar: #{@avvie_info[0]}"
     event << ''
     event << "Current status:"
@@ -8272,7 +8303,8 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
   end
   data_load()
   devservants_load()
-  j3=find_data_ex(:find_servant,event.message.text,event,false,true)
+  j3=find_data_ex(:find_servant,args.join(' '),event,false,true)
+  j3=find_data_ex(:find_servant,event.message.text,event,false,true) if j3.nil? || j3.length<=0
   unless has_any?([cmd,args[0].downcase],['ce','craft','craftessence']) && has_any?([cmd,args[0].downcase],['support','supports','friends','friend'])
     j=j3[0]
     if j.nil? || j<=0
@@ -8837,7 +8869,8 @@ bot.command(:edit) do |event, cmd, *args|
   jp=false
   jp=true if has_any?(args.map{|q| q.downcase},['japan','jp'])
   unless has_any?([cmd,args[0].downcase],['ce','craft','craftessence']) && has_any?([cmd,args[0].downcase],['support','supports','friends','friend'])
-    j3=find_data_ex(:find_servant,event.message.text,event,false,true)
+    j3=find_data_ex(:find_servant,args.join(' '),event,false,true)
+    j3=find_data_ex(:find_servant,event.message.text,event,false,true) if j3.nil? || j3.length<=0
     j=j3[0]
     if j.nil? || j<=0
       event.respond "There is no servant by that name.\nPlease know that servant IDs do not work for this command because numbers have to be used for other things."
@@ -9424,6 +9457,10 @@ bot.mention do |event|
   m=true
   m=false if event.user.bot_account?
   if !m
+  elsif ['tools','tool','links','link','resources','resource'].include?(args[0].downcase)
+    args.shift
+    show_tools(bot,event)
+    m=false
   elsif ['help','command_list','commandlist'].include?(args[0].downcase)
     args.shift
     help_text(event,bot,args[0],args[1])
@@ -9783,7 +9820,9 @@ bot.message do |event|
     s=remove_format(s,'`')                # remove small code blocks
     s=remove_format(s,'~~')               # remove crossed-out text
     s=remove_format(s,'||')               # remove spoiler tags
-    if " #{s} ".include?(' the archer class ')
+    if event.channel.name.downcase.include?('3h')
+    elsif event.channel.name.downcase.include?('spoil')
+    elsif " #{s} ".include?(' the archer class ')
       canpost=true
       k=0
       k=event.server.id unless event.server.nil?
@@ -9805,12 +9844,17 @@ bot.message do |event|
     s=remove_format(s,'```')              # remove large code blocks
     s=remove_format(s,'`')                # remove small code blocks
     s=remove_format(s,'~~')               # remove crossed-out text
+    s=remove_format(s,'||')               # remove spoiler tags
     s=s.gsub("\n",' ').gsub("  ",'')
     chain=false
     if s.split(' ').include?('death')
       k=0
       k=event.server.id unless event.server.nil?
+      k2=event.channel.id
       if k==271642342153388034
+      elsif has_any?(event.message.text.downcase.split(' '),['knight'])
+      elsif event.channel.name.downcase.include?('3h')
+      elsif event.channel.name.downcase.include?('spoil')
       elsif rand(1000)<13
         chain=true
         puts 'responded to death'
@@ -9821,6 +9865,8 @@ bot.message do |event|
       k=0
       k=event.server.id unless event.server.nil?
       if k==271642342153388034
+      elsif event.channel.name.downcase.include?('3h')
+      elsif event.channel.name.downcase.include?('spoil')
       elsif rand(1000)<13
         puts 'responded to correct'
         event.respond "Just because you're correct doesn't mean you're right."
