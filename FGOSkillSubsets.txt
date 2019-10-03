@@ -6,7 +6,7 @@
 ['BuffRateDown', ['buffratedown', 'buffratedecrease'], 'Skill']
 ['BuffRateUp', ['buffrateup', 'buffrateincrease'], 'Skill']
 ['BuffRemovalImmune', ['buffremovalimmune', 'buffremovalimmunity'], 'Skill']
-['BuffRemovalResistUp', ['buffremovalresistup', 'buffremovalresistincrease'], 'Skill']
+['BuffRemovalResistUp', ['buffremovalresistup', 'buffremovalresistincrease', 'buffremovalresistup', 'buffremovalresistincrease'], 'Skill']
 ['Burn', ['burn', 'fire'], 'Skill']
 ['BusterCritDmgUp', ['bustercritdmgup', 'bustercritdamageup', 'bustercritdmgincrease', 'bustercritdamageincrease'], 'Skill']
 ['BusterGatherUp', ['bustergatherup', 'bustergatherincrease'], 'Skill']
