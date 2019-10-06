@@ -579,6 +579,8 @@ def help_text(event,bot,command=nil,subcommand=nil,args=[])
     create_embed(event,'**reboot**',"Reboots this shard of the bot, installing any updates.\n\n**This command is only able to be used by Rot8er_ConeX**",0x008b8b)
   elsif ['support','supports','profile','friend','friends'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __user__","Shows `user`'s stored Support lineup.\n\nAccepts either a user mention or user ID as input.\nIf no valid user is provided, uses the user who invoked the command as input.",0xED619A)
+  elsif ['reload'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}**","Reloads specified data.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
   elsif ['devedit','dev_edit'].include?(command.downcase)
     subcommand='' if subcommand.nil?
     subcommand2=args[0]
@@ -907,9 +909,10 @@ def all_commands(include_nil=false,permissions=-1)
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
      'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit','support',
-     'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res','np1','np2','np3','np4','np5']
+     'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res','np1','np2','np3','np4','np5',
+     'reload']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
-  k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit'] if permissions==2
+  k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit','reload'] if permissions==2
   k.push(nil) if include_nil
   return k
 end
@@ -9413,6 +9416,98 @@ bot.command(:edit) do |event, cmd, *args|
     end
   else
     event.respond 'Edit mode was not specified.'
+  end
+  return nil
+end
+
+bot.command(:reload, from: 167657750971547648) do |event|
+  return nil if overlap_prevent(event)
+  return nil unless [167657750971547648].include?(event.user.id) || [502288368777035777,386658080257212417].include?(event.channel.id)
+  event.respond "Reload what?\n1.) Aliases, from backups#{"\n2.) Data, from GitHub" if [167657750971547648,78649866577780736].include?(event.user.id)}#{"\n3.) Source code, from GitHub" if event.user.id==167657750971547648}\nYou can include multiple numbers to load multiple things."
+  event.channel.await(:bob, from: event.user.id) do |e|
+    reload=false
+    if e.message.text.include?('1')
+      if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt")
+        b=[]
+        File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt").each_line do |line|
+          b.push(eval line)
+        end
+      else
+        b=[]
+      end
+      nzzzzz=b.uniq
+      nz=nzzzzz.reject{|q| q[0]!='Servant'}
+      if nz[nz.length-1][2]<238
+        e << 'Last backup of the alias list has been corrupted.  Restoring from manually-created backup.'
+        if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt")
+          b=[]
+          File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt").each_line do |line|
+            b.push(eval line)
+          end
+        else
+          b=[]
+        end
+        nzzzzz=b.uniq
+      else
+        e << 'Last backup of the alias list being used.'
+      end
+      open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
+        for i in 0...nzzzzz.length
+          f.puts "#{nzzzzz[i].to_s}#{"\n" if i<nzzzzz.length-1}"
+        end
+      }
+      e << 'Alias list has been restored from backup.'
+      reload=true
+    end
+    if e.message.text.include?('2') && [167657750971547648,78649866577780736].include?(event.user.id)
+      event.channel.send_temporary_message('Loading.  Please wait 5 seconds...',3)
+      to_reload=['Sevants','CraftEssances','Skills','CommandCodes','SkillSubsets','Clothes','Enemies','Mats']
+      for i in 0...to_reload.length
+        download = open("https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGO#{to_reload[i]}.txt")
+        IO.copy_stream(download, "FEHTemp.txt")
+        if File.size("FGOTemp.txt")>100
+          b=[]
+          File.open("FGOTemp.txt").each_line.with_index do |line, idx|
+            b.push(line)
+          end
+          open("FGO#{to_reload[i]}.txt", 'w') { |f|
+            f.puts b.join('')
+          }
+        end
+      end
+      e.respond 'New data loaded.'
+      reload=true
+    end
+    if e.message.text.include?('3') && [167657750971547648].include?(event.user.id)
+      download = open("https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/LizBot.rb")
+      IO.copy_stream(download, "FGOTemp.txt")
+      if File.size("FGOTemp.txt")>100
+        if File.exist?("C:/Users/#{@mash}/Desktop/devkit/BotTokens.txt")
+          b2=[]
+          File.open("C:/Users/#{@mash}/Desktop/devkit/BotTokens.txt").each_line do |line|
+            b2.push(line.split(' # ')[0])
+          end
+        else
+          b2=[]
+        end
+        if b2.length>0
+          b=[]
+          File.open("FGOTemp.txt").each_line.with_index do |line, idx|
+            if idx<100
+              b.push(line.gsub('>Main Token<',b2[2]).gsub('>Debug Token<',b2[-1]))
+            else
+              b.push(line)
+            end
+          end
+          open("LizBot.rb", 'w') { |f|
+            f.puts b.join('')
+          }
+          e.respond 'New source code loaded.'
+          reload=true
+        end
+      end
+    end
+    e.respond 'Nothing reloaded.  If you meant to use the command, please try it again.' unless reload
   end
   return nil
 end
