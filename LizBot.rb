@@ -41,9 +41,9 @@ end
 if @shardizard==4
   bot = Discordrb::Commands::CommandBot.new token: '>Debug Token<', client_id: 431895561193390090, prefix: prefix_proc
 elsif @shardizard>4
-  bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: (@shardizard-1), num_shards: @shards, client_id: 502288364838322176, prefix: prefix_proc
+  bot = Discordrb::Commands::CommandBot.new token: '>Token<', shard_id: (@shardizard-1), num_shards: @shards, client_id: 502288364838322176, prefix: prefix_proc
 else
-  bot = Discordrb::Commands::CommandBot.new token: '>Main Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: prefix_proc
+  bot = Discordrb::Commands::CommandBot.new token: '>Token<', shard_id: @shardizard, num_shards: 4, client_id: 502288364838322176, prefix: prefix_proc
 end
 bot.gateway.check_heartbeat_acks = false
 
