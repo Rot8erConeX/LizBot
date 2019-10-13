@@ -54,7 +54,6 @@ Homunculus Baby
 Iron Stake of Evening Tears
 Jet Black Feather Pen
 Kaientai Flag
-Kotan Magatama
 Kukulcan Mask
 Lamp of Evil-Sealing
 Lancer Monument
@@ -76,6 +75,7 @@ Proof of Hero
 Quiet Antique Bell
 Ranjatai
 Reactive Gunpowder
+Refined Magatama
 Ribbon of Memories
 Rider Monument
 Rider Piece
