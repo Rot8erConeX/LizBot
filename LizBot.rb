@@ -581,6 +581,8 @@ def help_text(event,bot,command=nil,subcommand=nil,args=[])
     create_embed(event,"**#{command.downcase}** __user__","Shows `user`'s stored Support lineup.\n\nAccepts either a user mention or user ID as input.\nIf no valid user is provided, uses the user who invoked the command as input.",0xED619A)
   elsif ['reload'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}**","Reloads specified data.\n\n**This command is only able to be used by Rot8er_ConeX**.",0x008b8b)
+  elsif ['update'].include?(command.downcase)
+    create_embed(event,"**#{command.downcase}**",'Shows my data input person how to remotely update for during the period where my developer is gone.',0xED619A)
   elsif ['devedit','dev_edit'].include?(command.downcase)
     subcommand='' if subcommand.nil?
     subcommand2=args[0]
@@ -910,9 +912,9 @@ def all_commands(include_nil=false,permissions=-1)
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
      'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit','support',
      'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res','np1','np2','np3','np4','np5',
-     'reload']
+     'reload','update']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
-  k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit','reload'] if permissions==2
+  k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit','reload','update'] if permissions==2
   k.push(nil) if include_nil
   return k
 end
@@ -4722,7 +4724,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     checkstr=checkstr.gsub("<:#{k[i].name}:#{k[i].id}>",k[i].name)
   end
   if checkstr.downcase =~ /(7|t)+?h+?(o|0)+?(7|t)+?/
-    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases.#{"\nhttps://cdn.discordapp.com/attachments/344355510281043969/514973942218227722/Storylineatroriaisagirlposing_c4361e8dc51f0451389bd016c9796bab.jpg" if unt[0]==99}"
+    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases.#{"\nhttps://cdn.discordapp.com/attachments/344355510281043969/514973942218227722/Storylineatroriaisagirlposing_c4361e8dc51f0451389bd016c9796bab.jpg" if unit[0]==99}"
     bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]}~~\n**Reason for rejection:** Begone, alias.")
     return nil
   elsif checkstr.downcase =~ /n+?((i|1)+?|(e|3)+?)(b|g|8)+?(a|4|(e|3)+?r+?)+?/
@@ -9422,7 +9424,7 @@ end
 
 bot.command(:reload, from: 167657750971547648) do |event|
   return nil if overlap_prevent(event)
-  return nil unless [167657750971547648].include?(event.user.id) || [502288368777035777,386658080257212417].include?(event.channel.id)
+  return nil unless [167657750971547648,78649866577780736].include?(event.user.id) || [502288368777035777,386658080257212417].include?(event.channel.id)
   event.respond "Reload what?\n1.) Aliases, from backups#{"\n2.) Data, from GitHub" if [167657750971547648,78649866577780736].include?(event.user.id)}#{"\n3.) Source code, from GitHub" if event.user.id==167657750971547648}\nYou can include multiple numbers to load multiple things."
   event.channel.await(:bob, from: event.user.id) do |e|
     reload=false
@@ -9461,10 +9463,10 @@ bot.command(:reload, from: 167657750971547648) do |event|
     end
     if e.message.text.include?('2') && [167657750971547648,78649866577780736].include?(event.user.id)
       event.channel.send_temporary_message('Loading.  Please wait 5 seconds...',3)
-      to_reload=['Sevants','CraftEssances','Skills','CommandCodes','SkillSubsets','Clothes','Enemies','Mats']
+      to_reload=['Servants','CraftEssances','Skills','CommandCodes','SkillSubsets','Clothes','Enemies','Mats']
       for i in 0...to_reload.length
         download = open("https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGO#{to_reload[i]}.txt")
-        IO.copy_stream(download, "FEHTemp.txt")
+        IO.copy_stream(download, "FGOTemp.txt")
         if File.size("FGOTemp.txt")>100
           b=[]
           File.open("FGOTemp.txt").each_line.with_index do |line, idx|
@@ -9494,7 +9496,7 @@ bot.command(:reload, from: 167657750971547648) do |event|
           b=[]
           File.open("FGOTemp.txt").each_line.with_index do |line, idx|
             if idx<100
-              b.push(line.gsub('>Main Token<',b2[2]).gsub('>Debug Token<',b2[-1]))
+              b.push(line.gsub('>Token<',b2[2]).gsub('>Debug Token<',b2[-1]))
             else
               b.push(line)
             end
@@ -9510,6 +9512,34 @@ bot.command(:reload, from: 167657750971547648) do |event|
     e.respond 'Nothing reloaded.  If you meant to use the command, please try it again.' unless reload
   end
   return nil
+end
+
+bot.command(:update) do |event|
+  if ![78649866577780736,167657750971547648].include?(event.user.id)
+    t=Time.now
+    if t.month==10 && t.year==2019 && t.day>23 && t.day<30
+      event.respond "Please note that my developer is away for the weekend, and cannot do updates.  I have code that allows my data collector to update me remotely, but that may take longer than usual."
+    else
+      event.respond "This command is unavailable to you."
+    end
+    return nil
+  end
+  str="1.) Edit [the sheet](https://docs.google.com/spreadsheets/d/1Xl7lrTPb_00EvBzCJgWDbIWeCCoPfzS48nhyHf28utI/edit#gid=0) as usual."
+  str="#{str}\n\n2.) If the edits made were to the \"Active Skills\", \"Passive Skills\", \"Noble Phantasms\", or \"MC Skills\" sheets, switch to the \"allskills\" sheet."
+  str="#{str}\n\n3.) Wait for the formulae to finish loading, then grab the LizBot data column of the sheet you edited.  I generally highlight the lowest entry and CTRL+SHIFT+(up)."
+  str="#{str}\n\n4.) Copy the selection from step 3 to a text file, with the following names based on sheet:"
+  str="#{str}\n- *Servants* should be copied to **FGOServants.txt**"
+  str="#{str}\n- *allskills* should be copied to **FGOSkills.txt**"
+  str="#{str}\n- *CEs* should be copied to **FGOCraftEssances.txt**"
+  str="#{str}\n- *MC Clothes* should be copied to **FGOClothes.txt**"
+  str="#{str}\n- *Command Codes* should be copied to **FGOCommandCodes.txt**"
+  str="#{str}\n- *Enemies* should be copied to **FGOEnemies.txt**"
+  str="#{str}\n\n5.) Upload the text file to [the GitHub page here](https://github.com/Rot8erConeX/LizBot).  You might need to make a GitHub account to do so."
+  str="#{str}\n\n6.) Wait probably five minutes for the file to settle on GitHub's servers, then use the command `FGO!reload` in either my debug server, or NEH's LizBotDev channel."
+  str="#{str}\n\n7.) Type the number 2 to select reloading data based on GitHub files."
+  str="#{str}\n\n8.) Double-check that the edited data works.  It is important to remember that I will not be there to guide you to wherever any problems might be based on error codes."
+  str="#{str}\n\n9.) Add any relevant aliases to the new data."
+  create_embed(event,"**How to update Liz's data while Mathoo is unavailable.**",str,0xED619A,nil)
 end
 
 bot.server_create do |event|
