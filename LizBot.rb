@@ -9468,7 +9468,7 @@ bot.command(:reload, from: 167657750971547648) do |event|
       for i in 0...to_reload.length
         download = open("https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGO#{to_reload[i]}.txt")
         IO.copy_stream(download, "FGOTemp.txt")
-        if to_reload[i]=='Skills' && File.size("FGOTemp.txt")<File.size("FGOSkills.txt")*3/2
+        if to_reload[i]=='Skills' && File.size("FGOTemp.txt")<File.size("FGOSkills.txt")*2/3
           stx='Skills were not reloaded because the file was loaded from the wrong sheet.'
         elsif File.size("FGOTemp.txt")>100
           b=[]
