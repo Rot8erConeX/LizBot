@@ -9464,10 +9464,13 @@ bot.command(:reload, from: 167657750971547648) do |event|
     if e.message.text.include?('2') && [167657750971547648,78649866577780736].include?(event.user.id)
       event.channel.send_temporary_message('Loading.  Please wait 5 seconds...',3)
       to_reload=['Servants','CraftEssances','Skills','CommandCodes','SkillSubsets','Clothes','Enemies','Mats']
+      stx=''
       for i in 0...to_reload.length
         download = open("https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/FGO#{to_reload[i]}.txt")
         IO.copy_stream(download, "FGOTemp.txt")
-        if File.size("FGOTemp.txt")>100
+        if to_reload[i]=='Skills' && File.size("FGOTemp.txt")<File.size("FGOSkills.txt")*3/2
+          stx='Skills were not reloaded because the file was loaded from the wrong sheet.'
+        elsif File.size("FGOTemp.txt")>100
           b=[]
           File.open("FGOTemp.txt").each_line.with_index do |line, idx|
             b.push(line)
@@ -9477,7 +9480,7 @@ bot.command(:reload, from: 167657750971547648) do |event|
           }
         end
       end
-      e.respond 'New data loaded.'
+      e.respond "New data loaded.\n#{stx}"
       reload=true
     end
     if e.message.text.include?('3') && [167657750971547648].include?(event.user.id)
