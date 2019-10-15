@@ -1096,6 +1096,167 @@ def find_servant(name,event,fullname=false,ignoreid=false)
   return []
 end
 
+def get_markers(event) # used to determine whether a server-specific unit/skill is safe to display
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHSave.txt")
+    b=[]
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FEHSave.txt").each_line do |line|
+      b.push(eval line)
+    end
+  else
+    b=[[],[],[0,0],[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],[0,0,0],[],[],[]]
+  end
+  @server_markers=b[5] unless b[5].nil?
+  @x_markers=b[6] unless b[6].nil?
+  k=0
+  k=event.server.id unless event.server.nil?
+  g=[nil]
+  for i in 0...@server_markers.length
+    g.push(@server_markers[i][0]) if k==@server_markers[i][1]
+    g.push(@server_markers[i][0].downcase) if k==@server_markers[i][1]
+  end
+  g.push('X') if @x_markers.include?(k)
+  g.push('x') if @x_markers.include?(k)
+  return g
+end
+
+def find_FEH_unit(name,event,ignore=false,ignore2=false,bot) # used to find a unit's data entry based on their name
+  return [] if !event.server.nil? && bot.user(312451658908958721).on(event.server.id).nil? && bot.user(627511537237491715).on(event.server.id).nil? && @shardizard != 4
+  ks=0
+  ks=event.server.id unless event.server.nil?
+  g=get_markers(event)
+  return [] if name.nil?
+  data_load()
+  name=normalize(name.gsub('!',''))
+  if name.downcase.gsub(' ','').gsub('_','')[0,2]=='<:'
+    buff=name.split(':')[1]
+    buff=buff[3,buff.length-3] if !event.server.nil? && event.server.id==350067448583553024 && buff[0,3].downcase=='gp_'
+    buff=buff[2,buff.length-2] if !event.server.nil? && event.server.id==350067448583553024 && buff[0,2].downcase=='gp'
+    name=buff if find_unit(buff,event,ignore).length>0
+  end
+  name=name.gsub('(','').gsub(')','').gsub(' ','').gsub('_','') unless ignore2
+  # UNIT DATA
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHUnits.txt")
+    b=[]
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FEHUnits.txt").each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  for i in 0...b.length
+    b[i]=b[i].split('\\'[0,1])
+    b[i][1]=b[i][1].split(', ')
+    if b[i][2].length>1 # Legendary Hero type is a two-part entry
+      b[i][2]=b[i][2].split(', ')
+    else
+      b[i][2]=[' ',' ']
+    end
+    b[i][4]=b[i][4].split(', ')
+    b[i][5]=b[i][5].split(', ')
+    for j in 0...5 # growth rates and level 40 stats should be stored as numbers, not strings
+      b[i][4][j]=b[i][4][j].to_i
+      b[i][5][j]=b[i][5][j].to_i
+    end
+    if b[i][7].length<=0
+      b[i][7]=['','']
+    elsif !b[i][7].include?(';; ')
+      b[i][7]=[b[i][7],'']
+    else
+      b[i][7]=b[i][7].split(';; ')
+    end
+    b[i][8]=b[i][8].to_i
+    # the list of games should be spliced into an array of game abbreviations
+    if b[i][9].length>1
+      b[i][9]=b[i][9].split(', ')
+    else
+      b[i][9]=['-']
+    end
+    # the list of games should be spliced into an array of game abbreviations
+    if b[i][11].length>1
+      b[i][11]=b[i][11].split(', ')
+    else
+      b[i][11]=[' ']
+    end
+    if b[i][13].nil? # server-specific units' markers should be split into two pieces - the server(s) they are allowed in, and the ID of the user whose avatar to use
+      b[i][13]=[]
+    else
+      b[i][13]=[b[i][13].scan(/[[:alpha:]]+?/).join, b[i][13].gsub(b[i][13].scan(/[[:alpha:]]+?/).join,'').to_i]
+    end
+  end
+  untz=b.map{|q| q}
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHNames.txt")
+    b=[]
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FEHNames.txt").each_line do |line|
+      b.push(eval line)
+    end
+  else
+    b=[]
+  end
+  b.reject!{|q| !q[3].nil? && !q[3].include?(ks)}
+  b.reject!{|q| q[0]!='Unit' || q[2].is_a?(Array)}
+  b.sort!{|a,c| a[1].downcase<=>c[1].downcase}
+  k=b.bsearch_index{|q| name.downcase<=>q[1].downcase}
+  unless k.nil?
+    if b[k][2].is_a?(Array)
+      return b[k][2].map{|q| untz[untz.find_index{|q2| q2[8]==q}]}
+    elsif b[k][2]<1000
+      return untz[b[k][2]]
+    else
+      m=untz[untz.find_index{|q| q[8]==b[k][2]}]
+      return m if has_any?(g, m[13][0])
+    end
+  end
+  k=b.bsearch_index{|q| name.downcase<=>q[1].gsub('||','').downcase}
+  unless k.nil?
+    if b[k][2].is_a?(Array)
+      return b[k][2].map{|q| untz[untz.find_index{|q2| q2[8]==q}]}
+    elsif b[k][2]<1000
+      return untz[b[k][2]]
+    else
+      m=untz[untz.find_index{|q| q[8]==b[k][2]}]
+      return m if has_any?(g, m[13][0])
+    end
+  end
+  unless name.length<2 || ignore || ['blade','blad','bla'].include?(name.downcase)
+    b.reject!{|q| q[1].length<name.length}
+    k=b.find_index{|q| name.downcase==q[1][0,name.length].downcase}
+    unless k.nil?
+      if b[k][2].is_a?(Array)
+        return b[k][2].map{|q| untz[untz.find_index{|q2| q2[8]==q}]}
+      elsif b[k][2]<1000
+        return untz[b[k][2]]
+      else
+        m=untz[untz.find_index{|q| q[8]==b[k][2]}]
+        return m if has_any?(g, m[13][0])
+      end
+    end
+    k=b.find_index{|q| name.downcase==q[1].gsub('||','')[0,name.length].downcase}
+    unless k.nil?
+      if b[k][2].is_a?(Array)
+        return b[k][2].map{|q| untz[untz.find_index{|q2| q2[8]==q}]}
+      elsif b[k][2]<1000
+        return untz[b[k][2]]
+      else
+        m=untz[untz.find_index{|q| q[8]==b[k][2]}]
+        return m if has_any?(g, m[13][0])
+      end
+    end
+  end
+  unless ignore2 || !name.downcase.include?('launch')
+    name2=name.downcase.gsub('launch','')
+    b.reject!{|q| q[1].length<name2.length}
+    k=b.bsearch_index{|q| name2.downcase<=>q[1].downcase}
+    unless k.nil?
+      return untz[b[k][2]] if !b[k][2].is_a?(Array) && b[k][2]<100 && untz[b[k][2]][9][0].include?('LU')
+    end
+    k=b.bsearch_index{|q| q[1].gsub('||','').downcase<=>name2.downcase}
+    unless k.nil?
+      return untz[b[k][2]] if !b[k][2].is_a?(Array) && b[k][2]<100 && untz[b[k][2]][9][0].include?('LU')
+    end
+  end
+  return []
+end
+
 def find_ce(name,event,fullname=false,buffer=nil)
   data_load()
   name=normalize(name)
@@ -1419,25 +1580,41 @@ def find_multi_servant(name,event,fullname=false,buffer=nil)
   return []
 end
 
-def find_data_ex(callback,name,event,fullname=false,buffer=nil)
-  k=method(callback).call(name,event,true,buffer)
+def find_data_ex(callback,name,event,fullname=false,buffer=nil,buffer2=nil)
+  if buffer2.nil?
+    k=method(callback).call(name,event,true,buffer)
+  else
+    k=method(callback).call(name,event,true,buffer,buffer2)
+  end
   return k if k.length>0
   blank=[]
   blank='' if [:find_mat].include?(callback)
   args=name.split(' ')
   for i in 0...args.length
     for i2 in 0...args.length-i
-      k=method(callback).call(args[i,args.length-i-i2].join(' '),event,true,buffer)
+      if buffer2.nil?
+        k=method(callback).call(args[i,args.length-i-i2].join(' '),event,true,buffer)
+      else
+        k=method(callback).call(args[i,args.length-i-i2].join(' '),event,true,buffer,buffer2)
+      end
       return k if k.length>0 && args[i,args.length-i-i2].length>0
     end
   end
   return blank if fullname || name.length<=2
-  k=method(callback).call(name,event,false,buffer)
+  if buffer2.nil?
+    k=method(callback).call(name,event,false,buffer)
+  else
+    k=method(callback).call(name,event,false,buffer,buffer2)
+  end
   return k if k.length>0
   args=name.split(' ')
   for i in 0...args.length
     for i2 in 0...args.length-i
-      k=method(callback).call(args[i,args.length-i-i2].join(' '),event,false,buffer)
+      if buffer2.nil?
+        k=method(callback).call(args[i,args.length-i-i2].join(' '),event,false,buffer)
+      else
+        k=method(callback).call(args[i,args.length-i-i2].join(' '),event,false,buffer,buffer2)
+      end
       return k if k.length>0 && args[i,args.length-i-i2].length>0
     end
   end
@@ -1732,7 +1909,10 @@ def generate_rarity_row(k,type='servant')
 end
 
 def smol_err(event,smol=true)
-  if !smol || @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
+  if find_data_ex(:find_FEH_unit,args.join(' '),event,false,false,bot).length>0
+    unt=find_data_ex(:find_FEH_unit,args.join(' '),event,false,false,bot)
+    event.respond "FEH unit found: #{unt[0]}\nTry `FGO!stats FGO #{unt[0]}` if you wish to see what this unit's stats would be in FGO."
+  elsif !smol || @embedless.include?(event.user.id) || was_embedless_mentioned?(event)
     event.respond 'No servant was included' unless ignore
     return nil
   else
@@ -1756,7 +1936,12 @@ def disp_servant_stats(bot,event,args=nil)
   dispfou=true if dispstr.include?('fou')
   k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
-    event.respond 'No matches found.'
+    if find_data_ex(:find_FEH_unit,args.join(' '),event,false,false,bot).length>0
+      unt=find_data_ex(:find_FEH_unit,args.join(' '),event,false,false,bot)
+      event.respond "FEH unit found: #{unt[0]}\nTry `FGO!stats FGO #{unt[0]}` if you wish to see what this unit's stats would be in FGO."
+    else
+      event.respond 'No matches found.'
+    end
     return nil
   end
   mfou=[0,0]
@@ -6962,6 +7147,15 @@ def show_tools(bot,event)
   event << ''
 end
 
+def disp_FEH_based_stats(bot,event,unt=nil)
+  if @shardizard==4
+    event.respond unt.map{|q| q.to_s}.join("\n")
+  else
+    event.respond "__**#{unt[0]}**__"
+  end
+  return nil
+end
+
 bot.command([:affinity, :affinities, :affinitys, :effective, :eff, :resist, :resistance, :resistances, :res]) do |event, *args|
   return nil if overlap_prevent(event)
   affinity_data(event,bot,args)
@@ -7225,6 +7419,11 @@ end
 
 bot.command([:servant,:data,:unit]) do |event, *args|
   return nil if overlap_prevent(event)
+  if args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
+    unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
+    disp_FEH_based_stats(bot,event,unt)
+    return nil
+  end
   disp_servant_stats(bot,event,args)
   disp_servant_skills(bot,event,args,true)
   if safe_to_spam?(event)
@@ -7238,6 +7437,11 @@ end
 
 bot.command([:stats,:stat]) do |event, *args|
   return nil if overlap_prevent(event)
+  if args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
+    unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
+    disp_FEH_based_stats(bot,event,unt)
+    return nil
+  end
   disp_servant_stats(bot,event,args)
   return nil
 end
@@ -7426,6 +7630,11 @@ end
 
 bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args|
   return nil if overlap_prevent(event)
+  if args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
+    unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
+    disp_FEH_based_stats(bot,event,unt)
+    return nil
+  end
   disp_tiny_stats(bot,event,args)
   return nil
 end
@@ -8852,7 +9061,7 @@ bot.command(:edit) do |event, cmd, *args|
   return nil if overlap_prevent(event)
   uid=event.user.id
   if uid==167657750971547648
-    event.respond "This command is for the donors.  Your version of the command is `FEH!devedit`."
+    event.respond "This command is for the donors.  Your version of the command is `FGO!devedit`."
     return nil
   elsif !get_donor_list().reject{|q| q[2][1]<4}.map{|q| q[0]}.include?(uid)
     event.respond "You do not have permission to use this command."
@@ -9585,6 +9794,10 @@ bot.mention do |event|
   m=true
   m=false if event.user.bot_account?
   if !m
+  elsif args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
+    unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
+    disp_FEH_based_stats(bot,event,unt)
+    m=false
   elsif ['tools','tool','links','link','resources','resource'].include?(args[0].downcase)
     args.shift
     show_tools(bot,event)
