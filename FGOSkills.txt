@@ -760,6 +760,7 @@ Yin Yang\A\Skill\6\Self\Heal\Restore HP;; 2,000;; 2,300;; 2,600;; 2,900;; 3,200;
 Yin-Yang Intersection\B\Skill\8\Self\AtkUp, AtkUp, DebuffImmunity\Increase ATK (1 turn);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\Increase ATK (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\Apply Nullify Debuff (1 turn)\-\-\-\-
 Zarich\C\Skill\8\Enemy\CritChanceDown\Decrease Critical Rate (3 turns);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\-\-\-\-\-\-
 Tesla Coil\A+\Skill\7\Self / All Allies\NPGainUpAtk\Increase own NP Gain (3 turns);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\Increase NP Gain of all allies except self (3 turns);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\-\-\-\-\-
+Suspicious Shadow\C++\Skill\7\All Enemies\DebuffResistDown, DefDown, NullifyBuff\Decrease Debuff Resist of all enemies (1 turn);; 50%;; 55%;; 60%;; 65%;; 70%;; 75%;; 80%;; 85%;; 90%;; 100%\Decrease DEF (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\Apply Nullify Buff (1 time)\-\-\-\-
 Altereactor\A\Passive\Increase Debuff Resist by 20%\DebuffResistUp
 At the Boundary\A\Passive\Apply Death Immune, Increase Charm Resist by 100%, 5% chance to inflict Death each time you attack\DeathImmunity, DebuffResistUp, DeathRateUp
 Authority of Beasts\D\Passive\Increase Critical Strength by 8%\CritDmgUp
