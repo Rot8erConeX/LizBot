@@ -87,7 +87,7 @@ Calm Composure\B\Skill\8\Self\NPGaugeUp, DebuffResistUp\Increase NP Gauge;; 30%;
 Calydonian Hunt\A\Skill\8\Self\Evasion, NPGainUpAtk\Apply Evade (1 turn)\Increase NP Gain (3 turns);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\-\-\-\-\-
 Candy Craft of the Rainbows\B\Skill\7\Ally\NPDmgUp, CritDmgUp\Increase NP Strength (1 turn);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\Increase Critical Strength (1 turn);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\-\-\-\-\-
 Cast Iron Yo-yo\C\Skill\8\Ally\BusterUp, RemoveDebuff\Increase Buster Card effectiveness (3 turns);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\Remove all Debuffs\-\-\-\-\-
-Castle Monster\A++\Skill\7\Enemy\DefDown, RemoveBuff\Decrease DEF (1 turn);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\Remove all Buffs\-\-\-\-\-
+Castle Apparition\A++\Skill\7\Enemy\DefDown, RemoveBuff\Decrease DEF (1 turn);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\Remove all Buffs\-\-\-\-\-
 Cerulean Ride\A\Skill\7\Self\ArtsUp\Increase Arts Card effectiveness (3 turns);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\-\-\-\-\-\-
 Chaotic Villain\A\Skill\8\Self / All Allies\NPDmgUp, StarGatherUp, DefDown\Increase own NP Strength (1 turn);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\Increase Critical Star Gather Rate to self (1 turn);; 3000%;; 3000%;; 3000%;; 3000%;; 3000%;; 3000%;; 3000%;; 3000%;; 3000%;; 3000%\Decrease DEF of all allies except self (1 turn) [Demerit];; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%\-\-\-\-
 Charisma\E\Skill\7\All Allies\AtkUp, Charisma\Increase ATK of all allies (3 turns);; 6%;; 6.60%;; 7.20%;; 7.80%;; 8.40%;; 9%;; 9.60%;; 10.20%;; 10.80%;; 12%\-\-\-\-\-\-
