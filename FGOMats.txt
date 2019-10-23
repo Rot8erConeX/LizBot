@@ -39,7 +39,6 @@ Gem of Assassin
 Gem of Berserker
 Gem of Caster
 Gem of Lancer
-Gem of RIder
 Gem of Rider
 Gem of Saber
 Ghost Lantern
@@ -89,7 +88,6 @@ Secret Gem of Assassin
 Secret Gem of Berserker
 Secret Gem of Caster
 Secret Gem of Lancer
-Secret Gem of RIder
 Secret Gem of Rider
 Secret Gem of Saber
 Seed of Yggdrasil
