@@ -1184,6 +1184,9 @@ def find_FEH_unit(name,event,ignore=false,ignore2=false,bot) # used to find a un
     end
   end
   untz=b.map{|q| q}
+  if name.to_i.to_s==name && !untz.find_index{|q| q[8]==name.to_i}.nil? && @shardizard==4
+    return untz[untz.find_index{|q| q[8]==name.to_i}]
+  end
   if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHNames.txt")
     b=[]
     File.open("C:/Users/#{@mash}/Desktop/devkit/FEHNames.txt").each_line do |line|
@@ -5587,7 +5590,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
     clzz.push('Assassin') if ['assassin','assasshin','assassins','assasshins'].include?(args[i])
     clzz.push('Berserker') if ['berserker','berserkers','berserk','berserks','zerker','zerkers'].include?(args[i])
     clzz.push('Shielder') if ['shielder','shielders','shield','shields','sheilder','sheilders','sheild','sheilds','extra','extras'].include?(args[i])
-    clzz.push('Ruler') if ['ruler','rulers','king','kings','queen','queens','leader','leaders','extra','extras'].include?(args[i])
+    clzz.push('Ruler') if ['ruler','rulers','leader','leaders','extra','extras'].include?(args[i])
     for i2 in 0...lookout2.length
       clzz.push(lookout2[i2][0]) if lookout2[i2][1].include?(args[i])
     end
@@ -7185,13 +7188,14 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif unt[1][1]=='Beast'
     clzz='Berserker'
   end
+  clzz='Saber' if unt[0]=='Raven'
   clzz='Avenger' if unt[0]=='Takumi(Fallen)'
   moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{clzz.downcase.gsub(' ','')}_#{color}"}
   clzemote=moji[0].mention unless moji.length<0
   att='Man'
   if unt[2][0]=='Earth' && unt[8]>999
     att='Earth'
-  elsif [2].include?(unt[8])
+  elsif [2,50,63,138,66].include?(unt[8])
     att='Earth'
   elsif ['Fire','Earth','Water','Wind'].include?(unt[2][0])
     att='Star'
@@ -7248,11 +7252,14 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   for i in 0...l40.length
     l1[i]=l40[i]-mods[unt[4][i]+4][5]
     l2[i]=l1[i]+mods[unt[4][i]+4][rar]
-    l2[i]-=1
   end
   qab=[l1[2]+2*unt[4][2], l1[4]+2*unt[4][4], l1[1]+2*unt[4][1]]
   deck=''
-  if qab.max==qab.min
+  if ['Genny(Picnic)','Sakura(Bath)','Veronica(Brave)','Camilla(Brave)','Genny','Laevatein(Winter)','Nixx(C137)','Loki'].include?(unt[0])
+    deck='QAABB'
+  elsif unt[1][1]=='Healer'
+    deck='QAAAB'
+  elsif qab.max==qab.min
     deck='QAABB'
     deck='QAABB' if clzz=='Saber'
     deck='QQAAB' if clzz=='Archer'
@@ -7284,12 +7291,16 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif qab.max==qab[2]
     deck='QQABB'
   end
-  if [2].include?(unt[8])
+  if [2,15,36,41,49,60,63,138,66,88,89,90,71].include?(unt[8])
     deck='QAABB'
-  elsif [11].include?(unt[8])
+  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,251].include?(unt[8])
     deck='QQAAB'
-  elsif [296].include?(unt[8])
+  elsif [61,296].include?(unt[8])
     deck='QAAAB'
+  elsif [32,38,45,83,97,125].include?(unt[8])
+    deck='QABBB'
+  elsif [62,68].include?(unt[8])
+    deck='QQABB'
   end
   xcolor.push([33,188,44]) if deck[1,1]=='Q'
   xcolor.push([33,188,44]) if deck[1,2]=='QQ'
@@ -7303,15 +7314,21 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   qab[1]+=2 if unt[1][0]=='Blue'
   qab[2]+=2 if unt[1][0]=='Red'
   np=''
-  if qab.max==qab[2]
+  if [13,27,34,75].include?(unt[8])
+    np='<:quick:523854796692783105> (Quick)'
+  elsif [11,15,23,30,35,36,43,49,59,61,70,78,86,92,100].include?(unt[8])
+    np='<:arts:523854803013730316> (Arts)'
+  elsif [41,63,138,66,68,63,81,88,99,296].include?(unt[8])
+    np='<:buster:523854810286391296> (Buster)'
+  elsif unt[1][1]=='Healer'
+    np='<:arts:523854803013730316> (Arts)'
+  elsif qab.max==qab[2]
     np='<:buster:523854810286391296> (Buster)'
   elsif qab.max==qab[1]
     np='<:arts:523854803013730316> (Arts)'
   elsif qab.max==qab[0]
     np='<:quick:523854796692783105> (Quick)'
   end
-  np='<:arts:523854803013730316> (Arts)' if [11].include?(unt[8])
-  np='<:buster:523854810286391296> (Buster)' if [296].include?(unt[8])
   if np[2,1]=='q'
     xcolor.push([33,188,44])
     xcolor.push([33,188,44])
@@ -7324,9 +7341,15 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   xcolor=avg_color(xcolor)
   l40[0]-=10
-  if [1,11].include?(unt[8])
+  if [1,11,17,24,28,30,32,35,36,38,41,43,47,50,51,63,138,67,75,79,97].include?(unt[8])
     np="#{np} - *Target:* Enemy"
-  elsif unt[1][1]=='Healer' || [93,78].include?(unt[8])
+  elsif [25,34,73,90].include?(unt[8])
+    np="#{np} - *Target:* All Enemies"
+  elsif [78,93].include?(unt[8])
+    np="#{np} - *Target:* All Enemies / All Aliies"
+  elsif [59].include?(unt[8])
+    np="#{np} - *Target:* Self / Enemy"
+  elsif unt[1][1]=='Healer' || [15,23,93,78].include?(unt[8])
     np="#{np} - *Target:* All Allies"
   elsif l40.max==l40[0]
     np="#{np} - *Target:* Self"
@@ -7341,8 +7364,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   l40[0]+=10
   str="#{str}\n**Noble Phantasm:** #{np}"
-  str="#{str}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(100*l1[0]+(unt[8]%50))}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber((l2[0]-30)*1100/3+9000+unt[8]%255)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber((l40[0]-30)*1100/3+9000+unt[8])}<:holy_grail:523842742992764940>"
-  str="#{str}\n**Atk:**\u00A0\u00A0#{longFormattedNumber((l1[1]-4)*150+900+(unt[8]%25))}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber((l2[1]-21)*400+7000+unt[8]%255)}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber((l40[1]-21)*400+7000+unt[8])}<:holy_grail:523842742992764940>"
+  sttz=[(l2[0]-30)*400+6000+unt[8]%255,(l2[1]-21)*300+5000+unt[8]%127]
+  str="#{str}\n\n**HP:**\u00A0\u00A0#{longFormattedNumber(100*l1[0]+(unt[8]%50))}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(sttz[0])}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(sttz[0]+11*(unt[8]%7)+(100*(100-[65,60,65,70,80,90][rar])))}<:holy_grail:523842742992764940>"
+  str="#{str}\n**Atk:**\u00A0\u00A0#{longFormattedNumber((l1[1]-4)*150+900+(unt[8]%25))}\u00A0L#{micronumber(1)}\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(sttz[1])}\u00A0max\u00A0\u00A0\u00B7\u00A0\u00A0#{longFormattedNumber(sttz[1]+7*(unt[8]%11)+(100*(100-[65,60,65,70,80,90][rar])))}<:holy_grail:523842742992764940>"
   drcap=5-l40[4]/10
   drcap=2 if drcap==1
   str="#{str}\n**Death Rate:** #{'%.1f' % (25*drcap-(l40[3]-13)*drcap*25.0/29)}%"
@@ -7352,6 +7376,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   wrongtotal=hits[0]+hits[1]+hits[2]+hits[3]+hits[4]
   hits=hits.map{|q| [q*hitstotal/wrongtotal,1].max}
   hits[4]=0 if np.include?('Self') || np.include?('Allies')
+  hits=[4,2,3,5,2] if unt[8]==20
+  hits=[3,2,4,5,2] if unt[8]==28
+  hits[4]=2 if [32,63,125,138].include?(unt[8])
   str="#{str}\n\n**Hit Counts:**\u00A0\u00A0<:Quick_y:526556106986618880>#{hits[0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{hits[1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{hits[2]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Extra_y:526556105388720130>#{hits[3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>#{hits[4]}"
   artscnt=1
   artscnt=2 if deck.include?('AA')
@@ -7360,6 +7387,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   npg[1]=4 if ['Lancer','Assassin'].include?(clzz)
   npg[1]=5 if clzz=='Berserker'
   npg[0]=4.5/(artscnt*hits[1])
+  npg[0]=[npg[0],0.55+0.25*rar].min
   str="#{str}\n**NP Gain:**\u00A0\u00A0*Attack:*\u00A0#{'%.1f' % npg[0]}%\u00A0\u00A0\u00B7\u00A0\u00A0*Defense:*\u00A0#{npg[1]}%"
   data=[100,10,100]
   data=[95,8,150] if clzz=='Archer'
@@ -7377,9 +7405,11 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   traits.push('Humanoid')
   traits.push('Servant')
   traits.push('Divine') if ['Light','Dark','Astra','Anima'].include?(unt[2][0])
-  traits.push('Demonic') if unt[0].include?('(Fallen)') || ['Surtr','Hel','Duma'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Dragon') if unt[1][1]=='Dragon' || ['Marth','Chrom','Lucina','Owain','Robin','Morgan','Roy','Ninian','Naga','Tiki','Bantu','Nagi','Corrin','Kana','Sothis','Myrrh','Fae','Nowi','Nah','Xander','Siegbert','Camilla','Leo','Forrest','Elise','Ryoma','Shiro','Hinoka','Takumi','Kiragi','Sakura','Julia','Julius','Arvis','Saias','Deirdre','Ishtar','Ares','Ayra','Eldigan','Lachesis','Nanna','Sigurd','Ethlyn','Seliph','Quan','Leif','Lene','Lewyn','Silvia','Tailtiu','Alm','Azelle','Lex','Edain','Chulainn','Claud','Brigid','Oifey','Shannan','Travant','Lana','Larcei','Ulster','Diarmuid','Lester','Fee','Ced',' Arthur','Amid','Iuchar','Iucharba','Patty','Tine','Linda','Febail','Coirpre','Altena','Ishtore','Arion','Hilda(Jugdral)','Andorey','Byleth','Dimitri','Claude','Edelgard','Hilda(3H)','Ferdinand','Lindhart','Bernie','Bernadetta','Felix','Sylvain','Mercedes','Annette','Seteth','Flayn','Rhea','Ingrid','Lorenz','Lysithia','Marianne','Hanneman','Catherine(3H)','Eyvel','Galzus','Mareeta','Linoan','Idunn','Soren','Kurthnaga','Ena','Nasir','Almedha','Dheginsea','Rajaion','Gareth'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Earth or Sky') if ['Earth','Sky'].include?(att)
+  traits.push('Fallen') if unt[0].include?('(Fallen)') || ['Surtr','Hel','Duma'].include?(unt[12].gsub('*','').split(', ')[0])
+  traits.push('King') if [2,8,32,35,36,98].include?(unt[8])
+  traits.push('Mecha') if ['Elise'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Riding') if ['Cavalry','Flier'].include?(unt[3]) && !['Dragon','Beast'].include?(unt[1][1])
   traits.push('Robin Face') if unt[6]=='Fujiwara Ryo'
   if ['Naga'].include?(unt[12].gsub('*','').split(', ')[0])
@@ -7390,7 +7420,11 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   traits.push('Wild Beast') if unt[1][1]=='Beast' || ['Volug','Muarim','Vika','Nailah','Rafiel','Leanne','Reyson','Nealuchi','Mordecai','Lethe','Ranulf','Kyza','Lyre','Janaff','Ulki','Naesala','Skrimir','Tibarn','Caineghis','Giffca','Lehran','Kehzda','Lotz','Seeker','Kurthnaga','Ena','Nasir','Dheginsea','Rajaion','Gareth'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Massive') if unt[0]=='Surtr'
   str="#{str}\n\n**Traits:** #{traits.join(', ')}" if traits.length>0
-  create_embed(event,["__**#{unt[0]}** [FEH Srv-#{unt[8]}]__#{clzemote}","**Class:** *#{clzz}*\n**Attribute:** *#{att}*#{"\n**Alignment:** *#{ali}*" if ali.length>0}"],str,xcolor,nil,xpic)
+  nmm="#{unt[0]}"
+  nmm='Tiki Alter Lily' if nmm='Tiki(Young)(Fallen)'
+  nmm=nmm.gsub('Tiki(Adult)','Tiki').gsub('Tiki(Young)(','Tiki Lily (').gsub('Tiki(Young)','Tiki Lily')
+  nmm='Azura Lily' if nmm=='Azura(Adrift)'
+  create_embed(event,["__**#{nmm}** [FEH Srv-#{unt[8]}]__#{clzemote}","**Class:** *#{clzz}*\n**Attribute:** *#{att}*#{"\n**Alignment:** *#{ali}*" if ali.length>0}"],str,xcolor,nil,xpic)
   return nil
 end
 
