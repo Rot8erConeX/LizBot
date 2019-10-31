@@ -44,3 +44,9 @@
 44\Fleeting Octopus\3\Remove 1 Buff from the enemy that increases NP Strength. If successful, decrease their DEF against Arts Card attacks by 10% (3 turns)\Behold! The Las Vegas Gozen Match ~Seven-Colored Duels of Swimsuit Swordmasters~
 45\Great Brush of Mad Strokes\4\Increase Critical Strength by 20% when installed into an Arts Card\Behold! The Las Vegas Gozen Match ~Seven-Colored Duels of Swimsuit Swordmasters~
 46\Magus of Flowers\5\Increase NP Gauge by 10% (requires 3 turns of cooldown to be reused)\Behold! The Las Vegas Gozen Match ~Seven-Colored Duels of Swimsuit Swordmasters~
+47\Your Faithful Sheep\3\Remove 1 Poison, Curse, or Burn Debuff from self and restore 100 HP\Battle in New York 2019 JP/ 2021 NA
+48\Law of Creation\4\Remove 1 DEF Up Buff from the enemy, Increase Critical Strength by 10%\Battle in New York 2019 JP/ 2021 NA
+49\Chain of Heaven\5\Apply Special Attack [Divine] 20%\Battle in New York 2019 JP/ 2021 NA
+50\Command Spells of the Shining Bearded Gentleman\3\Inflict Burn (500 damage, 3 turns)\SABER WARS II
+51\Scales of the Universe\4\Apply Special Attack [Threat to Humanity] 10%, Apply Special Attack [Saber] 10%\SABER WARS II
+52\Mistress of Heaven\5\Increase Critical Strength by 25% when installed into a Buster Card\SABER WARS II
