@@ -139,7 +139,7 @@
 174 # Paul Bunyan
 100\90
 0\0\0\0\0
-3\8\1
+3\10\1
 5
 292 # Summertime Mistress
 7
