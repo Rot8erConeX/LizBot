@@ -5774,9 +5774,23 @@ def find_in_servants(bot,event,args=nil,mode=0)
       end
     end
     nps=[] if nps.reject{|q| q.length<2}.length<=0
-    char=char.reject{|q| !total_decks.include?(q[17])}.uniq
+    char2=char.reject{|q| !total_decks.include?(q[17])}.uniq
+    if !char.find_index{|q| q[0]==268}.nil? && !total_decks.include?('QAABB(A)') && !total_decks.find_index{|q| q[0,5]=='QAABB'}.nil?
+      f=char[char.find_index{|q| q[0]==268}].map{|q| q}
+      f[1]="#{f[1]} *[NP type changes with S2]*"
+      char2.push(f)
+      char2.sort!{|a,b| a[0]<=>b[0]}
+    end
+    char=char2.map{|q| q}
   elsif nps.length>0
-    char=char.reject{|q| !nps.map{|q| q[0]}.include?(q[17][6,1])}.uniq
+    char2=char.reject{|q| !nps.map{|q2| q2[0]}.include?(q[17][6,1])}.uniq
+    if !char.find_index{|q| q[0]==268}.nil? && !nps.include?('Arts')
+      f=char[char.find_index{|q| q[0]==268}].map{|q| q}
+      f[1]="#{f[1]} *[NP type changes with S2]*"
+      char2.push(f)
+      char2.sort!{|a,b| a[0]<=>b[0]}
+    end
+    char=char2.map{|q| q}
   end
   if nps.length>0
     for i in 0...nps.length
@@ -7421,7 +7435,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   traits.push('Massive') if unt[0]=='Surtr'
   str="#{str}\n\n**Traits:** #{traits.join(', ')}" if traits.length>0
   nmm="#{unt[0]}"
-  nmm='Tiki Alter Lily' if nmm='Tiki(Young)(Fallen)'
+  nmm='Tiki Alter Lily' if nmm=='Tiki(Young)(Fallen)'
   nmm=nmm.gsub('Tiki(Adult)','Tiki').gsub('Tiki(Young)(','Tiki Lily (').gsub('Tiki(Young)','Tiki Lily')
   nmm='Azura Lily' if nmm=='Azura(Adrift)'
   create_embed(event,["__**#{nmm}** [FEH Srv-#{unt[8]}]__#{clzemote}","**Class:** *#{clzz}*\n**Attribute:** *#{att}*#{"\n**Alignment:** *#{ali}*" if ali.length>0}"],str,xcolor,nil,xpic)
@@ -8744,12 +8758,6 @@ bot.command(:snagstats) do |event, f, f2|
   event << "**I am #{longFormattedNumber(File.foreach("C:/Users/#{@mash}/Desktop/devkit/LizBot.rb").inject(0) {|c, line| c+1})} lines of *code* long.**"
   event << "Of those, #{longFormattedNumber(b.length)} are SLOC (non-empty)."
   return nil
-end
-
-def disp_date(t,mode=0)
-  return "#{t.day}#{['','Jan','Feb','Mar','Apr','May','June','July','Aug','Sept','Oct','Nov','Dec'][t.month]}#{t.year}" if mode==2
-  return "#{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year}" if mode==1
-  return "#{t.day} #{['','January','February','March','April','May','June','July','August','September','October','November','December'][t.month]} #{t.year} (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]})"
 end
 
 bot.command([:today,:now,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event, *args|
