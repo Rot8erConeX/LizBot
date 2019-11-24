@@ -1679,6 +1679,16 @@ def servant_color(event,k)
   m.push([254,33,22]) if k[17][2,2]=='BB'
   m.push([11,77,223]) if k[17].include?('AA')
   m.push([11,77,223]) if k[17].include?('AAA')
+  if k[0]==268
+    m.push([33,188,44])
+    m.push([33,188,44]) if k[17][1,1]=='Q'
+    m.push([33,188,44]) if k[17][1,2]=='QQ'
+    m.push([254,33,22])
+    m.push([254,33,22]) if k[17][3,1]=='B'
+    m.push([254,33,22]) if k[17][2,2]=='BB'
+    m.push([11,77,223]) if k[17].include?('AA')
+    m.push([11,77,223]) if k[17].include?('AAA')
+  end
   extracolor=nil
   if donate_trigger_word(event)>0
     uid=donate_trigger_word(event)
@@ -1949,6 +1959,7 @@ def disp_servant_stats(bot,event,args=nil)
       dv=-1
     else
       k=@servants[@servants.find_index{|q| q[0]==@dev_units[dv][0]}] if k[0].to_i==1
+      k[22]='Chaotic Good' if k[0]==74
       mfou=@dev_units[dv][1]
       art=@dev_units[dv][7][1]
       cedata=@dev_units[dv][5]
@@ -2076,6 +2087,7 @@ def disp_tiny_stats(bot,event,args=nil)
       dv=-1
     else
       k=@servants[@servants.find_index{|q| q[0]==@dev_units[dv][0]}] if k[0].to_i==1
+      k[22]='Chaotic Good' if k[0]==74
       mfou=@dev_units[dv][1]
       cedata=@dev_units[dv][5]
       art=@dev_units[dv][7][1]
@@ -2198,6 +2210,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
       k=@servants[@servants.find_index{|q| q[0]==@dev_units[dv][0]}] if k[0].to_i==1
       k[13].push('Smol *[added]*') if k[13][0]=='Female'
       k[13].push('Cuddly *[added]*') if k[0]==74
+      k[22]='Chaotic Good' if k[0]==74
       art=@dev_units[dv][7][1]
       colorshift=@dev_units[dv][7][2] unless @dev_units[dv][7][2].nil?
     end
@@ -5565,6 +5578,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
   align2=[]
   align=[]
   lookout=[]
+  skilltags=[]
   if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt")
     lookout=[]
     File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt").each_line do |line|
@@ -5573,6 +5587,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
   end
   dmg=false
   lookout2=lookout.reject{|q| q[2]!='Class'}
+  lookout3=lookout.reject{|q| q[2]!='Skill'}
   for i in 0...lookout2.length
     if lookout[i][3].nil?
       lookout2[i][1].push('extra')
@@ -5593,6 +5608,9 @@ def find_in_servants(bot,event,args=nil,mode=0)
     clzz.push('Ruler') if ['ruler','rulers','leader','leaders','extra','extras'].include?(args[i])
     for i2 in 0...lookout2.length
       clzz.push(lookout2[i2][0]) if lookout2[i2][1].include?(args[i])
+    end
+    for i2 in 0...lookout3.length
+      skilltags.push(lookout3[i2][0]) if lookout3[i2][1].include?(args[i])
     end
     rarity.push(args[i].to_i) if args[i].to_i.to_s==args[i] && args[i].to_i>=0 && args[i].to_i<6
     rarity.push(args[i][0,1].to_i) if args[i]=="#{args[i][0,1]}*" && args[i][0,1].to_i.to_s==args[i][0,1] && args[i][0,1].to_i>=0 && args[i][0,1].to_i<6
@@ -5643,7 +5661,8 @@ def find_in_servants(bot,event,args=nil,mode=0)
     avail.push('Starter') if ['starter','starters','start','starting'].include?(args[i])
     avail.push('StoryLocked') if ['story','stories','storylocked','storylock','storylocks','locked','lock','locks'].include?(args[i])
     avail.push('StoryPromo') if ['storypromo','storypromos','storypromotion','promotion','promotions','storypromotions'].include?(args[i])
-    avail.push('Unavailable') if ['unavailable','enemy-only','enemyonly'].include?(args[i])
+    avail.push('Unavailable') if ['unavailable','enemy-only','enemyonly','unplayable'].include?(args[i])
+    avail.push('Playable') if ['playable','player','available'].include?(args[i])
     align1.push('Lawful') if ['lawful','law','lawfuls','laws'].include?(args[i])
     align1.push('Neutral') if ['neutral','neutral1'].include?(args[i])
     align1.push('Chaotic') if ['chaotic','chaos','chaotics','chaoses'].include?(args[i])
@@ -5723,6 +5742,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
   align1.uniq!
   align2.uniq!
   align.uniq!
+  skilltags.uniq!
   char=@servants.map{|q| q}.uniq
   search=[]
   if clzz.length>0
@@ -5749,7 +5769,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
   end
   if traits.length>0
     search.push("*Traits*: #{traits.join(', ')}")
-    if args.include?('any')
+    if has_any?(args,['any','anytrait','anytraits'])
       search[-1]="#{search[-1]}\n(searching for servants with any listed trait)" if traits.length>1
       char=char.reject{|q| !has_any?(traits,q[13])}.uniq
     else
@@ -5816,13 +5836,14 @@ def find_in_servants(bot,event,args=nil,mode=0)
     char=char2.map{|q| q}
     search.push("*Damaging Noble Phantasms only*")
   end
+  skz=@skills.map{|q| q}
   if targets.length>0
     char2=[]
     for i in 0...char.length
-      nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==char[i][0].to_s}
-      nophan2=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{char[i][0].to_s}u"}
+      nophan=skz.find_index{|q| q[2]=='Noble' && q[1]==char[i][0].to_s}
+      nophan2=skz.find_index{|q| q[2]=='Noble' && q[1]=="#{char[i][0].to_s}u"}
       if nophan.nil?
-      elsif has_any?(@skills[nophan][6].split(' / '),targets)
+      elsif has_any?(skz[nophan][6].split(' / '),targets)
         char2.push(char[i])
       elsif !nophan2.nil? && has_any?(@skills[nophan2][6].split(' / '),targets)
         char[i][1]="#{char[i][1]} *[Upgrade]*"
@@ -5834,9 +5855,13 @@ def find_in_servants(bot,event,args=nil,mode=0)
     char=char2.map{|q| q}
     search.push("*Noble Phantasm target(s)*: #{targets.join(', ')}")
   end
+  avail=[] if avail.include?('Playable') && avail.include?('Unavailable')
   if avail.length>0
-    char=char.reject{|q| !avail.include?(q[20])}.uniq
     search.push("*Availability*: #{avail.join(', ')}")
+    spro=true if avail.include?('StoryPromo')
+    avail=['Event','Limited','NonLimited','Starter','StoryLocked'] if avail.include?('Playable')
+    avail.push('StoryPromo') if spro && !avail.include?('StoryPromo')
+    char=char.reject{|q| !avail.include?(q[20])}.uniq
   end
   textra=textra[2,textra.length-2] if [textra[0,1],textra[0,2]].include?("\n")
   search.push("*Horizontal Alignment*: #{align1.join(', ')}") if align1.length>0
@@ -5852,9 +5877,99 @@ def find_in_servants(bot,event,args=nil,mode=0)
     end
   end
   char=char.reject{|q| !has_any?(q[22].split(' / '),align)}.uniq if align.length>0
+  passiveremark=false
+  if skilltags.length>0
+    for i in 0...char.length
+      nophan=skz.find_index{|q| q[2]=='Noble' && q[1]==char[i][0].to_s}
+      nophan2=skz.find_index{|q| q[2]=='Noble' && q[1]=="#{char[i][0].to_s}u"}
+      s1=skz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==char[i][14][0][0]}
+      s1u=skz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==char[i][14][0][1]} rescue nil
+      s2=skz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==char[i][14][1][0]} rescue nil
+      s2u=skz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==char[i][14][1][1]} rescue nil
+      s3=skz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==char[i][14][2][0]} rescue nil
+      s3u=skz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==char[i][14][2][1]} rescue nil
+      psv=char[i][15].map{|q| skz.find_index{|q2| q2[2]=='Passive' && "#{q2[0]}#{" #{q2[1]}" unless q2[1]=='-'}"==q}}
+      for i2 in 0...psv.length
+        unless psv[i2].nil?
+          psv[i2]=skz[psv[i2]][4]
+        end
+      end
+      psv.uniq!
+      psv.compact!
+      unless has_any?(args,['passive','psv'])
+        passiveremark=true if has_any?(skilltags,psv)
+        psv=[]
+      end
+      char[i][30]=[[],[]]
+      char[i][30][0]=skz[nophan][7] unless nophan.nil?
+      char[i][30][1]=skz[nophan2][7] unless nophan2.nil?
+      char[i][31]=[[[],[]],[[],[]],[[],[]]]
+      char[i][31][0][0]=skz[s1][5] unless s1.nil?
+      char[i][31][0][1]=skz[s1u][5] unless s1u.nil?
+      char[i][31][1][0]=skz[s2][5] unless s2.nil?
+      char[i][31][1][1]=skz[s2u][5] unless s2u.nil?
+      char[i][31][2][0]=skz[s3][5] unless s3.nil?
+      char[i][31][2][1]=skz[s3u][5] unless s3u.nil?
+      char[i][32]=psv.map{|q| q}.join('; ').split('; ')
+      char[i][33]=[char[i][30],char[i][31],char[i][32]].join("\n").split("\n").uniq.reject{|q| q.length<=0}
+    end
+    search.push("*Skill Tags*: #{skilltags.join(', ')}")
+    if has_any?(args,['anyskill','anyskills']) || (args.include?('any') && traits.length<=0)
+      search[-1]="#{search[-1]}\n(searching for servants with any listed skill tags)" if skilltags.length>1
+      char=char.reject{|q| !has_any?(skilltags,q[33])}.uniq
+    else
+      search[-1]="#{search[-1]}\n(searching for servants with all listed skill tags)" if skilltags.length>1
+      textra="#{textra}\n\nSkill tag searching defaults to searching for servants with all listed skill tags.\nTo search for servants with any of the listed skill tags, perform the search again with the word \"anyskill\" in your message." if skilltags.length>1
+      for i in 0...skilltags.length
+        char=char.reject{|q| !q[33].include?(skilltags[i])}.uniq
+      end
+    end
+    textra="#{textra}\n\nSkill tag searching defaults to not including passive skills.\nTo include passive skills in your search, perform the search again with the word \"psv\" in your message." if passiveremark
+    for i in 0...char.length
+      sklist=[]
+      if char[i][31][0][1].length<=0 && has_any?(char[i][31][0][0],skilltags)
+        sklist.push('S1')
+      elsif has_any?(char[i][31][0][0],skilltags) && has_any?(char[i][31][0][1],skilltags)
+        sklist.push('S1')
+      elsif has_any?(char[i][31][0][0],skilltags)
+        sklist.push('S1b')
+      elsif has_any?(char[i][31][0][1],skilltags)
+        sklist.push('S1u')
+      end
+      if char[i][31][1][1].length<=0 && has_any?(char[i][31][1][0],skilltags)
+        sklist.push('S2')
+      elsif has_any?(char[i][31][1][0],skilltags) && has_any?(char[i][31][1][1],skilltags)
+        sklist.push('S2')
+      elsif has_any?(char[i][31][1][0],skilltags)
+        sklist.push('S2b')
+      elsif has_any?(char[i][31][1][1],skilltags)
+        sklist.push('S2u')
+      end
+      if char[i][31][2][1].length<=0 && has_any?(char[i][31][2][0],skilltags)
+        sklist.push('S3')
+      elsif has_any?(char[i][31][2][0],skilltags) && has_any?(char[i][31][2][1],skilltags)
+        sklist.push('S3')
+      elsif has_any?(char[i][31][2][0],skilltags)
+        sklist.push('S3b')
+      elsif has_any?(char[i][31][2][1],skilltags)
+        sklist.push('S3u')
+      end
+      if char[i][30][1].length<=0 && has_any?(char[i][30][0],skilltags)
+        sklist.push('NP')
+      elsif has_any?(char[i][30][0],skilltags) && has_any?(char[i][30][1],skilltags)
+        sklist.push('NP')
+      elsif has_any?(char[i][30][0],skilltags)
+        sklist.push('NPb')
+      elsif has_any?(char[i][30][1],skilltags)
+        sklist.push('NPu')
+      end
+      sklist.push('Psv') if has_any?(char[i][32],skilltags)
+      char[i][1]="#{char[i][1]} *[#{sklist.join('+')}]*" if sklist.length>0
+    end
+  end
   if safe_to_spam?(event)
   elsif (char.length>50 || char.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}.join("\n").length+search.join("\n").length+textra.length>=1900) && mode==0
-    event.respond "Too much data is trying to be displayed.  Please use this command in PM."
+    event.respond "__**Search**__\n#{search.join("\n")}\n\n__**Note**__\nAt #{char.length} entries, too much data is trying to be displayed.  Please use this command in PM."
     return nil
   end
   return [search,textra,char]
@@ -5993,7 +6108,7 @@ def find_skills(bot,event,args=nil,ces_only=false)
   end
   if m.map{|q| q.join("\n")}.join("\n\n").length+str.length+ftr.length>1900
     if !safe_to_spam?(event,nil,1)
-      event.respond 'There are too many skills trying to be displayed.  Please retry this command in PM.'
+      str="#{str.split("\n\n")[0]}\n\n__**Note**__\nThere are too many skills trying to be displayed.  Please retry this command in PM."
     else
       str=str.gsub("\n\n","\n\n\n")
       for i in 0...m.length
@@ -7009,7 +7124,9 @@ def affinity_data(event,bot,args=nil)
       atk[i]=-1
       atk[i+3]=1
     end
+    atk[7]=0
   elsif clzz=='Foreigner'
+    atk[7]=0
     defn[6]=-1
     defn[10]=1
     atk[10]=-1
@@ -7180,11 +7297,37 @@ def disp_FEH_based_stats(bot,event,unt=nil)
         [27,30,32,35,37,39,42],
         [29,31,34,37,39,42,44],
         [30,33,36,39,41,44,47]]
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHGroups.txt")
+    b=[]
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FEHGroups.txt").each_line do |line|
+      b.push(eval line)
+    end
+  else
+    b=[]
+  end
+  fehgroups=b.map{|q| q}
+  # SKILL DATA
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHSkills.txt")
+    b=[]
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FEHSkills.txt").each_line do |line|
+      b.push(line)
+    end
+  else
+    b=[]
+  end
+  bob4=[]
+  fehskills=[]
+  for i in 0...b.length
+    bob4=[]
+    b[i].each_line('\\'[0,1]) {|s| bob4.push(s[0,s.length-1])}
+    bob4[12]=bob4[12].split('; ') # ...as should the list of units who can learn a skill without inheritance
+    fehskills.push(bob4) if ['Dance','Sing','Wrathful Staff'].include?(bob4[1])
+  end
   clzz='Unknown'
   clzemote='<:class_unknown_blue:523948997229019136>'
   color='gold'
   xcolor=[]
-  if ['Healer','Tome'].include?(unt[1][1])
+  if ['Healer','Tome'].include?(unt[1][1]) || unt[0]=='Mathoo'
     clzz='Caster'
   elsif unt[1][1]=='Dagger' && ['Infantry','Flier'].include?(unt[3])
     clzz='Assassin'
@@ -7209,20 +7352,26 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   att='Man'
   if unt[2][0]=='Earth' && unt[8]>999
     att='Earth'
-  elsif [2,50,63,138,66].include?(unt[8])
+  elsif [2,50,63,138,66,117,118,119,120,167].include?(unt[8]) || ['Marth','Chrom','Lucina','Roy','Corrin','Xander','Camilla','Leo','Elise','Ryoma','Hinoka','Takumi','Sakura','Sigurd','Seliph','Leif','Alm','Celica','Byleth','Dimitri','Claude','Edelgard','Lyn','Hector','Eliwood','Ephraim','Eirika','Azura','Shigure'].include?(unt[12].gsub('*','').split(', ')[0])
     att='Earth'
   elsif ['Fire','Earth','Water','Wind'].include?(unt[2][0])
     att='Star'
-  elsif ['Astra','Anima','Light','Dark'].include?(unt[2][0])
+  elsif ['Astra','Anima','Light','Dark'].include?(unt[2][0]) || unt[1][1]=='Dragon'
     att='Sky'
   elsif unt[1][1]=='Beast' && unt[8]>999
     att='Beast'
   end
   ali=''
   ali='Bride' if unt[0].include?('(Bride)')
+  ali='Bunny' if unt[0].include?('(Bunny)')
   ali='Groom' if unt[0].include?('(Groom)')
   ali='Summer' if unt[0].include?('(Summer)')
+  ali='Spooky' if unt[0].include?('(Halloween)')
+  ali='Picnic' if unt[0].include?('(Picnic)')
+  ali='Comfy' if unt[0].include?('(Bath)')
   ali='Insane' if unt[0].include?('(Fallen)')
+  ali='Christmas' if !fehgroups.find_index{|q| q[0]=='Christmas'}.nil? && fehgroups[fehgroups.find_index{|q| q[0]=='Christmas'}][1].include?(unt[0])
+  ali="New Year's" if !fehgroups.find_index{|q| q[0]=="NewYear's"}.nil? && fehgroups[fehgroups.find_index{|q| q[0]=="NewYear's"}][1].include?(unt[0])
   ali='Chaotic Evil' if unt[0].include?('(Fallen)') && unt[0].include?('Robin')
   rar=5
   rar=3 if unt[9][0].include?('4g')
@@ -7269,7 +7418,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   qab=[l1[2]+2*unt[4][2], l1[4]+2*unt[4][4], l1[1]+2*unt[4][1]]
   deck=''
-  if ['Genny(Picnic)','Sakura(Bath)','Veronica(Brave)','Camilla(Brave)','Genny','Laevatein(Winter)','Nixx(C137)','Loki'].include?(unt[0])
+  if unt[1][1]=='Healer' && fehskills.reject{|q| q[1]!='Wrathful Staff'}.map{|q| q[12].reject{|q2| q2=='-'}}.join(', ').split(', ').include?(unt[0])
     deck='QAABB'
   elsif unt[1][1]=='Healer'
     deck='QAAAB'
@@ -7305,15 +7454,15 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif qab.max==qab[2]
     deck='QQABB'
   end
-  if [2,15,36,41,49,60,63,138,66,88,89,90,71].include?(unt[8])
+  if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190].include?(unt[8])
     deck='QAABB'
-  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,251].include?(unt[8])
+  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,251].include?(unt[8])
     deck='QQAAB'
-  elsif [61,296].include?(unt[8])
+  elsif [61,114,194,296].include?(unt[8])
     deck='QAAAB'
-  elsif [32,38,45,83,97,125].include?(unt[8])
+  elsif [32,38,45,83,97,102,104,125,143,170].include?(unt[8])
     deck='QABBB'
-  elsif [62,68].include?(unt[8])
+  elsif [62,68,128,142,154].include?(unt[8])
     deck='QQABB'
   end
   xcolor.push([33,188,44]) if deck[1,1]=='Q'
@@ -7328,13 +7477,17 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   qab[1]+=2 if unt[1][0]=='Blue'
   qab[2]+=2 if unt[1][0]=='Red'
   np=''
-  if [13,27,34,75].include?(unt[8])
+  if [13,27,34,75,122,136].include?(unt[8])
     np='<:quick:523854796692783105> (Quick)'
-  elsif [11,15,23,30,35,36,43,49,59,61,70,78,86,92,100].include?(unt[8])
+  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194].include?(unt[8])
     np='<:arts:523854803013730316> (Arts)'
-  elsif [41,63,138,66,68,63,81,88,99,296].include?(unt[8])
+  elsif [41,63,138,66,68,63,81,88,99,133,154,172,175,296].include?(unt[8])
     np='<:buster:523854810286391296> (Buster)'
   elsif unt[1][1]=='Healer'
+    np='<:arts:523854803013730316> (Arts)'
+  elsif !fehskills.find_index{|q| q[1]=='Dance'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Dance'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
+    np='<:arts:523854803013730316> (Arts)'
+  elsif !fehskills.find_index{|q| q[1]=='Sing'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Sing'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
     np='<:arts:523854803013730316> (Arts)'
   elsif qab.max==qab[2]
     np='<:buster:523854810286391296> (Buster)'
@@ -7355,15 +7508,23 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   xcolor=avg_color(xcolor)
   l40[0]-=10
-  if [1,11,17,24,28,30,32,35,36,38,41,43,47,50,51,63,138,67,75,79,97].include?(unt[8])
+  if [1,11,17,24,28,30,32,35,36,38,41,43,47,50,51,63,138,67,75,79,97,121,129,135,174,184].include?(unt[8])
     np="#{np} - *Target:* Enemy"
-  elsif [25,34,73,90].include?(unt[8])
+  elsif [25,34,73,90,105].include?(unt[8])
     np="#{np} - *Target:* All Enemies"
+  elsif [143].include?(unt[8])
+    np="#{np} - *Target:* All Enemies / Self"
   elsif [78,93].include?(unt[8])
     np="#{np} - *Target:* All Enemies / All Aliies"
-  elsif [59].include?(unt[8])
+  elsif [59,104].include?(unt[8])
     np="#{np} - *Target:* Self / Enemy"
-  elsif unt[1][1]=='Healer' || [15,23,93,78].include?(unt[8])
+  elsif [15,93,78,101,168].include?(unt[8])
+    np="#{np} - *Target:* All Allies"
+  elsif unt[1][1]=='Healer'
+    np="#{np} - *Target:* All Allies"
+  elsif !fehskills.find_index{|q| q[1]=='Dance'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Dance'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
+    np="#{np} - *Target:* All Allies"
+  elsif !fehskills.find_index{|q| q[1]=='Sing'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Sing'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
     np="#{np} - *Target:* All Allies"
   elsif l40.max==l40[0]
     np="#{np} - *Target:* Self"
@@ -7392,6 +7553,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   hits[4]=0 if np.include?('Self') || np.include?('Allies')
   hits=[4,2,3,5,2] if unt[8]==20
   hits=[3,2,4,5,2] if unt[8]==28
+  hits=[2,2,2,2,2] if unt[8]==109
   hits[4]=2 if [32,63,125,138].include?(unt[8])
   str="#{str}\n\n**Hit Counts:**\u00A0\u00A0<:Quick_y:526556106986618880>#{hits[0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{hits[1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{hits[2]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Extra_y:526556105388720130>#{hits[3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>#{hits[4]}"
   artscnt=1
@@ -7419,13 +7581,15 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   traits.push('Humanoid')
   traits.push('Servant')
   traits.push('Divine') if ['Light','Dark','Astra','Anima'].include?(unt[2][0])
-  traits.push('Dragon') if unt[1][1]=='Dragon' || ['Marth','Chrom','Lucina','Owain','Robin','Morgan','Roy','Ninian','Naga','Tiki','Bantu','Nagi','Corrin','Kana','Sothis','Myrrh','Fae','Nowi','Nah','Xander','Siegbert','Camilla','Leo','Forrest','Elise','Ryoma','Shiro','Hinoka','Takumi','Kiragi','Sakura','Julia','Julius','Arvis','Saias','Deirdre','Ishtar','Ares','Ayra','Eldigan','Lachesis','Nanna','Sigurd','Ethlyn','Seliph','Quan','Leif','Lene','Lewyn','Silvia','Tailtiu','Alm','Azelle','Lex','Edain','Chulainn','Claud','Brigid','Oifey','Shannan','Travant','Lana','Larcei','Ulster','Diarmuid','Lester','Fee','Ced',' Arthur','Amid','Iuchar','Iucharba','Patty','Tine','Linda','Febail','Coirpre','Altena','Ishtore','Arion','Hilda(Jugdral)','Andorey','Byleth','Dimitri','Claude','Edelgard','Hilda(3H)','Ferdinand','Lindhart','Bernie','Bernadetta','Felix','Sylvain','Mercedes','Annette','Seteth','Flayn','Rhea','Ingrid','Lorenz','Lysithia','Marianne','Hanneman','Catherine(3H)','Eyvel','Galzus','Mareeta','Linoan','Idunn','Soren','Kurthnaga','Ena','Nasir','Almedha','Dheginsea','Rajaion','Gareth'].include?(unt[12].gsub('*','').split(', ')[0])
+  traits.push('Dragon') if unt[1][1]=='Dragon' || ['Marth','Chrom','Lucina','Owain','Robin','Morgan','Roy','Ninian','Naga','Tiki','Bantu','Nagi','Corrin','Kana','Sothis','Myrrh','Fae','Nowi','Nah','Xander','Siegbert','Camilla','Leo','Forrest','Elise','Ryoma','Shiro','Hinoka','Takumi','Kiragi','Sakura','Julia','Julius','Arvis','Saias','Deirdre','Ishtar','Ares','Ayra','Eldigan','Lachesis','Nanna','Sigurd','Ethlyn','Seliph','Quan','Leif','Lene','Lewyn','Silvia','Tailtiu','Alm','Azelle','Lex','Edain','Chulainn','Claud','Brigid','Oifey','Shannan','Travant','Lana','Larcei','Ulster','Diarmuid','Lester','Fee','Ced','Arthur','Amid','Iuchar','Iucharba','Patty','Tine','Linda','Febail','Coirpre','Altena','Ishtore','Arion','Hilda(Jugdral)','Andorey','Byleth','Dimitri','Claude','Edelgard','Hilda(3H)','Ferdinand','Lindhart','Bernie','Bernadetta','Felix','Sylvain','Mercedes','Annette','Seteth','Flayn','Rhea','Ingrid','Lorenz','Lysithia','Marianne','Hanneman','Catherine(3H)','Eyvel','Galzus','Mareeta','Linoan','Idunn','Soren','Kurthnaga','Ena','Nasir','Almedha','Dheginsea','Rajaion','Gareth','Azura','Shigure'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Earth or Sky') if ['Earth','Sky'].include?(att)
   traits.push('Fallen') if unt[0].include?('(Fallen)') || ['Surtr','Hel','Duma'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('King') if [2,8,32,35,36,98].include?(unt[8])
   traits.push('Mecha') if ['Elise'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Riding') if ['Cavalry','Flier'].include?(unt[3]) && !['Dragon','Beast'].include?(unt[1][1])
-  traits.push('Robin Face') if unt[6]=='Fujiwara Ryo'
+  traits.push('Robin Face') if unt[6]=='Fujiwara Ryo' || (unt[12].gsub('*','').split(', ')[0]=='Robin' && !unt[0].include?('Fallen'))
+  traits.push('Smashing Bro.') if ['Marth','Roy','Ike','Ike(Vanguard)','Robin(M)','Robin(F)','Lucina','Corrin(M)','Corrin(F)','Chrom'].include?(unt[0])
+  traits.push('Smashing Bro. [audio]') if unt[7][0]=='Xander Mobus' || ['Ike(Brave)','Roy(Brave)'].include?(unt[0])
   if ['Naga'].include?(unt[12].gsub('*','').split(', ')[0])
     traits.push('Not Weak to Enuma Elish')
   else
@@ -8288,12 +8452,12 @@ end
 
 bot.command(:sendmessage, from: 167657750971547648) do |event, channel_id, *args| # sends a message to a specific channel
   return nil if overlap_prevent(event)
-  dev_message(bot,event,channel_id)
+  dev_message(bot,event,channel_id,[78649866577780736])
 end
 
 bot.command(:sendpm, from: 167657750971547648) do |event, user_id, *args| # sends a PM to a specific user
   return nil if overlap_prevent(event)
-  dev_pm(bot,event,user_id)
+  dev_pm(bot,event,user_id,[78649866577780736])
 end
 
 bot.command(:ignoreuser, from: 167657750971547648) do |event, user_id| # causes Liz to ignore the specified user
