@@ -14,7 +14,7 @@
 1120\1140
 0\0\0\0\0
 10\10\10
-2
+2u
 34 # Kaleidoscope
 9
 4\2\1
@@ -58,7 +58,7 @@
 33 # Hans Christian Andersen
 150\320
 0\0\0\0\0
-5\5\5
+5\6\5
 5
 0
 0
@@ -79,7 +79,7 @@
 6u\5\6
 5
 261 # Golden Sumo: Boulder Tournament
-9
+10
 4\2\0
 
 68 # Okita Souji
@@ -88,7 +88,7 @@
 5\8\5
 1
 63 # Okita
-8
+9
 4\3\0
 
 115 # Sakata Kintoki (Rider)
@@ -142,6 +142,6 @@
 3\10\1
 5
 292 # Summertime Mistress
-7
+8
 4\1\1
 
