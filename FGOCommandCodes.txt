@@ -50,3 +50,6 @@
 50\Command Spells of the Shining Bearded Gentleman\3\Inflict Burn (500 damage, 3 turns)\SABER WARS II
 51\Scales of the Universe\4\Apply Special Attack [Threat to Humanity] 10%, Apply Special Attack [Saber] 10%\SABER WARS II
 52\Mistress of Heaven\5\Increase Critical Strength by 25% when installed into a Buster Card\SABER WARS II
+53\Angel's Bed\3\Remove 1 Buff that increases Critical Rate from the enemy, Restore 100 HP\Christmas 2019: Nightingale's Christmas Carol
+54\Impossible Mystical Horse\4\Increase Critical Strength by 20% when installed into a Quick Card\Christmas 2019: Nightingale's Christmas Carol
+55\Maid of Orleans\5\Restore 1,000 HP (requires 3 turns of cooldown to be reused)\Christmas 2019: Nightingale's Christmas Carol
