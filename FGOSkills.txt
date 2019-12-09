@@ -530,7 +530,7 @@ Poisoned Blade\C++\Skill\6\Enemy / Self\Poison, Toxic, GainStars\Inflict Poison 
 Poisoned Meal\A\Skill\7\All Enemies\Poison, DefDown\Inflict Poison (3 turns);; 500;; 550;; 600;; 650;; 700;; 750;; 800;; 850;; 900;; 1000\Decrease DEF (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\-\-\-\-\-
 Popcorn Blizzard\B\Skill\8\All Enemies\DefDown, HealRateDown\Decrease DEF (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\Decrease HP Recovery amount (5 turns);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\-\-\-\-\-
 Powered Suit\EX\Skill\7\Self\Invul, AtkUp\Apply Invincible (1 turn)\Increase ATK (1 turn);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\-\-\-\-\-
-Witch Trials\C\Skill\9\All Allies\NPGaugeReGen, NPDmgUp\Increase NP Gauge per turn (3 turns);; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\Increase NP Strength (3 turns);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\-\-\-\-\-
+Faithful Prayer\C\Skill\9\All Allies\NPGaugeReGen, NPDmgUp\Increase NP Gauge per turn (3 turns);; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\Increase NP Strength (3 turns);; 20%;; 21%;; 22%;; 23%;; 24%;; 25%;; 26%;; 27%;; 28%;; 30%\-\-\-\-\-
 Precognition\A\Skill\8\Self\Evasion, CritDmgUp\Apply Evade (1 turn)\Increase Critical Strength (1 turn);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\-\-\-\-\-
 Prelati's Encouragement\B\Skill\7\Self\BusterUp\Increase Buster Card effectiveness (5 turns);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\-\-\-\-\-\-
 Presence Detection\A+\Skill\7\Enemy\CritChanceDown, Evasion\Decrease Critical Rate (3 turns);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\Remove Evade status\-\-\-\-\-
