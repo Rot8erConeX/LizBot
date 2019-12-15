@@ -3326,7 +3326,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
       end
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
-        unless b[i][10].nil? || b[i][10].length<=0
+        unless b[i][10].nil? || b[i][10].length<=0 || b[i][0].include?('Wily Warriors ')
           f[1].push("*[DL-Adv]* #{b[i][0]}") if b[i][10].split(' as ')[0]==k[25].split(' as ')[0]
         end
       end
@@ -3582,7 +3582,7 @@ def disp_ce_art(bot,event,args=nil)
         end
         for i in 0...b.length
           b[i]=b[i].gsub("\n",'').split('\\'[0])
-          unless b[i][7].nil? || b[i][7].length<=0
+          unless b[i][7].nil? || b[i][7].length<=0 || b[i][0].include?('Wily Warriors ')
             m=b[i][7].split(' as ')
             f.push("*[DL-Print]* #{b[i][0]}") if m[0]==artist
           end
@@ -7125,6 +7125,8 @@ def affinity_data(event,bot,args=nil)
       atk[i+3]=1
     end
     atk[7]=0
+    atk[11]=1
+    defn[11]=-1
   elsif clzz=='Foreigner'
     atk[7]=0
     defn[6]=-1
