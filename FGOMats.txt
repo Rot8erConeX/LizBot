@@ -50,10 +50,10 @@ Great Knight Medal
 Heart Bracelet
 Heart of the Foreign God
 Homunculus Baby
-Iron Stake of Evening Tears
 Jet Black Feather Pen
 Kaientai Flag
 Kukulcan Mask
+Lamp of Devotion
 Lamp of Evil-Sealing
 Lancer Monument
 Lancer Piece
@@ -91,10 +91,10 @@ Secret Gem of Lancer
 Secret Gem of Rider
 Secret Gem of Saber
 Seed of Yggdrasil
-Seed of Yggdrassil
 Serpent Jewel
 Shell of Reminiscence
 Spirit Root
+Stake of Wailing Night
 Story Unlock: 1st
 Story Unlock: 2nd Singularity:
 Story Unlock: 4th Singularity:
