@@ -1140,6 +1140,6 @@
 1140\Know the Way Broadly\5\12\0, 500\0, 2000\Apply Ignore Invincible, Increase NP Strength by 15%, Increase NP Gain by 15%\Apply Ignore Invincible, Increase NP Strength by 20%, Increase NP Gain by 20%\-\toridamono\\\New Year 2020(JP)/2022(NA)
 1141\Clear Dawn\4\9\320, 200\1200, 750\Gain 10 Critical Stars when entering the battle (1 time), Increase Arts Card effectiveness by 8%\Gain 12 Critical Stars when entering the battle (1 time), Increase Arts Card effectiveness by 10%\-\kazeto\\\New Year 2020(JP)/2022(NA)
 1142\We Are Friends\3\5\0, 200\0, 1000\Increase QP from clearing quests by 2020(JP)/2022(NA)\Increase QP from clearing quests by 2020(JP)/2022(NA), Increase Critical Star Drop Rate by 2%\-\Riyo\\\New Year 2020(JP)/2022(NA)
-1143\To Dance Like Spinning Tops\4\9\0, 2020\0, 2022\Increase Arts Card effectiveness by 8%\\-\KEIZEN\NewYear\\New Year 2020(JP)/2022(NA)
+1143\To Dance Like Spinning Tops\4\9\2020, 0\2022, 0\Increase Arts Card effectiveness by 8%\\-\KEIZEN\NewYear\\New Year 2020(JP)/2022(NA)
 1144\Cornered Mouse\3\5\0, 0\0, 0\No Effect, Increase Craft Essence EXP by 30,000 when used as synthesis material.\\-\Riyo\EXPCard\\New Year 2020(JP)/2022(NA)
 1145\Flute of Purple Jade\4\9\100, 100\100, 100\When equipped to Yang Guifei (Foreigner) only, Inflict Ignite (Increase the effects of Burn by 20%) during each normal attack (3 turns) and increase own NP Strength by 30%,\\-\Sakuma Mitsuro\\\New Year 2020(JP)/2022(NA)
