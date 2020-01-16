@@ -730,7 +730,7 @@ def help_text(event,bot,command=nil,subcommand=nil,args=[])
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s art.\n\nDefaults to their normal art, but can be modified to other arts based on the following words:\nFirst/1st/FirstAscension/1stAscension\nSecond/2nd/SecondAscension/2ndAscension\nThird/3rd/ThirdAscension/3rdAscension\nFinal/Fourth/4th/FinalAscension/FourthAscension/4thAscension\nCostume/FirstCostume/1stCostume/Costume1\nSecondCostume/2ndCostume/Costume2\nRiyo/AprilFool's\n\nIf the requested art doesn't exist, reverts back to default art.",0xED619A)
   elsif ['riyo'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","Shows `name`'s Riyo art, which is shown on April Fool's.",0xED619A)
-  elsif ['ce','craft','essance','craftessance'].include?(command.downcase)
+  elsif ['ce','craft','essence','essance','craftessance','craftessence'].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a CE, shows that CE's info.\nIf `name` is the name of a servant, shows that servant's Bond CE.\n\nIf `name` is a number, prioritizes servant ID over Craft Essence ID.",0xED619A)
   elsif ['valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece',"valentine's"].include?(command.downcase)
     create_embed(event,"**#{command.downcase}** __name__","If `name` is the name of a servant, shows that servant's Valentine's CE.",0xED619A)
@@ -797,7 +797,7 @@ def help_text(event,bot,command=nil,subcommand=nil,args=[])
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}**",'Returns the number of servers and unique members each shard reaches.',0xED619A)
     elsif ['servant','servants','unit','units','character','characters','chara','charas','char','chars'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}**","Returns the number of servants, sorted in each of the following ways:\n- Class\n- Rarity\n- Attribute\n- Growth Curve (in PM)\n- Deck contents (in PM)\n- Noble Phantasm card type (in PM)",0xED619A)
-    elsif ['ce','craft','essance','craftessance','ces','crafts','essances','craftessances'].include?(subcommand.downcase)
+    elsif ['ce','craft','essance','essence','craftessance','craftessence','ces','crafts','essances','essences','craftessances','craftessences'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}**","Returns the number of Craft Essences, sorted in each of the following ways:\n- Rarity\n- Grouping",0xED619A)
     elsif ['command','commandcode','commands','commandcodes'].include?(subcommand.downcase)
       create_embed(event,"**#{command.downcase} #{subcommand.downcase}**","Returns the number of Command Codes, sorted by rarity",0xED619A)
@@ -912,7 +912,7 @@ def all_commands(include_nil=false,permissions=-1)
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
      'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit','support',
      'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res','np1','np2','np3','np4','np5',
-     'reload','update']
+     'reload','essence','craftessence','update']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit','reload','update'] if permissions==2
   k.push(nil) if include_nil
@@ -1184,7 +1184,7 @@ def find_FEH_unit(name,event,ignore=false,ignore2=false,bot) # used to find a un
     end
   end
   untz=b.map{|q| q}
-  if name.to_i.to_s==name && !untz.find_index{|q| q[8]==name.to_i}.nil? && @shardizard==4
+  if name.to_i.to_s==name && !untz.find_index{|q| q[8]==name.to_i}.nil?
     return untz[untz.find_index{|q| q[8]==name.to_i}]
   end
   if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHNames.txt")
@@ -1851,7 +1851,7 @@ def servant_moji(bot,event,k,mode=0,clrshift=0,usr=0)
 end
 
 def servant_icon(k,event,art=0)
-  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if event.user.id==167657750971547648 && k[0]==196
+  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [167657750971547648,66631776864309248].include?(event.user.id) && k[0]==196
   return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [163952551237124097,243525860232003595].include?(event.user.id) && k[0]==196 && rand(5)==0
   return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if k[0]==196 && rand(500)==0
   art=2 if event.user.id==167657750971547648 && k[0]==74
@@ -1908,7 +1908,9 @@ def generate_rarity_row(k,type='servant')
   return str
 end
 
-def smol_err(event,smol=true)
+def smol_err(bot,event,smol=true)
+  args=event.message.text.downcase.split(' ')
+  args.shift
   if find_data_ex(:find_FEH_unit,args.join(' '),event,false,false,bot).length>0
     unt=find_data_ex(:find_FEH_unit,args.join(' '),event,false,false,bot)
     event.respond "FEH unit found: #{unt[0]}\nTry `FGO!stats FGO #{unt[0]}` if you wish to see what this unit's stats would be in FGO."
@@ -2034,6 +2036,7 @@ def disp_servant_stats(bot,event,args=nil)
   text="#{text}\n**Maximum default level:** *#{k[5]}* (#{k[4]} growth curve)"
   text="#{text}\n**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  text="#{text}  (*FPSummon* in JP)" if k[0]==4 && !k[20].include?('FP Summon')
   title="#{servant_superclass(bot,event,k)}"
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}"
@@ -2070,7 +2073,7 @@ def disp_tiny_stats(bot,event,args=nil)
   dispfou=2000 if dispstr.include?('fougolden') || dispstr.include?('fou_golden') || dispstr.include?('fou-golden') || dispstr.include?('golden-fou')
   k=find_data_ex(:find_servant,args.join(' '),event)
   if k.length.zero?
-    smol_err(event)
+    smol_err(bot,event)
     return nil
   end
   mfou=[0,0]
@@ -2165,6 +2168,7 @@ def disp_tiny_stats(bot,event,args=nil)
   end
   text="#{text}\n**Max. default level:** *#{k[5]}*\u00A0\u00B7\u00A0**Team Cost:** #{k[21]}"
   text="#{text}\n**Availability:** *#{k[20].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
+  text="#{text}  (*FPSummon* in JP)" if k[0]==4 && !k[20].include?('FP Summon')
   title="#{servant_superclass(bot,event,k)}"
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} #{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
@@ -3261,10 +3265,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     midtext=''
     artist='Tanaka Gorbachev'
   elsif k[0]==196 && dv>=0
-    xpic="https://cdn.awwni.me/1070o.png"
+    xpic="https://media.discordapp.net/attachments/397786370367553538/656077171630014474/image0.jpg"
     midtext=''
-    text="#{text}\n[Direct Link](https://www.pixiv.net/en/artworks/66249767)"
-    artist='sogno'
+    text="#{text}\n[Direct Link (original in Japanese)](https://www.pixiv.net/en/artworks/77513651)"
+    artist='Kurenai shake'
   elsif [5,90].include?(k[0]) && dv>=0
     xpic="https://pbs.twimg.com/media/D9Lcdt2UcAEDM3G?format=jpg&name=small"
     midtext=''
@@ -4180,7 +4184,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
     elsif find_data_ex(:find_mat,args.join(''),event).length>0
     elsif find_data_ex(:find_clothes,args.join(''),event).length>0
     elsif find_data_ex(:find_code,args.join(''),event).length>0
-    elsif has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars','skill','skills','skil','skils','ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances','mat','mats','materials','material','mysticcode','mystic_code','mystic-code','mysticode','mystic','mysticcodes','mystic_codes','mystic-codes','mysticodes','mystics','clothes','clothing','commandcode','command_code','command-code','command','commandcodes','command_codes','command-codes','commands'])
+    elsif has_any?(args,['servant','servants','unit','units','character','characters','chara','charas','char','chars','skill','skills','skil','skils','ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances','essence','essences','craftessence','craftessences','craft_essence','craft_essences','craft-essence','craft-essences','mat','mats','materials','material','mysticcode','mystic_code','mystic-code','mysticode','mystic','mysticcodes','mystic_codes','mystic-codes','mysticodes','mystics','clothes','clothing','commandcode','command_code','command-code','command','commandcodes','command_codes','command-codes','commands'])
     else
       alz=args.join(' ')
       alz='>censored mention<' if alz.include?('@')
@@ -4262,7 +4266,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
         end
       end
     elsif has_any?(args,['ce','ces','craft','crafts','essance','essances','craftessance','craftessances','craft_essance','craft_essances','craft-essance','craft-essances'])
-      f.push('__**Craft Essance Aliases**__')
+      f.push('__**Craft Essence Aliases**__')
       n=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
       n=n.reject{|q| q[2].nil?} if mode==1
       for i in 0...n.length
@@ -4381,7 +4385,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
         for i in 0...n.length
           msg=extend_message(msg,"#{n[i][0]} = #{n[i][1]}#{' *(in this server only)*' unless n[i][2].nil? || mode==1}",event) unless mode==1 && !event.server.nil? && !n[i][2].nil? && !n[i][2].include?(event.server.id)
         end
-        msg=extend_message(msg,'__**Craft Essance Aliases**__',event,2)
+        msg=extend_message(msg,'__**Craft Essence Aliases**__',event,2)
         n=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
         n=n.reject{|q| q[2].nil?} if mode==1
         for i in 0...n.length
@@ -4466,7 +4470,7 @@ def disp_aliases(bot,event,args=nil,mode=0)
           f.push("#{n[i][0].gsub('_','\_')} = #{n[i][1]} (in the following servers: #{list_lift(a,'and')})") if a.length>0
         end
       end
-      f.push("\n__**Craft Essance Aliases**__")
+      f.push("\n__**Craft Essence Aliases**__")
       n=@aliases.reject{|q| q[0]!='Craft'}.map{|q| [q[1],q[2],q[3]]}
       n=n.reject{|q| q[2].nil?} if mode==1
       for i in 0...n.length
@@ -4894,7 +4898,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     dispstr[0]='ClothingSkill' if dispstr[0]=='Clothes'
   elsif type[1]=='CE'
     unit=find_ce(unit,event)
-    dispstr=['Craft',"#{unit[1]} [CE-##{unit[0]}]",'Craft Essance',unit[0]]
+    dispstr=['Craft',"#{unit[1]} [CE-##{unit[0]}]",'Craft Essence',unit[0]]
   elsif type[1]=='Material'
     unit=find_mat(unit,event)
     dispstr=['Material',"#{unit}",'Material',unit]
@@ -5658,6 +5662,7 @@ def find_in_servants(bot,event,args=nil,mode=0)
     avail.push('Event') if ['event','event','welfare','welfares'].include?(args[i])
     avail.push('Limited') if ['limited','limit','limits','seasonal','seasonals'].include?(args[i])
     avail.push('NonLimited') if ['nonlimited','nonlimit','notlimits','notlimited','notlimit','notlimits','nolimits','limitless','non'].include?(args[i])
+    avail.push('FPSummon') if ['fp','friendpoint','fpsummon','friendpointsummon','friend'].include?(args[i])
     avail.push('Starter') if ['starter','starters','start','starting'].include?(args[i])
     avail.push('StoryLocked') if ['story','stories','storylocked','storylock','storylocks','locked','lock','locks'].include?(args[i])
     avail.push('StoryPromo') if ['storypromo','storypromos','storypromotion','promotion','promotions','storypromotions'].include?(args[i])
@@ -5861,7 +5866,16 @@ def find_in_servants(bot,event,args=nil,mode=0)
     spro=true if avail.include?('StoryPromo')
     avail=['Event','Limited','NonLimited','Starter','StoryLocked'] if avail.include?('Playable')
     avail.push('StoryPromo') if spro && !avail.include?('StoryPromo')
-    char=char.reject{|q| !avail.include?(q[20])}.uniq
+    char2=[]
+    for i in 0...char.length
+      if has_any?(char[i][20].split(', '),avail)
+        char2.push(char[i])
+      elsif char[i][0]==4 && avail.include?('FPSummon')
+        char[i][1]="#{char[i][1]} *[in JP only]*"
+        char2.push(char[i])
+      end
+    end
+    char=char2.map{|q| q}
   end
   textra=textra[2,textra.length-2] if [textra[0,1],textra[0,2]].include?("\n")
   search.push("*Horizontal Alignment*: #{align1.join(', ')}") if align1.length>0
@@ -6279,11 +6293,11 @@ def level(event,bot,args=nil,mode=0)
     nums.push(args[i].to_i) if args[i].to_i.to_s==args[i] && args[i].to_i>0
     mode=1 if mode==0 && ['player','pxp','pexp','plxp','plexp','plevel','pllevel'].include?(args[i])
     mode=2 if mode==0 && ['servant','servants','unit','units','sexp','sxp','slevel','servantexp','servantxp','servantlevel','unitexp','unitxp','unitlevel'].include?(args[i])
-    mode=3 if mode==0 && ['craft','crafts','essence','essences','ceexp','cexp','cxp','celevel','clevel','craftexp','craftxp','craftlevel','essenceexp','essencexp','essencelevel','craftessence','craftessences','craft-essence','craft-essences','craft_essences','craft_essence'].include?(args[i])
+    mode=3 if mode==0 && ['craft','crafts','essence','essences','essance','essances','ceexp','cexp','cxp','celevel','clevel','craftexp','craftxp','craftlevel','essenceexp','essencexp','essencelevel','essanceexp','essancexp','essancelevel','craftessence','craftessences','craft-essence','craft-essences','craft_essences','craft_essence','craftessance','craftessances','craft-essance','craft-essances','craft_essances','craft_essance'].include?(args[i])
     g=1 if ['ssr','gold','hellfire'].include?(args[i])
   end
   if mode==0 && !safe_to_spam?(event)
-    event.respond "Please either specify an EXP type or use this command in PM.\n\nAvailable EXP types include:\n- Player\n- Servant\n- Craft Essance"
+    event.respond "Please either specify an EXP type or use this command in PM.\n\nAvailable EXP types include:\n- Player\n- Servant\n- Craft Essence"
     return nil
   end
   nums.uniq!
@@ -7352,7 +7366,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{clzz.downcase.gsub(' ','')}_#{color}"}
   clzemote=moji[0].mention unless moji.length<0
   att='Man'
-  if unt[2][0]=='Earth' && unt[8]>999
+  if [199].include?(unt[8])
+    att='Sky'
+  elsif unt[2][0]=='Earth' && unt[8]>999
     att='Earth'
   elsif [2,50,63,138,66,117,118,119,120,167].include?(unt[8]) || ['Marth','Chrom','Lucina','Roy','Corrin','Xander','Camilla','Leo','Elise','Ryoma','Hinoka','Takumi','Sakura','Sigurd','Seliph','Leif','Alm','Celica','Byleth','Dimitri','Claude','Edelgard','Lyn','Hector','Eliwood','Ephraim','Eirika','Azura','Shigure'].include?(unt[12].gsub('*','').split(', ')[0])
     att='Earth'
@@ -7456,15 +7472,15 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif qab.max==qab[2]
     deck='QQABB'
   end
-  if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190].include?(unt[8])
+  if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190,211,216].include?(unt[8])
     deck='QAABB'
-  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,251].include?(unt[8])
+  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,204,205,251].include?(unt[8])
     deck='QQAAB'
   elsif [61,114,194,296].include?(unt[8])
     deck='QAAAB'
   elsif [32,38,45,83,97,102,104,125,143,170].include?(unt[8])
     deck='QABBB'
-  elsif [62,68,128,142,154].include?(unt[8])
+  elsif [62,68,128,142,154,206].include?(unt[8])
     deck='QQABB'
   end
   xcolor.push([33,188,44]) if deck[1,1]=='Q'
@@ -7481,7 +7497,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   np=''
   if [13,27,34,75,122,136].include?(unt[8])
     np='<:quick:523854796692783105> (Quick)'
-  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194].include?(unt[8])
+  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194,214].include?(unt[8])
     np='<:arts:523854803013730316> (Arts)'
   elsif [41,63,138,66,68,63,81,88,99,133,154,172,175,296].include?(unt[8])
     np='<:buster:523854810286391296> (Buster)'
@@ -7510,11 +7526,11 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   xcolor=avg_color(xcolor)
   l40[0]-=10
-  if [1,11,17,24,28,30,32,35,36,38,41,43,47,50,51,63,138,67,75,79,97,121,129,135,174,184].include?(unt[8])
+  if [1,11,17,24,28,30,32,35,36,38,41,43,47,50,51,63,138,67,75,79,97,121,129,135,174,184,200,202].include?(unt[8])
     np="#{np} - *Target:* Enemy"
-  elsif [25,34,73,90,105].include?(unt[8])
+  elsif [25,34,73,90,105,203].include?(unt[8])
     np="#{np} - *Target:* All Enemies"
-  elsif [143].include?(unt[8])
+  elsif [143,198].include?(unt[8])
     np="#{np} - *Target:* All Enemies / Self"
   elsif [78,93].include?(unt[8])
     np="#{np} - *Target:* All Enemies / All Aliies"
@@ -7592,7 +7608,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   traits.push('Robin Face') if unt[6]=='Fujiwara Ryo' || (unt[12].gsub('*','').split(', ')[0]=='Robin' && !unt[0].include?('Fallen'))
   traits.push('Smashing Bro.') if ['Marth','Roy','Ike','Ike(Vanguard)','Robin(M)','Robin(F)','Lucina','Corrin(M)','Corrin(F)','Chrom'].include?(unt[0])
   traits.push('Smashing Bro. [audio]') if unt[7][0]=='Xander Mobus' || ['Ike(Brave)','Roy(Brave)'].include?(unt[0])
-  if ['Naga'].include?(unt[12].gsub('*','').split(', ')[0])
+  if ['Naga','Sothis'].include?(unt[12].gsub('*','').split(', ')[0])
     traits.push('Not Weak to Enuma Elish')
   else
     traits.push('Weak to Enuma Elish')
@@ -7791,7 +7807,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
     j=["Skill","#{j[0]}"]
   elsif find_ce(name,event,true).length>0
     j=find_ce(name,event,true)
-    j=["Craft Essance","#{j[1]} [CE-##{j[0]}]"]
+    j=["Craft Essence","#{j[1]} [CE-##{j[0]}]"]
   elsif find_mat(name,event,true).length>0
     j=find_mat(name,event,true)
     j=["Material","#{j}"]
@@ -7810,7 +7826,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
     j=["Skill","#{j[0]}"]
   elsif find_ce(name,event).length>0
     j=find_ce(name,event)
-    j=["Craft Essance","#{j[1]} [CE-##{j[0]}]"]
+    j=["Craft Essence","#{j[1]} [CE-##{j[0]}]"]
   elsif find_mat(name,event).length>0
     j=find_mat(name,event)
     j=["Material","#{j}"]
@@ -7974,7 +7990,7 @@ bot.command([:np5]) do |event, *args|
   return nil
 end
 
-bot.command([:ce,:CE,:cE,:Ce,:craft,:essance,:craftessance]) do |event, *args|
+bot.command([:ce,:CE,:cE,:Ce,:craft,:essance,:craftessance,:essence,:craftessence]) do |event, *args|
   return nil if overlap_prevent(event)
   if args.nil? || args[0].nil?
   elsif ['find','search'].include?(args[0].downcase)
@@ -8082,7 +8098,8 @@ end
 
 bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args|
   return nil if overlap_prevent(event)
-  if args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
+  if args.nil? || args.length<=0
+  elsif args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
     unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
     disp_FEH_based_stats(bot,event,unt)
     return nil
@@ -8280,6 +8297,7 @@ bot.command(:invite) do |event, user|
   usr=event.user
   txt="**You can invite me to your server with this link: <https://goo.gl/ox9CxB>**\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/MarketingLiz.png"
   user_to_name="you"
+  user=nil if event.message.mentions.length<=0 && user.to_i.to_s != user
   unless user.nil?
     if /<@!?(?:\d+)>/ =~ user
       usr=event.message.mentions[0]
@@ -8713,7 +8731,7 @@ bot.command(:snagstats) do |event, f, f2|
     end
     event.respond str
     return nil
-  elsif ['ce','craft','essance','craftessance','ces','crafts','essances','craftessances'].include?(f.downcase)
+  elsif ['ce','craft','essance','craftessance','essence','craftessence','ces','crafts','essances','craftessances','essences','craftessences'].include?(f.downcase)
     crf=@crafts.map{|q| q}
     srv=@servants.map{|q| q}
     str="**There are #{crf.length} Craft Essences, including:**"
@@ -8845,7 +8863,7 @@ bot.command(:snagstats) do |event, f, f2|
     str=extend_message(str,str2,event,2)
     glbl=@aliases.reject{|q| q[0]!='Craft' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
     srv_spec=@aliases.reject{|q| q[0]!='Craft' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
-    str2="**There are #{longFormattedNumber(glbl.length)} global Craft Essance aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific Craft Essance aliases.**"
+    str2="**There are #{longFormattedNumber(glbl.length)} global Craft Essence aliases.**\n**There are #{longFormattedNumber(srv_spec.length)} server-specific Craft Essence aliases.**"
     if event.server.nil? && @shardizard==4
     elsif event.server.nil?
       str2="#{str2} - Servers you and I share account for #{@aliases.reject{|q| q[0]!='Craft' || q[3].nil? || q[3].reject{|q2| q2==285663217261477889 || bot.user(event.user.id).on(q2).nil?}.length<=0}.length} of those"
@@ -10425,7 +10443,7 @@ bot.mention do |event|
     args.shift
     disp_servant_ce2(bot,event,args)
     m=false
-  elsif ['ce','craft','essance','craftessance'].include?(args[0])
+  elsif ['ce','craft','essance','craftessance','essence','craftessence'].include?(args[0])
     args.shift
     if ['find','search'].include?(args[0].downcase)
       args.shift
@@ -10611,6 +10629,9 @@ bot.message do |event|
     elsif find_data_ex(:find_enemy,s,event).length>0
       disp_enemy_traits(bot,event,s.split(' '))
     end
+  elsif !event.server.nil? && (above_memes().include?("s#{event.server.id}") || above_memes().include?(event.server.id))
+  elsif !event.channel.nil? && above_memes().include?("c#{event.channel.id}")
+  elsif above_memes().include?("u#{event.user.id}") || above_memes().include?(event.user.id)
   elsif " #{event.message.text.downcase} ".include?(' the archer class ')
     s=event.message.text.downcase
     s=remove_format(s,'```')              # remove large code blocks
@@ -10620,21 +10641,8 @@ bot.message do |event|
     if event.channel.name.downcase.include?('3h')
     elsif event.channel.name.downcase.include?('spoil')
     elsif " #{s} ".include?(' the archer class ')
-      canpost=true
-      k=0
-      k=event.server.id unless event.server.nil?
-      if k==271642342153388034
-        post=Time.now
-        if (post - @zero_by_four[0]).to_f > 3600*3
-          @zero_by_four[0]=post
-        else
-          canpost=false
-        end
-      elsif event.channel.id==330850148261298176
-      elsif canpost
-        puts s
-        event.respond "#{"#{event.user.mention} " unless event.server.nil?}#{["It's really made out of archers.","What do you mean there's not many archers?","Archers use bows?  Are you insane?","Why would they use a feminine hair accessory to attack?"].sample}"
-      end
+      puts s
+      event.respond "#{"#{event.user.mention} " unless event.server.nil?}#{["It's really made out of archers.","What do you mean there's not many archers?","Archers use bows?  Are you insane?","Why would they use a feminine hair accessory to attack?","Archery is projectile dabbing, and *Fate* is trying to protect itself from what Nasu thinks are bad memes.  Which makes me wonder why they called them archers and not something more fitting."].sample}"
     end
   elsif has_any?(event.message.text.downcase.split(' '),['death','correct']) && !event.user.bot_account?
     s=event.message.text.downcase
@@ -10645,11 +10653,7 @@ bot.message do |event|
     s=s.gsub("\n",' ').gsub("  ",'')
     chain=false
     if s.split(' ').include?('death')
-      k=0
-      k=event.server.id unless event.server.nil?
-      k2=event.channel.id
-      if k==271642342153388034
-      elsif has_any?(event.message.text.downcase.split(' '),['knight'])
+      if has_any?(event.message.text.downcase.split(' '),['knight'])
       elsif event.channel.name.downcase.include?('3h')
       elsif event.channel.name.downcase.include?('spoil')
       elsif rand(1000)<13
@@ -10659,10 +10663,7 @@ bot.message do |event|
       end
     end
     if s.split(' ').include?('correct') && !chain
-      k=0
-      k=event.server.id unless event.server.nil?
-      if k==271642342153388034
-      elsif event.channel.name.downcase.include?('3h')
+      if event.channel.name.downcase.include?('3h')
       elsif event.channel.name.downcase.include?('spoil')
       elsif rand(1000)<13
         puts 'responded to correct'
