@@ -787,6 +787,7 @@ Guardian of Troy\A\Skill\7\All Allies\NPDmgUp, FlatDmgDown\Increase NP Strength 
 Love of Three-Thousand in One\A\Skill\8\Self\Invul, NPGaugeReGen, GainStars, Taunt\Apply Invincible (1 turn)\Increase NP Gauge per turn (3 turns);; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\Gain Critical Stars;; 5;; 6;; 7;; 8;; 9;; 10;; 11;; 12;; 13;; 15\Apply Target Focus to self [Male enemies only] (1 turns)\-\-\-
 Beautiful Consort\A\Skill\9\All Enemies\NPGaugeUp, NPChargeRed, DefDown\Absorb NP Gauge from all enemies;; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\Decrease DEF (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\-\-\-\-\-
 Fairy of the Flame Wheel\A\Skill\8\Self\DefUp, DefDown, Burn\Apply [Living Flame] to self (3 times, 3 turns)\>When attacked, apply DEF Down (3 turns) to the enemy;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\>When attacked, apply Burn (3 turns) to the enemy;; 500;; 550;; 600;; 650;; 700;; 750;; 800;; 850;; 900;; 1000\Increase own DEF (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\-\-\-
+Twilight Star\A\Skill\7\Self\NPGaugeUp, GainStars\Increase NP Gauge;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%;; 20%\Gain Critical Stars;; 10;; 11;; 12;; 13;; 14;; 15;; 16;; 17;; 18;; 20\-\-\-\-\-
 Altereactor\A\Passive\Increase Debuff Resist by 20%\DebuffResistUp
 At the Boundary\A\Passive\Apply Death Immune, Increase Charm Resist by 100%, 5% chance to inflict Death each time you attack\DeathImmunity, DebuffResistUp, DeathRateUp
 Authority of Beasts\D\Passive\Increase Critical Strength by 8%\CritDmgUp
@@ -1347,3 +1348,6 @@ Osechi Package\10\Clothes\MaxHPUp\Increase Max HP of one ally;; 1000;; 1200;; 14
 Over Charger\15\Clothes\NPDmgUp, RemoveDebuff\Increase NP Strength (1 turn);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\Remove Attack Buffs\-
 Star Blaster\12\Clothes\CritDmgUp\Increase Critical Strength (1 turn);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\-\-
 Escape Pod\15\Clothes\Evasion, Heal\Apply Evade (1 time, 3 turns)\Restore HP;; 1000;; 1200;; 1400;; 1600;; 1800;; 2000;; 2200;; 2400;; 2600;; 3000\-
+Simultaneous Charge\15\Clothes\BusterUp\Increase Buster Card effectiveness of all allies (1 turn);; 25%;; 26%;; 27%;; 28%;; 29%;; 30%;; 31%;; 32%;; 33%;; 35%\-\-
+Triple Treatment\12\Clothes\HPReGen\Restore HP of all allies per turn (3 turns)       ;; 1000;; 1100;; 1200;; 1300;; 1400;; 1500;; 1600;; 1700;; 1800;; 2000\-\-
+Magical Energy Conversion\12\Clothes\NPGaugeUp, NPGainUpAtk\Increase NP Gauge of all allies;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\Increase NP Gain (1 turn);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\-
