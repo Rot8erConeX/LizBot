@@ -1841,10 +1841,10 @@ def servant_moji(bot,event,k,mode=0,clrshift=0,usr=0)
   semoji=''
   semoji='<:Great_Badge_Golden:443704781068959744>' if k[13].include?('FEH Servant')
   semoji='<:Tribe_Dragon:549947361745567754>' if k[13].include?('DL Servant')
-  semoji='<:Valentines:523903633453219852>' if k[0]==74 && event.message.text.downcase.split(' ').include?("mathoo's")
-  semoji='<:Valentines:523903633453219852>' if k[0]==74 && usr==167657750971547648
-  semoji='<:Valentines:523903633453219852>' if k[0]==127 && event.message.text.downcase.split(' ').include?("ace's")
-  semoji='<:Valentines:523903633453219852>' if k[0]==127 && usr==78649866577780736
+  semoji='<:FGO_Favorite:679278523009204226>' if k[0]==74 && event.message.text.downcase.split(' ').include?("mathoo's")
+  semoji='<:FGO_Favorite:679278523009204226>' if k[0]==74 && usr==167657750971547648
+  semoji='<:FGO_Favorite:679278523009204226>' if k[0]==127 && event.message.text.downcase.split(' ').include?("ace's")
+  semoji='<:FGO_Favorite:679278523009204226>' if k[0]==127 && usr==78649866577780736
   npmoji=k[17][6,1].gsub('Q','<:Quick_xNP:523979766731243527>').gsub('A','<:Arts_xNP:523979767016325121>').gsub('B','<:Buster_xNP:523979766911598632>')
   npmoji='' if k[13].include?('FEH Servant')
   return "#{clsmoji}#{deckmoji}#{npmoji}#{semoji}"
@@ -1897,7 +1897,7 @@ def generate_rarity_row(k,type='servant')
       str=['','<:Rarity_1:532086056594440231>','<:Rarity_2:532086056254963713>','<:Rarity_3:532086056519204864>','<:Rarity_4:532086056301101067>','<:Rarity_5:532086056737177600>'][k[2]]*k[2]
     end
   elsif type=='code'
-    str="<:FGO_icon_rarity_rust:523903558928826372>"*k[2]
+    str="<:FGO_icon_rarity_rust:676942902953377802>"*k[2]
     if k[4].nil?
     elsif k[4].include?('FEH')
       str=['','<:Icon_Rarity_1n:570979179781160980>','<:Icon_Rarity_2n:570979178627858432>','<:Icon_Rarity_3n:570979178812407834>','<:Icon_Rarity_4n:570979181077463061>','<:Icon_Rarity_5n:570979178917396490>','<:Icon_Rarity_6n:570979179009409054>'][k[2]]*k[2]
@@ -2045,7 +2045,7 @@ def disp_servant_stats(bot,event,args=nil)
   fou=1000
   flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}\n*#{atk}* - #{longFormattedNumber(k[7][0])}\n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}\n*#{atk}* - #{longFormattedNumber(k[7][1])}#{"\n\n__**#{cemoji[3]}Level 90**__\n*HP* - #{longFormattedNumber(k[6][2])}\n*#{atk}* - #{longFormattedNumber(k[7][2])}" if k[7].length>3 || k[6].length>3}\n\n__**#{cemoji[13]}Level 100**__\n*HP* - #{longFormattedNumber(k[6][-1])}\n*#{atk}* - #{longFormattedNumber(k[7][-1])}"]]
   flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  #{"\n\n__**#{cemoji[3]}Level 90**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}" if k[7].length>3 || k[6].length>3}\n\n__**#{cemoji[13]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][-1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][-1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][-1]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][-1]+2000)}"]] if dispfou && mfou.max<=0
-  flds.push(["Attack Parameters","__**Hit Counts**__\n#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\n<:Blank:612718380507725824>#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
+  flds.push(["Attack Parameters","__**Hit Counts**__\n#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\n<:Blank:676220519690928179>#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   xpic=servant_icon(k,event,art)
   ftr=nil
   ftr='You can include the word "Fou" to show the values with Fou modifiers' unless dispfou
@@ -2212,8 +2212,9 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
       dv=-1
     else
       k=@servants[@servants.find_index{|q| q[0]==@dev_units[dv][0]}] if k[0].to_i==1
-      k[13].push('Smol *[added]*') if k[13][0]=='Female'
+      k[13].push('Smol *[added]*') if k[13][0]=='Female' && k[0]!=182
       k[13].push('Cuddly *[added]*') if k[0]==74
+      k[13].push('Doll *[added]*') if k[0]==182
       k[22]='Chaotic Good' if k[0]==74
       art=@dev_units[dv][7][1]
       colorshift=@dev_units[dv][7][2] unless @dev_units[dv][7][2].nil?
@@ -2767,7 +2768,7 @@ def disp_servant_ce2(bot,event,args=nil)
     text=">No CE information known<"
   else
     ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
-    cemoji=['<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+    cemoji=['<:Valentines:676941992768569374>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
     cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
     cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
     xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
@@ -2798,7 +2799,7 @@ def disp_servant_ce2(bot,event,args=nil)
       text=">No CE information known<"
     else
       ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
-      cemoji=['<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+      cemoji=['<:Valentines:676941992768569374>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
       cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
       cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
       xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
@@ -3274,6 +3275,15 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     midtext=''
     text="#{text}\n[Direct Link](https://twitter.com/yayoimaka03/status/1140216715147538432)"
     artist='@yayoimaka03'
+  elsif k[0]==142 && dv>=0
+    xpic="https://cdn.discordapp.com/attachments/285663217261477889/681617061289525256/image0.jpg"
+    midtext=''
+    artist='*Fate/Grand Order Absolute Demonic Front: Babylonia* amination team'
+  elsif k[0]==182 && dv>=0
+    xpic="https://cdn.discordapp.com/attachments/400114626433515530/681610528703119470/unknown.png"
+    midtext=''
+    text="#{text}\n[Direct Link](https://www.reddit.com/r/grandorder/comments/conp9p/unlocking_ishtar_rider)"
+    artist='u/AmimBlue'
   elsif k[0]==68 && dv>=0
     xpic='https://media.discordapp.net/attachments/331275258327728130/634032815737929738/67d141d.png'
     midtext=''
@@ -3304,15 +3314,18 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     end
     for i in 0...b.length
       b[i]=b[i].gsub("\n",'').split('\\'[0])
+      b[i][6]=b[i][6].split(';; ')
       b[i][7]=b[i][7].split(';; ')
       if !b[i][6].nil? && b[i][6].length>0 && !b[i][7][1].nil? && b[i][7][1].length>0
-        f[2].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[0]==artist && b[i][7][1].split(' as ')[0]==k[25]
+        f[2].push("*[FEH]* #{b[i][0]}") if b[i][6][0].split(' as ')[0]==artist && b[i][7][1].split(' as ')[0]==k[25]
+        f[2].push("*[FEH]* #{b[i][0]} - Resplendent") if !b[i][6][1].nil? && b[i][6][1].split(' as ')[0]==artist && b[i][7][1].split(' as ')[0]==k[25]
       end
       if !b[i][6].nil? && b[i][6].length>0
-        f[0].push("*[FEH]* #{b[i][0]}") if b[i][6].split(' as ')[0]==artist && (b[i][7][1].nil? || b[i][7][1].split(' as ')[0]!=k[25])
+        f[0].push("*[FEH]* #{b[i][0]}") if b[i][6][0].split(' as ')[0]==artist && (b[i][7][1].nil? || b[i][7][1].split(' as ')[0]!=k[25])
+        f[0].push("*[FEH]* #{b[i][0]} - Resplendent") if !b[i][6][1].nil? && b[i][6][1].split(' as ')[0]==artist && (b[i][7][1].nil? || b[i][7][1].split(' as ')[0]!=k[25])
       end
       if !b[i][7][1].nil? && b[i][7][1].length>0
-        f[1].push("*[FEH]* #{b[i][0]}") if (b[i][6].nil? || b[i][6].split(' as ')[0]!=artist) && b[i][7][1].split(' as ')[0]==k[25]
+        f[1].push("*[FEH]* #{b[i][0]}") if (b[i][6].nil? || !b[i][6].map{|q| q.split(' as ')[0]}.include?(artist)) && b[i][7][1].split(' as ')[0]==k[25]
       end
     end
     fehunts=b.map{|q| q}
@@ -3411,6 +3424,10 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     asc='Smol and Cute'
   elsif k[0]==196 && dv>=0
     asc='Smol Eresh Big Cute'
+  elsif k[0]==182 && dv>=0
+    asc='IshDoll'
+  elsif k[0]==142 && dv>=0
+    asc='Cursed and Cute'
   elsif k[0]==68 && dv>=0
     asc='Palm-Sized Okita-San'
   elsif [90,5].include?(k[0]) && dv>=0
@@ -3426,7 +3443,7 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     asc=["April Fool's Art",'Default (Zeroth Ascension)','First/Second Ascension','Third Ascension','Final Ascension','First Costume','Second Costume','Third Costume','Fourth Costume','Fifth Costume','Sixth Costume','Seventh Costume','Eighth Costume','Ninth Costume','Tenth Costume'][asc]
     asc="#{asc} [#{k[29][asc2-5]}]" if asc2>4 && !k[29].nil? && !k[29][asc2-5].nil?
   end
-  unless artist=='Riyo' || ([5,90,163,196,68].include?(k[0]) && dv>=0)
+  unless artist=='Riyo' || ([5,68,90,142,163,182,196].include?(k[0]) && dv>=0)
     artist=nil
     artist=k[24].split(' as ')[-1] unless k[24].nil? || k[24].length<=0
   end
@@ -3500,7 +3517,7 @@ def disp_ce_card(bot,event,args=nil)
   ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
   title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
-  cemoji=['<:Bond:613804021119189012>','<:Valentines:523903633453219852>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+  cemoji=['<:Bond:613804021119189012>','<:Valentines:676941992768569374>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
   cemoji=['<:RRAffinity:565064751780986890>','<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if ce[10].include?('FEH') || (!k.nil? && k[13].include?('FEH Servant')) || (!k2.nil? && k2[13].include?('FEH Servant'))
   cemoji=['<:Type_Healing:532107867348533249>','<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if ce[10].include?('DL') || (!k.nil? && k[13].include?('DL Servant')) || (!k2.nil? && k2[13].include?('DL Servant'))
   text="**#{cemoji[0]} Bond CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*" unless k.nil?
@@ -3572,7 +3589,8 @@ def disp_ce_art(bot,event,args=nil)
       for i in 0...b.length
         b[i]=b[i].gsub("\n",'').split('\\'[0])
         if !b[i][6].nil? && b[i][6].length>0
-          f.push("#{b[i][0]} *[FEH]*") if b[i][6].split(' as ')[-1]==artist
+          f.push("#{b[i][0]} *[FEH]*") if b[i][6][0].split(' as ')[-1]==artist
+          f.push("#{b[i][0]} - Resplendent *[FEH]*") if !b[i][6][1].nil? && b[i][6][1].split(' as ')[-1]==artist
         end
       end
       if event.server.nil? || !bot.user(543373018303299585).on(event.server.id).nil? || @shardizard==4
@@ -4035,7 +4053,7 @@ def disp_mat_data(bot,event,args=nil)
   if m_jp_x.nil? || disp_date(t_na)==disp_date(t_jp)
   elsif m_na_x==0 && m_jp_x==0
   elsif m_jp_x==0
-    nextstr="#{nextstr}\n*JP:* Today'"
+    nextstr="#{nextstr}\n*JP:* Today"
     t2=t_jp+m_jp_x2*24*60*60
     if m_jp_x2==1
       nextstr="#{nextstr} - Next available tomorrow (#{disp_date(t2,1)})"
@@ -6715,13 +6733,16 @@ def generate_random_servant(event,bot)
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
   text="#{text}\n\n**Command Deck:** #{deck.gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{deck})"
   text="#{text}\n**Noble Phantasm:** #{np.gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{np.gsub('Q','Quick').gsub('A','Arts').gsub('B','Buster')})"
-  type=['Personnel','Evil','Fortress','Army'].sample
-  type=['Encampment','World','Magecraft','Barrier','Divine','Demon','Populace','Wave','Dragon','Mountain','Purge','King','Beast','Boundary'].sample if rand(10)<=0
+  typs=['Personnel','Fortress','Army']
+  typs.push('Evil') unless valg=='Evil'
+  typs=['Encampment','World','Magecraft','Barrier','Divine','Demon','Populace','Wave','Dragon','Mountain','Purge','King','Beast','Boundary'] if rand(10)<=0
+  type=typs.sample
   type="Anti-#{type}"
   type=['Magic','Spirit','War Outbreak','Poetry'].sample if rand(10)<=0
   type="#{type}#{[' Hidden Technique',' Mystic Technique','(Self)',' (Encampment)'].sample}" if rand(100)<=0
   type='???' if rand(1000)<=0
   target=['All Allies','All Enemies','Enemy','Self'].sample
+  target=['All Enemies','Enemy'].sample if np=='B'
   text="#{text}\n*Type:* #{type}  -  *Target:* #{target}"
   data_load()
   f=@servants.reject{|q| q[3]!=rarity && q[2]!=clzz}
@@ -8749,7 +8770,7 @@ bot.command(:snagstats) do |event, f, f2|
     m=srv.map{|q| q[23]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
     str2="<:Bond:613804021119189012> #{m.length} Bond CE#{'s' if m.length>1}"
     m=srv.map{|q| q[26]}.join(', ').split(', ').map{|q| q.to_i}.reject{|q| q<c.min || q>c.max}.uniq
-    str2="#{str2}\n<:Valentines:523903633453219852> #{m.length} Valentine's CE#{'s' if m.length>1}"
+    str2="#{str2}\n<:Valentines:676941992768569374> #{m.length} Valentine's CE#{'s' if m.length>1}"
     str2=str2[1,str2.length-1] if str2[0,1]=="\n"
     str2=str2[2,str2.length-2] if str2[0,2]=="\n"
     str=extend_message(str,str2,event,2)
