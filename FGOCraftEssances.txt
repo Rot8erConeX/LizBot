@@ -1142,6 +1142,54 @@
 1142\We Are Friends\3\5\0, 200\0, 1000\Increase QP from clearing quests by 2020(JP)/2022(NA)\Increase QP from clearing quests by 2020(JP)/2022(NA), Increase Critical Star Drop Rate by 2%\-\Riyo\\\New Year 2020(JP)/2022(NA)
 1143\To Dance Like Spinning Tops\4\9\2020, 0\2022, 0\Increase Arts Card effectiveness by 8%\\-\KEIZEN\NewYear\\New Year 2020(JP)/2022(NA)
 1144\Cornered Mouse\3\5\0, 0\0, 0\No Effect, Increase Craft Essence EXP by 30,000 when used as synthesis material.\\-\Riyo\EXPCard\\New Year 2020(JP)/2022(NA)
-1145\Flute of Purple Jade\4\9\100, 100\100, 100\When equipped to Yang Guifei (Foreigner) only, Inflict Ignite (Increase the effects of Burn by 20%) during each normal attack (3 turns) and increase own NP Strength by 30%,\\-\Sakuma Mitsuro\\\New Year 2020(JP)/2022(NA)
+1145\Flute of Purple Jade\4\9\100, 100\100, 100\When equipped to Yang Guifei (Foreigner) only, Inflict Ignite (Increase the effects of Burn by 20%) (3 turns) during each normal attack, and increase own NP Strength by 30%\\-\Sakuma Mitsuro\\\New Year 2020(JP)/2022(NA)
 1146\Those Who Observe the Stars\4\9\100, 100\100, 100\Increase Master EXP from clearing quests by 50\\-\Hama Yurie/CloverWorks\\\TV Anime ｢Fate/Grand Order -Absolute Demonic Front Babylonia-｣ Commemoration Campaign 3!
 1147\Therapeutic Spa\5\12\400, 250\1600, 1000\Increase NP Gain by 10%, Increase NP Gauge by 2% per turn, Gain 3 Critical Stars per turn, Increase own Bond Points from clearing quests by 100% (Invalid when used as Support) [Amazoness CEO] When equipped to Mash Kyrielight (Shielder), increase Bond Points of all allies by 20% (Invalid when used as Support) [Amazoness CEO]\Increase NP Gain by 15%, Increase NP Gauge by 3% per turn, Gain 4 Critical Stars per turn, Increase own Bond Points from clearing quests by 200% (Invalid when used as Support) [Amazoness CEO] When equipped to Mash Kyrielight (Shielder), increase Bond Points of all allies by 40% (Invalid when used as Support) [Amazoness CEO]\-\Saitou Hiroki (DELiGHTWORKS)\\\Rescue! Amazoness Dot Com ~CEO Crisis 2020~
+1148\Shinjuku Phantom Incident\4\9\100, 100\100, 100\Increase Mystic Code EXP from clearing quests by 50\\-\Sasaki Shounen\\
+1149\Gran Cavallo\5\12\400, 250\1600, 1000\Increase Bond Points from clearing quests by 1%, Increase Mystic Code EXP from clearing quests by 1%\Increase Bond Points from clearing quests by 5%, Increase Mystic Code EXP from clearing quests by 5%\-\Hirai Yukio\\
+1150\Chocolate Heaven\5\12\0, 200\0, 2000\Increase Quick Card effectiveness by 10%, Increase NP Strength by 10%, Increase NP Gain by 15%, Increase Folding Fan of Overnights drop amount by 1 [Valentines 5]\Increase Quick Card effectiveness by 15%, Increase NP Strength by 15%, Increase NP Gain by 20%, Increase Folding Fan of Overnights drop amount by 2 [Valentines 5]\-\Homunculus\\
+1151\Queen's Dream\4\9\600, 0\2250, 0\Increase Critical Strength by 15%, Increase Buff Success Rate by 10%, Increase Handball of Meetings drop amount by 1 [Valentines 2]\Increase Critical Strength by 20%, Increase Buff Success Rate by 15%, Increase Handball of Meetings drop amount by 2 [Valentines 2]\-\Narue\\
+1152\Midnight Tension\3\5\0, 200\0, 1000\Increase NP Strength by 5%, Increase HP Recovery Amount by 5%, Increase Pinwheel of Encounters drop amount by 1 [Valentines 5]\Increase NP Strength by 10%, Increase HP Recovery Amount by 10%, Increase Pinwheel of Encounters drop amount by 2 [Valentines 5]\-\Michi Hasu\\
+1153\Knit the Love\5\12\400, 250\1600, 1000\Apply Sure Hit, Increase NP Strength by 10%, Increase NP Gauge by 30% at the start of battle, Increase Glittering Points drop amount by 30% [Valentines 5]\Apply Sure Hit, Increase NP Strength by 15%, Increase NP Gauge by 50% at the start of battle, Increase Glittering Points drop amount by 60% [Valentines 5]\-\Sakura Koharu\\
+1154\The Chaldea Book\4\9\100, 100\100, 100\When equipped to Sei Shonagon (Archer) only, Increase NP Gain and Critical Strength of all allies by 10% while she's on the field\\-\Tatsuyo\\
+1155\Grand Chocolate\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Ichihashi Makoto\\
+1156\With Love (LOL) Choco\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Akita Ken\\
+1157\Mercury Choco\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\\\
+1158\Wine and Star Chocolate\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Hayosena\\
+1159\Fudge\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1160\Premier Chocolate Cake\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\wapokichi\\
+1161\A Bundle of Good Fortune\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Sasaki Midori\\
+1162\Beginner's Hunting Set\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\\\
+1163\Ordinary Miraculous Stone\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\herosumi\\
+1164\Staying Up Late for a Chat\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Nowaki Nakami\\
+1165\Medical Choco\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1166\Dried Persimmon\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Ichihashi Makoto\\
+1167\Fool's Gourd\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Tawawa Minoru\\
+1168\A Cup of Tea\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Bep Mitsunaka\\
+1169\Bishamonten Choco\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Akita Ken\\
+1170\Chaldea New Order\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Akita Ken\\
+1171\Miniature Argo\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\herosumi\\
+1172\Apollon Doll\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\herosumi\\
+1173\Choco Cupcakes\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Aomidori\\
+1174\One-Eye Concealing Wig\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1175\Xia Dynasty All-Purpose Fountain Pen and Wooden Slips\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Oyu\\
+1176\A Gift for You to Fall in Love\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1177\From Salome to You\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Kyosuke\\
+1178\Parfait - Mystic Sword Challenge\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Aomidori\\
+1179\Japanese Sweets Wind Choco + Letter\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Shimokawa Ruriko (DELiGHTWORKS)\\
+1180\A Chocolate to Steal Something Unthinkable\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1181\Choco Choco Octopus Sculpture\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Zap.\\
+1182\Chocolate Cake Bunny White\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Hayosena\\
+1183\Bluebird Jelly Ice\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Inako\\
+1184\Jet Choco Yokan\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1185\Space Diorama Choco\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Fukazawa Ippei (DELiGHTWORKS)\\
+1186\SCB (Space Chocolate Bar)\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Kanbara Makoto\\
+1187\B-U-N-N-Y-E-A-R-S\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Nowaki Nakami\\
+1188\Mirror Mochi Puffy Choco\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1189\Chocolate-flavored Ampoule\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\ari\\
+1190\Tri-Star Belt (Handmade)\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Tawawa Minoru\\
+1191\Durandal Replica\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Kashia\\
+1192\Homemade Brownies with Hot Milk\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Tofu\\
+1193\Huaqing Palace Sweets Hot Spring Steamed Buns\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Hayosena\\
+1194\Ito Sweets\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Hayosena\\
+1195\Tropical Memoria\4\3\0, 0\0, 0\No Effect, Increase Glittering Points by 10% [Valentines 5]\\-\Akita Ken\\

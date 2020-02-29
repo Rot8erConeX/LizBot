@@ -53,3 +53,7 @@
 53\Angel's Bed\3\Remove 1 Buff that increases Critical Rate from the enemy, Restore 100 HP\Christmas 2019: Nightingale's Christmas Carol
 54\Impossible Mystical Horse\4\Increase Critical Strength by 20% when installed into a Quick Card\Christmas 2019: Nightingale's Christmas Carol
 55\Maid of Orleans\5\Restore 1,000 HP (requires 3 turns of cooldown to be reused)\Christmas 2019: Nightingale's Christmas Carol
+56\That Which Carries Fortune\3\Increase Critical Star Gather Rate by 100% when installed into a Quick Card\New Years 2020
+57\Himeji Bat\3\Remove 1 Buff that increases Critical Strength from the enemy, Restore own HP by 100\Valentine 2020
+58\Genie's Lamp\4\Inflict Burn (300 damage, 3 turns), Gain 2 Critical Stars\Valentine 2020
+59\Wisteria Fragrant Court Lady\5\Apply Special Attack [Demonic] 20%\Valentine 2020
