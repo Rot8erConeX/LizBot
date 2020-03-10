@@ -1358,6 +1358,6 @@ Osechi Package\10\Clothes\MaxHPUp\Increase Max HP of one ally;; 1000;; 1200;; 14
 Over Charger\15\Clothes\NPDmgUp, RemoveDebuff\Increase NP Strength (1 turn);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\Remove Attack Debuffs\-
 Star Blaster\12\Clothes\CritDmgUp\Increase Critical Strength (1 turn);; 30%;; 32%;; 34%;; 36%;; 38%;; 40%;; 42%;; 44%;; 46%;; 50%\-\-
 Escape Pod\15\Clothes\Evasion, Heal\Apply Evade (1 time, 3 turns)\Restore HP;; 1000;; 1200;; 1400;; 1600;; 1800;; 2000;; 2200;; 2400;; 2600;; 3000\-
-Simultaneous Charge\15\Clothes\BusterUp\Increase Buster Card effectiveness of all allies (1 turn);; 25%;; 26%;; 27%;; 28%;; 29%;; 30%;; 31%;; 32%;; 33%;; 35%\-\-
-Triple Treatment\12\Clothes\HPReGen\Restore HP per turn (3 turns);; 1000;; 1100;; 1200;; 1300;; 1400;; 1500;; 1600;; 1700;; 1800;; 2000\-\-
-Magical Energy Conversion\12\Clothes\NPGaugeUp, NPGainUpAtk\Increase NP Gauge of all allies;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\Increase NP Gain (1 turn);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\-
+All-out Charge\15\Clothes\BusterUp\Increase Buster Card effectiveness of all allies (1 turn);; 25%;; 26%;; 27%;; 28%;; 29%;; 30%;; 31%;; 32%;; 33%;; 35%\-\-
+Triple Restoration\12\Clothes\HPReGen\Restore HP per turn (3 turns);; 1000;; 1100;; 1200;; 1300;; 1400;; 1500;; 1600;; 1700;; 1800;; 2000\-\-
+Mana Conversion\12\Clothes\NPGaugeUp, NPGainUpAtk\Increase NP Gauge of one ally;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\Increase NP Gain (1 turn);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\-
