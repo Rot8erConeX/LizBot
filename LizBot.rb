@@ -188,7 +188,7 @@ system("title loading #{shard_data(2)[@shardizard]} LizBot")
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
-  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id) # it is safe to spam in the emoji servers
+  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
   return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
   return false if event.message.text.downcase.split(' ').include?('smol') && chn.id==502288368777035777
@@ -889,9 +889,9 @@ end
 def overlap_prevent(event) # used to prevent servers with both Liz and her debug form from receiving two replies
   if event.server.nil? # failsafe code catching PMs as not a server
     return false
-  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id)
+  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id)
     return @shardizard != 4 # the debug bot can be forced to be used in the emoji servers by including the word "debug" in your message
-  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) # emoji servers will use default Elise otherwise
+  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) # emoji servers will use default Elise otherwise
     return @shardizard == 4
   end
   return false
@@ -1639,6 +1639,8 @@ def find_emote(bot,event,item,mode=0,forcemoji=false)
     return "#{moji[0].icon_url}" if moji.length>0
     moji=bot.server(523822789308841985).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
     return "#{moji[0].icon_url}" if moji.length>0
+    moji=bot.server(691616574393811004).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+    return "#{moji[0].icon_url}" if moji.length>0
     return ''
   elsif has_any?(k2,['total','totals','summary','summarized','summery','summerized']) && !forcemoji
     f="#{item.split(' ')[0,item.split(' ').length-1].join(' ')} "
@@ -1661,6 +1663,8 @@ def find_emote(bot,event,item,mode=0,forcemoji=false)
   moji=bot.server(523825319916994564).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{f}#{k}" if moji.length>0
   moji=bot.server(523822789308841985).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
+  return "#{moji[0].mention}#{f}#{k}" if moji.length>0
+  moji=bot.server(691616574393811004).emoji.values.reject{|q| q.name.downcase != item.downcase.gsub(' ','_').gsub('-','').gsub("'",'')}
   return "#{moji[0].mention}#{f}#{k}" if moji.length>0
   return "#{item} #{k}"
 end
@@ -2784,37 +2788,41 @@ def disp_servant_ce2(bot,event,args=nil)
   end
   create_embed(event,["#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE ##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
   if k[26].length>1
-    text=''
-    ce=@crafts.find_index{|q| q[0]==k[26][1]}
-    ce=@crafts[ce] unless ce.nil?
-    ftr=nil
-    ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
-    ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
-    ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
-    ftr="For the other servant named Solomon, try servant #152." if k[0]==83
-    ftr="For the other servant named Solomon, try servant #83." if k[0]==152
-    title=nil
-    if ce.nil?
-      xpic=nil
-      text=">No CE information known<"
-    else
-      ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
-      cemoji=['<:Valentines:676941992768569374>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
-      cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
-      cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
-      xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
-      title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
-      text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*"
-      if ce[4]==ce[5] && ce[6]==ce[7]
-        text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+    for i in 1...k[26].length
+      text=''
+      ce=@crafts.find_index{|q| q[0]==k[26][i]}
+      ce=@crafts[ce] unless ce.nil?
+      ftr=nil
+      ftr='For info on the rarity-buffed version of this character, try "Mash Kyrielight Camelot"' if k[0]==1.0
+      ftr="This servant can switch to servant #1.2 at her Master's wish, after Lostbelt 1." if k[0]==1.1
+      ftr="This servant can switch to servant #1.1 at her Master's wish." if k[0]==1.2
+      ftr="For the other servant named Solomon, try servant #152." if k[0]==83
+      ftr="For the other servant named Solomon, try servant #83." if k[0]==152
+      title=nil
+      if ce.nil?
+        xpic=nil
+        text=">No CE information known<"
       else
-        text="#{text}\n\n__#{cemoji[1]}**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
-        text="#{text}\n\n__#{cemoji[2]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+        ce[7]="#{ce[6]}" if ce[7].nil? || ce[7].length<=0
+        cemoji=['<:Valentines:676941992768569374>','<:Limited:574682514585550848>','<:LimitBroken:574682514921095212>']
+        cemoji=['<:Icon_Support:448293527642701824>','<:Aether_Stone:510776805746278421>','<:Refining_Stone:453618312165720086>'] if k[13].include?('FEH Servant') || ce[10].include?('FEH')
+        cemoji=['<:HP:573344832307593216>','<:NonUnbound:534494090876682264>','<:Unbind:534494090969088000>'] if k[13].include?('DL Servant') || ce[10].include?('DL')
+        dispnum="#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}"
+        xpic="http://fate-go.cirnopedia.org/icons/essence_sample/craft_essence_#{dispnum}.png"
+        title="#{generate_rarity_row(ce,'craft')}\n**Cost:** #{ce[3]}"
+        text="#{text}\n**#{cemoji[0]} Valentine's CE for:** *#{k[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')} [Srv-##{k[0]}]*"
+        if ce[4]==ce[5] && ce[6]==ce[7]
+          text="#{text}\n\n**HP:** #{ce[4][0]}\n**Atk:** #{ce[4][1]}\n**Effect:** #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+        else
+          text="#{text}\n\n__#{cemoji[1]}**Base Limit**__\n*HP:* #{ce[4][0]}  \u00B7  *Atk:* #{ce[4][1]}\n*Effect:* #{ce[6].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+          text="#{text}\n\n__#{cemoji[2]}**Max Limit**__\n*HP:* #{ce[5][0]}  \u00B7  *Atk:* #{ce[5][1]}\n*Effect:* #{ce[7].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('; ',"\n")}"
+        end
+        text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
       end
-      text="#{text}\n\n__**Additional info**__\n#{ce[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless ce[12].nil? || ce[12].length.zero?
+      create_embed(event,["#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
     end
-    create_embed(event,["#{"**#{ce[1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}** [CE-##{ce[0]}]" unless ce.nil?}",title],text,xcolor,ftr,xpic)
   end
+  return nil
 end
 
 def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
@@ -5022,6 +5030,8 @@ def show_next(bot,event,args=nil,ignoreinputs=false)
   args=args.map{|q| q.downcase}
   msg=event.message.text.downcase.split(' ')
   jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
+  jp=false if event.channel.id==682110127251390484
+  jp=true if event.channel.id==657288969687531534
   mat_block=''
   mat_block=', ' if msg.include?('colorblind') || msg.include?('textmats')
   t=Time.now
@@ -5075,7 +5085,7 @@ def show_next(bot,event,args=nil,ignoreinputs=false)
       date=(((t2.to_i/60)/60)/24)
       str2='Tomorrow'
       str3=" (a #{['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.wday]})"
-      str5="~~This is displaying North America's *tomorrow*.  To show Japan's, include the word \"JP\" alongside the word \"tomorrow\".~~" unless jp || disp_date(t_na)==disp_date(t_jp)
+      str5="~~This is displaying North America's *tomorrow*.  To show Japan's, include the word \"JP\" alongside the word \"tomorrow\".~~" unless jp || disp_date(t_na)==disp_date(t_jp) || event.channel.id==682110127251390484
     else
       t=t_na
       tmw=(sftday==t.wday+1)
@@ -5209,6 +5219,8 @@ end
 def show_next_2(bot,event)
   msg=event.message.text.downcase.split(' ')
   jp=(msg.include?('jp') || msg.include?('japan') || msg.include?('japanese'))
+  jp=false if event.channel.id==682110127251390484
+  jp=true if event.channel.id==657288969687531534
   mat_block=''
   mat_block=', ' if msg.include?('colorblind') || msg.include?('textmats')
   tx=-1
@@ -5312,7 +5324,7 @@ def show_next_2(bot,event)
     date=(((t2.to_i/60)/60)/24)
     str="#{str}\n*Date assuming mat reset is at midnight:* #{disp_date(t_na)}"
     str="#{str}\n*Days since game release:* #{longFormattedNumber(date)}"
-    str3="~~You can include the word \"JP\" in your message to show JP data.~~"
+    str3="~~You can include the word \"JP\" in your message to show JP data.~~" unless event.channel.id==682110127251390484
     t_tot=t_na
   end
   if [-1,1].include?(tx)
@@ -7364,7 +7376,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   clzemote='<:class_unknown_blue:523948997229019136>'
   color='gold'
   xcolor=[]
-  if ['Healer','Tome'].include?(unt[1][1]) || unt[0]=='Mathoo'
+  if [268].include?(unt[8])
+    clzz='Archer / Berserker'
+  elsif ['Healer','Tome'].include?(unt[1][1]) || unt[0]=='Mathoo'
     clzz='Caster'
   elsif unt[1][1]=='Dagger' && ['Infantry','Flier'].include?(unt[3])
     clzz='Assassin'
@@ -7385,7 +7399,13 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   clzz='Saber' if unt[0]=='Raven'
   clzz='Avenger' if unt[0]=='Takumi(Fallen)'
   moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{clzz.downcase.gsub(' ','')}_#{color}"}
-  clzemote=moji[0].mention unless moji.length<0
+  clzemote=moji[0].mention unless moji.length<=0
+  if [268].include?(unt[8])
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_archer_#{color}"}
+    clzemote=moji[0].mention unless moji.length<=0
+    moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_berserker_#{color}"}
+    clzemote="#{clzemote}#{moji[0].mention}" unless moji.length<=0
+  end
   att='Man'
   if [199].include?(unt[8])
     att='Sky'
@@ -7495,14 +7515,18 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190,211,216].include?(unt[8])
     deck='QAABB'
-  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,204,205,251].include?(unt[8])
+  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,204,205,236,242,251,253,263].include?(unt[8])
     deck='QQAAB'
   elsif [61,114,194,296].include?(unt[8])
     deck='QAAAB'
-  elsif [32,38,45,83,97,102,104,125,143,170].include?(unt[8])
+  elsif [32,38,45,83,97,102,104,125,143,170,230].include?(unt[8])
     deck='QABBB'
-  elsif [62,68,128,142,154,206].include?(unt[8])
+  elsif [62,68,128,142,154,206,239,249,505].include?(unt[8])
     deck='QQABB'
+  elsif [245].include?(unt[8])
+    deck='QQQAB'
+  elsif [268].include?(unt[8])
+    deck='QQQAB / QABBB'
   end
   xcolor.push([33,188,44]) if deck[1,1]=='Q'
   xcolor.push([33,188,44]) if deck[1,2]=='QQ'
@@ -7510,6 +7534,12 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   xcolor.push([254,33,22]) if deck[2,2]=='BB'
   xcolor.push([11,77,223]) if deck.include?('AA')
   xcolor.push([11,77,223]) if deck.include?('AAA')
+  if [268].include?(unt[8])
+    deck='QQQAB / QABBB'
+    xcolor=[]
+    xcolor.push([33,188,44])
+    xcolor.push([254,33,22])
+  end
   str="#{str}\n\n**Command Deck:** #{deck.gsub('Q','<:quick:523854796692783105>').gsub('A','<:arts:523854803013730316>').gsub('B','<:buster:523854810286391296>')} (#{deck})"
   qab=[2*l1[2]+unt[4][2], 2*l1[4]+unt[4][4], 2*l1[1]+unt[4][1]]
   qab[0]+=2 if unt[1][0]=='Green'
@@ -7518,7 +7548,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   np=''
   if [13,27,34,75,122,136].include?(unt[8])
     np='<:quick:523854796692783105> (Quick)'
-  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194,214].include?(unt[8])
+  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194,214,236,238,268,269].include?(unt[8])
     np='<:arts:523854803013730316> (Arts)'
   elsif [41,63,138,66,68,63,81,88,99,133,154,172,175,296].include?(unt[8])
     np='<:buster:523854810286391296> (Buster)'
@@ -7527,6 +7557,8 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif !fehskills.find_index{|q| q[1]=='Dance'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Dance'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
     np='<:arts:523854803013730316> (Arts)'
   elsif !fehskills.find_index{|q| q[1]=='Sing'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Sing'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
+    np='<:arts:523854803013730316> (Arts)'
+  elsif !fehskills.find_index{|q| q[1]=='Play'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Play'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
     np='<:arts:523854803013730316> (Arts)'
   elsif qab.max==qab[2]
     np='<:buster:523854810286391296> (Buster)'
@@ -7557,7 +7589,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
     np="#{np} - *Target:* All Enemies / All Aliies"
   elsif [59,104].include?(unt[8])
     np="#{np} - *Target:* Self / Enemy"
-  elsif [15,93,78,101,168].include?(unt[8])
+  elsif [268].include?(unt[8])
+    np="#{np} - *Target:* Self"
+  elsif [15,93,78,101,168,248].include?(unt[8])
     np="#{np} - *Target:* All Allies"
   elsif unt[1][1]=='Healer'
     np="#{np} - *Target:* All Allies"
@@ -8135,7 +8169,7 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
   metadata_load()
   if event.server.nil?
     event.respond 'It is safe for me to send long replies here because this is my PMs with you.'
-  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id)
+  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id)
     event.respond 'It is safe for me to send long replies here because this is one of my emoji servers.'
   elsif @shardizard==4
     event.respond 'It is safe for me to send long replies here because this is my debug mode.'
@@ -8236,7 +8270,9 @@ end
 
 bot.command([:bugreport, :suggestion, :feedback]) do |event, *args|
   return nil if overlap_prevent(event)
-  bug_report(bot,event,args,@shards,shard_data(0),'Shard',['liz!','liz?','fate!','fate?','fgo!','fgo?'],502288368777035777)
+  x=['liz!','liz?','fate!','fate?','fgo!','fgo?']
+  x.push(@prefixes[event.server.id]) unless event.server.nil? || @prefixes[event.server.id].nil?
+  bug_report(bot,event,args,@shards,shard_data(0),'Shard',x,502288368777035777)
 end
 
 bot.command([:donation,:donate]) do |event, uid|
@@ -10248,7 +10284,7 @@ bot.server_create do |event|
     end
     chn=chnn[0] if chnn.length>0
   end
-  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) && @shardizard==4
+  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) && @shardizard==4
     (chn.send_message(get_debug_leave_message()) rescue nil)
     event.server.leave
   else
@@ -10853,7 +10889,7 @@ end
 bot.ready do |event|
   if @shardizard==4
     for i in 0...bot.servers.values.length
-      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(bot.servers.values[i].id)
+      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(bot.servers.values[i].id)
         bot.servers.values[i].general_channel.send_message(get_debug_leave_message()) rescue nil
         bot.servers.values[i].leave
       end
