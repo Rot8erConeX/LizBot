@@ -10,6 +10,7 @@ require 'tzinfo/data'                  # Downloaded with active_support below, b
 require 'rufus-scheduler'              # Download link: https://github.com/jmettraux/rufus-scheduler
 require 'active_support/core_ext/time' # Download link: https://rubygems.org/gems/activesupport/versions/5.0.0
 require_relative 'rot8er_functs'       # functions I use commonly in bots
+@location="C:/Users/#{@mash}/Desktop/"
 
 # this is required to get her to change her avatar on certain holidays
 ENV['TZ'] = 'America/Chicago'
@@ -188,6 +189,7 @@ system("title loading #{shard_data(2)[@shardizard]} LizBot")
 
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
+  return false if event.user.id==213048998678888448
   return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
   return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
@@ -7396,8 +7398,13 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif unt[1][1]=='Beast'
     clzz='Berserker'
   end
-  clzz='Saber' if unt[0]=='Raven'
-  clzz='Avenger' if unt[0]=='Takumi(Fallen)'
+  if [77,277].include?(unt[8])
+    clzz='Saber'
+  elsif [228].include?(unt[8])
+    clzz='Avenger'
+  elsif [300].include?(unt[8])
+    clzz='Berserker'
+  end
   moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{clzz.downcase.gsub(' ','')}_#{color}"}
   clzemote=moji[0].mention unless moji.length<=0
   if [268].include?(unt[8])
@@ -7513,20 +7520,24 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif qab.max==qab[2]
     deck='QQABB'
   end
-  if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190,211,216].include?(unt[8])
+  if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190,211,216,275,284,289,301,304].include?(unt[8])
     deck='QAABB'
-  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,204,205,236,242,251,253,263].include?(unt[8])
+  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,204,205,236,242,251,253,263,278,291,297].include?(unt[8])
     deck='QQAAB'
-  elsif [61,114,194,296].include?(unt[8])
+  elsif [61,114,194,293,296].include?(unt[8])
     deck='QAAAB'
-  elsif [32,38,45,83,97,102,104,125,143,170,230].include?(unt[8])
+  elsif [32,38,45,83,97,102,104,125,143,170,230,279,287].include?(unt[8])
     deck='QABBB'
-  elsif [62,68,128,142,154,206,239,249,505].include?(unt[8])
+  elsif [62,68,128,142,154,206,239,249,260,267,272,274,283,308,505].include?(unt[8])
     deck='QQABB'
+  elsif [280,281].include?(unt[8])
+    deck='QQAAB'
   elsif [245].include?(unt[8])
     deck='QQQAB'
   elsif [268].include?(unt[8])
     deck='QQQAB / QABBB'
+  elsif [199].include?(unt[8])
+    deck='BBBBB'
   end
   xcolor.push([33,188,44]) if deck[1,1]=='Q'
   xcolor.push([33,188,44]) if deck[1,2]=='QQ'
@@ -7548,9 +7559,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   np=''
   if [13,27,34,75,122,136].include?(unt[8])
     np='<:quick:523854796692783105> (Quick)'
-  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194,214,236,238,268,269].include?(unt[8])
+  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194,214,236,238,268,269,271,280,289,298,301].include?(unt[8])
     np='<:arts:523854803013730316> (Arts)'
-  elsif [41,63,138,66,68,63,81,88,99,133,154,172,175,296].include?(unt[8])
+  elsif [41,63,138,66,68,63,81,88,99,133,154,172,175,199,296].include?(unt[8])
     np='<:buster:523854810286391296> (Buster)'
   elsif unt[1][1]=='Healer'
     np='<:arts:523854803013730316> (Arts)'
@@ -7589,7 +7600,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
     np="#{np} - *Target:* All Enemies / All Aliies"
   elsif [59,104].include?(unt[8])
     np="#{np} - *Target:* Self / Enemy"
-  elsif [268].include?(unt[8])
+  elsif [265,268].include?(unt[8])
     np="#{np} - *Target:* Self"
   elsif [15,93,78,101,168,248].include?(unt[8])
     np="#{np} - *Target:* All Allies"
@@ -7627,7 +7638,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   hits=[4,2,3,5,2] if unt[8]==20
   hits=[3,2,4,5,2] if unt[8]==28
   hits=[2,2,2,2,2] if unt[8]==109
-  hits[4]=2 if [32,63,125,138].include?(unt[8])
+  hits[1]=3 if [298].include?(unt[8])
+  hits[4]=2 if [32,63,125,138,231].include?(unt[8])
+  hits[4]=5 if [260].include?(unt[8])
   str="#{str}\n\n**Hit Counts:**\u00A0\u00A0<:Quick_y:526556106986618880>#{hits[0]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Arts_y:526556105489252352>#{hits[1]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Buster_y:526556105422274580>#{hits[2]}\u00A0\u00A0\u00B7\u00A0\u00A0<:Extra_y:526556105388720130>#{hits[3]}\u00A0\u00A0\u00B7\u00A0\u00A0<:NP:523858635843960833>#{hits[4]}"
   artscnt=1
   artscnt=2 if deck.include?('AA')
@@ -7654,10 +7667,12 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   traits.push('Humanoid')
   traits.push('Servant')
   traits.push('Divine') if ['Light','Dark','Astra','Anima'].include?(unt[2][0])
-  traits.push('Dragon') if unt[1][1]=='Dragon' || ['Marth','Chrom','Lucina','Owain','Robin','Morgan','Roy','Ninian','Naga','Tiki','Bantu','Nagi','Corrin','Kana','Sothis','Myrrh','Fae','Nowi','Nah','Xander','Siegbert','Camilla','Leo','Forrest','Elise','Ryoma','Shiro','Hinoka','Takumi','Kiragi','Sakura','Julia','Julius','Arvis','Saias','Deirdre','Ishtar','Ares','Ayra','Eldigan','Lachesis','Nanna','Sigurd','Ethlyn','Seliph','Quan','Leif','Lene','Lewyn','Silvia','Tailtiu','Alm','Azelle','Lex','Edain','Chulainn','Claud','Brigid','Oifey','Shannan','Travant','Lana','Larcei','Ulster','Diarmuid','Lester','Fee','Ced','Arthur','Amid','Iuchar','Iucharba','Patty','Tine','Linda','Febail','Coirpre','Altena','Ishtore','Arion','Hilda(Jugdral)','Andorey','Byleth','Dimitri','Claude','Edelgard','Hilda(3H)','Ferdinand','Lindhart','Bernie','Bernadetta','Felix','Sylvain','Mercedes','Annette','Seteth','Flayn','Rhea','Ingrid','Lorenz','Lysithia','Marianne','Hanneman','Catherine(3H)','Eyvel','Galzus','Mareeta','Linoan','Idunn','Soren','Kurthnaga','Ena','Nasir','Almedha','Dheginsea','Rajaion','Gareth','Azura','Shigure'].include?(unt[12].gsub('*','').split(', ')[0])
+  traits.push('Dragon') if unt[1][1]=='Dragon' || ['Marth','Chrom','Lucina','Owain','Robin','Morgan','Roy','Ninian','Naga','Tiki','Bantu','Nagi','Corrin','Kana','Sothis','Myrrh','Fae','Nowi','Nah','Xander','Siegbert','Camilla','Leo','Forrest','Elise','Ryoma','Shiro','Hinoka','Takumi','Kiragi','Sakura','Julia','Julius','Arvis','Saias','Deirdre','Ishtar','Ares','Ayra','Eldigan','Lachesis','Nanna','Sigurd','Ethlyn','Seliph','Quan','Leif','Lene','Lewyn','Silvia','Tailtiu','Alm','Azelle','Lex','Edain','Chulainn','Claud','Brigid','Oifey','Shannan','Travant','Lana','Larcei','Ulster','Diarmuid','Lester','Fee','Ced','Arthur','Amid','Iuchar','Iucharba','Patty','Tine','Linda','Febail','Coirpre','Altena','Ishtore','Arion','Hilda(Jugdral)','Andorey','Byleth','Dimitri','Claude','Edelgard','Hilda(3H)','Ferdinand','Lindhart','Bernie','Bernadetta','Felix','Sylvain','Mercedes','Annette','Seteth','Flayn','Rhea','Ingrid','Lorenz','Lysithia','Marianne','Hanneman','Catherine(3H)','Eyvel','Galzus','Mareeta','Linoan','Idunn','Soren','Kurthnaga','Ena','Nasir','Almedha','Dheginsea','Rajaion','Gareth','Azura','Shigure','Ophelia'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Earth or Sky') if ['Earth','Sky'].include?(att)
   traits.push('Fallen') if unt[0].include?('(Fallen)') || ['Surtr','Hel','Duma'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('King') if [2,8,32,35,36,98].include?(unt[8])
+  traits.push('Stargirl') if [298].include?(unt[8])
+  traits.push('Busty') if [199].include?(unt[8])
   traits.push('Mecha') if ['Elise'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Riding') if ['Cavalry','Flier'].include?(unt[3]) && !['Dragon','Beast'].include?(unt[1][1])
   traits.push('Robin Face') if unt[6]=='Fujiwara Ryo' || (unt[12].gsub('*','').split(', ')[0]=='Robin' && !unt[0].include?('Fallen'))
@@ -8505,7 +8520,7 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
   end
   nzzzzz=b.uniq
   nz=nzzzzz.reject{|q| q[0]!='Servant'}
-  if nz[nz.length-1][2]<238
+  if nz[nz.length-1][2]<276
     event << 'Last backup of the alias list has been corrupted.  Restoring from manually-created backup.'
     if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt")
       b=[]
@@ -10155,43 +10170,46 @@ end
 bot.command(:reload, from: 167657750971547648) do |event|
   return nil if overlap_prevent(event)
   return nil unless [167657750971547648,78649866577780736].include?(event.user.id) || [502288368777035777,386658080257212417].include?(event.channel.id)
-  event.respond "Reload what?\n1.) Aliases, from backups#{"\n2.) Data, from GitHub" if [167657750971547648,78649866577780736].include?(event.user.id)}#{"\n3.) Source code, from GitHub" if event.user.id==167657750971547648}\nYou can include multiple numbers to load multiple things."
+  event.respond "Reload what?\n1.) Aliases, from backups#{" (unless includes the word \"git\")\n2.) ~~empty slot#{', redirects to 3' if event.user.id==78649866577780736}~~\n3.) Data, from GitHub (include \"subset\" in your message to also reload FGOSkillSubsets)" if [167657750971547648,78649866577780736].include?(event.user.id)}#{"\n4.) Source code, from GitHub (include the word \"all\" to also reload rot8er_functs.rb)\n5.) Crossover data" if event.user.id==167657750971547648}\nYou can include multiple numbers to load multiple things."
   event.channel.await(:bob, from: event.user.id) do |e|
     reload=false
     if e.message.text.include?('1')
-      if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt")
-        b=[]
-        File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt").each_line do |line|
-          b.push(eval line)
-        end
+      if e.message.text.include?('git') && [167657750971547648,78649866577780736].include?(event.user.id)
       else
-        b=[]
-      end
-      nzzzzz=b.uniq
-      nz=nzzzzz.reject{|q| q[0]!='Servant'}
-      if nz[nz.length-1][2]<238
-        e << 'Last backup of the alias list has been corrupted.  Restoring from manually-created backup.'
-        if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt")
+        if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt")
           b=[]
-          File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt").each_line do |line|
+          File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt").each_line do |line|
             b.push(eval line)
           end
         else
           b=[]
         end
         nzzzzz=b.uniq
-      else
-        e << 'Last backup of the alias list being used.'
-      end
-      open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
-        for i in 0...nzzzzz.length
-          f.puts "#{nzzzzz[i].to_s}#{"\n" if i<nzzzzz.length-1}"
+        nz=nzzzzz.reject{|q| q[0]!='Servant'}
+        if nz[nz.length-1][2]<276
+          e.respond 'Last backup of the alias list has been corrupted.  Restoring from manually-created backup.'
+          if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt")
+            b=[]
+            File.open("C:/Users/#{@mash}/Desktop/devkit/FGONames3.txt").each_line do |line|
+              b.push(eval line)
+            end
+          else
+            b=[]
+          end
+          nzzzzz=b.uniq
+        else
+          e.respond 'Last backup of the alias list being used.'
         end
-      }
-      e << 'Alias list has been restored from backup.'
-      reload=true
+        open("C:/Users/#{@mash}/Desktop/devkit/FGONames.txt", 'w') { |f|
+          for i in 0...nzzzzz.length
+            f.puts "#{nzzzzz[i].to_s}#{"\n" if i<nzzzzz.length-1}"
+          end
+        }
+        e.respond 'Alias list has been restored from backup.'
+        reload=true
+      end
     end
-    if e.message.text.include?('2') && [167657750971547648,78649866577780736].include?(event.user.id)
+    if (e.message.text.include?('3') && [167657750971547648,78649866577780736].include?(event.user.id)) || (e.message.text.include?('2') && [78649866577780736].include?(event.user.id))
       event.channel.send_temporary_message('Loading.  Please wait 5 seconds...',3)
       to_reload=['Servants','CraftEssances','Skills','CommandCodes','SkillSubsets','Clothes','Enemies','Mats']
       stx=''
@@ -10200,6 +10218,7 @@ bot.command(:reload, from: 167657750971547648) do |event|
         IO.copy_stream(download, "FGOTemp.txt")
         if to_reload[i]=='Skills' && File.size("FGOTemp.txt")<File.size("FGOSkills.txt")*2/3
           stx='Skills were not reloaded because the file was loaded from the wrong sheet.'
+        elsif to_reload[i]=='SkillSubsets' && File.size("FGOTemp.txt")<File.size("FGOSkillSubsets.txt") && !e.message.text.include?('subset')
         elsif File.size("FGOTemp.txt")>100
           b=[]
           File.open("FGOTemp.txt").each_line.with_index do |line, idx|
@@ -10210,10 +10229,10 @@ bot.command(:reload, from: 167657750971547648) do |event|
           }
         end
       end
-      e.respond "New data loaded.\n#{stx}"
+      e.respond "New data loaded.\n#{'FGOSkillSubsets also reloaded' if e.message.text.include?('subset')}"
       reload=true
     end
-    if e.message.text.include?('3') && [167657750971547648].include?(event.user.id)
+    if e.message.text.include?('4') && [167657750971547648].include?(event.user.id)
       download = open("https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/LizBot.rb")
       IO.copy_stream(download, "FGOTemp.txt")
       if File.size("FGOTemp.txt")>100
@@ -10241,6 +10260,47 @@ bot.command(:reload, from: 167657750971547648) do |event|
           reload=true
         end
       end
+      download = open("https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/rot8er_functs.rb")
+      IO.copy_stream(download, "FGOTemp.txt")
+      if File.size("FGOTemp.txt")>100 && e.message.text.include?('all')
+        b=[]
+        File.open("FGOTemp.txt").each_line.with_index do |line, idx|
+          b.push(line.gsub('Mini-Matt',@mash))
+        end
+        open("rot8er_functs.rb", 'w') { |f|
+          f.puts b.join('')
+        }
+        reload=true
+      end
+    end
+    if e.message.text.include?('5') && [167657750971547648].include?(event.user.id)
+      to_reload=['Adventurers','Dragons','Wyrmprints']
+      for i in 0...to_reload.length
+        download = open("https://raw.githubusercontent.com/Rot8erConeX/BotanBot/master/DL#{to_reload[i]}.txt")
+        IO.copy_stream(download, "DLTemp.txt")
+        if File.size("DLTemp.txt")>100
+          b=[]
+          File.open("DLTemp.txt").each_line.with_index do |line, idx|
+            b.push(line)
+          end
+          open("DL#{to_reload[i]}.txt", 'w') { |f|
+            f.puts b.join('')
+          }
+        end
+      end
+      download = open("https://raw.githubusercontent.com/Rot8erConeX/EliseBot/master/EliseBot/FEHUnits.txt")
+      IO.copy_stream(download, "DLTemp.txt")
+      if File.size("DLTemp.txt")>100
+        b=[]
+        File.open("DLTemp.txt").each_line.with_index do |line, idx|
+          b.push(line)
+        end
+        open("FEHUnits.txt", 'w') { |f|
+          f.puts b.join('')
+        }
+      end
+      e.respond 'New cross-data loaded.'
+      reload=true
     end
     e.respond 'Nothing reloaded.  If you meant to use the command, please try it again.' unless reload
   end
