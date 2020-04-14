@@ -806,6 +806,7 @@ Guardians of the Voyage\B\Skill\7\All Allies\NPDmgUp, AtkUp, DebuffImmunity\Incr
 Mana Burst (Light / Ancient)\A\Skill\8\Self\QuickUp, ArtsUp, Evade\Increase Quick Card effectiveness (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\Increase Arts Card effectiveness (3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\Apply Evade (1 turn)\-\-\-\-
 Trident of Plunder\B\Skill\7\Self\AtkUp, DefDown\Apply buff that applies Increase ATK (1 turn) to self before normal attacking (3 times, 3 turns);; 10%;; 11%;; 12%;; 13%;; 14%;; 15%;; 16%;; 17%;; 18%;; 20%\Apply Buff that inflicts ATK Down (1 turn) when normal attacking (3 times, 3 turns);; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%;; 10%\Apply Damage Cut (3 times, 3 turns);; 2000;; 2100;; 2200;; 2300;; 2400;; 2500;; 2600;; 2700;; 2800;; 3000\-\-\-\-
 Sea God's Favour\A\Skill\8\Self\Guts, FlatDmgDown\Apply Guts (1 time, 3 turns);; 1000;; 1200;; 1400;; 1600;; 1800;; 2000;; 2200;; 2400;; 2600;; 3000\-\-\-\-\-\-
+Monsterous Strength\B+\Skill\7\Self\AtkUp\Increase ATK (2 turns);; 20%;; 22%;; 24%;; 26%;; 28%;; 30%;; 32%;; 34%;; 36%;; 40%\-\-\-\-\-\-
 Altereactor\A\Passive\Increase Debuff Resist by 20%\DebuffResistUp
 At the Boundary\A\Passive\Apply Death Immune, Increase Charm Resist by 100%, 5% chance to inflict Death each time you attack\DeathImmunity, DebuffResistUp, DeathRateUp
 Authority of Beasts\D\Passive\Increase Critical Strength by 8%\CritDmgUp
@@ -950,6 +951,7 @@ Messenger God's Protection\B\Passive\Apply Immunity to Pig Status from a certain
 Riding\B+\Passive\Increase Quick Card effectiveness by 9%\QuickUp
 Twin Deities\B\Passive\Apply Damage Plus 225, Increase NP Gain by 5%, Increase Critical Star Drop Rate by 5%\DmgUpFlat, NPGainUpAtk, StarGenUp
 Poseidon's Essence\B\Passive\Apply Damage Plus 225, Increase Arts Card effectiveness by 8%\ArtsUp, DmgUpFlat
+Madness Enhancement\B-\Passive\Increase Buster Card effectiveness by 7.5%\BusterUp
 Lord Chaldeas\1.0\Noble\Virtual Noble Phantasm, Pseudo-Deployment / Humanity's Foundation\D\Anti-Personnel\All Allies\DefUp, FlatDmgDown\Increase DEF of all allies (3 turns) <OVERCHARGE>;; 30%;; 35%;; 40%;; 45%;; 50%\Apply Damage Cut (3 turns) <LEVEL>;; 100;; 550;; 775;; 888;; 1000\-\-\-\-\-\-\-\-
 Lord Camelot\1.1\Noble\Castle of the Distant Utopia\B+++\Anti-Evil\All Allies \DefUp, FlatDmgDown, AtkUp\Increase DEF of all allies (3 turns) <OVERCHARGE>;; 30%;; 35.00%;; 40.00%;; 45.00%;; 50.00%\Apply Damage Cut (3 turns) <LEVEL>;; 100;; 550;; 775;; 888;; 1000\Increase ATK of all allies except self (3 turns);; 30%;; 30.00%;; 30.00%;; 30.00%;; 30.00%\-\-\-\-\-\-\-
 Mold Camelot\1.2\Noble\Castle of Transient Dreams\D\Anti-Personnel\All Allies \DefUp, FlatDmgDown\Increase DEF of all allies (3 turns) <OVERCHARGE>;; 30%;; 35.00%;; 40.00%;; 45.00%;; 50.00%\Apply Damage Cut (3 times, 5 turns) <LEVEL>;; 100;; 550;; 775;; 888;; 1000\-\-\-\-\-\-\-\-
