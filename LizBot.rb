@@ -6869,11 +6869,7 @@ def generate_random_servant(event,bot)
   alter=' (Alter)' if rand(5)<=0
   alter=" (#{['Maid','Santa'].sample} Alter)" if rand(50)<=0
   imgx=event.user
-  unless event.server.nil?
-    imgx=event.server.users.sample
-    imgx=event.user if rand(100).zero? && event.server.users.length>100
-  end
-  if event.message.mentions.length>0 && rand(100)<[event.message.mentions.length*10,50].min
+  if event.message.mentions.length>0
     imgx=event.message.mentions.sample
   end
   img=imgx.avatar_url
@@ -10321,7 +10317,7 @@ end
 bot.command(:reload, from: 167657750971547648) do |event|
   return nil if overlap_prevent(event)
   return nil unless [167657750971547648,78649866577780736].include?(event.user.id) || [502288368777035777,386658080257212417].include?(event.channel.id)
-  event.respond "Reload what?\n1.) Aliases, from backups#{" (unless includes the word \"git\")\n2.) ~~empty slot#{', redirects to 3' if event.user.id==78649866577780736}~~\n3.) Data, from GitHub (include \"subset\" in your message to also reload FGOSkillSubsets)" if [167657750971547648,78649866577780736].include?(event.user.id)}#{"\n4.) Source code, from GitHub (include the word \"all\" to also reload rot8er_functs.rb)\n5.) Crossover data" if event.user.id==167657750971547648}\nYou can include multiple numbers to load multiple things."
+  event.respond "Reload what?\n1.) Aliases, from backups#{" (unless includes the word \"git\")\n2.) ~~empty slot#{', redirects to 3' if event.user.id==78649866577780736}~~\n3.) Data, from GitHub (include \"subset\" in your message to also reload FGOSkillSubsets)" if [167657750971547648,78649866577780736].include?(event.user.id)}#{"\n4.) Source code, from GitHub (include the word \"all\" to also reload rot8er_functs.rb)\n5.) Crossover data\n6.) ~~empty slot~~\n7.) Avatars, from GitHub" if event.user.id==167657750971547648}\nYou can include multiple numbers to load multiple things."
   event.channel.await(:bob, from: event.user.id) do |e|
     reload=false
     if e.message.text.include?('1')
@@ -10451,6 +10447,39 @@ bot.command(:reload, from: 167657750971547648) do |event|
         }
       end
       e.respond 'New cross-data loaded.'
+      reload=true
+    end
+    if e.message.text.include?('7') && [167657750971547648].include?(event.user.id)
+      download = open("https://raw.githubusercontent.com/Rot8erConeX/EliseBot/master/EliseBot/FEHDonorList.txt")
+      IO.copy_stream(download, "FGOTemp.txt")
+      if File.size("FGOTemp.txt")>100
+        b=[]
+        File.open("FGOTemp.txt").each_line.with_index do |line, idx|
+          b.push(line)
+        end
+        open("FEHDonorList.txt", 'w') { |f|
+          f.puts b.join('')
+        }
+      end
+      download = open("https://raw.githubusercontent.com/Rot8erConeX/EliseBot/master/EliseBot/FEHBotArtList.txt")
+      IO.copy_stream(download, "FGOTemp.txt")
+      x=[]
+      if File.size("FGOTemp.txt")>100
+        b=[]
+        File.open("FGOTemp.txt").each_line.with_index do |line, idx|
+          b.push(line)
+        end
+        x=b[1].gsub("\n",'').split('\\'[0])
+        for i in 0...x.length
+          download = open("https://raw.githubusercontent.com/Rot8erConeX/EliseBot/master/EliseBot/EliseImages/#{x[i]}.png")
+          IO.copy_stream(download, "FGOTemp#{@shardizard}.png")
+          if File.size("FGOTemp#{@shardizard}.png")>100
+            download = open("https://raw.githubusercontent.com/Rot8erConeX/EliseBot/master/EliseBot/EliseImages/#{x[i]}.png")
+            IO.copy_stream(download, "EliseImages/#{x[i]}.png")
+          end
+        end
+      end
+      e.respond 'Avatars reloaded'
       reload=true
     end
     e.respond 'Nothing reloaded.  If you meant to use the command, please try it again.' unless reload
@@ -10957,6 +10986,7 @@ def next_holiday(bot,mode=0)
             [0,3,17,'DaVinci',"pretend that I'm a genius","Info gatherer's birthday"],
             [0,4,1,'RiyoLiz','Fate/Grand Order?',"April Fool's Day"],
             [0,4,24,'Rhyme','dressup as my last owner.',"Coder's birthday"],
+            [0,5,10,'DaVinci(Maid)','errand-girl for Master','Maid Day'],
             [0,7,4,'Edison','games against my rival, Tesla',"4th of July"],
             [0,10,31,'Carmilla','as my spooky older self',"All Hallow's Eve"]]
   d=get_donor_list().reject{|q| q[2][1]<3 || q[4][1]=='-'}
