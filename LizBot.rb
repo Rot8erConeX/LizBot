@@ -2311,6 +2311,7 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   xpic=servant_icon(k,event,art)
   xpic=nil if chain
   ftr=nil
+  k[13].push('Evil *[added]*') if k[0]==74 && event.message.text.downcase.include?('crime')
   xflds=triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)})
   if k[0].to_i==81 && chain
     data_load()
@@ -2331,7 +2332,6 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   end
   nme="#{k[1]}"
   nme='Dr. Jekyll' if k[0]==81.0 && !chain
-  k[13].push('Evil *[added]*') if k[0]==74 && event.message.text.downcase.include?('crime')
   create_embed(event,["#{"__#{"Mathoo's " if dv>=0}**#{nme}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,6,colorshift)}" unless chain}",text],text2,xcolor,ftr,xpic,xflds)
 end
 
@@ -6401,6 +6401,7 @@ def sort_servants(bot,event,args=nil)
     end
     disp.push("Srv-#{char[i][0]}#{'.' if char[i][0]>=2}) #{char[i][1]}#{servant_moji(bot,event,char[i],1)}#{"  -  #{m.join('  -  ')}" if m.length>0}")
   end
+  d=['ID','Name','Servant ID','Rarity','ID','Level','<:FGO_HP:653485372168470528>HP','<:FGO_Atk:653485372231122944>Atk']
   str="__**Search**__#{"\n#{search.join("\n")}" if search.length>0}#{"\n*Sorted by:* #{srt.reject{|q| q==4}.uniq.map{|q| d[q]}.join(', ')}\n*Sorted at:* #{['Base','Default Max','Grailed Max'][lvl]} Level" if srt.reject{|q| q==2}.length>0}#{"\n\n__**Additional notes**__\n#{textra}" if textra.length>0}\n\n__**Results**__"
   str="__**Results**__" if str=="__**Search**__\n\n__**Results**__"
   tx=0
