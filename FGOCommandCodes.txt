@@ -1,3 +1,4 @@
+LizBot Data
 1\Mortal\1\Apply Special Attack [Human] 5%\Friend Point Summon
 2\Brute\1\Apply Special Attack [Beast] 5%\Friend Point Summon
 3\Corpse\1\Apply Special Attack [Undead] 5%\Friend Point Summon
@@ -57,3 +58,8 @@
 57\Himeji Bat\3\Remove 1 Buff that increases Critical Strength from the enemy, Restore own HP by 100\Valentine 2020
 58\Genie's Lamp\4\Inflict Burn (300 damage, 3 turns), Gain 2 Critical Stars\Valentine 2020
 59\Wisteria Fragrant Court Lady\5\Apply Special Attack [Demonic] 20%\Valentine 2020
+60\Great Witch's Wheat Porridge\4\Inflict Poison (1000 damage, 3 turns), Restore HP of enemy by 300 [Demerit]
+61\Blades of Niten Doraku\4\Increase Critical Strength by 20% when installed into a Buster Card
+62\Sky Blue Corpse Command Seal\3\Apply Special Attack [Demonic] 10%\Fate/Requiem
+63\Cosmos Voyager's License\4\Gain 2 Critical Stars, Remove 1 Poison, Curse, or Burn Debuff from self\Fate/Requiem
+64\Vive la France\5\Increase Critical Star Absorb by 100%, Recover HP of all allies by 100\Fate/Requiem
