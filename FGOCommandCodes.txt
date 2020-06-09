@@ -1,4 +1,3 @@
-LizBot Data
 1\Mortal\1\Apply Special Attack [Human] 5%\Friend Point Summon
 2\Brute\1\Apply Special Attack [Beast] 5%\Friend Point Summon
 3\Corpse\1\Apply Special Attack [Undead] 5%\Friend Point Summon
