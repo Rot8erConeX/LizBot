@@ -908,13 +908,13 @@ def all_commands(include_nil=false,permissions=-1)
      'micro','smol','squashed','littlestats','littlestat','statslittle','statlittle','little','stats','stat','traits','trait','skills','np','noble','phantasm',
      'noblephantasm','ce','bond','bondce','mats','ascension','enhancement','enhance','materials','art','riyo','code','command','commandcode','craft','find',
      'essance','craftessance','list','search','skill','mysticcode','mysticode','mystic','clothes','clothing','artist','channellist','chanelist','spamchannels',
-     'spamlist','snagchannels','boop','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool',
+     'spamlist','snagchannels','mat','material','donation','donate','ignoreuser','spam','sort','tools','links','resources','resource','link','tool','reload',
      'boop','valentines','valentine','chocolate','cevalentine','cevalentines','valentinesce','valentinece','tags','skil','skils','today','next','daily','moop',
      'dailies','today_in_fgo','todayinfgo','schedule','safe','safe2spam','s2s','safetospam','long','longreplies','tomorrow','tommorrow','tomorow','tommorow',
      'lookup','invite','exp','xp','sexp','sxp','servantexp','servantxp','level','plxp','plexp','pllevel','plevel','pxp','pexp','sxp','sexp','slevel','cxp',
      'cexp','ceexp','clevel','celevel','prefix','shard','deck','random','rand','alts','alt','avvie','avatar','devedit','dev_edit','alias','edit','support',
      'profile','friends','friend','affinity','affinities','affinitys','effective','eff','resist','resistance','resistances','res','np1','np2','np3','np4','np5',
-     'reload','essence','craftessence','update']
+     'essence','craftessence','update']
   k=['addalias','deletealias','removealias','prefix'] if permissions==1
   k=['sortaliases','status','sendmessage','sendpm','leaveserver','cleanupaliases','backupaliases','reboot','snagchannels','devedit','dev_edit','reload','update'] if permissions==2
   k.push(nil) if include_nil
@@ -1631,6 +1631,42 @@ def find_data_ex(callback,name,event,fullname=false,buffer=nil,buffer2=nil)
   return blank
 end
 
+def find_best_match(name,bot,event,fullname=false,ext=false,mode=1)
+  functions=[[:find_servant,:disp_servant_all,:disp_servant_art],
+             [:find_ce,:disp_ce_card,:disp_ce_art],
+             [:find_skill,:disp_skill_data],
+             [:find_clothes,:disp_clothing_data],
+             [:find_code,:disp_code_data,:disp_code_art],
+             [:find_mat,:disp_mat_data],
+             [:find_enemy,:disp_enemy_traits]]
+  for i3 in 0...functions.length
+    k=method(functions[i3][0]).call(name,event,true,ext)
+    return method(functions[i3][mode]).call(bot,event,name.split(' ')) if !functions[i3][mode].nil? && k.length>0
+  end
+  args=name.split(' ')
+  for i in 0...args.length
+    for i2 in 0...args.length-i
+      for i3 in 0...functions.length
+        k=method(functions[i3][0]).call(args[i,args.length-i-i2].join(' '),event,true,ext)
+        return method(functions[i3][mode]).call(bot,event,args) if !functions[i3][mode].nil? && k.length>0 && args[i,args.length-i-i2].length>0
+      end
+    end
+  end
+  return nil if fullname || name.length<=2
+  for i3 in 0...functions.length
+    k=method(functions[i3][0]).call(name,event,false,ext)
+    return method(functions[i3][mode]).call(bot,event,name.split(' ')) if !functions[i3][mode].nil? && k.length>0
+  end
+  args=name.split(' ')
+  for i in 0...args.length
+    for i2 in 0...args.length-i
+      k=method(functions[i3][0]).call(args[i,args.length-i-i2].join(' '),event,false,ext)
+      return method(functions[i3][mode]).call(bot,event,args) if !functions[i3][mode].nil? && k.length>0 && args[i,args.length-i-i2].length>0
+    end
+  end
+  return nil
+end
+
 def find_emote(bot,event,item,mode=0,forcemoji=false)
   k2=event.message.text.downcase.split(' ')
   f=''
@@ -1978,9 +2014,22 @@ def smol_err(bot,event,smol=true)
   end
 end
 
+def disp_servant_all(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  disp_servant_stats(bot,event,args,true)
+  disp_servant_skills(bot,event,args,true)
+  if safe_to_spam?(event)
+    disp_servant_traits(bot,event,args,true)
+    disp_servant_np(bot,event,args,true)
+    disp_servant_ce(bot,event,args,true,true)
+    disp_servant_mats(bot,event,args,true)
+  end
+end
+
 def disp_servant_stats(bot,event,args=nil,chain=false)
   dispstr=event.message.text.downcase.split(' ')
-  if dispstr.include?('tiny') || dispstr.include?('small') || dispstr.include?('smol') || dispstr.include?('micro') || dispstr.include?('little') || !safe_to_spam?(event)
+  if has_any?(dispstr,['tiny','small','smol','micro','little','mini']) || !safe_to_spam?(event)
     disp_tiny_stats(bot,event,args,chain)
     return nil
   end
@@ -2307,11 +2356,12 @@ def disp_servant_traits(bot,event,args=nil,chain=false)
   text="#{text}\n**Attribute:** *#{k[12].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
   text="#{text}\n**Alignment:** *#{k[22].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" unless k[0].to_i==81 && !chain
   text="#{text}\n**Gender:** *#{k[13][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*" if ['Female','Male'].include?(k[13][0])
-  text="#{text}\n~~**Genderless**~~" if [10,94,143,270,278].include?(k[0])
+  text="#{text}\n~~**Genderless**~~" unless ['Female','Male'].include?(k[13][0])
   xpic=servant_icon(k,event,art)
   xpic=nil if chain
   ftr=nil
   k[13].push('Evil *[added]*') if k[0]==74 && event.message.text.downcase.include?('crime')
+  k[13].push('Earth or Sky') if ['Earth','Sky'].include?(k[12]) && !k[13].include?('Earth or Sky')
   xflds=triple_finish(k[13].reject{|q| ['Female','Male'].include?(q)})
   if k[0].to_i==81 && chain
     data_load()
@@ -3857,6 +3907,22 @@ def disp_code_data(bot,event,args=nil)
   text="#{text}\n\n**Additional Info:** #{ce[4]}" unless ce[4].nil? || ce[4].length<=0
   xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
   create_embed(event,["**#{ce[1]}** [Cmd-##{ce[0]}]",title],text,xcolor,nil,xpic)
+end
+
+def disp_code_art(bot,event,args=nil)
+  args=event.message.text.downcase.split(' ') if args.nil?
+  args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) } # remove any mentions included in the inputs
+  ce=find_data_ex(:find_code,args.join(' '),event)
+  if ce.length.zero?
+    event.respond 'No matches found.'
+    return nil
+  end
+  xcolor=0x7D4529
+  xcolor=0x718F93 if ce[2]>2
+  xcolor=0xF5D672 if ce[2]>3
+  title=generate_rarity_row(ce,'code')
+  xpic="http://fate-go.cirnopedia.org/icons/ccode/ccode_#{'0' if ce[0]<100}#{'0' if ce[0]<10}#{ce[0]}.png"
+  create_embed(event,["**#{ce[1]}** [Cmd-##{ce[0]}]",title],'',xcolor,nil,[nil,xpic])
 end
 
 def disp_skill_data(bot,event,args=nil,addmsg=nil)
@@ -5955,6 +6021,11 @@ def find_in_servants(bot,event,args=nil,mode=0)
   end
   if traits.length>0
     search.push("*Traits*: #{traits.join(', ')}")
+    if traits.include?('Earth or Sky')
+      for i in 0...char.length
+        char[i][13].push('Earth or Sky') if ['Earth','Sky'].include?(char[i][12]) && !char[i][13].include?('Earth or Sky')
+      end
+    end
     if has_any?(args,['any','anytrait','anytraits'])
       search[-1]="#{search[-1]}\n(searching for servants with any listed trait)" if traits.length>1
       char=char.reject{|q| !has_any?(traits,q[13])}.uniq
@@ -7004,14 +7075,14 @@ def show_servant_alts(event,bot,args=nil)
           str="#{str}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
           str2="#{str2}\n\n__Facet #{i2+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}**__"
           str2="#{str2}\n#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
-          flds2[-1][3].push(["Facet #{i2+1}: #{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}",facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
+          flds2[-1][3].push(["Facet #{i2+1}: #{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}#{" (#{facets[i2]})" unless facets[i2]=='-'}",facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n"),true])
         end
-        flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str])
-        flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str2])
+        flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str,true])
+        flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",str2,true])
       else
         flds2[-1][4]="#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
-        flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",flds2[-1][4]])
-        flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**","#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"])
+        flds.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**",flds2[-1][4],true])
+        flds3.push(["Universe #{i+1}: **#{k[28][0]}#{" (#{universes[i]})" unless universes[i]=='-'}**","#{unisrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}",true])
         flds2[-1][3]=nil
       end
     end
@@ -7022,9 +7093,9 @@ def show_servant_alts(event,bot,args=nil)
         facsrvs=srvs.reject{|q| q[28][2]!=facets[i]}
         str="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
         str2="#{facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q,1)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")}"
-        flds.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str])
-        flds3.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str2])
-        flds2.push(["__Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**__",avg_color(facsrvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"this facet has #{facsrvs.length} alt#{'s' unless facsrvs.length==1}",nil,facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n")])
+        flds.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str,true])
+        flds3.push(["Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**",str2,true])
+        flds2.push(["__Facet #{i+1}: **#{k[28][0]}#{" (#{facets[i]})" unless facets[i]=='-'}**__",avg_color(facsrvs.map{|q| servant_color(event,q)}.map{|q| [q/(256*256),(q/256)%256,q%256]}),"this facet has #{facsrvs.length} alt#{'s' unless facsrvs.length==1}",nil,facsrvs.map{|q| "#{q[0]}#{'.' unless q[0]<2 || q[0].to_i==81}) #{q[1]}#{servant_moji(bot,event,q)}#{" - #{q[28][3]}" unless q[28][3]=='-'}"}.join("\n"),true])
       end
     else
       flds=nil
@@ -7520,7 +7591,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
     bob4=[]
     b[i].each_line('\\'[0,1]) {|s| bob4.push(s[0,s.length-1])}
     bob4[12]=bob4[12].split('; ') # ...as should the list of units who can learn a skill without inheritance
-    fehskills.push(bob4) if ['Dance','Sing','Wrathful Staff'].include?(bob4[1])
+    fehskills.push(bob4) if ['Dance','Sing','Play','Wrathful Staff'].include?(bob4[1])
   end
   clzz='Unknown'
   clzemote='<:class_unknown_blue:523948997229019136>'
@@ -7546,12 +7617,20 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif unt[1][1]=='Beast'
     clzz='Berserker'
   end
-  if [77,277].include?(unt[8])
+  if [77,277,369].include?(unt[8])
     clzz='Saber'
-  elsif [228].include?(unt[8])
-    clzz='Avenger'
-  elsif [300].include?(unt[8])
+  elsif [340,362,383].include?(unt[8])
+    clzz='Lancer'
+  elsif [372].include?(unt[8])
+    clzz='Caster'
+  elsif [320,338].include?(unt[8])
+    clzz='Assassin'
+  elsif [300,351,366,380].include?(unt[8])
     clzz='Berserker'
+  elsif [343,364].include?(unt[8])
+    clzz='Ruler'
+  elsif [228,356,360].include?(unt[8])
+    clzz='Avenger'
   end
   moji=bot.server(523821178670940170).emoji.values.reject{|q| q.name.downcase != "class_#{clzz.downcase.gsub(' ','')}_#{color}"}
   clzemote=moji[0].mention unless moji.length<=0
@@ -7583,6 +7662,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   ali='Spooky' if unt[0].include?('(Halloween)')
   ali='Picnic' if unt[0].include?('(Picnic)')
   ali='Comfy' if unt[0].include?('(Bath)')
+  ali='Wet' if unt[0]=='Camilla(Bath)'
   ali='Insane' if unt[0].include?('(Fallen)')
   ali='Christmas' if !fehgroups.find_index{|q| q[0]=='Christmas'}.nil? && fehgroups[fehgroups.find_index{|q| q[0]=='Christmas'}][1].include?(unt[0])
   ali="New Year's" if !fehgroups.find_index{|q| q[0]=="NewYear's"}.nil? && fehgroups[fehgroups.find_index{|q| q[0]=="NewYear's"}][1].include?(unt[0])
@@ -7668,15 +7748,15 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   elsif qab.max==qab[2]
     deck='QQABB'
   end
-  if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190,211,216,275,284,289,301,304].include?(unt[8])
+  if [2,15,36,41,49,60,63,138,66,88,89,90,71,106,110,117,130,132,133,150,161,163,172,187,190,211,216,275,284,289,301,304,309,312,322,329,330,343,346,361,377,381,382,1100].include?(unt[8])
     deck='QAABB'
-  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,204,205,236,242,251,253,263,278,291,297].include?(unt[8])
+  elsif [11,27,30,35,37,42,43,44,67,70,75,81,86,92,101,108,134,140,145,146,147,153,165,177,181,204,205,236,242,251,253,263,278,291,297,310,335,348,349,359,380,383,384].include?(unt[8])
     deck='QQAAB'
   elsif [61,114,194,293,296].include?(unt[8])
     deck='QAAAB'
-  elsif [32,38,45,83,97,102,104,125,143,170,230,279,287].include?(unt[8])
+  elsif [32,38,45,83,97,102,104,125,143,170,230,279,287,318,320,321,367,379].include?(unt[8])
     deck='QABBB'
-  elsif [62,68,128,142,154,206,239,249,260,267,272,274,283,308,505].include?(unt[8])
+  elsif [62,68,128,142,154,206,239,249,260,267,272,274,283,308,505,332,334,350,352,355].include?(unt[8])
     deck='QQABB'
   elsif [280,281].include?(unt[8])
     deck='QQAAB'
@@ -7705,11 +7785,11 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   qab[1]+=2 if unt[1][0]=='Blue'
   qab[2]+=2 if unt[1][0]=='Red'
   np=''
-  if [13,27,34,75,122,136].include?(unt[8])
+  if [13,27,34,75,122,136,320].include?(unt[8])
     np='<:quick:523854796692783105> (Quick)'
-  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194,214,236,238,268,269,271,280,289,298,301].include?(unt[8])
+  elsif [11,15,30,35,36,43,49,59,61,70,78,86,92,100,101,102,119,129,145,146,147,158,159,160,163,181,194,214,236,238,268,269,271,280,289,298,301,312,322,346,357,369,370,1100].include?(unt[8])
     np='<:arts:523854803013730316> (Arts)'
-  elsif [41,63,138,66,68,63,81,88,99,133,154,172,175,199,296].include?(unt[8])
+  elsif [41,63,138,66,68,63,81,88,99,133,154,172,175,199,296,317,339,352,366,378].include?(unt[8])
     np='<:buster:523854810286391296> (Buster)'
   elsif unt[1][1]=='Healer'
     np='<:arts:523854803013730316> (Arts)'
@@ -7738,9 +7818,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   xcolor=avg_color(xcolor)
   l40[0]-=10
-  if [1,11,17,24,28,30,32,35,36,38,41,43,47,50,51,63,138,67,75,79,97,121,129,135,174,184,200,202].include?(unt[8])
+  if [1,11,17,24,28,30,32,35,36,38,41,43,47,50,51,63,138,67,75,79,97,121,129,135,174,184,200,202,345,349,353,357,358,367].include?(unt[8])
     np="#{np} - *Target:* Enemy"
-  elsif [25,34,73,90,105,203].include?(unt[8])
+  elsif [25,34,73,90,105,203,381].include?(unt[8])
     np="#{np} - *Target:* All Enemies"
   elsif [143,198].include?(unt[8])
     np="#{np} - *Target:* All Enemies / Self"
@@ -7750,13 +7830,15 @@ def disp_FEH_based_stats(bot,event,unt=nil)
     np="#{np} - *Target:* Self / Enemy"
   elsif [265,268].include?(unt[8])
     np="#{np} - *Target:* Self"
-  elsif [15,93,78,101,168,248].include?(unt[8])
+  elsif [15,93,78,101,168,248,346,384,385].include?(unt[8])
     np="#{np} - *Target:* All Allies"
   elsif unt[1][1]=='Healer'
     np="#{np} - *Target:* All Allies"
   elsif !fehskills.find_index{|q| q[1]=='Dance'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Dance'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
     np="#{np} - *Target:* All Allies"
   elsif !fehskills.find_index{|q| q[1]=='Sing'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Sing'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
+    np="#{np} - *Target:* All Allies"
+  elsif !fehskills.find_index{|q| q[1]=='Play'}.nil? && fehskills[fehskills.find_index{|q| q[1]=='Play'}][12].reject{|q| q=='-'}.join(', ').split(', ').include?(unt[0])
     np="#{np} - *Target:* All Allies"
   elsif l40.max==l40[0]
     np="#{np} - *Target:* Self"
@@ -7778,6 +7860,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   drcap=2 if drcap==1
   str="#{str}\n**Death Rate:** #{'%.1f' % (25*drcap-(l40[3]-13)*drcap*25.0/29)}%"
   hitstotal=l40[2]*2/3
+  hitstotal*=2 if unt[8]==1100
   hits=[unt[4][2],unt[4][4],unt[4][1],unt[4][3]+unt[4][4]+unt[4][0]/2,unt[4][0]]
   hits[4]=hits[4]*3/2 unless np.include?('All Enemies') && unt[8]>100
   wrongtotal=hits[0]+hits[1]+hits[2]+hits[3]+hits[4]
@@ -7815,7 +7898,7 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   traits.push('Humanoid')
   traits.push('Servant')
   traits.push('Divine') if ['Light','Dark','Astra','Anima'].include?(unt[2][0])
-  traits.push('Dragon') if unt[1][1]=='Dragon' || ['Marth','Chrom','Lucina','Owain','Robin','Morgan','Roy','Ninian','Naga','Tiki','Bantu','Nagi','Corrin','Kana','Sothis','Myrrh','Fae','Nowi','Nah','Xander','Siegbert','Camilla','Leo','Forrest','Elise','Ryoma','Shiro','Hinoka','Takumi','Kiragi','Sakura','Julia','Julius','Arvis','Saias','Deirdre','Ishtar','Ares','Ayra','Eldigan','Lachesis','Nanna','Sigurd','Ethlyn','Seliph','Quan','Leif','Lene','Lewyn','Silvia','Tailtiu','Alm','Azelle','Lex','Edain','Chulainn','Claud','Brigid','Oifey','Shannan','Travant','Lana','Larcei','Ulster','Diarmuid','Lester','Fee','Ced','Arthur','Amid','Iuchar','Iucharba','Patty','Tine','Linda','Febail','Coirpre','Altena','Ishtore','Arion','Hilda(Jugdral)','Andorey','Byleth','Dimitri','Claude','Edelgard','Hilda(3H)','Ferdinand','Lindhart','Bernie','Bernadetta','Felix','Sylvain','Mercedes','Annette','Seteth','Flayn','Rhea','Ingrid','Lorenz','Lysithia','Marianne','Hanneman','Catherine(3H)','Eyvel','Galzus','Mareeta','Linoan','Idunn','Soren','Kurthnaga','Ena','Nasir','Almedha','Dheginsea','Rajaion','Gareth','Azura','Shigure','Ophelia'].include?(unt[12].gsub('*','').split(', ')[0])
+  traits.push('Dragon') if unt[1][1]=='Dragon' || ['Marth','Chrom','Lucina','Owain','Robin','Morgan','Roy','Ninian','Naga','Tiki','Bantu','Nagi','Corrin','Kana','Sothis','Myrrh','Fae','Nowi','Nah','Xander','Siegbert','Camilla','Leo','Forrest','Elise','Ryoma','Shiro','Hinoka','Takumi','Kiragi','Sakura','Julia','Julius','Arvis','Saias','Deirdre','Ishtar','Ares','Ayra','Eldigan','Lachesis','Nanna','Sigurd','Ethlyn','Seliph','Quan','Leif','Lene','Lewyn','Silvia','Tailtiu','Alm','Azelle','Lex','Edain','Chulainn','Claud','Brigid','Oifey','Shannan','Travant','Lana','Larcei','Ulster','Diarmuid','Lester','Fee','Ced','Arthur','Amid','Iuchar','Iucharba','Patty','Tine','Linda','Febail','Coirpre','Altena','Ishtore','Arion','Hilda(Jugdral)','Andorey','Byleth','Dimitri','Claude','Edelgard','Hilda(3H)','Ferdinand','Lindhart','Bernie','Bernadetta','Felix','Sylvain','Mercedes','Annette','Seteth','Flayn','Rhea','Ingrid','Lorenz','Lysithia','Marianne','Hanneman','Catherine(3H)','Eyvel','Galzus','Mareeta','Linoan','Idunn','Soren','Kurthnaga','Ena','Nasir','Almedha','Dheginsea','Rajaion','Gareth','Azura','Shigure','Ophelia','Surtr'].include?(unt[12].gsub('*','').split(', ')[0]) || unt[0]=='Fjorm'
   traits.push('Earth or Sky') if ['Earth','Sky'].include?(att)
   traits.push('Fallen') if unt[0].include?('(Fallen)') || ['Surtr','Hel','Duma'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('King') if [2,8,32,35,36,98].include?(unt[8])
@@ -7833,11 +7916,15 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   end
   traits.push('Wild Beast') if unt[1][1]=='Beast' || ['Volug','Muarim','Vika','Nailah','Rafiel','Leanne','Reyson','Nealuchi','Mordecai','Lethe','Ranulf','Kyza','Lyre','Janaff','Ulki','Naesala','Skrimir','Tibarn','Caineghis','Giffca','Lehran','Kehzda','Lotz','Seeker','Kurthnaga','Ena','Nasir','Dheginsea','Rajaion','Gareth'].include?(unt[12].gsub('*','').split(', ')[0])
   traits.push('Massive') if unt[0]=='Surtr'
+  traits.push('Undead') if ['Hel','Eir','Gustav'].include?(unt[0])
   str="#{str}\n\n**Traits:** #{traits.join(', ')}" if traits.length>0
   nmm="#{unt[0]}"
   nmm='Tiki Alter Lily' if nmm=='Tiki(Young)(Fallen)'
   nmm=nmm.gsub('Tiki(Adult)','Tiki').gsub('Tiki(Young)(','Tiki Lily (').gsub('Tiki(Young)','Tiki Lily')
   nmm='Azura Lily' if nmm=='Azura(Adrift)'
+  nmm='Grima(M)' if nmm=='Robin(M)(Fallen)'
+  nmm='Grima(F)' if nmm=='Robin(F)(Fallen)'
+  nmm=nmm.gsub('(Fallen)',' Alter')
   create_embed(event,["__**#{nmm}** [FEH Srv-#{unt[8]}]__#{clzemote}","**Class:** *#{clzz}*\n**Attribute:** *#{att}*#{"\n**Alignment:** *#{ali}*" if ali.length>0}"],str,xcolor,nil,xpic)
   return nil
 end
@@ -8105,19 +8192,13 @@ end
 
 bot.command([:servant,:data,:unit]) do |event, *args|
   return nil if overlap_prevent(event)
-  if args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
+  if args.nil? || args.length<=0
+  elsif args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
     unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
     disp_FEH_based_stats(bot,event,unt)
     return nil
   end
-  disp_servant_stats(bot,event,args,true)
-  disp_servant_skills(bot,event,args,true)
-  if safe_to_spam?(event)
-    disp_servant_traits(bot,event,args,true)
-    disp_servant_np(bot,event,args,true)
-    disp_servant_ce(bot,event,args,true,true)
-    disp_servant_mats(bot,event,args,true)
-  end
+  disp_servant_all(bot,event,args)
   return nil
 end
 
@@ -8152,17 +8233,7 @@ bot.command([:art,:artist]) do |event, *args|
   return nil if overlap_prevent(event)
   event.channel.send_temporary_message('Calculating data, please wait...',1)
   name=args.join(' ')
-  if find_data_ex(:find_servant,name,event,true).length>0
-    disp_servant_art(bot,event,args)
-  elsif find_data_ex(:find_ce,name,event,true).length>0
-    disp_ce_art(bot,event,args)
-  elsif find_data_ex(:find_servant,name,event).length>0
-    disp_servant_art(bot,event,args)
-  elsif find_data_ex(:find_ce,name,event).length>0
-    disp_ce_art(bot,event,args)
-  else
-    event.respond "No matches found."
-  end
+  find_best_match(name,bot,event,false,false,2)
   return nil
 end
 
@@ -10516,6 +10587,36 @@ bot.command(:update) do |event|
   create_embed(event,"**How to update Liz's data while Mathoo is unavailable.**",str,0xED619A,nil)
 end
 
+bot.command(:boop) do |event|
+  return nil if overlap_prevent(event)
+  return nil unless event.user.id==167657750971547648
+  return nil unless event.channel.id==502288368777035777 || @shardizard==4 # only work when used by the developer
+  data_load()
+  lookout=[]
+  skilltags=[]
+  if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt")
+    lookout=[]
+    File.open("C:/Users/#{@mash}/Desktop/devkit/FGOSkillSubsets.txt").each_line do |line|
+      lookout.push(eval line)
+    end
+  end
+  lookout=lookout.reject{|q| q[2]!='Servant'}.map{|q| q[0]}
+  lookout.push('Male')
+  lookout.push('Female')
+  k=@servants.map{|q| q[13]}.flatten.uniq
+  k.sort!
+  k=k.reject{|q| lookout.include?(q)}
+  if k.length<=0
+    event.respond '~~All traits properly marked~~'
+    return nil
+  end
+  msg=''
+  for i in 0...k.length
+    msg=extend_message(msg,k[i],event)
+  end
+  event.respond msg
+end
+
 bot.server_create do |event|
   chn=event.server.general_channel
   if chn.nil?
@@ -10610,14 +10711,7 @@ bot.mention do |event|
       unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
       disp_FEH_based_stats(bot,event,unt)
     else
-      disp_servant_stats(bot,event,args,true)
-      disp_servant_skills(bot,event,args,true)
-      if safe_to_spam?(event)
-        disp_servant_traits(bot,event,args,true)
-        disp_servant_np(bot,event,args,true)
-        disp_servant_ce(bot,event,args,true,true)
-        disp_servant_mats(bot,event,args,true)
-      end
+      disp_servant_all(bot,event,args)
     end
     m=false
   elsif ['deck'].include?(args[0])
@@ -10707,17 +10801,7 @@ bot.mention do |event|
     m=false
   elsif ['art','artist'].include?(args[0])
     event.channel.send_temporary_message('Calculating data, please wait...',1)
-    if find_data_ex(:find_servant,args.join(' '),event,true).length>0
-      disp_servant_art(bot,event,args)
-    elsif find_data_ex(:find_ce,args.join(' '),event,true).length>0
-      disp_ce_art(bot,event,args)
-    elsif find_data_ex(:find_servant,args.join(' '),event).length>0
-      disp_servant_art(bot,event,args)
-    elsif find_data_ex(:find_ce,args.join(' '),event).length>0
-      disp_ce_art(bot,event,args)
-    else
-      event.respond "No matches found."
-    end
+    find_best_match(name,bot,event,false,false,2)
     m=false
   elsif ['code'].include?(args[0])
     args.shift
@@ -10772,53 +10856,7 @@ bot.mention do |event|
     show_next_2(bot,event)
     m=false
   end
-  if m
-    if find_data_ex(:find_ce,name,event,true).length>0 && !find_data_ex(:find_ce,s,event,true)[11].include?('EXPCard')
-      disp_ce_card(bot,event,args)
-    elsif find_data_ex(:find_servant,name,event,true).length>0
-      disp_servant_stats(bot,event,args,true)
-      disp_servant_skills(bot,event,args,true)
-      if safe_to_spam?(event)
-        disp_servant_traits(bot,event,args,true)
-        disp_servant_np(bot,event,args,true)
-        disp_servant_ce(bot,event,args,true,true)
-        disp_servant_mats(bot,event,args,true)
-      end
-    elsif find_data_ex(:find_skill,name,event,true).length>0
-      disp_skill_data(bot,event,args)
-    elsif find_data_ex(:find_clothes,name,event,true).length>0
-      disp_clothing_data(bot,event,args)
-    elsif find_data_ex(:find_code,name,event,true).length>0
-      disp_code_data(bot,event,args)
-    elsif find_data_ex(:find_enemy,name,event,true).length>0
-      disp_enemy_traits(bot,event,args)
-    elsif find_data_ex(:find_mat,name,event,true).length>0
-      disp_mat_data(bot,event,args)
-    elsif find_data_ex(:find_ce,name,event,true).length>0
-      disp_ce_card(bot,event,args)
-    elsif find_data_ex(:find_ce,name,event).length>0
-      disp_ce_card(bot,event,args)
-    elsif find_data_ex(:find_servant,name,event).length>0
-      disp_servant_stats(bot,event,args,true)
-      disp_servant_skills(bot,event,args,true)
-      if safe_to_spam?(event)
-        disp_servant_traits(bot,event,args,true)
-        disp_servant_np(bot,event,args,true)
-        disp_servant_ce(bot,event,args,true,true)
-        disp_servant_mats(bot,event,args,true)
-      end
-    elsif find_data_ex(:find_skill,name,event).length>0
-      disp_skill_data(bot,event,args)
-    elsif find_data_ex(:find_clothes,name,event).length>0
-      disp_clothing_data(bot,event,args)
-    elsif find_data_ex(:find_code,name,event).length>0
-      disp_code_data(bot,event,args)
-    elsif find_data_ex(:find_mat,name,event).length>0
-      disp_mat_data(bot,event,args)
-    elsif find_data_ex(:find_enemy,name,event).length>0
-      disp_enemy_traits(bot,event,args)
-    end
-  end
+  find_best_match(name,bot,event) if m
 end
 
 bot.message do |event|
@@ -10882,51 +10920,7 @@ bot.message do |event|
     end
   elsif overlap_prevent(event)
   elsif m && !all_commands().include?(s.split(' ')[0])
-    if find_data_ex(:find_ce,s,event,true).length>0 && !find_data_ex(:find_ce,s,event,true)[11].include?('EXPCard')
-      disp_ce_card(bot,event,s.split(' '))
-    elsif find_data_ex(:find_servant,s,event,true).length>0
-      disp_servant_stats(bot,event,s.split(' '),true)
-      disp_servant_skills(bot,event,s.split(' '),true)
-      if safe_to_spam?(event)
-        disp_servant_traits(bot,event,s.split(' '),true)
-        disp_servant_np(bot,event,s.split(' '),true)
-        disp_servant_ce(bot,event,s.split(' '),true,true)
-        disp_servant_mats(bot,event,s.split(' '),true)
-      end
-    elsif find_data_ex(:find_skill,s,event,true).length>0
-      disp_skill_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_clothes,s,event,true).length>0
-      disp_clothing_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_code,s,event,true).length>0
-      disp_code_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_mat,s,event,true).length>0
-      disp_mat_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_enemy,s,event,true).length>0
-      disp_enemy_traits(bot,event,s.split(' '))
-    elsif find_data_ex(:find_ce,s,event,true).length>0
-      disp_ce_card(bot,event,s.split(' '))
-    elsif find_data_ex(:find_ce,s,event).length>0
-      disp_ce_card(bot,event,s.split(' '))
-    elsif find_data_ex(:find_servant,s,event).length>0
-      disp_servant_stats(bot,event,s.split(' '),true)
-      disp_servant_skills(bot,event,s.split(' '),true)
-      if safe_to_spam?(event)
-        disp_servant_traits(bot,event,s.split(' '),true)
-        disp_servant_np(bot,event,s.split(' '),true)
-        disp_servant_ce(bot,event,s.split(' '),true,true)
-        disp_servant_mats(bot,event,s.split(' '),true)
-      end
-    elsif find_data_ex(:find_skill,s,event).length>0
-      disp_skill_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_clothes,s,event).length>0
-      disp_clothing_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_code,s,event).length>0
-      disp_code_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_mat,s,event).length>0
-      disp_mat_data(bot,event,s.split(' '))
-    elsif find_data_ex(:find_enemy,s,event).length>0
-      disp_enemy_traits(bot,event,s.split(' '))
-    end
+    find_best_match(s,bot,event)
   elsif !event.server.nil? && (above_memes().include?("s#{event.server.id}") || above_memes().include?(event.server.id))
   elsif !event.channel.nil? && above_memes().include?("c#{event.channel.id}")
   elsif above_memes().include?("u#{event.user.id}") || above_memes().include?(event.user.id)
