@@ -285,7 +285,7 @@ def data_load()
       b[i][4]=b[i][4].split(', ') unless b[i][4].nil?
     elsif b[i][2]=='Noble'
       b[i][7]=b[i][7].split(', ') unless b[i][7].nil?
-      for i2 in 8...18
+      for i2 in 9...19
         b[i][i2]=b[i][i2].split(';; ')
       end
     elsif b[i][2]=='Clothes'
@@ -1938,9 +1938,9 @@ def servant_moji(bot,event,k,mode=0,clrshift=0,usr=0)
 end
 
 def servant_icon(k,event,art=0)
-  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [167657750971547648,66631776864309248].include?(event.user.id) && k[0]==196
-  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [163952551237124097,243525860232003595].include?(event.user.id) && k[0]==196 && rand(5)==0
-  return "https://cdn.discordapp.com/attachments/397786370367553538/627221736261419028/image0.jpg" if k[0]==196 && rand(500)==0
+  return "https://cdn.discord.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [167657750971547648,66631776864309248].include?(event.user.id) && k[0]==196
+  return "https://cdn.discord.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [163952551237124097,243525860232003595].include?(event.user.id) && k[0]==196 && rand(5)==0
+  return "https://cdn.discord.com/attachments/397786370367553538/627221736261419028/image0.jpg" if k[0]==196 && rand(500)==0
   art=2 if event.user.id==167657750971547648 && k[0]==74
   art=4 if event.user.id==78649866577780736 && k[0]==127 && art==0
   art=1 if art==0
@@ -2426,12 +2426,14 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       mlvl=@dev_units[dv][3].map{|q| q}
       art=@dev_units[dv][7][1]
       for i in 0...mlvl.length
-        if mlvl[i].include?('u')
+        if mlvl[i].include?('u2')
+          k[14][i]=[k[14][i][2]]
+        elsif mlvl[i].include?('u')
           k[14][i]=[k[14][i][1]]
         else
           k[14][i]=[k[14][i][0]]
         end
-        mlvl[i]=mlvl[i].gsub('u','').to_i
+        mlvl[i]=mlvl[i].split('u')[0].to_i
       end
     end
   elsif donate_trigger_word(event)>0
@@ -2450,7 +2452,9 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
       art=x[dvx][7][1]
       colorshift=x[dvx][7][2] unless x[dvx][7][2].nil?
       for i in 0...mlvl.length
-        if mlvl[i].include?('u')
+        if mlvl[i].include?('u2')
+          k[14][i]=[k[14][i][2]]
+        elsif mlvl[i].include?('u')
           k[14][i]=[k[14][i][1]]
         else
           k[14][i]=[k[14][i][0]]
@@ -2542,13 +2546,54 @@ def disp_servant_skills(bot,event,args=nil,chain=false)
             end
           end
         end
+        unless k[14][i][2].nil?
+          str="#{str}\n#{"\n__" if safe_to_spam?(event,nil,1)}*When upgraded again: #{k[14][i][2]}*#{'__' if safe_to_spam?(event,nil,1)}"
+          if safe_to_spam?(event,nil,1)
+            k2=@skills.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==k[14][i][2] && k2 != q}
+            if k2.nil?
+              str="#{str}\n~~ERROR LOADING SKILL DATA~~"
+            else
+              k2=@skills[k2].map{|q| q}
+              if mlvl[i]>0
+                str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]<7
+                str="#{str}\n*Cooldown:* #{k2[3]-1}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>6 && mlvl[i]<10
+                str="#{str}\n*Cooldown:* #{k2[3]-2}\u00A0L#{micronumber(mlvl[i])}" if mlvl[i]>9
+              else
+                str="#{str}\n*Cooldown:* #{k2[3]}\u00A0L#{micronumber(1)}  \u00B7  #{k2[3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k2[3]-2}\u00A0L#{micronumber(10)}"
+              end
+              str="#{str}\n*Target:* #{k2[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+              for i2 in 6...k2.length
+                unless k2[i2][0]=='-'
+                  str="#{str}\n#{k2[i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+                  unless k2[i2][1].nil?
+                    x=k2[i2][1]
+                    x2=k2[i2][6]
+                    x3=k2[i2][10]
+                    if x.to_f<1
+                      x="#{(x.to_f*1000).to_i/10.0}%" 
+                      x2="#{(x2.to_f*1000).to_i/10.0}%"
+                      x3="#{(x3.to_f*1000).to_i/10.0}%"
+                    end
+                    if x==x2 && x==x3
+                      str="#{str}\u00A0\u00A0\u00B7\u00A0\u00A0Constant #{x}"
+                    elsif mlvl[i]>0
+                      str="#{str}  \u00B7  #{k2[i2][mlvl[i]]} L#{micronumber(mlvl[i])}"
+                    else
+                      str="#{str}  \u00B7  #{x}\u00A0L#{micronumber(1)}  \u00B7  #{x2}\u00A0L#{micronumber(6)}  \u00B7  #{x3}\u00A0L#{micronumber(10)}"
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
       end
       str="~~#{str}~~" if mlvl[i]==0
       actsklz.push(str)
     end
   end
   passklz=[]
-  if k[15][0]=='-'
+  if k[15].nil? || k[15].length<=0 || k[15][0].nil? || k[15][0].length<=0 || k[15][0]=='-'
     passklz.push('>None<')
   else
     for i in 0...k[15].length
@@ -2644,7 +2689,7 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
   uid=0
   donorjp=false
   colorshift=0
-  art=1
+  art=-1
   nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]==k[0].to_s}
   if event.message.text.downcase.split(' ').include?("mathoo's")
     devservants_load()
@@ -2657,7 +2702,8 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
       art=@dev_units[dv][7][1]
       colorshift=@dev_units[dv][7][2] unless @dev_units[dv][7][2].nil?
       nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"} if mlvl.include?('u')
-      mlvl=mlvl.gsub('u','').to_i
+      nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u2"} if mlvl.include?('u2')
+      mlvl=mlvl.split('u')[0].to_i
     end
   elsif donate_trigger_word(event)>0
     uid=donate_trigger_word(event)
@@ -2675,7 +2721,8 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
       art=x[dvx][7][1]
       colorshift=x[dvx][7][2] unless x[dvx][7][2].nil?
       nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"} if mlvl.include?('u')
-      mlvl=mlvl.gsub('u','').to_i
+      nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u2"} if mlvl.include?('u2')
+      mlvl=mlvl.split('u')[0].to_i
     end
   end
   text=generate_rarity_row(k,'servant')
@@ -2688,6 +2735,11 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
   end
   title=''
   title="**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
+  unless nophan[8].nil? || nophan[8].length<=0
+    x=nophan[8].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','').split(': ')
+    title="#{title}\n**Alternative name:** *#{x[0]}:* #{x[1]}" unless chain || art>-1
+    title="**Noble Phantasm:** *#{x[0]}:* #{x[1]}" if !chain && art>2
+  end
   text=''
   npl=1
   npl=0 if ['Event','Welfare'].include?(k[20])
@@ -2709,6 +2761,7 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
   cemoji=['<:quick:523854796692783105>','<:arts:523854803013730316>','<:buster:523854810286391296>']
   cemoji=['<:FEHQuick:574760823340400665>','<:FEHArts:574760822149218304>','<:FEHBuster:574760822136635402>'] if k[13].include?('FEH Servant')
   unless nophan.nil?
+    nonophan=nophan.map{|q| q}
     nophan2=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u"}
     title="#{title}\n**Card Type:** #{k[17][6,1].gsub('Q',"#{cemoji[0]} Quick").gsub('A',"#{cemoji[1]} Arts").gsub('B',"#{cemoji[2]} Buster")}"
     if nophan2.nil?
@@ -2735,7 +2788,7 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
     title="#{title}\n**Hit Count:** #{k[9][4]}" unless k[9][4]<=0
     text="#{text}\n**Rank:** #{nophan[4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
     text="#{text}\n__**Effects**__"
-    for i in 8...18
+    for i in 9...19
       unless nophan[i][0]=='-'
         nxx=nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
         if nxx.include?('`')
@@ -2782,7 +2835,7 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
       text="#{text}\n**Target:** #{nophan[6].encode(Encoding::UTF_8)}" if l[1]
       text="#{text}#{"\n" unless l[1] || l[0]}\n**Rank:** #{nophan[4].encode(Encoding::UTF_8)}"
       text="#{text}\n__**Effects**__"
-      for i in 8...18
+      for i in 9...19
         unless nophan[i][0]=='-'
           nxx=nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
           if nxx.include?('`')
@@ -2819,15 +2872,71 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
         end
       end
       tags2=nophan[7]
-      tags3="#{tags.join("\n")}\n#{tags2.join("\n")}".split("\n").uniq
-      for i in 0...tags3.length
-        if tags.include?(tags3[i]) && tags2.include?(tags3[i])
-          tags3[i]="*#{tags3[i]}*"
-        elsif tags.include?(tags3[i])
-          tags3[i]="~~#{tags3[i]}~~"
+      nophan=@skills.find_index{|q| q[2]=='Noble' && q[1]=="#{k[0].to_s}u2"}
+      if nophan.nil? || mlvl>=0
+        tags3="#{tags.join("\n")}\n#{tags2.join("\n")}".split("\n").uniq
+        for i in 0...tags3.length
+          if tags.include?(tags3[i]) && tags2.include?(tags3[i])
+            tags3[i]="*#{tags3[i]}*"
+          elsif tags.include?(tags3[i])
+            tags3[i]="~~#{tags3[i]}~~"
+          end
         end
+        text="#{text}\n\n**Skill tags:** #{tags3.join(', ')}" if tags3.length>0
+      else
+        nophan=@skills[nophan]
+        text="#{text}#{"\n" if l[0] || l[1]}"
+        text="#{text}\n**Counter Type:** #{nophan[5].encode(Encoding::UTF_8)}" if l[0]
+        text="#{text}\n**Target:** #{nophan[6].encode(Encoding::UTF_8)}" if l[1]
+        text="#{text}#{"\n" unless l[1] || l[0]}\n**Rank:** #{nophan[4].encode(Encoding::UTF_8)}"
+        text="#{text}\n__**Effects**__"
+        for i in 9...19
+          unless nophan[i][0]=='-'
+            nxx=nophan[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')
+            if nxx.include?('`')
+              nxx=nxx.split('`')
+              for ix in 0...nxx.length
+                if ix%2==0
+                  nxx[ix]="*#{nxx[ix].split(' ').compact.join(' ')}*"
+                else
+                  nxx[ix]="`#{nxx[ix].split(' ').compact.join(' ')}`"
+                end
+              end
+              nxx=nxx.join(' ')
+            end
+            text="#{text}\n#{nxx}"
+            if nophan[i][0].include?('<LEVEL>') && mlvl>0
+              text="#{text} - #{nophan[i][mlvl].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(mlvl)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+            elsif nophan[i][0].include?('<LEVEL>') && safe_to_spam?(event)
+              text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(2)}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(3)}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(4)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+            elsif nophan[i][0].include?('<OVERCHARGE>')
+              text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][2].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][3].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+            elsif npl==0 && nophan[i][0].include?('<LEVEL>')
+              text="#{text} - #{nophan[i][1].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(1)}\u00A0/\u00A0#{nophan[i][5].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}\u00A0NP#{micronumber(5)}" unless nophan[i][1].nil? || nophan[i][1]=='-'
+            elsif nophan[i].length<=1
+            elsif npl<=0
+              if nophan[i][1]=='-'
+              elsif nophan[i][1,5].uniq.length<=1
+                text="#{text} - Constant #{nophan[i][1]}"
+              else
+                text="#{text} - #{nophan[i][1,5].join(' / ')}"
+              end
+            else
+              text="#{text} - #{nophan[i][npl]}" unless nophan[i][npl].nil? || nophan[i][npl]=='-'
+            end
+          end
+        end
+        tags3=nophan[7]
+        tags4="#{tags.join("\n")}\n#{tags2.join("\n")}\n#{tags3.join("\n")}".split("\n").uniq
+        for i in 0...tags4.length
+          if tags.include?(tags4[i]) && tags2.include?(tags4[i]) && tags3.include?(tags4[i])
+            tags4[i]="*#{tags4[i]}*"
+          elsif !tags3.include?(tags4[i])
+            tags4[i]="~~#{tags4[i]}~~"
+          end
+        end
+        text="#{text}\n\n**Skill tags:** #{tags4.join(', ')}" if tags4.length>0
       end
-      text="#{text}\n\n**Skill tags:** #{tags3.join(', ')}" if tags3.length>0
     end
   end
   ftr='You can also include NP# to show relevant stats at other merge counts.' if npl==1
@@ -2857,7 +2966,13 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
   nme='Dr. Jekyll' if k[0]==81.0
   xpic=nil
   xpic="http://fate-go.cirnopedia.org/icons/servant/servant_10011.png" if k[0].to_i==81 && chain
-  create_embed(event,["#{"__#{"Mathoo's " if dv>=0}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{nme}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,6,colorshift)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if mlvl<=0 && npl<1 && !safe_to_spam?(event)}" unless chain}#{"**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",title],text,xcolor,ftr,xpic)
+  x2="**#{k[16]}#{":** *#{np}*" unless np.length<2}#{'**' if np.length<2}"
+  unless nonophan[8].nil? || nonophan[8].length<=0
+    x=nonophan[8].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','').split(': ')
+    x2="#{x2}\n**#{x[0]}:** *#{x[1]}* after 3rd ascension" unless art>-1
+    x2="**#{x[0]}:** *#{x[1]}*" if art>2
+  end
+  create_embed(event,["#{"__#{"Mathoo's " if dv>=0}#{"Ace's #{'Japanese ' if donorjp}" if uid==78649866577780736}**#{nme}**__ [Srv-##{k[0]}] #{servant_moji(bot,event,k,6,colorshift)}#{" - NP#{mlvl}" if mlvl>0}#{" - NP#{npl}" if npl>1 && !safe_to_spam?(event)}#{" - NPWelfare" if mlvl<=0 && npl<1 && !safe_to_spam?(event)}" unless chain}#{"#{x2}#{"\nLevel #{npl}" if npl>1 && !safe_to_spam?(event)}" if chain}",title],text,xcolor,ftr,xpic)
 end
 
 def disp_servant_ce(bot,event,args=nil,chain=false,skipftr=false)
@@ -3207,6 +3322,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
     ascstr="#{ascstr}\n*Third Ascension:* #{k[18][2].join(', ')}  \u00B7  #{numabr(qp[2])}#{qpd}" if asc<3
     ascstr="#{ascstr}\n*Final Ascension:* #{k[18][3].join(', ')}  \u00B7  #{numabr(qp[3])}#{qpd}" if asc<4
     flds=[["Ascension materials (#{numabr(qp[asc,4-asc].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
+    flds[0][0]="Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)" if asc<0
     if k[18][0,4].uniq.length<=1
       ascstr="__*Per stage:* #{k[18][0].join(', ')}__"
       ascstr="#{ascstr}\n*First Ascension:* #{numabr(qp[0])}#{qpd}" if asc<1
@@ -3214,6 +3330,7 @@ def disp_servant_mats(bot,event,args=nil,chain=false,skillsonly=false)
       ascstr="#{ascstr}\n*Third Ascension:* #{numabr(qp[2])}#{qpd}" if asc<3
       ascstr="#{ascstr}\n*Final Ascension:* #{numabr(qp[3])}#{qpd}" if asc<4
       flds=[["Ascension materials (#{numabr(qp[asc,4-asc].inject(0){|sum,x| sum + x })}#{qpd} total)",ascstr]]
+      flds[0][0]="Ascension materials (#{numabr(qp[0,4].inject(0){|sum,x| sum + x })}#{qpd} total)" if asc<0
     elsif k[0]<2
       ascstr=''
       ascstr="#{ascstr}\n*First Ascension:* #{k[18][0].join(', ')}" if asc<1
@@ -3485,11 +3602,11 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     text="#{text}\n[Direct Link](https://twitter.com/yayoimaka03/status/1140216715147538432)"
     artist='@yayoimaka03'
   elsif k[0]==142 && dv>=0
-    xpic="https://cdn.discordapp.com/attachments/285663217261477889/681617061289525256/image0.jpg"
+    xpic="https://cdn.discord.com/attachments/285663217261477889/681617061289525256/image0.jpg"
     midtext=''
-    artist='*Fate/Grand Order Absolute Demonic Front: Babylonia* amination team'
+    artist='*Fate/Grand Order Absolute Demonic Front: Babylonia* animation team'
   elsif k[0]==182 && dv>=0
-    xpic="https://cdn.discordapp.com/attachments/400114626433515530/681610528703119470/unknown.png"
+    xpic="https://cdn.discord.com/attachments/400114626433515530/681610528703119470/unknown.png"
     midtext=''
     text="#{text}\n[Direct Link](https://www.reddit.com/r/grandorder/comments/conp9p/unlocking_ishtar_rider)"
     artist='u/AmimBlue'
@@ -3931,16 +4048,16 @@ def disp_skill_data(bot,event,args=nil,addmsg=nil)
   k=find_data_ex(:find_skill,args.join(' '),event)
   if k.length.zero?
     sklz=@skills.map{|q| q}
-    if find_data_ex(:find_servant,args.join(' '),event).length>0 && has_any?(args,['s1','s2','s3','skill1','skill2','skill3','skl1','skl2','skl3','s1u','s2u','s3u','skill1u','skill2u','skill3u','skl1u','skl2u','skl3u','s1upgrade','s2upgrade','s3upgrade','skill1upgrade','skill2upgrade','skill3upgrade','skl1upgrade','skl2upgrade','skl3upgrade'])
+    if find_data_ex(:find_servant,args.join(' '),event).length>0 && has_any?(args,['s1','s2','s3','skill1','skill2','skill3','skl1','skl2','skl3','s1u','s2u','s3u','skill1u','skill2u','skill3u','skl1u','skl2u','skl3u','s1upgrade','s2upgrade','s3upgrade','skill1upgrade','skill2upgrade','skill3upgrade','skl1upgrade','skl2upgrade','skl3upgrade','s1u1','s2u1','s3u1','skill1u1','skill2u1','skill3u1','skl1u1','skl2u1','skl3u1','s1upgrade1','s2upgrade1','s3upgrade1','skill1upgrade1','skill2upgrade1','skill3upgrade1','skl1upgrade1','skl2upgrade1','skl3upgrade1','s1u2','s2u2','s3u2','skill1u2','skill2u2','skill3u2','skl1u2','skl2u2','skl3u2','s1upgrade2','s2upgrade2','s3upgrade2','skill1upgrade2','skill2upgrade2','skill3upgrade2','skl1upgrade2','skl2upgrade2','skl3upgrade2'])
       adv=find_data_ex(:find_servant,args.join(' '),event)
       p=0
-      p=1 if has_any?(args,['s2','skill2','skl2','s2u','skill2u','skl2u','s2upgrade','skill2upgrade','skl2upgrade'])
-      p=2 if has_any?(args,['s3','skill3','skl3','s3u','skill3u','skl3u','s3upgrade','skill3upgrade','skl3upgrade'])
+      p=1 if has_any?(args,['s2','skill2','skl2','s2u','skill2u','skl2u','s2upgrade','skill2upgrade','skl2upgrade','s2u1','skill2u1','skl2u1','s2upgrade1','skill2upgrade1','skl2upgrade1','s2u2','skill2u2','skl2u2','s2upgrade2','skill2upgrade2','skl2upgrade2'])
+      p=2 if has_any?(args,['s3','skill3','skl3','s3u','skill3u','skl3u','s3upgrade','skill3upgrade','skl3upgrade','s3u1','skill3u1','skl3u1','s3upgrade1','skill3upgrade1','skl3upgrade1','s3u2','skill3u2','skl3u2','s3upgrade2','skill3upgrade2','skl3upgrade2'])
       p2=0
       if adv[14].nil? || adv[14].length<=0 || adv[14][p].length<=0 || adv[14][p][0].nil?
         event.respond "#{adv[1]} [Srv-##{adv[0]}] does not have a #{['1st','2nd','3rd'][p]} skill."
         return nil
-      elsif has_any?(args,['s1u','s2u','s3u','skill1u','skill2u','skill3u','skl1u','skl2u','skl3u','s1upgrade','s2upgrade','s3upgrade','skill1upgrade','skill2upgrade','skill3upgrade','skl1upgrade','skl2upgrade','skl3upgrade','upgrade'])
+      elsif has_any?(args,['s1u','s2u','s3u','skill1u','skill2u','skill3u','skl1u','skl2u','skl3u','s1upgrade','s2upgrade','s3upgrade','skill1upgrade','skill2upgrade','skill3upgrade','skl1upgrade','skl2upgrade','skl3upgrade','upgrade','s1u1','s2u1','s3u1','skill1u1','skill2u1','skill3u1','skl1u1','skl2u1','skl3u1','s1upgrade1','s2upgrade1','s3upgrade1','skill1upgrade1','skill2upgrade1','skill3upgrade1','skl1upgrade1','skl2upgrade1','skl3upgrade1','upgrade1','u1'])
         if adv[14][p][1].nil?
           event.respond "#{adv[1]} [Srv-##{adv[0]}] does not have an upgrading #{['1st','2nd','3rd'][p]} skill.  Showing default skill in that slot."
         elsif sklz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==adv[14][p][1]}.nil?
@@ -3948,12 +4065,28 @@ def disp_skill_data(bot,event,args=nil,addmsg=nil)
         else
           p2=1
         end
+      elsif has_any?(args,['s1u2','s2u2','s3u2','skill1u2','skill2u2','skill3u2','skl1u2','skl2u2','skl3u2','s1upgrade2','s2upgrade2','s3upgrade2','skill1upgrade2','skill2upgrade2','skill3upgrade2','skl1upgrade2','skl2upgrade2','skl3upgrade2','upgrade2','u2'])
+        if adv[14][p][1].nil?
+          event.respond "#{adv[1]} [Srv-##{adv[0]}] does not have an upgrading #{['1st','2nd','3rd'][p]} skill.  Showing default skill in that slot."
+        elsif adv[14][p][2].nil?
+          event.respond "#{adv[1]} [Srv-##{adv[0]}] does not have a #{['1st','2nd','3rd'][p]} skill that upgrades twice.  Showing regular upgraded skill in that slot."
+          p2=1
+        elsif sklz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==adv[14][p][2]}.nil?
+          if sklz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==adv[14][p][1]}.nil?
+            event.respond "Neither of #{adv[1]} [Srv-##{adv[0]}]'s upgraded #{['1st','2nd','3rd'][p]} skill, #{adv[14][p][1]} and #{adv[14][p][2]}, have skill data.  Showing default skill in that slot."
+          else
+            event.respond "#{adv[1]} [Srv-##{adv[0]}]'s double-upgraded #{['1st','2nd','3rd'][p]} skill, #{adv[14][p][2]}, does not have skill data.  Showing regular upgraded skill in that slot."
+            p2=1
+          end
+        else
+          p2=2
+        end
       end
       if sklz.find_index{|q| q[2]=='Skill' && "#{q[0]}#{" #{q[1]}" unless q[1]=='-'}"==adv[14][p][p2]}.nil?
         event.respond "#{adv[1]} [Srv-##{adv[0]}]'s #{['1st','2nd','3rd'][p]} skill, #{adv[14][p][p2]}, does not have skill data."
       else
         ftr=nil
-        ftr="#{adv[1]} [Srv-##{adv[0]}]'s #{['1st','2nd','3rd'][p]} skill can be upgraded to #{adv[14][p][1]}" unless adv[14][p][1].nil? || adv[14][p][1].length<=0 
+        ftr="#{adv[1]} [Srv-##{adv[0]}]'s #{['1st','2nd','3rd'][p]} skill can be upgraded to #{adv[14][p][p2+1]}" unless adv[14][p][p2+1].nil? || adv[14][p][p2+1].length<=0
         disp_skill_data(bot,event,adv[14][p][p2].split(' '),ftr)
       end
     else
@@ -3976,7 +4109,10 @@ def disp_skill_data(bot,event,args=nil,addmsg=nil)
       xcolor=0x5000A0
       text2=''
       for i in 0...k.length
-        text2="__**Version: #{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('Primordial Rune (','').gsub(')','')}**__\n*Rank:* #{k[i][1]}\n*Cooldown:* #{k[i][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][3]-2}\u00A0L#{micronumber(10)}\n*Target:* #{k[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
+        text2="__**Version: #{k[i][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','').gsub('Primordial Rune (','').gsub(')','')}**__"
+        text2="#{text2}\n*Rank:* #{k[i][1]}" unless k[i][1]=='-'
+        text2="#{text2}\n*Cooldown:* #{k[i][3]}\u00A0L#{micronumber(1)}  \u00B7  #{k[i][3]-1}\u00A0L#{micronumber(6)}  \u00B7  #{k[i][3]-2}\u00A0L#{micronumber(10)}"
+        text2="#{text2}\n*Target:* #{k[i][4].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}"
         for i2 in 6...k[i].length
           unless k[i][i2][0]=='-'
             text2="#{text2}\n*#{k[i][i2][0].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}*"
@@ -4115,16 +4251,19 @@ def disp_skill_data(bot,event,args=nil,addmsg=nil)
   if safe_to_spam?(event,nil,1)
     srv=[]
     srv2=[]
+    srv3=[]
     if k[0].is_a?(Array)
     elsif k[2]=='Skill'
       srv=@servants.reject{|q| !q[14].map{|q2| q2[0]}.include?("#{k[0]}#{" #{k[1]}" unless k[1]=='-'}")}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}
       srv2=@servants.reject{|q| !q[14].map{|q2| q2[1]}.include?("#{k[0]}#{" #{k[1]}" unless k[1]=='-'}")}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}
+      srv3=@servants.reject{|q| !q[14].map{|q2| q2[2]}.include?("#{k[0]}#{" #{k[1]}" unless k[1]=='-'}")}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}
     elsif k[2]=='Passive'
       srv=@servants.reject{|q| !q[15].include?("#{k[0]}#{" #{k[1]}" unless k[1]=='-'}")}.map{|q| "#{q[0]}#{'.' if q[0]>=2}) #{q[1]}"}
     end
     flds=[]
     flds.push(['Servants who have this skill by default',srv.join("\n")]) if srv.length>0
     flds.push(['Servants who have this skill after upgrading',srv2.join("\n")]) if srv2.length>0
+    flds.push(['Servants who have this skill after upgrading twice',srv3.join("\n")]) if srv3.length>0
     flds.push(['Skill tags',tags.join("\n")]) if safe_to_spam?(event) && tags.length>0
     text=''
     if flds.length==1
@@ -5166,7 +5305,7 @@ def add_new_alias(bot,event,newname=nil,unit=nil,modifier=nil,modifier2=nil,mode
     checkstr=checkstr.gsub("<:#{k[i].name}:#{k[i].id}>",k[i].name)
   end
   if checkstr.downcase =~ /(7|t)+?h+?(o|0)+?(7|t)+?/
-    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases.#{"\nhttps://cdn.discordapp.com/attachments/344355510281043969/514973942218227722/Storylineatroriaisagirlposing_c4361e8dc51f0451389bd016c9796bab.jpg" if unit[0]==99}"
+    event.respond "That name has __***NOT***__ been added to #{dispstr[1]}'s aliases.#{"\nhttps://cdn.discord.com/attachments/344355510281043969/514973942218227722/Storylineatroriaisagirlposing_c4361e8dc51f0451389bd016c9796bab.jpg" if unit[0]==99}"
     bot.channel(logchn).send_message("~~**Server:** #{srvname} (#{srv})\n**Channel:** #{event.channel.name} (#{event.channel.id})\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{dispstr[2]} Alias:** #{newname} for #{dispstr[1]}~~\n**Reason for rejection:** Begone, alias.")
     return nil
   elsif checkstr.downcase =~ /n+?((i|1)+?|(e|3)+?)(b|g|8)+?(a|4|(e|3)+?r+?)+?/
@@ -6335,6 +6474,8 @@ def find_skills(bot,event,args=nil,ces_only=false)
         m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]}")
       elsif skz[i][1].include?('b')
         m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]} *[Before Upgrading]*")
+      elsif skz[i][1].include?('u2')
+        m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]} *[After Upgrading Twice]*")
       elsif skz[i][1].include?('u')
         m[2][1].push("NP-#{skz[i][1].gsub('u','').gsub('b','')}#{'.' unless skz[i][1].gsub('u','').gsub('b','').to_i<2}) #{skz[i][0]} *[After Upgrading]*")
       else
@@ -7291,7 +7432,7 @@ def affinity_data(event,bot,args=nil)
     k=find_data_ex(:find_servant,args.join(' '),event)
     if k.length.zero?
       clzz='Default Affinity'
-      xpic='https://cdn.discordapp.com/emojis/523838967058006027.png?v=1'
+      xpic='https://cdn.discord.com/emojis/523838967058006027.png?v=1'
     else
       str="*Servant:* #{k[1]} [Srv-##{k[0]}] #{servant_moji(bot,event,k,6)}\n*Class:* "
       clzz=k[2]
@@ -7678,9 +7819,9 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   rar=0 if unt[0]=='Takumi'
   dd=unt[0].gsub(' ','_')
   xpic="https://raw.githubusercontent.com/Rot8erConeX/EliseBot/master/EliseBot/FEHArt/#{dd}/Face_FC.png"
-  xpic='https://cdn.discordapp.com/emojis/437519293240836106.png' if unt[0]=='Arden' && (event.message.text.downcase.include?('woke') || rand(100).zero?)
-  xpic='https://cdn.discordapp.com/emojis/420360385862828052.png' if unt[0]=='Sakura' && event.user.id==167657750971547648
-  xpic='https://cdn.discordapp.com/emojis/418140222530912256.png' if unt[0]=='Nino(Launch)' && (event.message.text.downcase.include?('face') || rand(100).zero?)
+  xpic='https://cdn.discord.com/emojis/437519293240836106.png' if unt[0]=='Arden' && (event.message.text.downcase.include?('woke') || rand(100).zero?)
+  xpic='https://cdn.discord.com/emojis/420360385862828052.png' if unt[0]=='Sakura' && event.user.id==167657750971547648
+  xpic='https://cdn.discord.com/emojis/418140222530912256.png' if unt[0]=='Nino(Launch)' && (event.message.text.downcase.include?('face') || rand(100).zero?)
   xpic=bot.user(unt[13][1]).avatar_url if unt.length>13 && !unt[13].nil? && !unt[13][1].nil? && unt[13][1].is_a?(Integer) && !bot.user(unt[13][1]).nil?
   str=['','<:Icon_Rarity_1:448266417481973781>','<:Icon_Rarity_2:448266417872044032>','<:Icon_Rarity_3:448266417934958592>','<:Icon_Rarity_4:448266418459377684>','<:Icon_Rarity_5:448266417553539104>','<:Icon_Rarity_6:491487784650145812>'][rar]*rar
   str='**0-star**' if rar==0
@@ -9437,7 +9578,15 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
       return nil
     elsif typ==-1
       if @dev_units[j2][3][m].include?('u')
-        event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} is already upgraded."
+        if @dev_units[j2][3][m].include?('u2')
+          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} is already upgraded twice."
+        elsif j3[14][m][2].nil? || j3[14][m][2].length<=0
+          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} cannot be upgraded again."
+        else
+          @dev_units[j2][3][m]="#{@dev_units[j2][3][m].to_i}u2"
+          devservants_save()
+          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} has been upgraded a second time due to an Interlude or Rank-Up Quest."
+        end
       elsif j3[14][m][1].nil? || j3[14][m][1].length<=0
         event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} cannot be upgraded yet."
       else
@@ -9475,9 +9624,21 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
     typ=1 if typ.zero?
     if typ==-1
       if @dev_units[j2][4].include?('u')
-        event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm is already upgraded."
+        if @dev_units[j2][4].include?('u2')
+          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm is already upgraded twice."
+        elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u2"}.nil?
+          if @skills.reject{|q| q[2]!='Noble' || !q[1].include?('u2')}.length<=0
+            event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm is already upgraded."
+          else
+            event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm cannot be upgraded again."
+          end
+        else
+          @dev_units[j2][4]="#{@dev_units[j2][4].to_i}u2"
+          devservants_save()
+          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm has been upgraded a second time due to an Interlude or Rank-Up Quest."
+        end
       elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
-        event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm cannot be upgraded yet."
+        event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s Noble Phantasm cannot be upgraded yet."
       else
         @dev_units[j2][4]="#{@dev_units[j2][4]}u"
         devservants_save()
@@ -9610,9 +9771,21 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
     args=args.map{|q| q.downcase}
     if has_any?(['np','merge','merges'],args)
       if @dev_units[j2][4].include?('u')
-        event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm is already upgraded."
+        if @dev_units[j2][4].include?('u2')
+          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm is already upgraded twice."
+        elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u2"}.nil?
+          if @skills.reject{|q| q[2]!='Noble' || !q[1].include?('u2')}.length<=0
+            event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm is already upgraded."
+          else
+            event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm cannot be upgraded again."
+          end
+        else
+          @dev_units[j2][4]="#{@dev_units[j2][4].to_i}u2"
+          devservants_save()
+          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm has been upgraded a second time due to an Interlude or Rank-Up Quest."
+        end
       elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
-        event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s Noble Phantasm cannot be upgraded yet."
+        event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s Noble Phantasm cannot be upgraded yet."
       else
         @dev_units[j2][4]="#{@dev_units[j2][4]}u"
         devservants_save()
@@ -9638,7 +9811,15 @@ bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *ar
         event.respond "No skills were upgraded because no skill slot was defined."
       else
         if @dev_units[j2][3][m].include?('u')
-          event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} is already upgraded."
+          if @dev_units[j2][3][m].include?('u2')
+            event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} is already upgraded twice."
+          elsif j3[14][m][2].nil? || j3[14][m][2].length<=0
+            event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} cannot be upgraded a second time."
+          else
+            @dev_units[j2][3][m]="#{@dev_units[j2][3][m].to_i}u2"
+            devservants_save()
+            event.respond "Your #{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} has been upgraded a second time due to an Interlude or Rank-Up Quest."
+          end
         elsif j3[14][m][1].nil? || j3[14][m][1].length<=0
           event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,@dev_units[j2][7][2],167657750971547648)}'s S#{m+1} cannot be upgraded yet."
         else
@@ -10009,7 +10190,15 @@ bot.command(:edit) do |event, cmd, *args|
       return nil
     elsif typ==-1
       if donor_units[j2][3][m].include?('u')
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} is already upgraded."
+        if donor_units[j2][3][m].include?('u2')
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} is already upgraded twice."
+        elsif j3[14][m][2].nil? || j3[14][m][2].length<=0
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} cannot be upgraded again."
+        else
+          donor_units[j2][3][m]="#{donor_units[j2][3][m].to_i}u2"
+          donor_servant_save(uid,donor_units)
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been upgraded a second time due to an Interlude or Rank-Up Quest."
+        end
       elsif j3[14][m][1].nil? || j3[14][m][1].length<=0
         event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s S#{m+1} cannot be upgraded yet."
       else
@@ -10047,7 +10236,19 @@ bot.command(:edit) do |event, cmd, *args|
     typ=1 if typ.zero?
     if typ==-1
       if donor_units[j2][4].include?('u')
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded."
+        if donor_units[j2][4].include?('u2')
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded twice."
+        elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
+          if @skills.reject{|q| q[2]!='Noble' || !q[1].include?('u2')}.length<=0
+            event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded."
+          else
+            event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm cannot be upgraded again."
+          end
+        else
+          donor_units[j2][4]="#{donor_units[j2][4].to_i}u2"
+          donor_servant_save(uid,donor_units)
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm has been a second time upgraded due to an Interlude or Rank-Up Quest."
+        end
       elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
         event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s Noble Phantasm cannot be upgraded yet."
       else
@@ -10182,7 +10383,19 @@ bot.command(:edit) do |event, cmd, *args|
     args=args.map{|q| q.downcase}
     if has_any?(['np','merge','merges'],args)
       if donor_units[j2][4].include?('u')
-        event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded."
+        if donor_units[j2][4].include?('u2')
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded twice."
+        elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
+          if @skills.reject{|q| q[2]!='Noble' || !q[1].include?('u2')}.length<=0
+            event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm is already upgraded."
+          else
+            event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm cannot be upgraded again."
+          end
+        else
+          donor_units[j2][4]="#{donor_units[j2][4].to_i}u2"
+          donor_servant_save(uid,donor_units)
+          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s Noble Phantasm has been a second time upgraded due to an Interlude or Rank-Up Quest."
+        end
       elsif @skills.find_index{|q| q[2]=='Noble' && q[1]=="#{j3[0]}u"}.nil?
         event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s Noble Phantasm cannot be upgraded yet."
       else
@@ -10210,7 +10423,15 @@ bot.command(:edit) do |event, cmd, *args|
         event.respond "No skills were upgraded because no skill slot was defined."
       else
         if donor_units[j2][3][m].include?('u')
-          event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} is already upgraded."
+          if donor_units[j2][3][m].include?('u2')
+            event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} is already upgraded twice."
+          elsif j3[14][m][2].nil? || j3[14][m][2].length<=0
+            event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} cannot be upgraded again."
+          else
+            donor_units[j2][3][m]="#{donor_units[j2][3][m].to_i}u2"
+            donor_servant_save(uid,donor_units)
+            event.respond "Your #{'Japanese ' if jp}#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2,donor_units[j2][7][2],uid)}'s S#{m+1} has been upgraded a second time due to an Interlude or Rank-Up Quest."
+          end
         elsif j3[14][m][1].nil? || j3[14][m][1].length<=0
           event.respond "#{j3[1]} [Srv-##{j3[0]}] #{servant_moji(bot,event,j3,2)}'s S#{m+1} cannot be upgraded yet."
         else
@@ -10393,7 +10614,7 @@ bot.command(:reload, from: 167657750971547648) do |event|
   event.channel.await(:bob, from: event.user.id) do |e|
     reload=false
     if e.message.text.include?('1')
-      if e.message.text.include?('git') && [167657750971547648,78649866577780736].include?(event.user.id)
+      if e.message.text.downcase.include?('git') && [167657750971547648,78649866577780736].include?(event.user.id)
       else
         if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FGONames2.txt")
           b=[]
@@ -10437,7 +10658,7 @@ bot.command(:reload, from: 167657750971547648) do |event|
         IO.copy_stream(download, "FGOTemp.txt")
         if to_reload[i]=='Skills' && File.size("FGOTemp.txt")<File.size("FGOSkills.txt")*2/3
           stx='Skills were not reloaded because the file was loaded from the wrong sheet.'
-        elsif to_reload[i]=='SkillSubsets' && File.size("FGOTemp.txt")<File.size("FGOSkillSubsets.txt") && !e.message.text.include?('subset')
+        elsif to_reload[i]=='SkillSubsets' && File.size("FGOTemp.txt")<File.size("FGOSkillSubsets.txt") && !e.message.text.downcase.include?('subset')
         elsif File.size("FGOTemp.txt")>100
           b=[]
           File.open("FGOTemp.txt").each_line.with_index do |line, idx|
@@ -10581,7 +10802,7 @@ bot.command(:update) do |event|
   str="#{str}\n- *Enemies* should be copied to **FGOEnemies.txt**"
   str="#{str}\n\n5.) Upload the text file to [the GitHub page here](https://github.com/Rot8erConeX/LizBot).  You might need to make a GitHub account to do so."
   str="#{str}\n\n6.) Wait probably five minutes for the file to settle on GitHub's servers, then use the command `FGO!reload` in either my debug server, or NEH's LizBotDev channel."
-  str="#{str}\n\n7.) Type the number 2 to select reloading data based on GitHub files."
+  str="#{str}\n\n7.) Type the number 3 to select reloading data based on GitHub files."
   str="#{str}\n\n8.) Double-check that the edited data works.  It is important to remember that I will not be there to guide you to wherever any problems might be based on error codes."
   str="#{str}\n\n9.) Add any relevant aliases to the new data."
   create_embed(event,"**How to update Liz's data while Mathoo is unavailable.**",str,0xED619A,nil)
