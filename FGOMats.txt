@@ -4,6 +4,7 @@ Archer Piece
 Arrowhead of Catastrophic Sin
 Assassin Monument
 Assassin Piece
+Astrolabe of Faraway Adventure
 Aurora Steel
 B Pellet
 Beast Monument
@@ -30,10 +31,12 @@ Dragon's Reversed Scale
 Egg of Truth
 Eternal Frost
 Eternal Gear
+Eternal Ice
 Evil Bone
 Fool's Chain
 Forbidden Page
 Forgotten Leaf
+Fruit of Eternity
 Gem of Archer
 Gem of Assassin
 Gem of Berserker
@@ -43,6 +46,7 @@ Gem of Rider
 Gem of Saber
 Ghost Lantern
 Gilles de Rais Doll
+Glowing Star Fragment
 Golden Bear Lighter
 Golden Reed
 Golden Skull
@@ -66,6 +70,7 @@ Magic Gem of Rider
 Magic Gem of Saber
 Meteor Horseshoe
 Mysterious Divine Wine
+Mystic Gunpowder
 Mystic Spinal Fluid
 Octuplet Crystals
 Phoenix Feather
@@ -73,7 +78,6 @@ Primordial Lanugo
 Proof of Hero
 Quiet Antique Bell
 Ranjatai
-Reactive Gunpowder
 Refined Magatama
 Ribbon of Memories
 Rider Monument
@@ -93,11 +97,14 @@ Secret Gem of Saber
 Seed of Yggdrasil
 Serpent Jewel
 Shell of Reminiscence
+Shining Silver Crown
+Spirit Orb
 Spirit Root
 Stake of Wailing Night
 Story Unlock: 1st
 Story Unlock: 2nd Singularity:
 Story Unlock: 4th Singularity:
+Story Unlock: 5th Lostbelt Part
 Story Unlock: 6th Singularity:
 Story Unlock: 7th Singularity:
 Tearstone of Blood

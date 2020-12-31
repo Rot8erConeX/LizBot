@@ -88,3 +88,52 @@ Soul Eater\Earth\Demonic
 Gazer\Earth\Evil Demon, Demonic
 Spotter\Earth\Evil Demon, Demonic
 Bicorn\Earth\Wild Beast, Demonic
+Emperorcorn\Earth\Wild Beast, Demonic
+Spriggan\Earth\Massive
+Bronze Spriggan\Earth\Massive
+Lesser Oni\Earth\Male, Demon Beast, Oni, Humanoid, Demonic
+Vile Oni\Earth\Male, Demon Beast, Oni, Humanoid, Demonic
+Kazakoemaru\Earth\Male, Demon Beast, Oni, Humanoid, Demonic, Massive
+Wazahamimaru\Earth\Male, Demon Beast, Oni, Humanoid, Demonic, Massive
+Gorikimaru\Earth\Male, Demon Beast, Oni, Humanoid, Demonic, Massive
+Makul the Quick\Man\Male, Servant, Human, Humanoid
+Zayd the Base\Man\Male, Servant, Human, Humanoid
+Gozul the Strong\Man\Male, Servant, Human, Humanoid
+Enforcement Knight\Man\Male, Human, Humanoid
+Sphinx\Earth\Male, Divine, Massive
+Malika Sphinx\Earth\Female, Divine, Massive
+Ifreeta\Earth\Female, Demonic Beast, Demonic
+Soulless Man\Man\Male, Human, Humanoid
+Soulless Damned\Man\Male, Human, Humanoid
+Bladed Winged Incect\Earth\-
+Bladed Winged Swarm\Earth\-
+Little Sea Fiend\Earth\Demonic
+Sea Fiend\Earth\Demonic
+Gluttonous Sea Fiend\Earth\Demonic
+Automated Defense Unit\Sky\Artificial, Demon
+Automated Defense Unit MK-2\Sky\Artificial, Demon
+Giant Hermit Crab\Earth\Demonic
+Poison Hermit Crab\Earth\Demonic
+Millenium Hermit Crab\Earth\Demonic
+Demon Boar\Earth\Wild Beast, Demonic
+Giant Demon Boar\Earth\Wild Beast, Demonic, Massive
+Mecha Demon Boar\Earth\Wild Beast, Demonic, Massive
+Uridimmu\Earth\Wild Beast
+Ugallu\Earth\Wild Beast
+Mushussu\Earth\Dragon
+Musmahhu\Earth\Demonic
+Lahmu\Sky\-
+Bel Lahmu Sky\Sky\-
+Bel Lahmu Beast\Beast\Divine
+Basmu\Earth\Dragon, Massive
+Ereshkigal Ghost\Sky\Undead, Demonic, Divine, Massive, King
+Romeo and Juliet\Sky\Undead, Demonic, Massive
+Enigma\Sky\Undead, Demonic, Massive
+Gangster\Man\Male, Human, Humanoid
+Yakuza\Man\Male, Human, Humanoid
+Coloratura\Sky\Artificial, Demon
+Christine\Sky\Artificial, Demon
+Hornet\Man\Male, Human, Humanoid
+Super Chimera\Earth\Demon Beast, Wild Beast
+King Lear\Earth\Massive, King
+Hydra\Earth\Wild Beast, Demonic, Massive
