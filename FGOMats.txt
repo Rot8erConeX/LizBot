@@ -1,7 +1,9 @@
 Add Plush
 Archer Monument
 Archer Piece
+Arrow of Calamity
 Arrowhead of Catastrophic Sin
+Assassin
 Assassin Monument
 Assassin Piece
 Astrolabe of Faraway Adventure
@@ -16,6 +18,7 @@ Black Beast Grease
 Caster Monument
 Caster Piece
 Chicken Bucket
+Claw of
 Claw of Chaos
 Crystal Ball
 Crystalized Lore
@@ -33,6 +36,7 @@ Eternal Frost
 Eternal Gear
 Eternal Ice
 Evil Bone
+Field Poppy Hair Ornament
 Fool's Chain
 Forbidden Page
 Forgotten Leaf
@@ -41,7 +45,9 @@ Gem of Archer
 Gem of Assassin
 Gem of Berserker
 Gem of Caster
+Gem of Foreigner
 Gem of Lancer
+Gem of Moon Cancer
 Gem of Rider
 Gem of Saber
 Ghost Lantern
@@ -65,13 +71,17 @@ Magic Gem of Archer
 Magic Gem of Assassin
 Magic Gem of Berserker
 Magic Gem of Caster
+Magic Gem of Foreigner
 Magic Gem of Lancer
+Magic Gem of Moon Cancer
 Magic Gem of Rider
 Magic Gem of Saber
 Meteor Horseshoe
 Mysterious Divine Wine
 Mystic Gunpowder
+Mystic Spinal
 Mystic Spinal Fluid
+Octuplet Crystal
 Octuplet Crystals
 Phoenix Feather
 Primordial Lanugo
@@ -81,6 +91,7 @@ Ranjatai
 Refined Magatama
 Ribbon of Memories
 Rider Monument
+Rider Piecce
 Rider Piece
 Ring of Giants
 Saber Monument
@@ -97,7 +108,9 @@ Secret Gem of Saber
 Seed of Yggdrasil
 Serpent Jewel
 Shell of Reminiscence
+Shell of Reminisence
 Shining Silver Crown
+Soundless Bell
 Spirit Orb
 Spirit Root
 Stake of Wailing Night
@@ -110,8 +123,10 @@ Story Unlock: 7th Singularity:
 Tearstone of Blood
 Thirty-Six Ice of Mount Fuji
 Tsukumo Kagami
+Tsukumo Mirror
 Twinkle Candy
 Void's Dust
+Warhorse's Young
 Warhorse's Young Horn
 Wazamono Knife
 

@@ -27,7 +27,18 @@ def pseudocase(str)
 end
 
 def get_donor_list()
-  if File.exist?("#{@location}devkit/FEHDonorList.txt")
+  if !$location.nil? && File.exist?("#{$location}devkit/FEHDonorList.txt")
+    b=[]
+    File.open("#{$location}devkit/FEHDonorList.txt").each_line do |line|
+      b.push(line.gsub("\n",'').split('\\'[0]))
+    end
+    for i in 0...b.length
+      b[i][0]=b[i][0].to_i
+      b[i][2]=b[i][2].split(', ').map{|q| q.to_i}
+      b[i][3]=b[i][3].split('/').map{|q| q.to_i} unless b[i][3].nil?
+      b[i][4]=b[i][4].split(', ') unless b[i][4].nil?
+    end
+  elsif File.exist?("#{@location}devkit/FEHDonorList.txt")
     b=[]
     File.open("#{@location}devkit/FEHDonorList.txt").each_line do |line|
       b.push(line.gsub("\n",'').split('\\'[0]))
@@ -45,10 +56,10 @@ def get_donor_list()
 end
 
 def is_mod?(user,server,channel,mode=0) # used by certain commands to determine if a user can use them
-  return true if user.id==167657750971547648 # bot developer is always an EliseMod
-  return false if server.nil? # no one is a EliseMod in PMs
-  return true if user.id==server.owner.id # server owners are EliseMods by default
-  for i in 0...user.roles.length # certain role names will count as EliseMods even if they don't have legitimate mod powers
+  return true if user.id==167657750971547648 # bot developer is always a Mod
+  return false if server.nil? # no one is a Mod in PMs
+  return true if user.id==server.owner.id # server owners are Mods by default
+  for i in 0...user.roles.length # certain role names will count as Mods even if they don't have legitimate mod powers
     return true if ['mod','mods','moderator','moderators','admin','admins','administrator','administrators','owner','owners'].include?(user.roles[i].name.downcase.gsub(' ',''))
   end
   return true if user.permission?(:manage_messages,channel) # legitimate mod powers also confer BotMod powers
@@ -190,7 +201,13 @@ def supersort(a,b,m,n=nil,mode=0)
       return a[m][n] <=> b[m][n]
     end
   end
-  if a[m].is_a?(String) && b[m].is_a?(String) && mode==1
+  if a[m].nil? && b[m].nil?
+    return 0
+  elsif a[m].nil?
+    return 1
+  elsif b[m].nil?
+    return -1
+  elsif a[m].is_a?(String) && b[m].is_a?(String) && mode==1
     return a[m].downcase <=> b[m].downcase
   elsif a[m].is_a?(String) && b[m].is_a?(String)
     return b[m].downcase <=> a[m].downcase
@@ -216,7 +233,9 @@ def not_both(a,b)
 end
 
 def list_lift(a,c)
-  if a.length==1
+  if a.length<=0
+    return ''
+  elsif a.length==1
     return a[0]
   elsif a.length==2
     return "#{a[0]} #{c} #{a[1]}"
@@ -285,10 +304,18 @@ def prio(arr,o)
 end
 
 def was_embedless_mentioned?(event) # used to detect if someone who wishes to see responses as plaintext is relevant to the information being displayed
-  for i in 0...@embedless.length
-    return true if event.user.id==@embedless[i]
-    return true if event.message.text.include?("<@#{@embedless[i].to_s}>")
-    return true if event.message.text.include?("<@!#{@embedless[i].to_s}>")
+  if !@embedless.nil?
+    for i in 0...@embedless.length
+      return true if event.user.id==@embedless[i]
+      return true if event.message.text.include?("<@#{@embedless[i].to_s}>")
+      return true if event.message.text.include?("<@!#{@embedless[i].to_s}>")
+    end
+  elsif !$embedless.nil?
+    for i in 0...$embedless.length
+      return true if event.user.id==$embedless[i]
+      return true if event.message.text.include?("<@#{$embedless[i].to_s}>")
+      return true if event.message.text.include?("<@!#{$embedless[i].to_s}>")
+    end
   end
   return false
 end
@@ -311,7 +338,13 @@ def create_embed(event,header,text,xcolor=nil,xfooter=nil,xpic=nil,xfields=nil,m
     text="#{title[1]}\n\n#{text}"
     title=title[0]
   end
-  if @embedless.include?(event.user.id) || (was_embedless_mentioned?(event) && ch_id==0)
+  mbd=false
+  if !@embedless.nil? 
+    mbd=true if @embedless.include?(event.user.id) || (was_embedless_mentioned?(event) && ch_id==0)
+  elsif $embedless.nil?
+    mbd=true if $embedless.include?(event.user.id) || (was_embedless_mentioned?(event) && ch_id==0)
+  end
+  if mbd
     str=''
     if header.length>0
       if header.include?('*') || header.include?('_')
@@ -636,7 +669,7 @@ def triple_weakness(bot,event)
     inv=true if ['inverse','reverse','backwards'].include?(args[i])
   end
   tpz=tpz.uniq
-  if @shardizard==4
+  if @shardizard==4 || Shardizard==4
   elsif !event.server.nil? && event.server.id==330850148261298176 && bot.user(206147275775279104).on(event.server.id).nil?
   else
     return nil if tpz.length<3 && !inv
@@ -702,7 +735,9 @@ def dev_pm(bot,event,user_id,allowedids=[])
   sig="<:MCandleTop:642901964308480040>\n<:MCandleBottom:642901962005938181>"
   sig="<:Smol_Ephraim:644015195710291968>" if event.user.id==78649866577780736
   sig="<:cornslep:669319246647525412>" if event.user.id==141260274144509952
-  bot.user(user_id.to_i).pm("#{first_sub(event.message.text,f,'',1)}#{"\n#{sig}" unless jke}")
+  text2send=event.message.text.gsub("\n"," \n")
+  text2send=first_sub(text2send,f,'',1)
+  bot.user(user_id.to_i).pm("#{text2send}#{"\n#{sig}" unless jke}")
   event.respond 'Message sent.'
 end
 
@@ -732,13 +767,19 @@ def dev_message(bot,event,channel_id,allowedids=[])
   sig="<:MCandleTop:642901964308480040>\n<:MCandleBottom:642901962005938181>"
   sig="<:Smol_Ephraim:644015195710291968>" if event.user.id==78649866577780736
   sig="<:cornslep:669319246647525412>" if event.user.id==141260274144509952
+  text2send=event.message.text.gsub("\n"," \n")
+  text2send=first_sub(text2send,f,'',1)
   if jke
-    bot.channel(channel_id).send_message("#{first_sub(event.message.text,f,'',1)}")
+    bot.channel(channel_id).send_message(text2send)
   else
-    bot.channel(channel_id).send_message("#{first_sub(event.message.text,f,'',1)}\n#{sig}")
-    bot.user(167657750971547648).pm("**Channel:** #{bot.channel(channel_id).name} (#{channel_id})\n**Responder:** #{event.user.distinct} (#{event.user.id})\n**Message:** #{first_sub(event.message.text,f,'',1)}") unless event.user.id==167657750971547648
+    bot.channel(channel_id).send_message("#{text2send}\n#{sig}")
+    unless event.user.id==167657750971547648
+      bot.user(167657750971547648).pm("**Channel:** #{bot.channel(channel_id).name} (#{channel_id})\n**Responder:** #{event.user.distinct} (#{event.user.id})\n**Message:** #{text2send}") rescue nil
+    end
     for i in 0...allowedids.length
-      bot.user(allowedids[i]).pm("**Channel:** #{bot.channel(channel_id).name} (#{channel_id})\n**Responder:** #{event.user.distinct} (#{event.user.id})\n**Message:** #{first_sub(event.message.text,f,'',1)}") unless event.user.id==allowedids[i]
+      unless event.user.id==allowedids[i]
+        bot.user(allowedids[i]).pm("**Channel:** #{bot.channel(channel_id).name} (#{channel_id})\n**Responder:** #{event.user.distinct} (#{event.user.id})\n**Message:** #{text2send}") rescue nil
+      end
     end
   end
   event.respond 'Message sent.'
@@ -754,7 +795,8 @@ def donor_embed(bot,event,str='')
     event << 'However, there are other options:'
     event << "- My Amazon wish list: http://a.co/0p3sBec (Items purchased from this list will be delivered to me)"
     event << '- You can also purchase an Amazon gift card and have it delivered via email to **rot8er.conex@gmail.com**.  (Quicklink: <https://goo.gl/femEcw>)'
-    event << "You can use your Nitro Boost on either Elise's (<https://discord.gg/9TaRd2h>) or Liz's (<https://discord.gg/bcRcanR>) primary emote servers, which will count as a $5 donation per boost."
+    event << "- I am saving to replace my laptop again, though this time it's nowhere near as urgent as before.  You can purchase a NewEgg giftcard to be delivered via email to **rot8er.conex@gmail.com**.  (Quicklink: <https://rb.gy/dmh9gf>)"
+    event << "- You can use your Nitro Boost on either Elise's (<https://discord.gg/9TaRd2h>) or Liz's (<https://discord.gg/bcRcanR>) primary emote servers, which will count as a $5 donation per boost."
     event << ''
     event << '~~Please note that supporting me means indirectly enabling my addiction to pretzels and pizza rolls.~~'
     event << ''
@@ -767,6 +809,7 @@ def donor_embed(bot,event,str='')
     str2="#{str2}\n\nHowever, there are other options:"
     str2="#{str2}\n- You can purchase items from [this list](http://a.co/0p3sBec) and they will be delivered to me."
     str2="#{str2}\n- You can [purchase an Amazon gift card](https://goo.gl/femEcw) and have it delivered via email to **rot8er.conex@gmail.com**."
+    str2="#{str2}\n- You can [purchase a NewEgg gift card](https://rb.gy/dmh9gf) and have it delivered via email to **rot8er.conex@gmail.com**.  I am aiming to replace my laptop again, though this time it's nowhere near as urgent, so I can afford to be smarter about finding the features I need."
     str2="#{str2}\n- You can use your Nitro Boost on either [Elise's](https://discord.gg/9TaRd2h) or [Liz's](https://discord.gg/bcRcanR) primary emote servers, which will count as a $5 donation per boost."
     str2="#{str2}\n\n[Donor List](https://tinyurl.com/y5m8dv6k)"
     str2="#{str2}\n[Donor Perks](https://urlzs.com/kthnr)"
@@ -803,7 +846,7 @@ def bug_report(bot,event,args,shrd_num,shrd_names,shrd_type,pref,echo=nil)
   s3='Suggestion' if a[0]=='suggestion'
   s3='Feedback' if a[0]=='feedback'
   if args.nil? || args.length.zero?
-    event.respond "You did not include a description of your #{s3.downcase}.  Please retry the command like this:\n```#{event.message.text} here is where you type the description of your #{s3.downcase}```"
+    event.respond "You did not include a description of your #{s3.downcase}.  Please retry the command like this:\n```#{event.message.text} here is where you type the description of your #{s3.downcase}```  Please note that images cannot be relayed to my developer through this command."
     if event.server.nil?
       s="**#{s3} sent by PM**"
     else
@@ -819,8 +862,11 @@ def bug_report(bot,event,args,shrd_num,shrd_names,shrd_type,pref,echo=nil)
   end
   f=event.message.text.split(' ')
   f="#{f[0]} "
-  bot.user(167657750971547648).pm("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}")
-  bot.channel(echo).send_message("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{first_sub(event.message.text,f,'',1)}") unless echo.nil? || bot.channel(echo).nil?
+  text2send=event.message.text.gsub("\n"," \n")
+  text2send=first_sub(text2send,f,'',1)
+  echo=431862993194582036 if !@shardizard.nil? && @shardizard==4 && !echo.nil?
+  bot.user(167657750971547648).pm("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{text2send}")
+  bot.channel(echo).send_message("#{s}\n**User:** #{event.user.distinct} (#{event.user.id})\n**#{s3}:** #{text2send}") unless echo.nil? || bot.channel(echo).nil?
   s3='Bug' if s3=='Bug Report'
   t=Time.now
   event << "Your #{s3.downcase} has been logged."
