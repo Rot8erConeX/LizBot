@@ -190,7 +190,7 @@ system("title loading #{shard_data(2)[@shardizard]} LizBot")
 def safe_to_spam?(event,chn=nil,mode=0) # determines whether or not it is safe to send extremely long messages
   return true if event.server.nil? # it is safe to spam in PM
   return false if event.user.id==213048998678888448
-  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id) # it is safe to spam in the emoji servers
+  return true if [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,620710758841450529].include?(event.server.id) # it is safe to spam in the emoji servers
   chn=event.channel if chn.nil?
   return false if event.message.text.downcase.split(' ').include?('smol') && @shardizard==4
   return false if event.message.text.downcase.split(' ').include?('smol') && chn.id==502288368777035777
@@ -563,7 +563,7 @@ bot.command(:reboot, from: 167657750971547648) do |event| # reboots Liz
   exec "cd C:/Users/#{@mash}/Desktop/devkit && LizBot.rb #{@shardizard}"
 end
 
-bot.command([:help,:command_list,:commandlist,:Help]) do |event, command, subcommand, *args|
+bot.command(:help, aliases: [:command_list,:commandlist,:Help]) do |event, command, subcommand, *args|
   return nil if overlap_prevent(event)
   help_text(event,bot,command,subcommand,args)
 end
@@ -891,9 +891,9 @@ end
 def overlap_prevent(event) # used to prevent servers with both Liz and her debug form from receiving two replies
   if event.server.nil? # failsafe code catching PMs as not a server
     return false
-  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id)
+  elsif event.message.text.downcase.split(' ').include?('debug') && [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,620710758841450529,572792502159933440].include?(event.server.id)
     return @shardizard != 4 # the debug bot can be forced to be used in the emoji servers by including the word "debug" in your message
-  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) # emoji servers will use default Elise otherwise
+  elsif [443172595580534784,443704357335203840,443181099494146068,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,620710758841450529,572792502159933440].include?(event.server.id) # emoji servers will use default Elise otherwise
     return @shardizard == 4
   end
   return false
@@ -1098,6 +1098,8 @@ def find_servant(name,event,fullname=false,ignoreid=false)
   return []
 end
 
+# FEH related
+
 def get_markers(event) # used to determine whether a server-specific unit/skill is safe to display
   if File.exist?("C:/Users/#{@mash}/Desktop/devkit/FEHSave.txt")
     b=[]
@@ -1262,6 +1264,8 @@ def find_FEH_unit(name,event,ignore=false,ignore2=false,bot) # used to find a un
   end
   return []
 end
+
+# no longer FEH related
 
 def find_ce(name,event,fullname=false,buffer=nil)
   data_load()
@@ -1938,9 +1942,9 @@ def servant_moji(bot,event,k,mode=0,clrshift=0,usr=0)
 end
 
 def servant_icon(k,event,art=0)
-  return "https://cdn.discord.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [167657750971547648,66631776864309248].include?(event.user.id) && k[0]==196
-  return "https://cdn.discord.com/attachments/397786370367553538/627221736261419028/image0.jpg" if [163952551237124097,243525860232003595].include?(event.user.id) && k[0]==196 && rand(5)==0
-  return "https://cdn.discord.com/attachments/397786370367553538/627221736261419028/image0.jpg" if k[0]==196 && rand(500)==0
+  return "https://media.discordapp.net/attachments/397786370367553538/627221736261419028/image0.jpg" if [167657750971547648,66631776864309248].include?(event.user.id) && k[0]==196
+  return "https://media.discordapp.net/attachments/397786370367553538/627221736261419028/image0.jpg" if [163952551237124097,243525860232003595].include?(event.user.id) && k[0]==196 && rand(5)==0
+  return "https://media.discordapp.net/attachments/397786370367553538/627221736261419028/image0.jpg" if k[0]==196 && rand(500)==0
   art=2 if event.user.id==167657750971547648 && k[0]==74
   art=4 if event.user.id==78649866577780736 && k[0]==127 && art==0
   art=1 if art==0
@@ -2147,18 +2151,16 @@ def disp_servant_stats(bot,event,args=nil,chain=false)
   text="#{text}\n\n**Command Deck:** #{k[17][0,5].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} (#{k[17][0,5]})"
   text="#{text}\n**Noble Phantasm:** #{k[17][6,1].gsub('Q',cemoji[0]).gsub('A',cemoji[1]).gsub('B',cemoji[2])} *#{k[16].encode(Encoding::UTF_8).gsub('┬á','').gsub('ΓÇï','')}#{np}"
   text="#{text}\n\n#{bond}"
-  if k[0].to_i==81 && chain
-    text="#{text}\n\n**Hit Counts:** #{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}"
-  else
-    text="#{text}\n\n**Death Rate:** #{k[11]}%"
-  end
   fou=1000
   flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{longFormattedNumber(k[6][0])}\n*#{atk}* - #{longFormattedNumber(k[7][0])}\n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{longFormattedNumber(k[6][1])}\n*#{atk}* - #{longFormattedNumber(k[7][1])}#{"\n\n__**#{cemoji[3]}Level 90**__\n*HP* - #{longFormattedNumber(k[6][2])}\n*#{atk}* - #{longFormattedNumber(k[7][2])}" if k[7].length>3 || k[6].length>3}\n\n__**#{cemoji[13]}Level 100**__\n*HP* - #{longFormattedNumber(k[6][-1])}\n*#{atk}* - #{longFormattedNumber(k[7][-1])}"]]
-  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  #{"\n\n__**#{cemoji[3]}Level 90**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][2]+2000)}" if k[7].length>3 || k[6].length>3}\n\n__**#{cemoji[13]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][-1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][-1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][-1]+fou)} - <:GoldenFou:544138629832769536>#{longFormattedNumber(k[7][-1]+2000)}"]] if dispfou && mfou.max<=0
+  flds=[["Combat stats","__**#{cemoji[4]}Level 1**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][0]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][0]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][0]+2000)}  \n\n__**#{cemoji[5]}Level #{k[5]}**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][1]+2000)}  #{"\n\n__**#{cemoji[3]}Level 90**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][2]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][2]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][2]+2000)}" if k[7].length>3 || k[6].length>3}\n\n__**#{cemoji[13]}Level 100**__\n*HP* - #{cemoji[6]}#{longFormattedNumber(k[6][-1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[6][-1]+2000)}  \n*#{atk}* - #{cemoji[6]}#{longFormattedNumber(k[7][-1]+fou)} - #{cemoji[7]}#{longFormattedNumber(k[7][-1]+2000)}"]] if dispfou && mfou.max<=0
   flds.push(["Attack Parameters","#{"__**Hit Counts**__\n#{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\n<:Blank:676220519690928179>#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}" unless k[0].to_i==81 && chain}#{"**Death Rate:** #{k[11]}%" if k[0].to_i==81 && chain}\n\n__**NP Gain**__\n*Attack:* #{k[8][0]}%#{"\n*Alt. Atk.:* #{k[8][2]}% (#{k[8][3]})" unless k[8][2].nil?}\n*Defense:* #{k[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{k[10][0]}\n*Drop Rate:* #{k[10][1]}%"])
   if k[0].to_i==81 && chain
+    text="#{text}\n\n**Hit Counts:** #{cemoji[8]}#{k[9][0]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[9]}#{k[9][1]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[10]}#{k[9][2]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[11]}#{k[9][3]}\u00A0\u00A0\u00B7\u00A0\u00A0#{cemoji[12]}#{k[9][4]}"
     flds[-1][0]="#{flds[-1][0]} (Jekyll)"
     flds.push(["Attack Parameters (Hyde)","**Death Rate:** #{kk2[11]}%\n\n__**NP Gain**__\n*Attack:* #{kk2[8][0]}%#{"\n*Alt. Atk.:* #{kk2[8][2]}% (#{kk2[8][3]})" unless kk2[8][2].nil?}\n*Defense:* #{kk2[8][1]}%\n\n__**Crit Stars**__\n*Weight:* #{kk2[10][0]}\n*Drop Rate:* #{kk2[10][1]}%"])
+  else
+    text="#{text}\n\n**Death Rate:** #{k[11]}%"
   end
   xpic=servant_icon(k,event,art)
   ftr=nil
@@ -2735,7 +2737,7 @@ def disp_servant_np(bot,event,args=nil,chain=false,forcenpl=nil)
   end
   title=''
   title="**Noble Phantasm:** *#{k[16].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','')}#{np}" unless chain
-  unless nophan[8].nil? || nophan[8].length<=0
+  unless nophan.nil? || nophan[8].nil? || nophan[8].length<=0
     x=nophan[8].encode(Encoding::UTF_8).gsub('ΓÇï','').gsub('┬á','').split(': ')
     title="#{title}\n**Alternative name:** *#{x[0]}:* #{x[1]}" unless chain || art>-1
     title="**Noble Phantasm:** *#{x[0]}:* #{x[1]}" if !chain && art>2
@@ -3602,11 +3604,11 @@ def disp_servant_art(bot,event,args=nil,riyodefault=false)
     text="#{text}\n[Direct Link](https://twitter.com/yayoimaka03/status/1140216715147538432)"
     artist='@yayoimaka03'
   elsif k[0]==142 && dv>=0
-    xpic="https://cdn.discord.com/attachments/285663217261477889/681617061289525256/image0.jpg"
+    xpic="https://media.discordapp.net/attachments/285663217261477889/681617061289525256/image0.jpg"
     midtext=''
     artist='*Fate/Grand Order Absolute Demonic Front: Babylonia* animation team'
   elsif k[0]==182 && dv>=0
-    xpic="https://cdn.discord.com/attachments/400114626433515530/681610528703119470/unknown.png"
+    xpic="https://media.discordapp.net/attachments/400114626433515530/681610528703119470/unknown.png"
     midtext=''
     text="#{text}\n[Direct Link](https://www.reddit.com/r/grandorder/comments/conp9p/unlocking_ishtar_rider)"
     artist='u/AmimBlue'
@@ -4554,7 +4556,7 @@ def disp_mat_data(bot,event,args=nil)
 end
 
 def disp_aliases(bot,event,args=nil,mode=0)
-  event.channel.send_temporary_message('Calculating data, please wait...',2)
+  event.channel.send_temporary_message('Calculating data, please wait...',2) rescue nil
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
   data_load()
@@ -6930,7 +6932,7 @@ def dsort(s)
 end
 
 def generate_deck(event,bot,args=nil)
-  event.channel.send_temporary_message('Calculating data, please wait...',event.message.text.length/30+1)
+  event.channel.send_temporary_message('Calculating data, please wait...',event.message.text.length/30+1) rescue nil
   args=event.message.text.downcase.split(' ') if args.nil?
   args=args.reject{ |a| a.match(/<@!?(?:\d+)>/) }
   args=args.reject{ |a| a.downcase=='smol' } if @shardizard==4
@@ -7346,6 +7348,7 @@ def support_lineup(event,bot,args=nil)
     if m[i].nil? || m[i].length<=0 || m[i][0]<=0
       text="#{text}#{newline}~~**#{clzz[i]}:** >Empty<~~"
     else
+      puts m[i][0]
       j=srvs[srvs.find_index{|q| q[0]==m[i][0]}]
       ntry=srvlist.find_index{|q| q[0]==m[i][0]}
       srvname="#{j[1]}"
@@ -8070,52 +8073,52 @@ def disp_FEH_based_stats(bot,event,unt=nil)
   return nil
 end
 
-bot.command([:affinity, :affinities, :affinitys, :effective, :eff, :resist, :resistance, :resistances, :res]) do |event, *args|
+bot.command(:affinity,  aliases: [:affinities,:affinitys,:effective,:eff,:resist,:resistance,:resistances,:res]) do |event, *args|
   return nil if overlap_prevent(event)
   affinity_data(event,bot,args)
 end
 
-bot.command([:support,:supports,:friends,:friend,:profile]) do |event, *args|
+bot.command(:support, aliases: [:supports,:friends,:friend,:profile]) do |event, *args|
   return nil if overlap_prevent(event)
   support_lineup(event,bot,args)
 end
 
-bot.command([:alts,:alt]) do |event, *args|
+bot.command(:alts, aliases: [:alt]) do |event, *args|
   return nil if overlap_prevent(event)
   show_servant_alts(event,bot,args)
 end
 
-bot.command([:random,:rand]) do |event|
+bot.command(:random, aliases: [:rand]) do |event|
   return nil if overlap_prevent(event)
   generate_random_servant(event,bot)
 end
 
-bot.command([:deck]) do |event, *args|
+bot.command(:deck) do |event, *args|
   return nil if overlap_prevent(event)
   generate_deck(event,bot,args)
 end
 
-bot.command([:xp,:exp,:level]) do |event, *args|
+bot.command(:xp, aliases: [:exp,:level]) do |event, *args|
   return nil if overlap_prevent(event)
   level(event,bot,args)
 end
 
-bot.command([:plxp,:plexp,:pllevel,:plevel,:pxp,:pexp]) do |event, *args|
+bot.command(:plxp, aliases: [:plexp,:pllevel,:plevel,:pxp,:pexp]) do |event, *args|
   return nil if overlap_prevent(event)
   level(event,bot,args,1)
 end
 
-bot.command([:sxp,:sexp,:slevel]) do |event, *args|
+bot.command(:sxp, aliases: [:sexp,:slevel]) do |event, *args|
   return nil if overlap_prevent(event)
   level(event,bot,args,2)
 end
 
-bot.command([:cxp,:cexp,:ceexp,:clevel,:celevel]) do |event, *args|
+bot.command(:cxp, aliases: [:cexp,:ceexp,:clevel,:celevel]) do |event, *args|
   return nil if overlap_prevent(event)
   level(event,bot,args,3)
 end
 
-bot.command([:skill,:skil]) do |event, *args|
+bot.command(:skill, aliases: [:skil]) do |event, *args|
   return nil if overlap_prevent(event)
   if args.nil? || args[0].nil?
   elsif ['find','search'].include?(args[0].downcase)
@@ -8130,7 +8133,7 @@ bot.command([:skill,:skil]) do |event, *args|
   disp_skill_data(bot,event,args)
 end
 
-bot.command([:sort,:list]) do |event, *args|
+bot.command(:sort, aliases: [:list]) do |event, *args|
   return nil if overlap_prevent(event)
   if args.nil? || args.length<=0
   elsif ['aliases','alias'].include?(args[0].downcase) && event.user.id==167657750971547648
@@ -8149,7 +8152,7 @@ bot.command([:sort,:list]) do |event, *args|
   sort_servants(bot,event,args)
 end
 
-bot.command([:find,:search,:lookup]) do |event, *args|
+bot.command(:find, aliases: [:search,:lookup]) do |event, *args|
   return nil if overlap_prevent(event)
   if args.nil? || args.length<=0
   elsif ['skill','skills','skil','skils'].include?(args[0].downcase)
@@ -8164,7 +8167,7 @@ bot.command([:find,:search,:lookup]) do |event, *args|
   find_servants(bot,event,args)
 end
 
-bot.command([:embeds,:embed]) do |event|
+bot.command(:embeds, aliases: [:embed]) do |event| # TRANSFERRED
   return nil if overlap_prevent(event)
   metadata_load()
   if @embedless.include?(event.user.id)
@@ -8181,12 +8184,12 @@ bot.command([:embeds,:embed]) do |event|
   return nil
 end
 
-bot.command([:tools,:links,:tool,:link,:resources,:resources]) do |event|
+bot.command(:tools, aliases: [:links,:tool,:link,:resources,:resources]) do |event| # TRANSFERRED
   return nil if overlap_prevent(event)
   show_tools(bot,event)
 end
 
-bot.command(:prefix) do |event, prefix|
+bot.command(:prefix) do |event, prefix| # TRANSFERRED
   return nil if overlap_prevent(event)
   if prefix.nil?
     event.respond 'No prefix was defined.  Try again'
@@ -8218,17 +8221,17 @@ bot.command(:alias) do |event, newname, unit, modifier, modifier2|
   return nil
 end
 
-bot.command([:checkaliases,:aliases,:seealiases]) do |event, *args|
+bot.command(:aliases, aliases: [:checkaliases,:seealiases]) do |event, *args|
   return nil if overlap_prevent(event)
   disp_aliases(bot,event,args)
 end
 
-bot.command([:serveraliases,:saliases]) do |event, *args|
+bot.command(:saliases, aliases: [:serveraliases]) do |event, *args|
   return nil if overlap_prevent(event)
   disp_aliases(bot,event,args,1)
 end
 
-bot.command([:deletealias,:removealias]) do |event, name|
+bot.command(:deletealias, aliases: [:removealias]) do |event, name|
   return nil if overlap_prevent(event)
   nicknames_load()
   if name.nil?
@@ -8331,7 +8334,7 @@ bot.command([:deletealias,:removealias]) do |event, name|
   return nil
 end
 
-bot.command([:servant,:data,:unit]) do |event, *args|
+bot.command(:servant, aliases: [:data,:unit]) do |event, *args| # PARTLY TRANSFERRED
   return nil if overlap_prevent(event)
   if args.nil? || args.length<=0
   elsif args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
@@ -8343,7 +8346,7 @@ bot.command([:servant,:data,:unit]) do |event, *args|
   return nil
 end
 
-bot.command([:stats,:stat]) do |event, *args|
+bot.command(:stats, aliases: [:stat]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   if args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
     unt=find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot)
@@ -8354,7 +8357,7 @@ bot.command([:stats,:stat]) do |event, *args|
   return nil
 end
 
-bot.command([:traits,:trait]) do |event, *args|
+bot.command(:traits, aliases: [:trait]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   name=args.join(' ')
   if find_data_ex(:find_servant,name,event,true).length>0
@@ -8370,57 +8373,57 @@ bot.command([:traits,:trait]) do |event, *args|
   end
 end
 
-bot.command([:art,:artist]) do |event, *args|
+bot.command(:art, aliases: [:artist]) do |event, *args|
   return nil if overlap_prevent(event)
-  event.channel.send_temporary_message('Calculating data, please wait...',1)
+  event.channel.send_temporary_message('Calculating data, please wait...',1) rescue nil
   name=args.join(' ')
   find_best_match(name,bot,event,false,false,2)
   return nil
 end
 
-bot.command([:riyo,:Riyo]) do |event, *args|
+bot.command(:riyo) do |event, *args|
   return nil if overlap_prevent(event)
   disp_servant_art(bot,event,args,true)
   return nil
 end
 
-bot.command([:np,:NP,:noble,:phantasm,:noblephantasm]) do |event, *args|
+bot.command(:np, aliases: [:noble,:phantasm,:noblephantasm]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_np(bot,event,args)
   return nil
 end
 
-bot.command([:np1]) do |event, *args|
+bot.command(:np1) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_np(bot,event,args,false,1)
   return nil
 end
 
-bot.command([:np2]) do |event, *args|
+bot.command(:np2) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_np(bot,event,args,false,2)
   return nil
 end
 
-bot.command([:np3]) do |event, *args|
+bot.command(:np3) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_np(bot,event,args,false,3)
   return nil
 end
 
-bot.command([:np4]) do |event, *args|
+bot.command(:np4) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_np(bot,event,args,false,4)
   return nil
 end
 
-bot.command([:np5]) do |event, *args|
+bot.command(:np5) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_np(bot,event,args,false,5)
   return nil
 end
 
-bot.command([:ce,:CE,:cE,:Ce,:craft,:essance,:craftessance,:essence,:craftessence]) do |event, *args|
+bot.command(:ce, aliases: [:craft,:essance,:craftessance,:essence,:craftessence]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   if args.nil? || args[0].nil?
   elsif ['find','search'].include?(args[0].downcase)
@@ -8442,7 +8445,7 @@ bot.command([:ce,:CE,:cE,:Ce,:craft,:essance,:craftessance,:essence,:craftessenc
   end
 end
 
-bot.command([:valentines,:valentine,:valentinesce,:cevalentines,:valentinece,:cevalentine,:chocolate]) do |event, *args|
+bot.command(:valentines, aliases: [:valentine,:valentinesce,:cevalentines,:valentinece,:cevalentine,:chocolate]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   name=args.join(' ')
   if find_data_ex(:find_servant,name,event,true).length>0
@@ -8454,7 +8457,7 @@ bot.command([:valentines,:valentine,:valentinesce,:cevalentines,:valentinece,:ce
   end
 end
 
-bot.command([:command]) do |event, *args|
+bot.command(:command) do |event, *args|
   return nil if overlap_prevent(event)
   if args.nil? || args[0].nil?
   elsif args[0].downcase=='list'
@@ -8466,12 +8469,12 @@ bot.command([:command]) do |event, *args|
   disp_code_data(bot,event,args)
 end
 
-bot.command([:commandcode]) do |event, *args|
+bot.command(:commandcode) do |event, *args|
   return nil if overlap_prevent(event)
   disp_code_data(bot,event,args)
 end
 
-bot.command([:code]) do |event, *args|
+bot.command(:code) do |event, *args|
   return nil if overlap_prevent(event)
   name=args.join(' ')
   if find_data_ex(:find_clothes,name,event,true).length>0
@@ -8487,30 +8490,30 @@ bot.command([:code]) do |event, *args|
   end
 end
 
-bot.command([:mysticcode,:mysticode,:mystic,:clothes,:clothing]) do |event, *args|
+bot.command(:mysticcode, aliases: [:mysticode,:mystic,:clothes,:clothing]) do |event, *args|
   return nil if overlap_prevent(event)
   disp_clothing_data(bot,event,args)
 end
 
-bot.command([:bond,:bondce,:bondCE]) do |event, *args|
+bot.command(:bond, aliases: [:bondce,:bondCE]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_ce(bot,event,args,false,true)
   return nil
 end
 
-bot.command([:mats,:ascension,:enhancement,:enhance,:materials]) do |event, *args|
+bot.command(:mats, aliases: [:ascension,:enhancement,:enhance,:materials]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   disp_servant_mats(bot,event,args)
   return nil
 end
 
-bot.command([:mat,:material]) do |event, *args|
+bot.command(:mat, aliases: [:material]) do |event, *args|
   return nil if overlap_prevent(event)
   disp_mat_data(bot,event,args)
   return nil
 end
 
-bot.command([:skills,:skils]) do |event, *args|
+bot.command(:skills, aliases: [:skils]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   if args.nil? || args[0].nil?
   elsif ['find','search'].include?(args[0].downcase)
@@ -8526,7 +8529,7 @@ bot.command([:skills,:skils]) do |event, *args|
   return nil
 end
 
-bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args|
+bot.command(:tinystats, aliases: [:smallstats,:smolstats,:microstats,:squashedstats,:sstats,:statstiny,:statssmall,:statssmol,:statsmicro,:statssquashed,:statss,:stattiny,:statsmall,:statsmol,:statmicro,:statsquashed,:sstat,:tinystat,:smallstat,:smolstat,:microstat,:squashedstat,:tiny,:small,:micro,:smol,:squashed,:littlestats,:littlestat,:statslittle,:statlittle,:little]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   if args.nil? || args.length<=0
   elsif args[0].downcase=='feh' && find_data_ex(:find_FEH_unit,args[1,args.length-1].join(' '),event,false,false,bot).length>0
@@ -8538,13 +8541,13 @@ bot.command([:tinystats,:smallstats,:smolstats,:microstats,:squashedstats,:sstat
   return nil
 end
 
-bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, f|
+bot.command(:safe, aliases: [:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, f| # TRANSFERRED
   return nil if overlap_prevent(event)
   f='' if f.nil?
   metadata_load()
   if event.server.nil?
     event.respond 'It is safe for me to send long replies here because this is my PMs with you.'
-  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388].include?(event.server.id)
+  elsif [443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,620710758841450529].include?(event.server.id)
     event.respond 'It is safe for me to send long replies here because this is one of my emoji servers.'
   elsif @shardizard==4
     event.respond 'It is safe for me to send long replies here because this is my debug mode.'
@@ -8618,7 +8621,7 @@ bot.command([:safe,:spam,:safetospam,:safe2spam,:long,:longreplies]) do |event, 
   end
 end
 
-bot.command([:channellist,:chanelist,:spamchannels,:spamlist]) do |event|
+bot.command(:channellist, aliases: [:chanelist,:spamchannels,:spamlist]) do |event| # TRANSFERRED
   return nil if overlap_prevent(event)
   if event.server.nil?
     event.respond "Yes, it is safe to spam here."
@@ -8643,14 +8646,14 @@ bot.command([:channellist,:chanelist,:spamchannels,:spamlist]) do |event|
   end
 end
 
-bot.command([:bugreport, :suggestion, :feedback]) do |event, *args|
+bot.command(:bugreport, aliases: [:suggestion,:feedback]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   x=['liz!','liz?','fate!','fate?','fgo!','fgo?']
   x.push(@prefixes[event.server.id]) unless event.server.nil? || @prefixes[event.server.id].nil?
   bug_report(bot,event,args,@shards,shard_data(0),'Shard',x,502288368777035777)
 end
 
-bot.command([:donation,:donate]) do |event, uid|
+bot.command(:donation, aliases: [:donate]) do |event, uid|
   return nil if overlap_prevent(event)
   uid="#{event.user.id}" if uid.nil? || uid.length.zero?
   if /<@!?(?:\d+)>/ =~ uid
@@ -8724,7 +8727,7 @@ bot.command([:donation,:donate]) do |event, uid|
   donor_embed(bot,event)
 end
 
-bot.command(:invite) do |event, user|
+bot.command(:invite) do |event, user| # TRANSFERRED
   return nil if overlap_prevent(event)
   usr=event.user
   txt="**You can invite me to your server with this link: <https://goo.gl/ox9CxB>**\nTo look at my source code: <https://github.com/Rot8erConeX/LizBot/blob/master/LizBot.rb>\nTo follow my coder's development Twitter and learn of updates: <https://twitter.com/EliseBotDev>\nIf you suggested me to server mods and they ask what I do, show them this image: https://raw.githubusercontent.com/Rot8erConeX/LizBot/master/MarketingLiz.png"
@@ -8745,7 +8748,7 @@ bot.command(:invite) do |event, user|
   event.respond "A PM was sent to #{user_to_name}." unless event.server.nil? && user_to_name=="you"
 end
 
-bot.command([:shard,:attribute]) do |event, i, j|
+bot.command(:shard, aliases: [:attribute]) do |event, i, j| # TRANSFERRED
   return nil if overlap_prevent(event)
   if j.to_i.to_s==j
     j=j.to_i
@@ -8818,7 +8821,7 @@ bot.command(:sortaliases, from: 167657750971547648) do |event, *args|
   event.respond 'The alias list has been sorted alphabetically'
 end
 
-bot.command([:status, :avatar, :avvie]) do |event, *args|
+bot.command(:status, aliases: [:avatar,:avvie]) do |event, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   t=Time.now
   timeshift=6
@@ -8902,29 +8905,29 @@ bot.command(:restorealiases, from: 167657750971547648) do |event|
   event << 'Alias list has been restored from backup.'
 end
 
-bot.command(:sendmessage, from: 167657750971547648) do |event, channel_id, *args| # sends a message to a specific channel
+bot.command(:sendmessage, from: 167657750971547648) do |event, channel_id, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   dev_message(bot,event,channel_id,[78649866577780736])
 end
 
-bot.command(:sendpm, from: 167657750971547648) do |event, user_id, *args| # sends a PM to a specific user
+bot.command(:sendpm, from: 167657750971547648) do |event, user_id, *args| # TRANSFERRED
   return nil if overlap_prevent(event)
   dev_pm(bot,event,user_id,[78649866577780736])
 end
 
-bot.command(:ignoreuser, from: 167657750971547648) do |event, user_id| # causes Liz to ignore the specified user
+bot.command(:ignoreuser, from: 167657750971547648) do |event, user_id| # TRANSFERRED
   return nil if overlap_prevent(event)
   bliss_mode(bot,event,user_id)
 end
 
-bot.command(:leaveserver, from: 167657750971547648) do |event, server_id| # forces Liz to leave a server
+bot.command(:leaveserver, from: 167657750971547648) do |event, server_id| # TRANSFERRED
   return nil if overlap_prevent(event)
   walk_away(bot,event,server_id)
 end
 
 bot.command(:cleanupaliases, from: 167657750971547648) do |event|
   return nil if overlap_prevent(event)
-  event.channel.send_temporary_message('Please wait...',10)
+  event.channel.send_temporary_message('Please wait...',10) rescue nil
   return nil unless event.user.id==167657750971547648 # only work when used by the developer
   nicknames_load()
   nmz=@aliases.map{|q| q}
@@ -9205,7 +9208,7 @@ bot.command(:snagstats) do |event, f, f2|
     event.respond str
     return nil
   elsif ['code','lines','line','sloc'].include?(f.downcase)
-    event.channel.send_temporary_message('Calculating data, please wait...',3)
+    event.channel.send_temporary_message('Calculating data, please wait...',3) rescue nil
     b=[[],[],[],[],[]]
     File.open("C:/Users/#{@mash}/Desktop/devkit/LizBot.rb").each_line do |line|
       l=line.gsub("\n",'')
@@ -9255,7 +9258,7 @@ bot.command(:snagstats) do |event, f, f2|
     end
     return nil
   elsif ['alias','aliases','name','names','nickname','nicknames'].include?(f.downcase)
-    event.channel.send_temporary_message('Calculating data, please wait...',1)
+    event.channel.send_temporary_message('Calculating data, please wait...',1) rescue nil
     glbl=@aliases.reject{|q| q[0]!='Servant' || !q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
     srv_spec=@aliases.reject{|q| q[0]!='Servant' || q[3].nil?}.map{|q| [q[1],q[2],q[3]]}
     all_units=@servants.map{|q| [q[0],q[1],0,0]}
@@ -9376,27 +9379,27 @@ bot.command(:snagstats) do |event, f, f2|
   return nil
 end
 
-bot.command([:today,:now,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event, *args|
+bot.command(:today, aliases: [:now,:todayinfgo,:todayinFGO,:todayInFGO,:today_in_fgo,:today_in_FGO]) do |event, *args|
   return nil if overlap_prevent(event)
   show_next(bot,event,args,true)
 end
 
-bot.command([:tomorrow,:tommorrow,:tomorow,:tommorrow]) do |event, *args|
+bot.command(:tomorrow, aliases: [:tommorrow,:tomorow,:tommorrow]) do |event, *args|
   return nil if overlap_prevent(event)
   show_next(bot,event,args,-1)
 end
 
-bot.command([:dailies,:daily]) do |event, *args|
+bot.command(:dailies, aliases: [:daily]) do |event, *args|
   return nil if overlap_prevent(event)
   show_next(bot,event,args)
 end
 
-bot.command([:next,:schedule]) do |event|
+bot.command(:next, aliases: [:schedule]) do |event|
   return nil if overlap_prevent(event)
   show_next_2(bot,event)
 end
 
-bot.command([:devedit, :dev_edit], from: 167657750971547648) do |event, cmd, *args|
+bot.command(:devedit, aliases: [:dev_edit], from: 167657750971547648) do |event, cmd, *args|
   return nil if overlap_prevent(event)
   if File.exist?("C:/Users/#{@mash}/Desktop/devkit/LizUserSaves/#{event.user.id}.txt")
     event.respond "This command is to allow the developer to edit his servants.  Your version of the command is `FGO!edit`"
@@ -10607,7 +10610,7 @@ bot.command(:edit) do |event, cmd, *args|
   return nil
 end
 
-bot.command(:reload, from: 167657750971547648) do |event|
+bot.command(:reload, from: 167657750971547648) do |event| # TRANSFERRED
   return nil if overlap_prevent(event)
   return nil unless [167657750971547648,78649866577780736].include?(event.user.id) || [502288368777035777,386658080257212417].include?(event.channel.id)
   event.respond "Reload what?\n1.) Aliases, from backups#{" (unless includes the word \"git\")\n2.) ~~empty slot#{', redirects to 3' if event.user.id==78649866577780736}~~\n3.) Data, from GitHub (include \"subset\" in your message to also reload FGOSkillSubsets)" if [167657750971547648,78649866577780736].include?(event.user.id)}#{"\n4.) Source code, from GitHub (include the word \"all\" to also reload rot8er_functs.rb)\n5.) Crossover data\n6.) ~~empty slot~~\n7.) Avatars, from GitHub" if event.user.id==167657750971547648}\nYou can include multiple numbers to load multiple things."
@@ -10650,7 +10653,7 @@ bot.command(:reload, from: 167657750971547648) do |event|
       end
     end
     if (e.message.text.include?('3') && [167657750971547648,78649866577780736].include?(event.user.id)) || (e.message.text.include?('2') && [78649866577780736].include?(event.user.id))
-      event.channel.send_temporary_message('Loading.  Please wait 5 seconds...',3)
+      event.channel.send_temporary_message('Loading.  Please wait 5 seconds...',3) rescue nil
       to_reload=['Servants','CraftEssances','Skills','CommandCodes','SkillSubsets','Clothes','Enemies','Mats']
       stx=''
       for i in 0...to_reload.length
@@ -10847,7 +10850,7 @@ bot.server_create do |event|
     end
     chn=chnn[0] if chnn.length>0
   end
-  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(event.server.id) && @shardizard==4
+  if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,620710758841450529,572792502159933440].include?(event.server.id) && @shardizard==4
     (chn.send_message(get_debug_leave_message()) rescue nil)
     event.server.leave
   else
@@ -11021,7 +11024,7 @@ bot.mention do |event|
     disp_clothing_data(bot,event,args)
     m=false
   elsif ['art','artist'].include?(args[0])
-    event.channel.send_temporary_message('Calculating data, please wait...',1)
+    event.channel.send_temporary_message('Calculating data, please wait...',1) rescue nil
     find_best_match(name,bot,event,false,false,2)
     m=false
   elsif ['code'].include?(args[0])
@@ -11122,6 +11125,14 @@ bot.message do |event|
     elsif event.server.nil? || event.server.id==285663217261477889
       event.respond "I am not Elise right now.  Please use `FEH!reboot` to turn me into Elise."
     end
+  elsif ['d!','d?'].include?(str[0,2]) && @shardizard==4 && (event.server.nil? || event.server.id==285663217261477889)
+    s=event.message.text.downcase
+    s=s[2,s.length-2]
+    a=s.split(' ')
+    if a[0].downcase=='reboot'
+      event.respond "Becoming LizX.  Please wait approximately ten seconds..."
+      exec "cd C:/Users/#{@mash}/Desktop/devkit && DebugBotX.rb 4"
+    end
   elsif ['dl!','dl?'].include?(str[0,3]) && @shardizard==4 && (event.server.nil? || event.server.id==285663217261477889)
     s=event.message.text.downcase
     s=s[3,s.length-3]
@@ -11208,7 +11219,7 @@ def next_holiday(bot,mode=0)
   d=get_donor_list().reject{|q| q[2][1]<3 || q[4][1]=='-'}
   for i in 0...d.length
     if d[i][4][1]!='-' && d[i][0]!=78649866577780736
-      holidays.push([0,d[i][3][0],d[i][3][1],d[i][4][1],"in recognition of #{bot.user(d[i][0]).distinct}","Donator's birthday"])
+      holidays.push([0,d[i][3][0],d[i][3][1],d[i][4][1],"in recognition of contributions provided by #{bot.user(d[i][0]).distinct}","Donator's birthday"])
       holidays[-1][5]="Donator's Day" if d[i][0]==189235935563481088
     end
   end
@@ -11346,7 +11357,8 @@ end
 bot.ready do |event|
   if @shardizard==4
     for i in 0...bot.servers.values.length
-      if ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,572792502159933440].include?(bot.servers.values[i].id)
+      if bot.servers.values[i].nil?
+      elsif ![285663217261477889,443172595580534784,443181099494146068,443704357335203840,449988713330769920,497429938471829504,554231720698707979,523821178670940170,523830882453422120,691616574393811004,523824424437415946,523825319916994564,523822789308841985,532083509083373579,575426885048336388,620710758841450529,572792502159933440].include?(bot.servers.values[i].id)
         bot.servers.values[i].general_channel.send_message(get_debug_leave_message()) rescue nil
         bot.servers.values[i].leave
       end
