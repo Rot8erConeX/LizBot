@@ -122,4 +122,5 @@
 ['Avenger', ['avenger', 'avengers'], 'Class']
 ['Beast', ['beastclass'], 'Class', 'no-extra']
 ['Foreigner', ['foreigner', 'foreigners'], 'Class']
+['Pretender', ['pretender', 'pretenders', 'faker', 'fakers'], 'Class']
 ['Moon Cancer', ['mooncancer', 'mooncanser', 'mooncancers', 'mooncansers', 'moonkancer', 'moonkanser', 'moonkancers', 'moonkansers', 'moon', 'moons', 'cancer', 'cancers', 'canser', 'cansers', 'kancer', 'kancers', 'kanser', 'kansers'], 'Class']

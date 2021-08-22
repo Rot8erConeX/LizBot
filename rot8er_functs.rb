@@ -1,4 +1,6 @@
-@mash='Mini-Matt'
+# loadbotan = true
+# debug = Debug
+@mash='rot8e'
 
 def triple_finish(list,forcetwo=false) # used to split a list into three roughly-equal parts for use in embeds
   return [['.',list.join("\n")]] if list.length<5
@@ -341,7 +343,7 @@ def create_embed(event,header,text,xcolor=nil,xfooter=nil,xpic=nil,xfields=nil,m
   mbd=false
   if !@embedless.nil? 
     mbd=true if @embedless.include?(event.user.id) || (was_embedless_mentioned?(event) && ch_id==0)
-  elsif $embedless.nil?
+  elsif !$embedless.nil?
     mbd=true if $embedless.include?(event.user.id) || (was_embedless_mentioned?(event) && ch_id==0)
   end
   if mbd
@@ -712,7 +714,18 @@ end
 
 def embedless_swap(bot,event)
   metadata_load()
-  if @embedless.include?(event.user.id)
+  if !$embedless.nil?
+    if $embedless.include?(event.user.id)
+      for i in 0...$embedless.length
+        $embedless[i]=nil if $embedless[i]==event.user.id
+      end
+      $embedless.compact!
+      event.respond 'You will now see my replies as embeds again.'
+    else
+      $embedless.push(event.user.id)
+      event.respond 'You will now see my replies as plaintext.'
+    end
+  elsif @embedless.include?(event.user.id)
     for i in 0...@embedless.length
       @embedless[i]=nil if @embedless[i]==event.user.id
     end
@@ -765,7 +778,7 @@ def dev_message(bot,event,channel_id,allowedids=[])
   jke=true if ['rcx','.','x'].include?(f[2].downcase) && event.user.id==167657750971547648
   f="#{f[0]} #{f[1]} #{"#{f[2]} " if jke}"
   sig="<:MCandleTop:642901964308480040>\n<:MCandleBottom:642901962005938181>"
-  sig="<:Smol_Ephraim:644015195710291968>" if event.user.id==78649866577780736
+  sig="<:Ace_Staff:875102524829478912>" if event.user.id==78649866577780736
   sig="<:cornslep:669319246647525412>" if event.user.id==141260274144509952
   text2send=event.message.text.gsub("\n"," \n")
   text2send=first_sub(text2send,f,'',1)
@@ -787,7 +800,8 @@ end
 
 def donor_embed(bot,event,str='')
   str='' if str.nil?
-  if @embedless.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
+  mbd=(@embedless.map{|q| q} rescue $embedless.map{|q| q} rescue [])
+  if mbd.include?(event.user.id) || was_embedless_mentioned?(event) || event.message.text.downcase.include?('mobile') || event.message.text.downcase.include?('phone')
     event << '__**If you wish to donate to me:** A word from my developer__'
     event << ''
     event << 'Due to income regulations within the building where I live, I cannot accept donations in the form of PayPal, Patreon, or other forms of direct payment.  Only a small percentage of any such donations would actually reach me and the rest would end up in the hands of the owners of my building.'
@@ -795,7 +809,6 @@ def donor_embed(bot,event,str='')
     event << 'However, there are other options:'
     event << "- My Amazon wish list: http://a.co/0p3sBec (Items purchased from this list will be delivered to me)"
     event << '- You can also purchase an Amazon gift card and have it delivered via email to **rot8er.conex@gmail.com**.  (Quicklink: <https://goo.gl/femEcw>)'
-    event << "- I am saving to replace my laptop again, though this time it's nowhere near as urgent as before.  You can purchase a NewEgg giftcard to be delivered via email to **rot8er.conex@gmail.com**.  (Quicklink: <https://rb.gy/dmh9gf>)"
     event << "- You can use your Nitro Boost on either Elise's (<https://discord.gg/9TaRd2h>) or Liz's (<https://discord.gg/bcRcanR>) primary emote servers, which will count as a $5 donation per boost."
     event << ''
     event << '~~Please note that supporting me means indirectly enabling my addiction to pretzels and pizza rolls.~~'
@@ -809,7 +822,6 @@ def donor_embed(bot,event,str='')
     str2="#{str2}\n\nHowever, there are other options:"
     str2="#{str2}\n- You can purchase items from [this list](http://a.co/0p3sBec) and they will be delivered to me."
     str2="#{str2}\n- You can [purchase an Amazon gift card](https://goo.gl/femEcw) and have it delivered via email to **rot8er.conex@gmail.com**."
-    str2="#{str2}\n- You can [purchase a NewEgg gift card](https://rb.gy/dmh9gf) and have it delivered via email to **rot8er.conex@gmail.com**.  I am aiming to replace my laptop again, though this time it's nowhere near as urgent, so I can afford to be smarter about finding the features I need."
     str2="#{str2}\n- You can use your Nitro Boost on either [Elise's](https://discord.gg/9TaRd2h) or [Liz's](https://discord.gg/bcRcanR) primary emote servers, which will count as a $5 donation per boost."
     str2="#{str2}\n\n[Donor List](https://tinyurl.com/y5m8dv6k)"
     str2="#{str2}\n[Donor Perks](https://urlzs.com/kthnr)"
@@ -915,10 +927,12 @@ def get_debug_leave_message()
   str="I am Mathoo's personal debug bot.  As such, I do not belong here.  You may be looking for one of my facets, so I'll drop all the invite links here."
   str="#{str}\n\n**EliseBot** allows you to look up stats and skill data for characters in *Fire Emblem: Heroes*"
   str="#{str}\nHere's her invite link: <https://goo.gl/Hf9RNj>"
-  str="#{str}\n\n**RobinBot**, also known as **FEIndex**, is for *Fire Emblem: Awakening* and *Fire Emblem Fates*."
-  str="#{str}\nHere's her invite link: <https://goo.gl/f1wSGd>"
   str="#{str}\n\n**LizBot** allows you to look up stats, mats, and skill data in *Fate/Grand Order*"
   str="#{str}\nHere's her invite link: <https://goo.gl/ox9CxB>"
+  str="#{str}\n\n**BotanBot** allows you to look up stats, mats, and skill data in *Dragalia Lost*"
+  str="#{str}\nHere's her invite link: <https://goo.gl/mp77kQ>"
+  str="#{str}\n\n**RobinBot**, also known as **FEIndex**, is for *Fire Emblem: Awakening*, *Fire Emblem Fates*, and *Fire Emblem: Three Houses*."
+  str="#{str}\nHere's her invite link: <https://goo.gl/f1wSGd>"
   return str
 end
 

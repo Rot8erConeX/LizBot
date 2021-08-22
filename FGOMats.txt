@@ -43,12 +43,13 @@ Forgotten Leaf
 Fruit of Eternity
 Gem of Archer
 Gem of Assassin
+Gem of Avenger
 Gem of Berserker
 Gem of Caster
-Gem of Foreigner
 Gem of Lancer
 Gem of Moon Cancer
 Gem of Rider
+Gem of Ruler
 Gem of Saber
 Ghost Lantern
 Gilles de Rais Doll
@@ -71,10 +72,10 @@ Magic Gem of Archer
 Magic Gem of Assassin
 Magic Gem of Berserker
 Magic Gem of Caster
-Magic Gem of Foreigner
 Magic Gem of Lancer
 Magic Gem of Moon Cancer
 Magic Gem of Rider
+Magic Gem of Ruler
 Magic Gem of Saber
 Meteor Horseshoe
 Mysterious Divine Wine
